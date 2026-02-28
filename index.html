@@ -6,13 +6,14 @@
     <title>KRYA Messenger - दुनिया की एक पहचान</title>
     <style>
         body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background: #0f172a; /* इमेज जैसा गहरा नीला रंग */
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background: #0f172a; /* प्रीमियम डार्क बैकग्राउंड */
             display: flex; 
             justify-content: center; 
             align-items: center; 
             min-height: 100vh; 
             margin: 0; 
+            padding: 15px;
             color: white;
         }
         .app-container {
@@ -28,79 +29,47 @@
         .gold-brand {
             font-size: 42px;
             font-weight: 800;
-            color: #fbbf24; /* इमेज जैसा गोल्ड रंग */
+            color: #fbbf24; /* गोल्ड रंग */
             letter-spacing: 3px;
             margin-bottom: 5px;
             text-shadow: 0 2px 10px rgba(251, 191, 36, 0.3);
         }
-        .app-name { font-size: 18px; color: #cbd5e1; margin-bottom: 10px; }
-        .slogan { font-size: 14px; color: #fbbf24; margin-bottom: 30px; font-style: italic; }
+        .slogan { font-size: 14px; color: #fbbf24; margin-bottom: 30px; font-style: italic; opacity: 0.9; }
         
-        .input-card {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+        .input-card { background: white; border-radius: 20px; padding: 5px; margin-bottom: 20px; }
         input { 
-            width: 100%; 
-            padding: 15px; 
-            border: none; 
-            font-size: 16px; 
-            text-align: center; 
-            outline: none;
-            color: #1e293b;
+            width: 100%; padding: 15px; border: none; font-size: 16px; 
+            text-align: center; outline: none; border-radius: 15px; color: #1e293b;
         }
         #checkBtn { 
-            width: 100%; 
-            padding: 15px; 
-            background: #007bff; 
-            color: white; 
-            border: none; 
-            border-radius: 15px; 
-            font-size: 18px; 
-            font-weight: bold; 
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,123,255,0.4);
+            width: 100%; padding: 15px; background: #007bff; color: white; 
+            border: none; border-radius: 15px; font-size: 18px; font-weight: bold; 
+            cursor: pointer; box-shadow: 0 4px 15px rgba(0,123,255,0.4); 
         }
         
-        #statusMsg { margin: 15px 0; font-weight: bold; }
+        #statusMsg { margin: 15px 0; font-weight: bold; min-height: 24px; }
         
         .payment-box { 
-            display: none; 
-            margin-top: 25px; 
-            padding: 20px; 
-            background: rgba(34, 197, 94, 0.1); 
-            border: 1px solid #22c55e; 
-            border-radius: 20px; 
+            display: none; margin-top: 25px; padding: 20px; 
+            background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; border-radius: 20px; 
         }
         .pay-btn { 
-            display: block; 
-            background: #22c55e; 
-            color: white; 
-            padding: 16px; 
-            text-decoration: none; 
-            border-radius: 15px; 
-            font-weight: bold; 
-            margin-bottom: 15px;
+            display: block; background: #22c55e; color: white; padding: 16px; 
+            text-decoration: none; border-radius: 15px; font-weight: bold; margin-bottom: 15px; 
         }
         .wa-btn { 
-            display: block; 
-            background: #25d366; 
-            color: white; 
-            padding: 12px; 
-            text-decoration: none; 
-            border-radius: 12px; 
-            font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
+            background: #25d366; color: white; padding: 12px; 
+            text-decoration: none; border-radius: 12px; font-size: 14px; font-weight: bold;
         }
-        .footer { margin-top: 30px; font-size: 10px; color: #64748b; text-transform: uppercase; }
+        .footer { margin-top: 30px; font-size: 10px; color: #64748b; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div class="gold-brand">KRYA</div>
-    <div class="app-name">Messenger</div>
+    <div style="font-size: 18px; color: #cbd5e1; margin-bottom: 5px;">Messenger</div>
     <div class="slogan">दुनिया की एक पहचान</div>
     
     <div class="input-card">
@@ -111,12 +80,12 @@
     <div id="statusMsg"></div>
 
     <div id="paymentArea" class="payment-box">
-        <p style="color: #22c55e; font-size: 18px; margin: 0 0 15px 0;">✨ यह नाम उपलब्ध है!</p>
+        <p style="color: #22c55e; font-size: 18px; margin: 0 0 15px 0; font-weight: bold;">✨ यह नाम उपलब्ध है!</p>
         <a href="upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh%20Ray&am=9&cu=INR" class="pay-btn">₹9 पे करें और बुक करें</a>
         <a id="waLink" href="#" target="_blank" class="wa-btn">📱 WhatsApp पर स्क्रीनशॉट भेजें</a>
     </div>
 
-    <div class="footer">Verified by Mukesh Ray | © 2026 KRYA Official</div>
+    <div class="footer">VERIFIED BY MUKESH RAY | © 2026 KRYA</div>
 </div>
 
 <script type="module">
@@ -143,7 +112,7 @@
   checkBtn.onclick = async () => {
     const handle = document.getElementById('handleInput').value.toLowerCase().trim();
     if (handle.length < 3) {
-      statusMsg.innerHTML = "❌ नाम 3 अक्षर से बड़ा लिखें";
+      statusMsg.innerHTML = "❌ नाम कम से कम 3 अक्षर का हो!";
       statusMsg.style.color = "#f87171";
       return;
     }
@@ -153,65 +122,18 @@
     try {
       const docSnap = await getDoc(doc(db, "handles", handle));
       if (docSnap.exists()) {
-        statusMsg.innerHTML = "🚫 @" + handle + " बुक हो चुका है";
+        statusMsg.innerHTML = "🚫 @" + handle + " पहले से बुक है।";
         statusMsg.style.color = "#f87171";
         paymentArea.style.display = "none";
       } else {
         statusMsg.innerHTML = "";
         paymentArea.style.display = "block";
         const waNumber = "916379403821";
-        const message = encodeURIComponent("नमस्ते मुकेश जी, मैंने @" + handle + " के लिए ₹9 पे कर दिए हैं।");
+        const message = encodeURIComponent("नमस्ते मुकेश जी, मैंने @" + handle + " के लिए ₹9 पे कर दिए हैं। कृपया इसे एक्टिवेट करें।");
         waLink.href = "https://wa.me/" + waNumber + "?text=" + message;
       }
     } catch (e) {
-      statusMsg.innerHTML = "⚠️ नेटवर्क एरर!";
-    }
-  };
-</script>
-
-</body>
-</html>
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyCtSIGAybHuIga19QpPRS1egRrsbhvJV2c",
-    authDomain: "krya-94e55.firebaseapp.com",
-    projectId: "krya-94e55",
-    storageBucket: "krya-94e55.firebasestorage.app",
-    messagingSenderId: "1025043894227",
-    appId: "1:1025043894227:web:fa57c21ed2f6381a792926"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  const checkBtn = document.getElementById('checkBtn');
-  const statusMsg = document.getElementById('statusMsg');
-  const paymentArea = document.getElementById('paymentArea');
-
-  checkBtn.onclick = async () => {
-    const handle = document.getElementById('handleInput').value.toLowerCase().trim();
-    if (handle.length < 3) {
-      statusMsg.innerHTML = "❌ नाम कम से कम 3 अक्षर का हो!";
-      statusMsg.style.color = "red";
-      return;
-    }
-    statusMsg.innerHTML = "🔍 जांच हो रही है...";
-    statusMsg.style.color = "#666";
-    
-    try {
-      const docSnap = await getDoc(doc(db, "handles", handle));
-      if (docSnap.exists()) {
-        statusMsg.innerHTML = "🚫 @" + handle + " पहले से बुक है।";
-        statusMsg.style.color = "red";
-        paymentArea.style.display = "none";
-      } else {
-        statusMsg.innerHTML = "";
-        paymentArea.style.display = "block";
-      }
-    } catch (e) {
-      statusMsg.innerHTML = "⚠️ नेटवर्क एरर, कृपया पुनः प्रयास करें।";
+      statusMsg.innerHTML = "⚠️ नेटवर्क एरर, फिर से प्रयास करें।";
     }
   };
 </script>
