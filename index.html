@@ -3,76 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA Messenger - दुनिया की एक पहचान</title>
+    <title>KRYA Messenger - Premium Identity</title>
     <style>
+        * { box-sizing: border-box; } /* इससे बॉक्स बाहर नहीं कटेगा */
         body { 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            background: #0f172a; /* प्रीमियम डार्क बैकग्राउंड */
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            margin: 0; 
-            padding: 15px;
-            color: white;
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            background: #0f172a; 
+            display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; margin: 0; padding: 20px; color: white;
         }
         .app-container {
             background: #1e293b;
             width: 100%;
-            max-width: 400px;
-            border-radius: 30px;
-            padding: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            max-width: 380px; /* एकदम सही चौड़ाई */
+            border-radius: 35px;
+            padding: 40px 25px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
             text-align: center;
-            border: 1px solid #334155;
+            border: 1px solid rgba(255,255,255,0.1);
         }
         .gold-brand {
-            font-size: 42px;
+            font-size: 45px;
             font-weight: 800;
-            color: #fbbf24; /* गोल्ड रंग */
-            letter-spacing: 3px;
-            margin-bottom: 5px;
-            text-shadow: 0 2px 10px rgba(251, 191, 36, 0.3);
+            color: #fbbf24;
+            letter-spacing: 4px;
+            margin-bottom: 0;
+            text-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
         }
-        .slogan { font-size: 14px; color: #fbbf24; margin-bottom: 30px; font-style: italic; opacity: 0.9; }
+        .app-name { font-size: 20px; color: #cbd5e1; margin-top: 5px; font-weight: 500; }
+        .slogan { font-size: 14px; color: #fbbf24; margin: 15px 0 35px 0; font-style: italic; opacity: 0.8; }
         
-        .input-card { background: white; border-radius: 20px; padding: 5px; margin-bottom: 20px; }
+        .input-wrapper { 
+            background: white; 
+            border-radius: 20px; 
+            margin-bottom: 20px; 
+            overflow: hidden; /* कटना बंद */
+            border: 2px solid transparent;
+            transition: 0.3s;
+        }
+        .input-wrapper:focus-within { border-color: #fbbf24; }
+        
         input { 
-            width: 100%; padding: 15px; border: none; font-size: 16px; 
-            text-align: center; outline: none; border-radius: 15px; color: #1e293b;
-        }
-        #checkBtn { 
-            width: 100%; padding: 15px; background: #007bff; color: white; 
-            border: none; border-radius: 15px; font-size: 18px; font-weight: bold; 
-            cursor: pointer; box-shadow: 0 4px 15px rgba(0,123,255,0.4); 
+            width: 100%; padding: 18px; border: none; font-size: 17px; 
+            text-align: center; outline: none; color: #1e293b; font-weight: 500;
         }
         
-        #statusMsg { margin: 15px 0; font-weight: bold; min-height: 24px; }
+        #checkBtn { 
+            width: 100%; padding: 16px; 
+            background: #007bff; color: white; border: none; 
+            border-radius: 20px; font-size: 18px; font-weight: bold; 
+            cursor: pointer; transition: 0.3s;
+            box-shadow: 0 10px 20px -5px rgba(0, 123, 255, 0.5);
+        }
+        #checkBtn:active { transform: scale(0.98); }
+        
+        #statusMsg { margin: 20px 0; font-weight: 600; min-height: 24px; font-size: 15px; }
         
         .payment-box { 
-            display: none; margin-top: 25px; padding: 20px; 
-            background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; border-radius: 20px; 
+            display: none; margin-top: 10px; padding: 25px; 
+            background: rgba(34, 197, 94, 0.05); border: 2px dashed #22c55e; border-radius: 25px; 
+            animation: fadeIn 0.5s ease;
         }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         .pay-btn { 
-            display: block; background: #22c55e; color: white; padding: 16px; 
-            text-decoration: none; border-radius: 15px; font-weight: bold; margin-bottom: 15px; 
+            display: block; background: #22c55e; color: white; padding: 18px; 
+            text-decoration: none; border-radius: 18px; font-weight: bold; margin-bottom: 15px; 
+            box-shadow: 0 8px 15px rgba(34, 197, 94, 0.3);
         }
         .wa-btn { 
             display: flex; align-items: center; justify-content: center;
-            background: #25d366; color: white; padding: 12px; 
-            text-decoration: none; border-radius: 12px; font-size: 14px; font-weight: bold;
+            background: #25d366; color: white; padding: 14px; 
+            text-decoration: none; border-radius: 15px; font-size: 14px; font-weight: bold;
         }
-        .footer { margin-top: 30px; font-size: 10px; color: #64748b; letter-spacing: 1px; }
+        .footer { margin-top: 40px; font-size: 10px; color: #64748b; letter-spacing: 2px; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div class="gold-brand">KRYA</div>
-    <div style="font-size: 18px; color: #cbd5e1; margin-bottom: 5px;">Messenger</div>
+    <div class="app-name">Messenger</div>
     <div class="slogan">दुनिया की एक पहचान</div>
     
-    <div class="input-card">
+    <div class="input-wrapper">
         <input type="text" id="handleInput" placeholder="@username चुनें">
     </div>
     
@@ -80,9 +94,9 @@
     <div id="statusMsg"></div>
 
     <div id="paymentArea" class="payment-box">
-        <p style="color: #22c55e; font-size: 18px; margin: 0 0 15px 0; font-weight: bold;">✨ यह नाम उपलब्ध है!</p>
-        <a href="upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh%20Ray&am=9&cu=INR" class="pay-btn">₹9 पे करें और बुक करें</a>
-        <a id="waLink" href="#" target="_blank" class="wa-btn">📱 WhatsApp पर स्क्रीनशॉट भेजें</a>
+        <p style="color: #22c55e; font-size: 18px; margin-bottom: 20px; font-weight: bold;">✨ नाम उपलब्ध है!</p>
+        <a href="upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh%20Ray&am=9&cu=INR" class="pay-btn">₹9 पे करें</a>
+        <a id="waLink" href="#" target="_blank" class="wa-btn">📱 WhatsApp स्क्रीनशॉट</a>
     </div>
 
     <div class="footer">VERIFIED BY MUKESH RAY | © 2026 KRYA</div>
@@ -112,28 +126,27 @@
   checkBtn.onclick = async () => {
     const handle = document.getElementById('handleInput').value.toLowerCase().trim();
     if (handle.length < 3) {
-      statusMsg.innerHTML = "❌ नाम कम से कम 3 अक्षर का हो!";
+      statusMsg.innerHTML = "❌ नाम थोड़ा बड़ा लिखें!";
       statusMsg.style.color = "#f87171";
       return;
     }
-    statusMsg.innerHTML = "⏳ जांच हो रही है...";
+    statusMsg.innerHTML = "⏳ चेकिंग...";
     statusMsg.style.color = "#fbbf24";
     
     try {
       const docSnap = await getDoc(doc(db, "handles", handle));
       if (docSnap.exists()) {
-        statusMsg.innerHTML = "🚫 @" + handle + " पहले से बुक है।";
+        statusMsg.innerHTML = "🚫 @" + handle + " बुक हो चुका है।";
         statusMsg.style.color = "#f87171";
         paymentArea.style.display = "none";
       } else {
         statusMsg.innerHTML = "";
         paymentArea.style.display = "block";
-        const waNumber = "916379403821";
-        const message = encodeURIComponent("नमस्ते मुकेश जी, मैंने @" + handle + " के लिए ₹9 पे कर दिए हैं। कृपया इसे एक्टिवेट करें।");
-        waLink.href = "https://wa.me/" + waNumber + "?text=" + message;
+        const message = encodeURIComponent("नमस्ते मुकेश जी, मैंने @" + handle + " के लिए ₹9 पे कर दिए हैं।");
+        waLink.href = "https://wa.me/916379403821?text=" + message;
       }
     } catch (e) {
-      statusMsg.innerHTML = "⚠️ नेटवर्क एरर, फिर से प्रयास करें।";
+      statusMsg.innerHTML = "⚠️ नेटवर्क एरर!";
     }
   };
 </script>
