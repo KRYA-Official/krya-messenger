@@ -1,30 +1,63 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA Official Messenger</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; padding: 20px; }
-        .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
-        h1 { color: #333; margin-bottom: 5px; }
-        .brand { color: #007bff; font-weight: bold; font-size: 24px; }
-        p { color: #666; }
-        .pay-button { background-color: #28a745; color: white; padding: 15px 25px; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 20px; font-weight: bold; }
-        .pay-button:hover { background-color: #218838; }
-        .footer { margin-top: 30px; font-size: 12px; color: #999; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="brand">KRYA</div>
-        <h1>Official Messenger</h1>
-        <p>मुकेश राय द्वारा संचालित सुरक्षित प्लेटफॉर्म</p>
-        <hr>
-        <h3>KRYA सर्विस एक्टिवेट करें</h3>
-        <p>अपनी सेवा शुरू करने के लिए नीचे बटन दबाएं</p>
-        <a href="upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh Rai&am=9&cu=INR" class="pay-button">₹9 पे करें</a>
-        <div class="footer">© 2026 KRYA - सभी अधिकार सुरक्षित</div>
+<div class="container">
+    <div class="brand">KRYA</div>
+    <h1>Official Messenger</h1>
+    <p>मुकेश राय द्वारा संचालित सुरक्षित प्लेटफॉर्म</p>
+    <br>
+    <h3>अपना यूनिक KRYA हैंडल बुक करें</h3>
+    <p>पसंदीदा नाम चेक करें (सिर्फ ₹9/माह)</p>
+    
+    <input type="text" id="handleInput" placeholder="जैसे: mukesh" style="padding: 12px; width: 80%; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 10px; font-size: 16px;">
+    
+    <button id="checkBtn" style="padding: 12px 25px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 85%; margin-bottom: 10px;">Availability चेक करें</button>
+    
+    <div id="statusMsg" style="margin-top: 10px; font-weight: bold;"></div>
+
+    <div id="paymentArea" style="display:none; margin-top:20px;">
+        <p style="color: green; font-weight: bold;">✅ यह नाम उपलब्ध है!</p>
+        <a href="upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh%20Ray&am=9&cu=INR" class="pay-button" style="background-color: #28a745;">₹9 पे करें और बुक करें</a>
     </div>
-</body>
-</html>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCtSIGAybHuIga19QpPRS1egRrsbhvJV2c",
+    authDomain: "krya-94e55.firebaseapp.com",
+    projectId: "krya-94e55",
+    storageBucket: "krya-94e55.firebasestorage.app",
+    messagingSenderId: "1025043894227",
+    appId: "1:1025043894227:web:fa57c21ed2f6381a792926"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const checkBtn = document.getElementById('checkBtn');
+  const statusMsg = document.getElementById('statusMsg');
+  const paymentArea = document.getElementById('paymentArea');
+
+  checkBtn.onclick = async () => {
+    const handle = document.getElementById('handleInput').value.toLowerCase().trim();
+    if (handle.length < 3) {
+      statusMsg.innerHTML = "❌ नाम कम से कम 3 अक्षर का हो!";
+      statusMsg.style.color = "red";
+      return;
+    }
+    statusMsg.innerHTML = "🔍 जांच हो रही है...";
+    try {
+      const docSnap = await getDoc(doc(db, "handles", handle));
+      if (docSnap.exists()) {
+        statusMsg.innerHTML = "🚫 @" + handle + " पहले से बुक है।";
+        statusMsg.style.color = "red";
+        paymentArea.style.display = "none";
+      } else {
+        statusMsg.innerHTML = "";
+        paymentArea.style.display = "block";
+      }
+    } catch (e) {
+      statusMsg.innerHTML = "⚠️ कृपया Firebase Rules चेक करें।";
+    }
+  };
+</script>
