@@ -1,3 +1,66 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRYA - स्मार्ट डैशबोर्ड</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0b1120; color: white; }
+        .container { max-width: 500px; margin: auto; background: #111827; min-height: 100vh; padding-bottom: 100px; }
+        
+        /* Header & Vision Image Style */
+        .brand-header { padding: 20px; text-align: center; border-bottom: 2px solid #fbbf24; background: linear-gradient(to bottom, #1e293b, #111827); }
+        .brand-logo { font-size: 32px; font-weight: 900; color: #fbbf24; letter-spacing: 2px; }
+        
+        /* Earning Vision Card (Inspired by 1000438402.png) */
+        .vision-card { background: linear-gradient(135deg, #1e3a8a, #1e40af); margin: 15px; padding: 20px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); text-align: center; }
+        .vision-card h3 { font-size: 18px; color: #fbbf24; margin-bottom: 5px; }
+        .vision-card p { font-size: 12px; color: #d1d5db; }
+
+        /* Messenger List (Inspired by 1000442650.png) */
+        .messenger-section { padding: 20px; }
+        .user-item { display: flex; align-items: center; background: #1f2937; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid transparent; transition: 0.3s; }
+        .user-item:hover { border-left: 4px solid #fbbf24; background: #374151; }
+        .user-avatar { width: 50px; height: 50px; border-radius: 50%; background: #4b5563; margin-right: 15px; border: 2px solid #fbbf24; }
+        .user-info b { display: block; font-size: 16px; }
+        .user-info span { font-size: 12px; color: #9ca3af; }
+
+        /* Floating Input Section */
+        .input-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #111827; padding: 15px; border-top: 1px solid #374151; }
+        #userComment { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #374151; background: #0b1120; color: white; margin-bottom: 10px; }
+        #sendBtn { width: 100%; padding: 12px; background: #fbbf24; color: #0f172a; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="brand-header">
+        <div class="brand-logo">KRYA</div>
+        <div style="font-size: 10px; color: #9ca3af;">सिर्फ एक क्लिक में पूरी दुनिया तक पहुंच!</div>
+    </header>
+
+    <div class="vision-card">
+        <h3>ऑटोमेटिक कमाई 24x7</h3>
+        <p>डिजिटल दुकान | एक बार की मेहनत, पूरी जिंदगी की कमाई!</p>
+    </div>
+
+    <div class="messenger-section">
+        <div class="user-item">
+            <div class="user-avatar" style="background: url('https://via.placeholder.com/50') center/cover;"></div>
+            <div class="user-info">
+                <b>Mukesh Kumar ✔</b>
+                <span>संस्थापक | KRYA Brand</span>
+            </div>
+        </div>
+        </div>
+
+    <div class="input-bar">
+        <textarea id="userComment" placeholder="अपनी राय यहाँ लिखें..." rows="2"></textarea>
+        <button id="sendBtn">दुनिया तक पहुँचायें (Send)</button>
+    </div>
+</div>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -15,27 +78,18 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    // बटन क्लिक को सुनने वाला फंक्शन
     document.getElementById('sendBtn').onclick = function() {
-        const commentText = document.getElementById('userComment').value;
-        
-        if(commentText.trim() === "") {
-            alert("मुकेश जी, कृपया कुछ लिखें!");
-            return;
-        }
+        const text = document.getElementById('userComment').value;
+        if(text.trim() === "") return alert("कुछ लिखें!");
 
         const commentRef = ref(database, 'comments');
-        const newCommentRef = push(commentRef);
-        
-        set(newCommentRef, {
-            text: commentText,
-            timestamp: Date.now()
-        }).then(() => {
-            alert("मुकेश जी, आपका मैसेज सफलतापूर्वक Firebase में पहुँच गया है!");
+        push(commentRef, { text: text, timestamp: Date.now() })
+        .then(() => {
+            alert("मैसेज ग्लोबल फीड में पहुँच गया है!");
             document.getElementById('userComment').value = "";
-        }).catch((error) => {
-            alert("डेटाबेस में कोई समस्या है!");
-            console.error(error);
         });
     };
 </script>
+
+</body>
+</html>
