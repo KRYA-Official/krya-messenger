@@ -7,7 +7,7 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: white; line-height: 1.6; }
-        .container { max-width: 500px; margin: auto; background: #1e293b; min-height: 100vh; position: relative; border-left: 1px solid #334155; border-right: 1px solid #334155; }
+        .container { max-width: 500px; margin: auto; background: #1e293b; min-height: 100vh; position: relative; border-left: 1px solid #334155; border-right: 1px solid #334155; padding-bottom: 120px; }
         
         /* Header Section */
         header { padding: 30px 20px; text-align: center; border-bottom: 2px solid #fbbf24; background: #1e293b; }
@@ -24,7 +24,7 @@
         .v-badge { color: #22c55e; margin-left: 5px; font-size: 18px; }
 
         /* Subscription & Payment */
-        .payment-footer { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #0f172a; padding: 20px; border-top: 1px solid #334155; text-align: center; }
+        .payment-footer { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #0f172a; padding: 20px; border-top: 1px solid #334155; text-align: center; z-index: 100; }
         .btn-pay { background: #fbbf24; color: #0f172a; border: none; padding: 14px 0; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3); transition: 0.3s; }
         .btn-pay:active { transform: scale(0.98); }
     </style>
@@ -49,27 +49,25 @@
             <div style="font-size: 12px; color: #22c55e;">● आप मुझे फॉलो कर रहे हैं (Auto)</div>
         </div>
     </div>
+
     <div style="padding: 20px; background: rgba(255,255,255,0.05); margin: 20px; border-radius: 12px;">
         <h4 style="color: #fbbf24; margin-bottom: 10px; font-size: 14px;">अपनी राय या सवाल यहाँ लिखें:</h4>
         <textarea id="userComment" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: white; padding: 10px; border-radius: 8px; margin-bottom: 10px;" rows="3" placeholder="मुकेश जी से कुछ पूछें..."></textarea>
-        <button onclick="<button id="sendBtn" style="background: #fbbf24; color: #0f172a; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; width: 100%; cursor: pointer;">भेजें (Send)</button>
-" style="background: #fbbf24; color: #0f172a; border: none; padding: 8px 20px; border-radius: 5px; font-weight: bold; cursor: pointer;">भेजें (Send)</button>
+        <button id="sendBtn" style="background: #fbbf24; color: #0f172a; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; width: 100%; cursor: pointer;">भेजें (Send)</button>
     </div>
 
-
-        <div class="payment-footer">
+    <div class="payment-footer">
         <p style="font-size: 12px; margin-bottom: 12px; color: #cbd5e1;">अपनी ग्लोबल पहचान सुरक्षित रखें (मात्र ₹9/माह)</p>
         <button class="btn-pay" onclick="window.location.href='upi://pay?pa=93690mukeshkumar@axl&pn=KRYA_MUKESH&am=9&cu=INR'">
             अभी सब्सक्राइब करें (₹9 Pay)
         </button>
-        </div>
-    
+    </div>
+</div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // आपकी Firebase की चाबी (Config)
     const firebaseConfig = {
         apiKey: "AIzaSyCtSIGAybHuIga19QpPRS1egRrsbhvJV2c",
         authDomain: "krya-94e55.firebaseapp.com",
@@ -83,30 +81,26 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    // बटन दबाते ही मैसेज Firebase में भेजने का लॉजिक
-    document.addEventListener('click', function (event) {
-        // यह चेक करता है कि क्या यूजर ने 'भेजें (Send)' वाले बटन पर क्लिक किया है
-        if (event.target && (event.target.innerText === 'भेजें (Send)' || event.target.id === 'sendBtn')) {
-            const commentText = document.getElementById('userComment').value;
-            
-            if(commentText.trim() === "") {
-                alert("कृपया कुछ लिखें!");
-                return;
-            }
-
-            const commentRef = ref(database, 'comments');
-            const newCommentRef = push(commentRef);
-            set(newCommentRef, {
-                text: commentText,
-                timestamp: Date.now()
-            }).then(() => {
-                alert("मुकेश जी, आपका मैसेज सफलतापूर्वक Firebase में पहुँच गया है!");
-                document.getElementById('userComment').value = "";
-            }).catch((error) => {
-                alert("एक बार Firebase Realtime Database चेक करें!");
-                console.error(error);
-            });
+    document.getElementById('sendBtn').addEventListener('click', function () {
+        const commentText = document.getElementById('userComment').value;
+        
+        if(commentText.trim() === "") {
+            alert("कृपया कुछ लिखें!");
+            return;
         }
+
+        const commentRef = ref(database, 'comments');
+        const newCommentRef = push(commentRef);
+        set(newCommentRef, {
+            text: commentText,
+            timestamp: Date.now()
+        }).then(() => {
+            alert("मुकेश जी, आपका मैसेज सफलतापूर्वक Firebase में पहुँच गया है!");
+            document.getElementById('userComment').value = "";
+        }).catch((error) => {
+            alert("डेटाबेस में कोई समस्या है, कृपया Firebase चेक करें।");
+            console.error(error);
+        });
     });
 </script>
     
