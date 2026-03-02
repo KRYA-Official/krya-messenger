@@ -3,58 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA Messanger</title>
+    <title>KRYA Messanger - Final Fix</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: sans-serif; background: #0b1120; color: white; margin: 0; padding-bottom: 200px; }
-        .header { text-align: center; padding: 30px; background: #0f172a; border-bottom: 2px solid #fbbf24; }
-        .brand { font-size: 30px; font-weight: bold; color: #fbbf24; }
+        body { font-family: sans-serif; background: #0b1120; color: white; margin: 0; padding-bottom: 220px; }
+        .header { text-align: center; padding: 25px; background: #0f172a; border-bottom: 2px solid #fbbf24; }
+        .brand { font-size: 28px; font-weight: bold; color: #fbbf24; }
         
-        /* मैसेज दिखने की जगह */
-        #globalFeed { padding: 15px; }
-        .msg-card { background: white; color: #1e293b; padding: 15px; border-radius: 15px; margin-bottom: 15px; display: flex; align-items: center; }
-        .user-icon { width: 40px; height: 40px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; font-weight: bold; }
+        /* मैसेज लिस्ट */
+        #globalFeed { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .msg-card { background: white; color: #1e293b; padding: 12px; border-radius: 12px; border-left: 5px solid #fbbf24; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .msg-card b { color: #0f172a; font-size: 14px; }
 
-        /* इनपुट बॉक्स */
-        .input-area { position: fixed; bottom: 80px; width: 100%; max-width: 500px; background: #1e293b; padding: 15px; border-radius: 20px 20px 0 0; }
-        textarea { width: 100%; padding: 10px; border-radius: 10px; border: none; margin-bottom: 10px; }
-        button { width: 100%; padding: 12px; background: #fbbf24; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        /* मैसेज इनपुट */
+        .controls { position: fixed; bottom: 85px; width: 100%; max-width: 500px; background: #1e293b; padding: 15px; border-radius: 20px 20px 0 0; z-index: 100; left: 50%; transform: translateX(-50%); }
+        textarea { width: 100%; padding: 12px; border-radius: 10px; border: none; font-size: 16px; margin-bottom: 8px; background: #f8fafc; color: #0f172a; }
+        .send-btn { width: 100%; padding: 15px; background: #fbbf24; color: #0f172a; border: none; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; }
 
-        /* नीचे के 4 बटन */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: white; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #ddd; }
-        .nav-btn { color: #64748b; text-align: center; font-size: 12px; cursor: pointer; flex: 1; }
-        .nav-btn i { font-size: 20px; display: block; }
-        .nav-btn.active { color: #0f172a; font-weight: bold; }
+        /* नीचे के 4 बटन (Working Now) */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: white; display: flex; padding: 15px 0; border-top: 1px solid #e2e8f0; left: 50%; transform: translateX(-50%); z-index: 101; }
+        .nav-item { flex: 1; text-align: center; color: #64748b; font-size: 12px; cursor: pointer; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .nav-item.active { color: #0f172a; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="header">
     <div class="brand">KRYA</div>
-    <div style="color: #94a3b8;">Messanger</div>
+    <div style="color: #94a3b8; font-size: 14px;">दुनिया की एक पहचान | मुकेश राय का मिशन</div>
 </div>
 
 <div id="globalFeed">
-    <p style="text-align:center; color:#94a3b8;">मैसेज लोड हो रहे हैं...</p>
+    <p style="text-align:center; color:#94a3b8;" id="statusMsg">मैसेज लोड हो रहे हैं...</p>
 </div>
 
-<div class="input-area">
-    <textarea id="userMsg" rows="2" placeholder="अपनी राय लिखें..."></textarea>
-    <button id="sendBtn">Global Feed में भेजें</button>
+<div class="controls">
+    <textarea id="msgBox" placeholder="मुकेश जी से कुछ पूछें..."></textarea>
+    <button class="send-btn" onclick="sendMessage()">भेजें (Send)</button>
 </div>
 
 <div class="nav-bar">
-    <div class="nav-btn active" onclick="alert('आप Global Feed पर हैं')"><i class="fas fa-globe"></i>Global Feed</div>
-    <div class="nav-btn" onclick="alert('My Family जल्द आएगा')"><i class="fas fa-users"></i>My Family</div>
-    <div class="nav-btn" onclick="alert('Rewards जल्द आएगा')"><i class="fas fa-shield-alt"></i>Rewards</div>
-    <div class="nav-btn" onclick="alert('My Account जल्द आएगा')"><i class="fas fa-user-circle"></i>My Account</div>
+    <div class="nav-item active" onclick="alert('आप Global Feed पर हैं')"><i class="fas fa-globe"></i>Global Feed</div>
+    <div class="nav-item" onclick="alert('My Family जल्द उपलब्ध होगा')"><i class="fas fa-users"></i>My Family</div>
+    <div class="nav-item" onclick="alert('Rewards अपडेट हो रहे हैं')"><i class="fas fa-shield-alt"></i>Rewards</div>
+    <div class="nav-item" onclick="alert('Profile सेटिंग्स लोड हो रही हैं')"><i class="fas fa-user-circle"></i>My Account</div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // आपका Firebase Config (स्क्रीनशॉट के अनुसार)
+    // Firebase कॉन्फ़िगरेशन
     const firebaseConfig = {
         apiKey: "AIzaSyCtSIGAybHuIga19QpPRS1egRrsbhvJV2c",
         authDomain: "krya-94e55.firebaseapp.com",
@@ -66,43 +66,39 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
+    const db = getDatabase(app);
     const feed = document.getElementById('globalFeed');
+    const status = document.getElementById('statusMsg');
 
-    // 1. डेटाबेस से मैसेज पढ़ना (Load Messages)
-    onValue(ref(database, 'messages'), (snapshot) => {
-        feed.innerHTML = ''; 
-        if (!snapshot.exists()) {
+    // 1. मैसेज लोड करना
+    onValue(ref(db, 'global_messages'), (snap) => {
+        status.style.display = 'none';
+        feed.innerHTML = '';
+        if (!snap.exists()) {
             feed.innerHTML = '<p style="text-align:center;">कोई मैसेज नहीं है।</p>';
             return;
         }
-        snapshot.forEach((child) => {
+        snap.forEach((child) => {
             const data = child.val();
-            feed.insertAdjacentHTML('afterbegin', `
-                <div class="msg-card">
-                    <div class="user-icon">M</div>
-                    <div>
-                        <b>@Mukesh_Jee</b>
-                        <p style="margin:5px 0 0;">${data.text}</p>
-                    </div>
-                </div>
-            `);
+            const card = document.createElement('div');
+            card.className = 'msg-card';
+            card.innerHTML = `<b>@Mukesh_Jee:</b><br>${data.message}`;
+            feed.prepend(card); // नया मैसेज सबसे ऊपर दिखेगा
         });
     });
 
-    // 2. बटन दबाने पर मैसेज भेजना
-    document.getElementById('sendBtn').onclick = function() {
-        const text = document.getElementById('userMsg').value;
-        if(text.trim() === "") return;
+    // 2. मैसेज भेजना
+    window.sendMessage = function() {
+        const txt = document.getElementById('msgBox').value;
+        if(txt.trim() === "") return alert("कृपया कुछ लिखें!");
 
-        push(ref(database, 'messages'), {
-            text: text,
-            timestamp: Date.now()
+        push(ref(db, 'global_messages'), {
+            message: txt,
+            time: Date.now()
         }).then(() => {
-            document.getElementById('userMsg').value = "";
-        }).catch((err) => {
-            alert("Error: " + err.message);
-        });
+            document.getElementById('msgBox').value = "";
+            alert("मैसेज सफलतापूर्वक भेज दिया गया!");
+        }).catch(err => alert("Error: " + err.message));
     };
 </script>
 
