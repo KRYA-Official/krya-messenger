@@ -3,67 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA - स्मार्ट डैशबोर्ड</title>
+    <title>KRYA Messanger - दुनिया की पहचान</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', sans-serif; background: #0b1120; color: white; }
-        .container { max-width: 500px; margin: auto; background: #111827; min-height: 100vh; padding-bottom: 100px; }
+        .container { max-width: 500px; margin: auto; background: #0f172a; min-height: 100vh; position: relative; padding-bottom: 180px; }
         
-        /* Header & Vision Image Style */
-        .brand-header { padding: 20px; text-align: center; border-bottom: 2px solid #fbbf24; background: linear-gradient(to bottom, #1e293b, #111827); }
-        .brand-logo { font-size: 32px; font-weight: 900; color: #fbbf24; letter-spacing: 2px; }
+        /* Top Header (Image Style) */
+        .header { padding: 40px 20px; text-align: center; background: #0f172a; }
+        .brand-name { font-size: 28px; font-weight: bold; color: #fbbf24; letter-spacing: 2px; }
+        .sub-text { font-size: 14px; color: #94a3b8; margin-top: 5px; }
+
+        /* User List Section (Like 1000442650.png) */
+        .user-list { padding: 10px 20px; }
+        .user-card { display: flex; align-items: center; background: white; color: #1e293b; padding: 12px; border-radius: 15px; margin-bottom: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .user-img { width: 50px; height: 50px; border-radius: 50%; background: #e2e8f0; margin-right: 15px; }
+        .user-details { flex-grow: 1; }
+        .user-details b { font-size: 15px; display: block; }
+        .user-details span { font-size: 12px; color: #64748b; }
+        .v-check { color: #10b981; margin-left: auto; font-size: 18px; }
+
+        /* Floating Input Bar */
+        .input-section { position: fixed; bottom: 70px; width: 100%; max-width: 500px; background: #1e293b; padding: 15px; border-radius: 20px 20px 0 0; }
+        #userComment { width: 100%; background: #0f172a; border: 1px solid #334155; color: white; padding: 12px; border-radius: 10px; margin-bottom: 8px; }
+        #sendBtn { width: 100%; background: #fbbf24; color: #0f172a; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+
+        /* Bottom Navigation Bar (Image Features) */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #e2e8f0; }
+        .nav-item { text-align: center; color: #64748b; font-size: 10px; cursor: pointer; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 2px; }
+        .nav-item.active { color: #1e293b; font-weight: bold; }
         
-        /* Earning Vision Card (Inspired by 1000438402.png) */
-        .vision-card { background: linear-gradient(135deg, #1e3a8a, #1e40af); margin: 15px; padding: 20px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); text-align: center; }
-        .vision-card h3 { font-size: 18px; color: #fbbf24; margin-bottom: 5px; }
-        .vision-card p { font-size: 12px; color: #d1d5db; }
-
-        /* Messenger List (Inspired by 1000442650.png) */
-        .messenger-section { padding: 20px; }
-        .user-item { display: flex; align-items: center; background: #1f2937; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid transparent; transition: 0.3s; }
-        .user-item:hover { border-left: 4px solid #fbbf24; background: #374151; }
-        .user-avatar { width: 50px; height: 50px; border-radius: 50%; background: #4b5563; margin-right: 15px; border: 2px solid #fbbf24; }
-        .user-info b { display: block; font-size: 16px; }
-        .user-info span { font-size: 12px; color: #9ca3af; }
-
-        /* Floating Input Section */
-        .input-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #111827; padding: 15px; border-top: 1px solid #374151; }
-        #userComment { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #374151; background: #0b1120; color: white; margin-bottom: 10px; }
-        #sendBtn { width: 100%; padding: 12px; background: #fbbf24; color: #0f172a; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; }
+        /* Floating Plus Button */
+        .add-btn { position: absolute; right: 20px; bottom: 85px; background: #1e293b; color: #fbbf24; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 3px solid #fbbf24; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header class="brand-header">
-        <div class="brand-logo">KRYA</div>
-        <div style="font-size: 10px; color: #9ca3af;">सिर्फ एक क्लिक में पूरी दुनिया तक पहुंच!</div>
-    </header>
-
-    <div class="vision-card">
-        <h3>ऑटोमेटिक कमाई 24x7</h3>
-        <p>डिजिटल दुकान | एक बार की मेहनत, पूरी जिंदगी की कमाई!</p>
+    <div class="header">
+        <div class="brand-name">KRYA</div>
+        <div style="color: #94a3b8; font-size: 16px;">Messanger</div>
+        <div class="sub-text">दुनिया की एक पहचान</div>
     </div>
 
-    <div class="messenger-section">
-        <div class="user-item">
-            <div class="user-avatar" style="background: url('https://via.placeholder.com/50') center/cover;"></div>
-            <div class="user-info">
-                <b>Mukesh Kumar ✔</b>
-                <span>संस्थापक | KRYA Brand</span>
+    <div class="user-list" id="globalFeed">
+        <div class="user-card">
+            <div class="user-img"></div>
+            <div class="user-details">
+                <b>@Mukesh_Jee_KRYA</b>
+                <span>@KRYA Handle</span>
             </div>
+            <i class="fas fa-check-circle v-check"></i>
         </div>
         </div>
 
-    <div class="input-bar">
-        <textarea id="userComment" placeholder="अपनी राय यहाँ लिखें..." rows="2"></textarea>
-        <button id="sendBtn">दुनिया तक पहुँचायें (Send)</button>
+    <div class="add-btn"><i class="fas fa-plus"></i></div>
+
+    <div class="input-section">
+        <textarea id="userComment" rows="2" placeholder="अपनी राय यहाँ लिखें..."></textarea>
+        <button id="sendBtn">Global Feed में भेजें</button>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-item active"><i class="fas fa-globe"></i>Global Feed</div>
+        <div class="nav-item"><i class="fas fa-users"></i>My Family</div>
+        <div class="nav-item"><i class="fas fa-shield-alt"></i>Rewards</div>
+        <div class="nav-item"><i class="fas fa-user"></i>My Account</div>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCtSIGAybHuIga19QpPRS1egRrsbhvJV2c",
@@ -77,18 +90,29 @@
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
+    const feedContainer = document.getElementById('globalFeed');
 
+    // 1. मैसेज भेजने का काम
     document.getElementById('sendBtn').onclick = function() {
         const text = document.getElementById('userComment').value;
-        if(text.trim() === "") return alert("कुछ लिखें!");
-
-        const commentRef = ref(database, 'comments');
-        push(commentRef, { text: text, timestamp: Date.now() })
-        .then(() => {
-            alert("मैसेज ग्लोबल फीड में पहुँच गया है!");
-            document.getElementById('userComment').value = "";
-        });
+        if(text.trim() === "") return;
+        push(ref(database, 'comments'), { text: text, user: "KRYA_User", timestamp: Date.now() });
+        document.getElementById('userComment').value = "";
     };
+
+    // 2. लाइव मैसेज दिखाने का काम (Real-time Feature)
+    onChildAdded(ref(database, 'comments'), (snapshot) => {
+        const data = snapshot.val();
+        const html = `
+            <div class="user-card" style="background: #f8fafc;">
+                <div class="user-img" style="background: #fbbf24; display:flex; align-items:center; justify-content:center; color:#0f172a; font-weight:bold;">K</div>
+                <div class="user-details">
+                    <b>@Global_User</b>
+                    <span>${data.text}</span>
+                </div>
+            </div>`;
+        feedContainer.innerHTML += html;
+    });
 </script>
 
 </body>
