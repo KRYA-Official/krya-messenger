@@ -3,104 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA Messanger - Final Fix</title>
+    <title>KRYA Messanger - Final UI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: sans-serif; background: #0b1120; color: white; margin: 0; padding-bottom: 220px; }
-        .header { text-align: center; padding: 25px; background: #0f172a; border-bottom: 2px solid #fbbf24; }
-        .brand { font-size: 28px; font-weight: bold; color: #fbbf24; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: sans-serif; background: #0b1120; color: white; overflow-x: hidden; }
+        .container { max-width: 500px; margin: auto; background: #0f172a; min-height: 100vh; position: relative; padding-bottom: 250px; }
         
-        /* मैसेज लिस्ट */
-        #globalFeed { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .msg-card { background: white; color: #1e293b; padding: 12px; border-radius: 12px; border-left: 5px solid #fbbf24; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .msg-card b { color: #0f172a; font-size: 14px; }
+        /* Header */
+        .header { padding: 40px 20px; text-align: center; background: #0f172a; }
+        .brand-name { font-size: 32px; font-weight: bold; color: #fbbf24; letter-spacing: 3px; }
+        .tagline { font-size: 14px; color: #94a3b8; margin-top: 5px; }
 
-        /* मैसेज इनपुट */
-        .controls { position: fixed; bottom: 85px; width: 100%; max-width: 500px; background: #1e293b; padding: 15px; border-radius: 20px 20px 0 0; z-index: 100; left: 50%; transform: translateX(-50%); }
-        textarea { width: 100%; padding: 12px; border-radius: 10px; border: none; font-size: 16px; margin-bottom: 8px; background: #f8fafc; color: #0f172a; }
-        .send-btn { width: 100%; padding: 15px; background: #fbbf24; color: #0f172a; border: none; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        /* Feed List */
+        .user-list { padding: 15px; }
+        .user-card { display: flex; align-items: center; background: white; color: #1e293b; padding: 15px; border-radius: 20px; margin-bottom: 15px; }
+        .user-img { width: 50px; height: 50px; border-radius: 50%; background: #fbbf24; margin-right: 15px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #0f172a; }
+        .user-details { flex-grow: 1; }
+        .user-details b { font-size: 16px; display: block; }
+        .v-check { color: #10b981; margin-left: auto; font-size: 20px; }
 
-        /* नीचे के 4 बटन (Working Now) */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: white; display: flex; padding: 15px 0; border-top: 1px solid #e2e8f0; left: 50%; transform: translateX(-50%); z-index: 101; }
-        .nav-item { flex: 1; text-align: center; color: #64748b; font-size: 12px; cursor: pointer; }
-        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+        /* --- यहाँ है आपका गोल प्लस (+) बटन --- */
+        .floating-plus {
+            position: fixed;
+            right: 20px;
+            bottom: 100px; /* 5 बटनों के ठीक ऊपर */
+            width: 60px;
+            height: 60px;
+            background: #0f172a;
+            color: #fbbf24;
+            border: 3px solid #fbbf24;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 99;
+        }
+
+        /* इनपुट सेक्शन */
+        .input-area { position: fixed; bottom: 80px; width: 100%; max-width: 500px; background: #1e293b; padding: 15px; border-radius: 25px 25px 0 0; z-index: 10; left: 50%; transform: translateX(-50%); }
+        textarea { width: 100%; background: #0b1120; border: 1px solid #334155; color: white; padding: 12px; border-radius: 12px; margin-bottom: 10px; resize: none; }
+        .send-btn { width: 100%; background: #fbbf24; color: #0f172a; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+
+        /* --- नीचे के 5 बटन (इमेज के अनुसार) --- */
+        .nav-bar { 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+            max-width: 500px; 
+            background: white; 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 12px 0; 
+            border-top: 1px solid #e2e8f0; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            z-index: 100; 
+        }
+        .nav-item { text-align: center; color: #64748b; font-size: 10px; flex: 1; cursor: pointer; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 3px; }
         .nav-item.active { color: #0f172a; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <div class="brand">KRYA</div>
-    <div style="color: #94a3b8; font-size: 14px;">दुनिया की एक पहचान | मुकेश राय का मिशन</div>
+<div class="container">
+    <div class="header">
+        <div class="brand-name">KRYA</div>
+        <div class="tagline">दुनिया की एक पहचान</div>
+    </div>
+
+    <div class="user-list">
+        <div class="user-card">
+            <div class="user-img">M</div>
+            <div class="user-details">
+                <b>@Mukesh_Jee_KRYA</b>
+                <p style="font-size: 12px; color: #64748b;">KRYA Messanger में आपका स्वागत है</p>
+            </div>
+            <i class="fas fa-check-circle v-check"></i>
+        </div>
+    </div>
+
+    <div class="floating-plus" onclick="alert('नया मैसेज लिखें')">
+        <i class="fas fa-plus"></i>
+    </div>
+
+    <div class="input-area">
+        <textarea id="msgInput" rows="2" placeholder="ग्लोबल Feed में कुछ लिखें..."></textarea>
+        <button class="send-btn">भेजें (Send)</button>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-item active"><i class="fas fa-globe"></i>Global Feed</div>
+        <div class="nav-item"><i class="fas fa-users"></i>My Family</div>
+        <div class="nav-item"><i class="fas fa-shield-alt"></i>Rewards</div>
+        <div class="nav-item"><i class="fas fa-search"></i>Explore</div> <div class="nav-item"><i class="fas fa-user-circle"></i>My Account</div>
+    </div>
 </div>
-
-<div id="globalFeed">
-    <p style="text-align:center; color:#94a3b8;" id="statusMsg">मैसेज लोड हो रहे हैं...</p>
-</div>
-
-<div class="controls">
-    <textarea id="msgBox" placeholder="मुकेश जी से कुछ पूछें..."></textarea>
-    <button class="send-btn" onclick="sendMessage()">भेजें (Send)</button>
-</div>
-
-<div class="nav-bar">
-    <div class="nav-item active" onclick="alert('आप Global Feed पर हैं')"><i class="fas fa-globe"></i>Global Feed</div>
-    <div class="nav-item" onclick="alert('My Family जल्द उपलब्ध होगा')"><i class="fas fa-users"></i>My Family</div>
-    <div class="nav-item" onclick="alert('Rewards अपडेट हो रहे हैं')"><i class="fas fa-shield-alt"></i>Rewards</div>
-    <div class="nav-item" onclick="alert('Profile सेटिंग्स लोड हो रही हैं')"><i class="fas fa-user-circle"></i>My Account</div>
-</div>
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-    // Firebase कॉन्फ़िगरेशन
-    const firebaseConfig = {
-        apiKey: "AIzaSyCtSIGAybHuIga19QpPRS1egRrsbhvJV2c",
-        authDomain: "krya-94e55.firebaseapp.com",
-        projectId: "krya-94e55",
-        storageBucket: "krya-94e55.firebasestorage.app",
-        databaseURL: "https://krya-94e55-default-rtdb.firebaseio.com",
-        messagingSenderId: "1025043894227",
-        appId: "1:1025043894227:web:fa57c21ed2f6381a792926"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const feed = document.getElementById('globalFeed');
-    const status = document.getElementById('statusMsg');
-
-    // 1. मैसेज लोड करना
-    onValue(ref(db, 'global_messages'), (snap) => {
-        status.style.display = 'none';
-        feed.innerHTML = '';
-        if (!snap.exists()) {
-            feed.innerHTML = '<p style="text-align:center;">कोई मैसेज नहीं है।</p>';
-            return;
-        }
-        snap.forEach((child) => {
-            const data = child.val();
-            const card = document.createElement('div');
-            card.className = 'msg-card';
-            card.innerHTML = `<b>@Mukesh_Jee:</b><br>${data.message}`;
-            feed.prepend(card); // नया मैसेज सबसे ऊपर दिखेगा
-        });
-    });
-
-    // 2. मैसेज भेजना
-    window.sendMessage = function() {
-        const txt = document.getElementById('msgBox').value;
-        if(txt.trim() === "") return alert("कृपया कुछ लिखें!");
-
-        push(ref(db, 'global_messages'), {
-            message: txt,
-            time: Date.now()
-        }).then(() => {
-            document.getElementById('msgBox').value = "";
-            alert("मैसेज सफलतापूर्वक भेज दिया गया!");
-        }).catch(err => alert("Error: " + err.message));
-    };
-</script>
 
 </body>
 </html>
