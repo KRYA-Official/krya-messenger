@@ -3,153 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA Messenger - Premium Identity</title>
+    <title>KRYA - दुनिया की एक पहचान</title>
     <style>
-        * { box-sizing: border-box; } /* इससे बॉक्स बाहर नहीं कटेगा */
-        body { 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            background: #0f172a; 
-            display: flex; justify-content: center; align-items: center; 
-            min-height: 100vh; margin: 0; padding: 20px; color: white;
-        }
-        .app-container {
-            background: #1e293b;
-            width: 100%;
-            max-width: 380px; /* एकदम सही चौड़ाई */
-            border-radius: 35px;
-            padding: 40px 25px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .gold-brand {
-            font-size: 45px;
-            font-weight: 800;
-            color: #fbbf24;
-            letter-spacing: 4px;
-            margin-bottom: 0;
-            text-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
-        }
-        .app-name { font-size: 20px; color: #cbd5e1; margin-top: 5px; font-weight: 500; }
-        .slogan { font-size: 14px; color: #fbbf24; margin: 15px 0 35px 0; font-style: italic; opacity: 0.8; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: white; line-height: 1.6; }
+        .container { max-width: 500px; margin: auto; background: #1e293b; min-height: 100vh; position: relative; border-left: 1px solid #334155; border-right: 1px solid #334155; }
         
-        .input-wrapper { 
-            background: white; 
-            border-radius: 20px; 
-            margin-bottom: 20px; 
-            overflow: hidden; /* कटना बंद */
-            border: 2px solid transparent;
-            transition: 0.3s;
-        }
-        .input-wrapper:focus-within { border-color: #fbbf24; }
-        
-        input { 
-            width: 100%; padding: 18px; border: none; font-size: 17px; 
-            text-align: center; outline: none; color: #1e293b; font-weight: 500;
-        }
-        
-        #checkBtn { 
-            width: 100%; padding: 16px; 
-            background: #007bff; color: white; border: none; 
-            border-radius: 20px; font-size: 18px; font-weight: bold; 
-            cursor: pointer; transition: 0.3s;
-            box-shadow: 0 10px 20px -5px rgba(0, 123, 255, 0.5);
-        }
-        #checkBtn:active { transform: scale(0.98); }
-        
-        #statusMsg { margin: 20px 0; font-weight: 600; min-height: 24px; font-size: 15px; }
-        
-        .payment-box { 
-            display: none; margin-top: 10px; padding: 25px; 
-            background: rgba(34, 197, 94, 0.05); border: 2px dashed #22c55e; border-radius: 25px; 
-            animation: fadeIn 0.5s ease;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Header Section */
+        header { padding: 30px 20px; text-align: center; border-bottom: 2px solid #fbbf24; background: #1e293b; }
+        .logo { font-size: 38px; font-weight: 800; color: #fbbf24; letter-spacing: 3px; text-transform: uppercase; }
+        .tagline { font-size: 12px; color: #94a3b8; margin-top: 5px; }
 
-        .pay-btn { 
-            display: block; background: #22c55e; color: white; padding: 18px; 
-            text-decoration: none; border-radius: 18px; font-weight: bold; margin-bottom: 15px; 
-            box-shadow: 0 8px 15px rgba(34, 197, 94, 0.3);
-        }
-        .wa-btn { 
-            display: flex; align-items: center; justify-content: center;
-            background: #25d366; color: white; padding: 14px; 
-            text-decoration: none; border-radius: 15px; font-size: 14px; font-weight: bold;
-        }
-        .footer { margin-top: 40px; font-size: 10px; color: #64748b; letter-spacing: 2px; text-transform: uppercase; }
+        /* Guidance Section (Founders Message) */
+        .guidance-card { background: rgba(251, 191, 36, 0.1); margin: 20px; padding: 15px; border-radius: 12px; border: 1px dashed #fbbf24; }
+        .guidance-card h3 { color: #fbbf24; font-size: 16px; margin-bottom: 8px; display: flex; align-items: center; }
+        
+        /* Auto-Follow Section */
+        .founder-profile { display: flex; align-items: center; padding: 15px 20px; background: rgba(255,255,255,0.03); margin-bottom: 10px; }
+        .avatar { width: 55px; height: 55px; border-radius: 50%; border: 2px solid #fbbf24; background: #334155; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #fbbf24; font-size: 20px; margin-right: 15px; }
+        .v-badge { color: #22c55e; margin-left: 5px; font-size: 18px; }
+
+        /* Subscription & Payment */
+        .payment-footer { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #0f172a; padding: 20px; border-top: 1px solid #334155; text-align: center; }
+        .btn-pay { background: #fbbf24; color: #0f172a; border: none; padding: 14px 0; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3); transition: 0.3s; }
+        .btn-pay:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="gold-brand">KRYA</div>
-    <div class="app-name">Messenger</div>
-    <div class="slogan">दुनिया की एक पहचान</div>
-    
-    <div class="input-wrapper">
-        <input type="text" id="handleInput" placeholder="@username चुनें">
-    </div>
-    
-    <button id="checkBtn">Availability चेक करें</button>
-    <div id="statusMsg"></div>
+<div class="container">
+    <header>
+        <div class="logo">KRYA</div>
+        <div class="tagline">दुनिया की एक पहचान | मुकेश राय का मिशन</div>
+    </header>
 
-    <div id="paymentArea" class="payment-box">
-        <p style="color: #22c55e; font-size: 18px; margin-bottom: 20px; font-weight: bold;">✨ नाम उपलब्ध है!</p>
-        <a href="upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh%20Ray&am=9&cu=INR" class="pay-btn">₹9 पे करें</a>
-        <a id="waLink" href="#" target="_blank" class="wa-btn">📱 WhatsApp स्क्रीनशॉट</a>
+    <div class="guidance-card">
+        <h3>📢 संस्थापक संदेश</h3>
+        <p>नमस्ते! मैं मुकेश राय, आपको डिजिटल उद्यमी बनने में मदद करूँगा। ग्रीन टिक (Green Tick) पाने के लिए मेहनत शुरू करें। आगे क्या सीखना चाहते हैं? नीचे कमेंट में बतायें।</p>
     </div>
 
-    <div class="footer">VERIFIED BY MUKESH RAY | © 2026 KRYA</div>
+    <div class="founder-profile">
+        <div class="avatar">M</div>
+        <div class="info">
+            <div style="font-weight: bold; font-size: 16px;">Mukesh Kumar <span class="v-badge">✔</span></div>
+            <div style="font-size: 12px; color: #22c55e;">● आप मुझे फॉलो कर रहे हैं (Auto)</div>
+        </div>
+    </div>
+
+    <div id="comment-section" style="padding: 20px; color: #94a3b8; text-align: center; font-size: 13px;">
+        जल्द ही यहाँ कमेंट बॉक्स शुरू होगा...
+    </div>
+
+    <div class="payment-footer">
+        <p style="font-size: 12px; margin-bottom: 12px; color: #cbd5e1;">अपनी ग्लोबल पहचान सुरक्षित रखें (मात्र ₹9/माह)</p>
+        <button class="btn-pay" onclick="window.location.href='upi://pay?pa=9523298113@ptaxis&pn=KRYA_MUKESH&am=9&cu=INR'">
+            अभी सब्सक्राइब करें (₹9 Pay)
+        </button>
+    </div>
 </div>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyCtSIGAybHuIga19QpPRS1egRrsbhvJV2c",
-    authDomain: "krya-94e55.firebaseapp.com",
-    projectId: "krya-94e55",
-    storageBucket: "krya-94e55.firebasestorage.app",
-    messagingSenderId: "1025043894227",
-    appId: "1:1025043894227:web:fa57c21ed2f6381a792926"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  const checkBtn = document.getElementById('checkBtn');
-  const statusMsg = document.getElementById('statusMsg');
-  const paymentArea = document.getElementById('paymentArea');
-  const waLink = document.getElementById('waLink');
-
-  checkBtn.onclick = async () => {
-    const handle = document.getElementById('handleInput').value.toLowerCase().trim();
-    if (handle.length < 3) {
-      statusMsg.innerHTML = "❌ नाम थोड़ा बड़ा लिखें!";
-      statusMsg.style.color = "#f87171";
-      return;
-    }
-    statusMsg.innerHTML = "⏳ चेकिंग...";
-    statusMsg.style.color = "#fbbf24";
-    
-    try {
-      const docSnap = await getDoc(doc(db, "handles", handle));
-      if (docSnap.exists()) {
-        statusMsg.innerHTML = "🚫 @" + handle + " बुक हो चुका है।";
-        statusMsg.style.color = "#f87171";
-        paymentArea.style.display = "none";
-      } else {
-        statusMsg.innerHTML = "";
-        paymentArea.style.display = "block";
-        const message = encodeURIComponent("नमस्ते मुकेश जी, मैंने @" + handle + " के लिए ₹9 पे कर दिए हैं।");
-        waLink.href = "https://wa.me/916379403821?text=" + message;
-      }
-    } catch (e) {
-      statusMsg.innerHTML = "⚠️ नेटवर्क एरर!";
-    }
-  };
-</script>
 
 </body>
 </html>
