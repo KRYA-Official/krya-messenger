@@ -7,36 +7,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', sans-serif; background: #0b1120; color: white; }
-        .container { max-width: 500px; margin: auto; background: #0f172a; min-height: 100vh; position: relative; padding-bottom: 180px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0b1120; color: white; overflow-x: hidden; }
+        .container { max-width: 500px; margin: auto; background: #0f172a; min-height: 100vh; position: relative; padding-bottom: 220px; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
         
-        /* Top Header (Image Style) */
-        .header { padding: 40px 20px; text-align: center; background: #0f172a; }
-        .brand-name { font-size: 28px; font-weight: bold; color: #fbbf24; letter-spacing: 2px; }
-        .sub-text { font-size: 14px; color: #94a3b8; margin-top: 5px; }
+        /* Header Section */
+        .header { padding: 40px 20px 20px; text-align: center; background: #0f172a; }
+        .brand-name { font-size: 32px; font-weight: bold; color: #fbbf24; letter-spacing: 3px; }
+        .brand-sub { font-size: 18px; color: #94a3b8; }
+        .tagline { font-size: 14px; color: #fbbf24; margin-top: 10px; opacity: 0.8; }
 
-        /* User List Section (Like 1000442650.png) */
-        .user-list { padding: 10px 20px; }
-        .user-card { display: flex; align-items: center; background: white; color: #1e293b; padding: 12px; border-radius: 15px; margin-bottom: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .user-img { width: 50px; height: 50px; border-radius: 50%; background: #e2e8f0; margin-right: 15px; }
+        /* Feed Section */
+        .user-list { padding: 10px 15px; }
+        .user-card { display: flex; align-items: center; background: white; color: #1e293b; padding: 15px; border-radius: 20px; margin-bottom: 15px; animation: slideIn 0.3s ease-out; }
+        .user-img { width: 50px; height: 50px; border-radius: 50%; background: #e2e8f0; margin-right: 15px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid #fbbf24; }
         .user-details { flex-grow: 1; }
-        .user-details b { font-size: 15px; display: block; }
-        .user-details span { font-size: 12px; color: #64748b; }
-        .v-check { color: #10b981; margin-left: auto; font-size: 18px; }
+        .user-details b { font-size: 16px; display: block; color: #0f172a; }
+        .user-details p { font-size: 13px; color: #475569; margin-top: 2px; }
+        .v-check { color: #10b981; margin-left: auto; font-size: 20px; }
 
-        /* Floating Input Bar */
-        .input-section { position: fixed; bottom: 70px; width: 100%; max-width: 500px; background: #1e293b; padding: 15px; border-radius: 20px 20px 0 0; }
-        #userComment { width: 100%; background: #0f172a; border: 1px solid #334155; color: white; padding: 12px; border-radius: 10px; margin-bottom: 8px; }
-        #sendBtn { width: 100%; background: #fbbf24; color: #0f172a; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        /* Input Floating Section */
+        .input-box { position: fixed; bottom: 85px; width: 100%; max-width: 500px; background: #1e293b; padding: 15px; border-radius: 25px 25px 0 0; border-top: 1px solid #334155; z-index: 10; }
+        #userComment { width: 100%; background: #0b1120; border: 1px solid #334155; color: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; resize: none; font-size: 14px; }
+        #sendBtn { width: 100%; background: #fbbf24; color: #0f172a; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.2s; }
+        #sendBtn:active { transform: scale(0.98); }
 
-        /* Bottom Navigation Bar (Image Features) */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #e2e8f0; }
-        .nav-item { text-align: center; color: #64748b; font-size: 10px; cursor: pointer; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 2px; }
-        .nav-item.active { color: #1e293b; font-weight: bold; }
-        
-        /* Floating Plus Button */
-        .add-btn { position: absolute; right: 20px; bottom: 85px; background: #1e293b; color: #fbbf24; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 3px solid #fbbf24; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        /* Bottom Navigation Bar */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #e2e8f0; z-index: 20; }
+        .nav-item { text-align: center; color: #64748b; font-size: 11px; flex: 1; transition: 0.3s; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .nav-item.active { color: #0f172a; font-weight: bold; }
+
+        /* Add Plus Button */
+        .plus-btn { position: absolute; right: 20px; bottom: 170px; background: #0f172a; color: #fbbf24; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; border: 3px solid #fbbf24; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.4); z-index: 5; }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -44,33 +48,33 @@
 <div class="container">
     <div class="header">
         <div class="brand-name">KRYA</div>
-        <div style="color: #94a3b8; font-size: 16px;">Messanger</div>
-        <div class="sub-text">दुनिया की एक पहचान</div>
+        <div class="brand-sub">Messanger</div>
+        <div class="tagline">दुनिया की एक पहचान</div>
     </div>
 
     <div class="user-list" id="globalFeed">
         <div class="user-card">
-            <div class="user-img"></div>
+            <div class="user-img" style="background: #fbbf24; color: #0f172a;">M</div>
             <div class="user-details">
                 <b>@Mukesh_Jee_KRYA</b>
-                <span>@KRYA Handle</span>
+                <p>हेलो दोस्तों! KRYA प्लेटफॉर्म पर आपका स्वागत है।</p>
             </div>
             <i class="fas fa-check-circle v-check"></i>
         </div>
-        </div>
+    </div>
 
-    <div class="add-btn"><i class="fas fa-plus"></i></div>
+    <div class="plus-btn"><i class="fas fa-plus"></i></div>
 
-    <div class="input-section">
-        <textarea id="userComment" rows="2" placeholder="अपनी राय यहाँ लिखें..."></textarea>
+    <div class="input-box">
+        <textarea id="userComment" rows="2" placeholder="अपनी राय या मैसेज यहाँ लिखें..."></textarea>
         <button id="sendBtn">Global Feed में भेजें</button>
     </div>
 
     <div class="nav-bar">
-        <div class="nav-item active"><i class="fas fa-globe"></i>Global Feed</div>
-        <div class="nav-item"><i class="fas fa-users"></i>My Family</div>
-        <div class="nav-item"><i class="fas fa-shield-alt"></i>Rewards</div>
-        <div class="nav-item"><i class="fas fa-user"></i>My Account</div>
+        <div class="nav-item active" onclick="alert('Global Feed active')"><i class="fas fa-globe"></i>Global Feed</div>
+        <div class="nav-item" onclick="alert('My Family जल्द आ रहा है')"><i class="fas fa-users"></i>My Family</div>
+        <div class="nav-item" onclick="alert('Rewards सेक्शन सक्रिय हो रहा है')"><i class="fas fa-shield-alt"></i>Rewards</div>
+        <div class="nav-item" onclick="alert('प्रोफाइल सेटिंग')"><i class="fas fa-user-circle"></i>My Account</div>
     </div>
 </div>
 
@@ -92,26 +96,35 @@
     const database = getDatabase(app);
     const feedContainer = document.getElementById('globalFeed');
 
-    // 1. मैसेज भेजने का काम
+    // मैसेज भेजने का लॉजिक
     document.getElementById('sendBtn').onclick = function() {
         const text = document.getElementById('userComment').value;
-        if(text.trim() === "") return;
-        push(ref(database, 'comments'), { text: text, user: "KRYA_User", timestamp: Date.now() });
+        if(text.trim() === "") {
+            alert("कृपया कुछ लिखें!");
+            return;
+        }
+        push(ref(database, 'comments'), {
+            text: text,
+            user: "Global_User",
+            timestamp: Date.now()
+        });
         document.getElementById('userComment').value = "";
     };
 
-    // 2. लाइव मैसेज दिखाने का काम (Real-time Feature)
+    // रियल-टाइम मैसेज लोड करने का लॉजिक
     onChildAdded(ref(database, 'comments'), (snapshot) => {
         const data = snapshot.val();
-        const html = `
-            <div class="user-card" style="background: #f8fafc;">
-                <div class="user-img" style="background: #fbbf24; display:flex; align-items:center; justify-content:center; color:#0f172a; font-weight:bold;">K</div>
+        const firstLetter = data.user.charAt(0).toUpperCase();
+        const cardHtml = `
+            <div class="user-card">
+                <div class="user-img" style="background: #e2e8f0; color: #0f172a;">${firstLetter}</div>
                 <div class="user-details">
-                    <b>@Global_User</b>
-                    <span>${data.text}</span>
+                    <b>@${data.user}</b>
+                    <p>${data.text}</p>
                 </div>
+                <i class="fas fa-check-circle v-check" style="color: #cbd5e1;"></i>
             </div>`;
-        feedContainer.innerHTML += html;
+        feedContainer.insertAdjacentHTML('afterbegin', cardHtml);
     });
 </script>
 
