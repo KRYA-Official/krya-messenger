@@ -9,21 +9,30 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', sans-serif; background: #0b1120; color: white; }
         .container { max-width: 500px; margin: auto; background: #0f172a; min-height: 100vh; position: relative; padding-bottom: 220px; }
-        .header { padding: 40px 20px 20px; text-align: center; background: #0f172a; }
+        
+        /* Header */
+        .header { padding: 40px 20px 20px; text-align: center; }
         .brand-name { font-size: 32px; font-weight: bold; color: #fbbf24; letter-spacing: 3px; }
-        .tagline { font-size: 14px; color: #fbbf24; margin-top: 10px; opacity: 0.8; }
-        .user-list { padding: 10px 15px; }
-        .user-card { display: flex; align-items: center; background: white; color: #1e293b; padding: 15px; border-radius: 20px; margin-bottom: 15px; }
-        .user-img { width: 50px; height: 50px; border-radius: 50%; background: #fbbf24; margin-right: 15px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #0f172a; border: 2px solid #0f172a; }
+        .tagline { font-size: 14px; color: #fbbf24; opacity: 0.8; margin-top: 5px; }
+
+        /* Global Feed Area */
+        .user-list { padding: 10px 15px; min-height: 200px; }
+        .user-card { display: flex; align-items: center; background: white; color: #1e293b; padding: 15px; border-radius: 20px; margin-bottom: 15px; border-left: 5px solid #fbbf24; }
+        .user-img { width: 45px; height: 45px; border-radius: 50%; background: #fbbf24; margin-right: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #0f172a; }
         .user-details { flex-grow: 1; }
-        .user-details b { font-size: 16px; display: block; color: #0f172a; }
+        .user-details b { font-size: 15px; display: block; color: #0f172a; }
         .user-details p { font-size: 13px; color: #475569; }
-        .v-check { color: #10b981; margin-left: auto; font-size: 20px; }
-        .input-box { position: fixed; bottom: 85px; width: 100%; max-width: 500px; background: #1e293b; padding: 15px; border-radius: 25px 25px 0 0; z-index: 10; }
-        #userComment { width: 100%; background: #0b1120; border: 1px solid #334155; color: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; resize: none; }
-        #sendBtn { width: 100%; background: #fbbf24; color: #0f172a; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .v-check { color: #10b981; margin-left: auto; font-size: 18px; }
+
+        /* Message Input Section */
+        .input-box { position: fixed; bottom: 85px; width: 100%; max-width: 500px; background: #1e293b; padding: 15px; border-radius: 25px 25px 0 0; z-index: 10; border-top: 1px solid #334155; }
+        #userComment { width: 100%; background: #0b1120; border: 1px solid #334155; color: white; padding: 12px; border-radius: 12px; margin-bottom: 10px; resize: none; }
+        #sendBtn { width: 100%; background: #fbbf24; color: #0f172a; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        #sendBtn:active { transform: scale(0.98); }
+
+        /* Bottom Nav Bar (अब ये काम करेंगे) */
         .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #e2e8f0; z-index: 20; }
-        .nav-item { text-align: center; color: #64748b; font-size: 11px; flex: 1; }
+        .nav-item { text-align: center; color: #64748b; font-size: 11px; flex: 1; cursor: pointer; transition: 0.3s; }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
         .nav-item.active { color: #0f172a; font-weight: bold; }
     </style>
@@ -37,7 +46,9 @@
         <div class="tagline">दुनिया की एक पहचान</div>
     </div>
 
-    <div class="user-list" id="globalFeed"></div>
+    <div class="user-list" id="globalFeed">
+        <p style="text-align: center; color: #64748b;">मैसेज लोड हो रहे हैं...</p>
+    </div>
 
     <div class="input-box">
         <textarea id="userComment" rows="2" placeholder="अपनी राय या मैसेज यहाँ लिखें..."></textarea>
@@ -45,10 +56,10 @@
     </div>
 
     <div class="nav-bar">
-        <div class="nav-item active"><i class="fas fa-globe"></i>Global Feed</div>
-        <div class="nav-item"><i class="fas fa-users"></i>My Family</div>
-        <div class="nav-item"><i class="fas fa-shield-alt"></i>Rewards</div>
-        <div class="nav-item"><i class="fas fa-user-circle"></i>My Account</div>
+        <div class="nav-item active" onclick="showSection('Global Feed')"><i class="fas fa-globe"></i>Global Feed</div>
+        <div class="nav-item" onclick="showSection('My Family')"><i class="fas fa-users"></i>My Family</div>
+        <div class="nav-item" onclick="showSection('Rewards')"><i class="fas fa-shield-alt"></i>Rewards</div>
+        <div class="nav-item" onclick="showSection('My Account')"><i class="fas fa-user-circle"></i>My Account</div>
     </div>
 </div>
 
@@ -70,16 +81,20 @@
     const database = getDatabase(app);
     const feedContainer = document.getElementById('globalFeed');
 
-    // 1. रिफ्रेश के बाद पुराने मैसेज लोड करना
+    // 1. रिफ्रेश के बाद पुराने मैसेज लोड करने का फिक्स
     onValue(ref(database, 'comments'), (snapshot) => {
         feedContainer.innerHTML = ''; 
+        if (!snapshot.exists()) {
+            feedContainer.innerHTML = '<p style="text-align: center; color: #64748b;">अभी कोई मैसेज नहीं है। पहले मैसेज लिखें!</p>';
+            return;
+        }
         snapshot.forEach((childSnapshot) => {
             const data = childSnapshot.val();
             const cardHtml = `
                 <div class="user-card">
-                    <div class="user-img">K</div>
+                    <div class="user-img">${data.user ? data.user.charAt(0).toUpperCase() : 'K'}</div>
                     <div class="user-details">
-                        <b>@KRYA_User</b>
+                        <b>@${data.user || 'KRYA_User'}</b>
                         <p>${data.text}</p>
                     </div>
                     <i class="fas fa-check-circle v-check"></i>
@@ -88,12 +103,25 @@
         });
     });
 
-    // 2. नया मैसेज भेजना
+    // 2. नया मैसेज भेजने का फिक्स (गायब नहीं होगा)
     document.getElementById('sendBtn').onclick = function() {
         const text = document.getElementById('userComment').value;
-        if(text.trim() === "") return;
-        push(ref(database, 'comments'), { text: text, user: "KRYA_User", timestamp: Date.now() });
-        document.getElementById('userComment').value = "";
+        if(text.trim() === "") return alert("कृपया कुछ लिखें!");
+        
+        push(ref(database, 'comments'), {
+            text: text,
+            user: "Mukesh_Jee", // आप अपना नाम यहाँ बदल सकते हैं
+            timestamp: Date.now()
+        }).then(() => {
+            document.getElementById('userComment').value = "";
+            alert("मैसेज सफलतापूर्वक भेज दिया गया!");
+        });
+    };
+
+    // 3. नेविगेशन बटनों के लिए फंक्शन
+    window.showSection = function(name) {
+        alert(name + " सेक्शन जल्द ही अपडेट होगा! अभी आप Global Feed का आनंद लें।");
+        // यहाँ हम भविष्य में अलग-अलग पेज लोड करा सकते हैं
     };
 </script>
 
