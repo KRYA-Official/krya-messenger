@@ -64,5 +64,50 @@
         </div>
     
 
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    // आपकी Firebase की चाबी (Config)
+    const firebaseConfig = {
+        apiKey: "AIzaSyCtSIGAybHuIga19QpPRS1egRrsbhvJV2c",
+        authDomain: "krya-94e55.firebaseapp.com",
+        projectId: "krya-94e55",
+        storageBucket: "krya-94e55.firebasestorage.app",
+        databaseURL: "https://krya-94e55-default-rtdb.firebaseio.com",
+        messagingSenderId: "1025043894227",
+        appId: "1:1025043894227:web:fa57c21ed2f6381a792926"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // बटन दबाते ही मैसेज Firebase में भेजने का लॉजिक
+    document.addEventListener('click', function (event) {
+        // यह चेक करता है कि क्या यूजर ने 'भेजें (Send)' वाले बटन पर क्लिक किया है
+        if (event.target && (event.target.innerText === 'भेजें (Send)' || event.target.id === 'sendBtn')) {
+            const commentText = document.getElementById('userComment').value;
+            
+            if(commentText.trim() === "") {
+                alert("कृपया कुछ लिखें!");
+                return;
+            }
+
+            const commentRef = ref(database, 'comments');
+            const newCommentRef = push(commentRef);
+            set(newCommentRef, {
+                text: commentText,
+                timestamp: Date.now()
+            }).then(() => {
+                alert("मुकेश जी, आपका मैसेज सफलतापूर्वक Firebase में पहुँच गया है!");
+                document.getElementById('userComment').value = "";
+            }).catch((error) => {
+                alert("एक बार Firebase Realtime Database चेक करें!");
+                console.error(error);
+            });
+        }
+    });
+</script>
+    
 </body>
 </html>
