@@ -28,8 +28,6 @@
         #feed-list { padding: 15px; display: flex; flex-direction: column-reverse; padding-bottom: 100px; }
         .user-card { display: flex; align-items: flex-start; background: white; color: #1e293b; padding: 12px; border-radius: 15px; margin-bottom: 10px; border-left: 5px solid #fbbf24; }
         .user-img { width: 40px; height: 40px; border-radius: 50%; background: #fbbf24; margin-right: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; color: #0f172a; flex-shrink: 0; margin-top: 3px; }
-        .user-details { flex-grow: 1; }
-        .v-check { color: #10b981; margin-left: 8px; font-size: 14px; }
 
         /* Input Section */
         .input-area { position: fixed; bottom: 80px; width: 100%; max-width: 500px; background: #1e293b; padding: 15px; border-radius: 25px 25px 0 0; z-index: 10; left: 50%; transform: translateX(-50%); }
@@ -43,9 +41,9 @@
         .nav-item.active { color: #0f172a; font-weight: bold; }
         
         /* Name Prompt Modal */
-        #name-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 2000; display: none; }
-        .modal-content { background: #1e293b; padding: 30px; border-radius: 20px; text-align: center; border: 2px solid #fbbf24; width: 80%; max-width: 400px; }
-        .modal-content input { width: 100%; padding: 12px; margin-top: 15px; border-radius: 10px; border: none; outline: none; background: #0b1120; color: white; text-align: center; font-size: 16px; }
+        #name-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 2000; display: none; }
+        .modal-content { background: #1e293b; padding: 30px; border-radius: 20px; text-align: center; border: 2px solid #fbbf24; width: 85%; max-width: 400px; }
+        .modal-content input { width: 100%; padding: 12px; margin-top: 15px; border-radius: 10px; border: none; outline: none; background: #0b1120; color: white; text-align: center; font-size: 16px; border: 1px solid #334155; }
         .modal-content button { background: #fbbf24; color: #0f172a; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; margin-top: 20px; cursor: pointer; width: 100%; }
     </style>
 </head>
@@ -54,9 +52,9 @@
 <div id="name-modal">
     <div class="modal-content">
         <h3 style="color:#fbbf24;">KRYA में आपका स्वागत है!</h3>
-        <p style="font-size:14px; color:#d1d5db; margin-top:10px;">कृपया अपना नाम (Handle) दर्ज करें:</p>
-        <input type="text" id="username-input" placeholder="उदाहरण: Mukesh_Rai" maxlength="20">
-        <button id="save-name-btn">शुरू करें (Start)</button>
+        <p style="font-size:14px; color:#d1d5db; margin-top:10px;">अपना नाम (Handle) लिखें:</p>
+        <input type="text" id="username-input" placeholder="जैसे: Mukesh_Rai" maxlength="15">
+        <button id="save-name-btn">शुरू करें</button>
     </div>
 </div>
 
@@ -81,7 +79,7 @@
         </div>
 
     <div class="input-area">
-        <textarea id="msgInput" rows="2" placeholder="ग्लोबल Feed में कुछ लिखें..."></textarea>
+        <textarea id="msgInput" rows="2" placeholder="कुछ लिखें..."></textarea>
         <button id="sendBtn" class="send-btn">भेजें (Send)</button>
     </div>
 
@@ -97,7 +95,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // Firebase Config - [मुकेश जी की चाबी]
     const firebaseConfig = {
         apiKey: "AIzaSyCtSIGAybHuIga19QpPR51eg...", 
         authDomain: "krya-94e55.firebaseapp.com",
@@ -110,30 +107,27 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // --- नाम (Handle) का लॉजिक ---
+    // --- नाम का लॉजिक ---
     const nameModal = document.getElementById('name-modal');
     const usernameInput = document.getElementById('username-input');
     const saveNameBtn = document.getElementById('save-name-btn');
-    let currentUserHandle = localStorage.getItem('kryaHandle'); // फोन की मेमोरी से नाम ढूँढो
+    let userHandle = localStorage.getItem('krya_user_handle');
 
-    // अगर नाम नहीं मिला, तो बॉक्स दिखाओ
-    if (!currentUserHandle) {
+    if (!userHandle) {
         nameModal.style.display = 'flex';
     }
 
-    // नाम सेव करने का बटन
     saveNameBtn.onclick = () => {
         let name = usernameInput.value.trim();
         if (name.length >= 3) {
-            localStorage.setItem('kryaHandle', name); // फोन में नाम सेव करो
-            currentUserHandle = name;
-            nameModal.style.display = 'none'; // बॉक्स बंद करो
+            localStorage.setItem('krya_user_handle', name);
+            userHandle = name;
+            nameModal.style.display = 'none';
         } else {
-            alert("नाम कम से कम 3 अक्षरों का होना चाहिए।");
+            alert("नाम कम से कम 3 अक्षर का होना चाहिए!");
         }
     };
 
-    // Sidebar Toggle Function
     window.toggleMenu = function() {
         document.getElementById('sidebar').classList.toggle('active');
         document.getElementById('overlay').classList.toggle('active');
@@ -145,37 +139,31 @@
 
     sendBtn.onclick = async () => {
         const text = msgInput.value.trim();
-        if(text !== "" && currentUserHandle) {
-            try {
-                await addDoc(collection(db, "messages"), {
-                    text: text,
-                    user: currentUserHandle, // असली नाम भेजो
-                    createdAt: serverTimestamp()
-                });
-                msgInput.value = "";
-            } catch (e) {
-                alert("Error: " + e.message);
-            }
-        } else if (!currentUserHandle) {
-            nameModal.style.display = 'flex'; // अगर नाम डिलीट हो गया हो
+        if(text !== "" && userHandle) {
+            await addDoc(collection(db, "messages"), {
+                text: text,
+                user: userHandle,
+                createdAt: serverTimestamp()
+            });
+            msgInput.value = "";
         }
     };
 
-    // संदेश लाइव दिखाना
+    // लाइव अपडेट
     const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
     onSnapshot(q, (snapshot) => {
         const feedList = document.getElementById('feed-list');
         feedList.innerHTML = "";
         snapshot.forEach((doc) => {
             const data = doc.data();
-            const firstLetter = data.user ? data.user.charAt(0).toUpperCase() : '?';
+            const initial = data.user ? data.user.charAt(0).toUpperCase() : '?';
             const card = document.createElement('div');
             card.className = "user-card";
             card.innerHTML = `
-                <div class="user-img">${firstLetter}</div>
+                <div class="user-img">${initial}</div>
                 <div class="user-details">
-                    <b style="color:#0f172a;">@${data.user || 'Unknown'}</b><i class="fas fa-check-circle v-check"></i>
-                    <p style="font-size: 14px; color: #1e293b; margin-top:4px; line-height:1.4;">${data.text}</p>
+                    <b>@${data.user || 'User'}</b> <i class="fas fa-check-circle" style="color:#10b981; font-size:12px;"></i>
+                    <p style="font-size: 14px; margin-top:4px;">${data.text}</p>
                 </div>
             `;
             feedList.appendChild(card);
