@@ -25,9 +25,11 @@
         .overlay.active { display: block; }
 
         /* Global Feed List */
-        #feed-list { padding: 15px; display: flex; flex-direction: column-reverse; }
-        .user-card { display: flex; align-items: center; background: white; color: #1e293b; padding: 12px; border-radius: 15px; margin-bottom: 10px; border-left: 5px solid #fbbf24; }
-        .user-img { width: 40px; height: 40px; border-radius: 50%; background: #fbbf24; margin-right: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; }
+        #feed-list { padding: 15px; display: flex; flex-direction: column-reverse; padding-bottom: 100px; }
+        .user-card { display: flex; align-items: flex-start; background: white; color: #1e293b; padding: 12px; border-radius: 15px; margin-bottom: 10px; border-left: 5px solid #fbbf24; }
+        .user-img { width: 40px; height: 40px; border-radius: 50%; background: #fbbf24; margin-right: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; color: #0f172a; flex-shrink: 0; margin-top: 3px; }
+        .user-details { flex-grow: 1; }
+        .v-check { color: #10b981; margin-left: 8px; font-size: 14px; }
 
         /* Input Section */
         .input-area { position: fixed; bottom: 80px; width: 100%; max-width: 500px; background: #1e293b; padding: 15px; border-radius: 25px 25px 0 0; z-index: 10; left: 50%; transform: translateX(-50%); }
@@ -39,9 +41,24 @@
         .nav-item { text-align: center; color: #64748b; font-size: 10px; flex: 1; }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 3px; }
         .nav-item.active { color: #0f172a; font-weight: bold; }
+        
+        /* Name Prompt Modal */
+        #name-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 2000; display: none; }
+        .modal-content { background: #1e293b; padding: 30px; border-radius: 20px; text-align: center; border: 2px solid #fbbf24; width: 80%; max-width: 400px; }
+        .modal-content input { width: 100%; padding: 12px; margin-top: 15px; border-radius: 10px; border: none; outline: none; background: #0b1120; color: white; text-align: center; font-size: 16px; }
+        .modal-content button { background: #fbbf24; color: #0f172a; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; margin-top: 20px; cursor: pointer; width: 100%; }
     </style>
 </head>
 <body>
+
+<div id="name-modal">
+    <div class="modal-content">
+        <h3 style="color:#fbbf24;">KRYA में आपका स्वागत है!</h3>
+        <p style="font-size:14px; color:#d1d5db; margin-top:10px;">कृपया अपना नाम (Handle) दर्ज करें:</p>
+        <input type="text" id="username-input" placeholder="उदाहरण: Mukesh_Rai" maxlength="20">
+        <button id="save-name-btn">शुरू करें (Start)</button>
+    </div>
+</div>
 
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
@@ -93,6 +110,29 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // --- नाम (Handle) का लॉजिक ---
+    const nameModal = document.getElementById('name-modal');
+    const usernameInput = document.getElementById('username-input');
+    const saveNameBtn = document.getElementById('save-name-btn');
+    let currentUserHandle = localStorage.getItem('kryaHandle'); // फोन की मेमोरी से नाम ढूँढो
+
+    // अगर नाम नहीं मिला, तो बॉक्स दिखाओ
+    if (!currentUserHandle) {
+        nameModal.style.display = 'flex';
+    }
+
+    // नाम सेव करने का बटन
+    saveNameBtn.onclick = () => {
+        let name = usernameInput.value.trim();
+        if (name.length >= 3) {
+            localStorage.setItem('kryaHandle', name); // फोन में नाम सेव करो
+            currentUserHandle = name;
+            nameModal.style.display = 'none'; // बॉक्स बंद करो
+        } else {
+            alert("नाम कम से कम 3 अक्षरों का होना चाहिए।");
+        }
+    };
+
     // Sidebar Toggle Function
     window.toggleMenu = function() {
         document.getElementById('sidebar').classList.toggle('active');
@@ -105,17 +145,19 @@
 
     sendBtn.onclick = async () => {
         const text = msgInput.value.trim();
-        if(text !== "") {
+        if(text !== "" && currentUserHandle) {
             try {
                 await addDoc(collection(db, "messages"), {
                     text: text,
-                    user: "User", // बाद में यहाँ नाम डाल सकेंगे
+                    user: currentUserHandle, // असली नाम भेजो
                     createdAt: serverTimestamp()
                 });
                 msgInput.value = "";
             } catch (e) {
                 alert("Error: " + e.message);
             }
+        } else if (!currentUserHandle) {
+            nameModal.style.display = 'flex'; // अगर नाम डिलीट हो गया हो
         }
     };
 
@@ -126,15 +168,15 @@
         feedList.innerHTML = "";
         snapshot.forEach((doc) => {
             const data = doc.data();
+            const firstLetter = data.user ? data.user.charAt(0).toUpperCase() : '?';
             const card = document.createElement('div');
             card.className = "user-card";
             card.innerHTML = `
-                <div class="user-img">K</div>
+                <div class="user-img">${firstLetter}</div>
                 <div class="user-details">
-                    <b>@KRYA_User</b>
-                    <p style="font-size: 14px; color: #1e293b; margin-top:4px;">${data.text}</p>
+                    <b style="color:#0f172a;">@${data.user || 'Unknown'}</b><i class="fas fa-check-circle v-check"></i>
+                    <p style="font-size: 14px; color: #1e293b; margin-top:4px; line-height:1.4;">${data.text}</p>
                 </div>
-                <i class="fas fa-check-circle v-check" style="color:#10b981; margin-left:auto;"></i>
             `;
             feedList.appendChild(card);
         });
