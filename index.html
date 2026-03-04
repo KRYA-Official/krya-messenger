@@ -3,98 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA Messenger - Global Live</title>
+    <title>KRYA Messenger - Verified</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: sans-serif; background: #0b1120; color: white; overflow-x: hidden; }
-        .container { max-width: 500px; margin: auto; background: #0f172a; min-height: 100vh; position: relative; padding-bottom: 250px; }
+        .container { max-width: 500px; margin: auto; background: #0f172a; min-height: 100vh; position: relative; padding-bottom: 80px; }
         
-        /* Header */
+        /* प्रोफेशनल लॉगिन स्क्रीन */
+        #auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b1120; z-index: 2000; display: flex; align-items: center; justify-content: center; }
+        .auth-box { background: #1e293b; padding: 30px; border-radius: 20px; width: 85%; max-width: 400px; text-align: center; border: 2px solid #fbbf24; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .auth-box h2 { color: #fbbf24; margin-bottom: 20px; letter-spacing: 2px; }
+        .auth-box input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #334155; background: #0b1120; color: white; outline: none; }
+        .auth-btn { background: #fbbf24; color: #0f172a; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .auth-btn:active { transform: scale(0.98); }
+        
+        /* चैटिंग एरिया */
         .header { padding: 20px; display: flex; align-items: center; justify-content: space-between; background: #0f172a; border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 100; }
-        .menu-icon { font-size: 24px; color: #fbbf24; cursor: pointer; }
-        .brand-name { font-size: 24px; font-weight: bold; color: #fbbf24; letter-spacing: 2px; }
-
-        /* Sidebar */
-        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #1e293b; transition: 0.3s; z-index: 1000; padding: 20px; box-shadow: 5px 0 15px rgba(0,0,0,0.5); }
-        .sidebar.active { left: 0; }
-        .sidebar h2 { color: #fbbf24; margin-bottom: 30px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
-        .sidebar-item { padding: 15px 0; border-bottom: 1px solid #334155; display: flex; align-items: center; cursor: pointer; color: #d1d5db; }
-        .sidebar-item i { margin-right: 15px; width: 20px; color: #fbbf24; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 999; }
-        .overlay.active { display: block; }
-
-        /* Global Feed List */
-        #feed-list { padding: 15px; display: flex; flex-direction: column-reverse; padding-bottom: 100px; }
-        .user-card { display: flex; align-items: flex-start; background: white; color: #1e293b; padding: 12px; border-radius: 15px; margin-bottom: 10px; border-left: 5px solid #fbbf24; }
-        .user-img { width: 40px; height: 40px; border-radius: 50%; background: #fbbf24; margin-right: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; color: #0f172a; flex-shrink: 0; margin-top: 3px; }
-
-        /* Input Section */
-        .input-area { position: fixed; bottom: 80px; width: 100%; max-width: 500px; background: #1e293b; padding: 15px; border-radius: 25px 25px 0 0; z-index: 10; left: 50%; transform: translateX(-50%); }
-        textarea { width: 100%; background: #0b1120; border: 1px solid #334155; color: white; padding: 12px; border-radius: 12px; margin-bottom: 10px; resize: none; outline: none; }
-        .send-btn { width: 100%; background: #fbbf24; color: #0f172a; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
-
-        /* Nav Bar */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: white; display: flex; justify-content: space-around; padding: 12px 0; left: 50%; transform: translateX(-50%); z-index: 100; border-top: 1px solid #ddd; }
-        .nav-item { text-align: center; color: #64748b; font-size: 10px; flex: 1; }
-        .nav-item i { font-size: 22px; display: block; margin-bottom: 3px; }
-        .nav-item.active { color: #0f172a; font-weight: bold; }
+        .brand-name { font-size: 24px; font-weight: bold; color: #fbbf24; }
+        #feed-list { padding: 15px; display: flex; flex-direction: column-reverse; }
         
-        /* Name Prompt Modal */
-        #name-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 2000; display: none; }
-        .modal-content { background: #1e293b; padding: 30px; border-radius: 20px; text-align: center; border: 2px solid #fbbf24; width: 85%; max-width: 400px; }
-        .modal-content input { width: 100%; padding: 12px; margin-top: 15px; border-radius: 10px; border: none; outline: none; background: #0b1120; color: white; text-align: center; font-size: 16px; border: 1px solid #334155; }
-        .modal-content button { background: #fbbf24; color: #0f172a; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; margin-top: 20px; cursor: pointer; width: 100%; }
+        /* मैसेज कार्ड और ग्रीन टिक */
+        .user-card { display: flex; align-items: flex-start; background: white; color: #1e293b; padding: 12px; border-radius: 15px; margin-bottom: 12px; border-left: 5px solid #fbbf24; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .user-img { width: 40px; height: 40px; border-radius: 50%; background: #fbbf24; margin-right: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #0f172a; flex-shrink: 0; }
+        .v-tick { color: #10b981; margin-left: 5px; font-size: 14px; }
+        
+        /* इनपुट बॉक्स */
+        .input-area { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #1e293b; padding: 15px; display: flex; gap: 10px; left: 50%; transform: translateX(-50%); }
+        textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 12px; border-radius: 10px; resize: none; outline: none; height: 45px; }
+        .send-btn { background: #fbbf24; border: none; width: 50px; border-radius: 10px; cursor: pointer; color: #0f172a; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+        
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-<div id="name-modal">
-    <div class="modal-content">
-        <h3 style="color:#fbbf24;">KRYA में आपका स्वागत है!</h3>
-        <p style="font-size:14px; color:#d1d5db; margin-top:10px;">अपना नाम (Handle) लिखें:</p>
-        <input type="text" id="username-input" placeholder="जैसे: Mukesh_Rai" maxlength="15">
-        <button id="save-name-btn">शुरू करें</button>
+<div id="auth-screen">
+    <div class="auth-box">
+        <h2>KRYA</h2>
+        <p style="color:#d1d5db; font-size:14px;">अपनी पहचान वेरिफाई करें</p>
+        <input type="email" id="email-field" placeholder="ईमेल आईडी">
+        <input type="password" id="pass-field" placeholder="पासवर्ड">
+        <button class="auth-btn" onclick="handleSignUp()">अकाउंट बनाएं (Sign Up)</button>
+        <button class="auth-btn" style="background:#334155; color:white;" onclick="handleLogin()">लॉगिन करें (Login)</button>
+        <p id="status" style="font-size:12px; margin-top:15px; color:#fbbf24;"></p>
     </div>
 </div>
 
-<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-
-<div class="sidebar" id="sidebar">
-    <h2>KRYA Menu</h2>
-    <div class="sidebar-item"><i class="fas fa-user-edit"></i> Edit Profile</div>
-    <div class="sidebar-item"><i class="fas fa-cog"></i> Settings</div>
-    <div class="sidebar-item"><i class="fas fa-wallet"></i> My Earnings</div>
-    <div class="sidebar-item" style="margin-top: 50px; color: #f87171;"><i class="fas fa-sign-out-alt"></i> Logout</div>
-</div>
-
-<div class="container">
+<div class="container hidden" id="main-app">
     <div class="header">
-        <i class="fas fa-bars menu-icon" onclick="toggleMenu()"></i>
         <div class="brand-name">KRYA</div>
-        <i class="fas fa-search" style="font-size: 20px; color: #fbbf24;"></i>
+        <button onclick="logout()" style="background:none; border:none; color:#f87171; cursor:pointer; font-size:20px;"><i class="fas fa-sign-out-alt"></i></button>
     </div>
-
-    <div id="feed-list" class="user-list">
-        </div>
-
+    <div id="feed-list"></div>
     <div class="input-area">
-        <textarea id="msgInput" rows="2" placeholder="कुछ लिखें..."></textarea>
-        <button id="sendBtn" class="send-btn">भेजें (Send)</button>
-    </div>
-
-    <div class="nav-bar">
-        <div class="nav-item active"><i class="fas fa-globe"></i>Global</div>
-        <div class="nav-item"><i class="fas fa-users"></i>Family</div>
-        <div class="nav-item"><i class="fas fa-shield-alt"></i>Rewards</div>
-        <div class="nav-item"><i class="fas fa-user-circle"></i>Account</div>
+        <textarea id="msgInput" placeholder="संदेश लिखें..."></textarea>
+        <button onclick="sendMessage()" class="send-btn"><i class="fas fa-paper-plane"></i></button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+    // आपका कॉन्फ़िगरेशन
     const firebaseConfig = {
         apiKey: "AIzaSyCtSIGAybHuIga19QpPR51eg...", 
         authDomain: "krya-94e55.firebaseapp.com",
@@ -105,71 +78,86 @@
     };
 
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // --- नाम का लॉजिक ---
-    const nameModal = document.getElementById('name-modal');
-    const usernameInput = document.getElementById('username-input');
-    const saveNameBtn = document.getElementById('save-name-btn');
-    let userHandle = localStorage.getItem('krya_user_handle');
+    const authScreen = document.getElementById('auth-screen');
+    const mainApp = document.getElementById('main-app');
+    const status = document.getElementById('status');
 
-    if (!userHandle) {
-        nameModal.style.display = 'flex';
-    }
-
-    saveNameBtn.onclick = () => {
-        let name = usernameInput.value.trim();
-        if (name.length >= 3) {
-            localStorage.setItem('krya_user_handle', name);
-            userHandle = name;
-            nameModal.style.display = 'none';
-        } else {
-            alert("नाम कम से कम 3 अक्षर का होना चाहिए!");
-        }
+    // अकाउंट बनाना + वेरिफिकेशन लिंक भेजना
+    window.handleSignUp = async () => {
+        const email = document.getElementById('email-field').value;
+        const pass = document.getElementById('pass-field').value;
+        try {
+            const userCred = await createUserWithEmailAndPassword(auth, email, pass);
+            await sendEmailVerification(userCred.user);
+            status.innerText = "ईमेल वेरिफाई करें! आपके इनबॉक्स में एक लिंक भेजा गया है।";
+        } catch (e) { status.innerText = "त्रुटि: " + e.message; }
     };
 
-    window.toggleMenu = function() {
-        document.getElementById('sidebar').classList.toggle('active');
-        document.getElementById('overlay').classList.toggle('active');
-    }
+    // लॉगिन
+    window.handleLogin = async () => {
+        const email = document.getElementById('email-field').value;
+        const pass = document.getElementById('pass-field').value;
+        try {
+            const userCred = await signInWithEmailAndPassword(auth, email, pass);
+            if(!userCred.user.emailVerified) {
+                alert("कृपया पहले ईमेल पर आए लिंक को क्लिक करके वेरिफाई करें!");
+                await signOut(auth);
+            }
+        } catch (e) { status.innerText = "लॉगिन फेल: " + e.message; }
+    };
 
-    // संदेश भेजना
-    const sendBtn = document.getElementById('sendBtn');
-    const msgInput = document.getElementById('msgInput');
+    window.logout = () => signOut(auth);
 
-    sendBtn.onclick = async () => {
-        const text = msgInput.value.trim();
-        if(text !== "" && userHandle) {
+    onAuthStateChanged(auth, (user) => {
+        if (user && user.emailVerified) {
+            authScreen.classList.add('hidden');
+            mainApp.classList.remove('hidden');
+            loadMessages();
+        } else {
+            authScreen.classList.remove('hidden');
+            mainApp.classList.add('hidden');
+        }
+    });
+
+    window.sendMessage = async () => {
+        const text = document.getElementById('msgInput').value;
+        if(text.trim() !== "") {
             await addDoc(collection(db, "messages"), {
                 text: text,
-                user: userHandle,
+                user: auth.currentUser.email.split('@')[0],
+                email: auth.currentUser.email,
                 createdAt: serverTimestamp()
             });
-            msgInput.value = "";
+            document.getElementById('msgInput').value = "";
         }
     };
 
-    // लाइव अपडेट
-    const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
-    onSnapshot(q, (snapshot) => {
-        const feedList = document.getElementById('feed-list');
-        feedList.innerHTML = "";
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            const initial = data.user ? data.user.charAt(0).toUpperCase() : '?';
-            const card = document.createElement('div');
-            card.className = "user-card";
-            card.innerHTML = `
-                <div class="user-img">${initial}</div>
-                <div class="user-details">
-                    <b>@${data.user || 'User'}</b> <i class="fas fa-check-circle" style="color:#10b981; font-size:12px;"></i>
-                    <p style="font-size: 14px; margin-top:4px;">${data.text}</p>
-                </div>
-            `;
-            feedList.appendChild(card);
+    function loadMessages() {
+        const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
+        onSnapshot(q, (snapshot) => {
+            const feedList = document.getElementById('feed-list');
+            feedList.innerHTML = "";
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                // सिर्फ 'Krya.global@gmail.com' को ग्रीन टिक
+                const isAdmin = (data.email === "Krya.global@gmail.com"); 
+                const tick = isAdmin ? '<i class="fas fa-check-circle v-tick"></i>' : '';
+                
+                const card = document.createElement('div');
+                card.className = "user-card";
+                card.innerHTML = `
+                    <div class="user-img" style="background:${isAdmin ? '#10b981' : '#fbbf24'}">${data.user.charAt(0).toUpperCase()}</div>
+                    <div class="user-details">
+                        <b>@${data.user}</b>${tick}
+                        <p style="margin-top:4px;">${data.text}</p>
+                    </div>`;
+                feedList.appendChild(card);
+            });
         });
-    });
+    }
 </script>
-
 </body>
 </html>
