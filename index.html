@@ -3,36 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA Messenger - Verified</title>
+    <title>KRYA Messenger - Admin Verified</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: sans-serif; background: #0b1120; color: white; overflow-x: hidden; }
         .container { max-width: 500px; margin: auto; background: #0f172a; min-height: 100vh; position: relative; padding-bottom: 80px; }
-        
-        /* प्रोफेशनल लॉगिन स्क्रीन */
         #auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b1120; z-index: 2000; display: flex; align-items: center; justify-content: center; }
-        .auth-box { background: #1e293b; padding: 30px; border-radius: 20px; width: 85%; max-width: 400px; text-align: center; border: 2px solid #fbbf24; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        .auth-box h2 { color: #fbbf24; margin-bottom: 20px; letter-spacing: 2px; }
+        .auth-box { background: #1e293b; padding: 30px; border-radius: 20px; width: 85%; max-width: 400px; text-align: center; border: 2px solid #fbbf24; }
         .auth-box input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #334155; background: #0b1120; color: white; outline: none; }
-        .auth-btn { background: #fbbf24; color: #0f172a; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        .auth-btn:active { transform: scale(0.98); }
-        
-        /* चैटिंग एरिया */
+        .auth-btn { background: #fbbf24; color: #0f172a; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; }
         .header { padding: 20px; display: flex; align-items: center; justify-content: space-between; background: #0f172a; border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 100; }
         .brand-name { font-size: 24px; font-weight: bold; color: #fbbf24; }
         #feed-list { padding: 15px; display: flex; flex-direction: column-reverse; }
-        
-        /* मैसेज कार्ड और ग्रीन टिक */
-        .user-card { display: flex; align-items: flex-start; background: white; color: #1e293b; padding: 12px; border-radius: 15px; margin-bottom: 12px; border-left: 5px solid #fbbf24; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .user-img { width: 40px; height: 40px; border-radius: 50%; background: #fbbf24; margin-right: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #0f172a; flex-shrink: 0; }
+        .user-card { display: flex; align-items: flex-start; background: white; color: #1e293b; padding: 12px; border-radius: 15px; margin-bottom: 12px; border-left: 5px solid #fbbf24; }
+        .user-img { width: 40px; height: 40px; border-radius: 50%; background: #fbbf24; margin-right: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #0f172a; }
         .v-tick { color: #10b981; margin-left: 5px; font-size: 14px; }
-        
-        /* इनपुट बॉक्स */
         .input-area { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #1e293b; padding: 15px; display: flex; gap: 10px; left: 50%; transform: translateX(-50%); }
-        textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 12px; border-radius: 10px; resize: none; outline: none; height: 45px; }
-        .send-btn { background: #fbbf24; border: none; width: 50px; border-radius: 10px; cursor: pointer; color: #0f172a; font-size: 18px; display: flex; align-items: center; justify-content: center; }
-        
+        textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 10px; border-radius: 10px; resize: none; outline: none; }
+        .send-btn { background: #fbbf24; border: none; width: 50px; border-radius: 10px; cursor: pointer; color: #0f172a; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -40,26 +29,19 @@
 
 <div id="auth-screen">
     <div class="auth-box">
-        <h2>KRYA</h2>
-        <p style="color:#d1d5db; font-size:14px;">अपनी पहचान वेरिफाई करें</p>
+        <h2 style="color:#fbbf24;">KRYA Login</h2>
         <input type="email" id="email-field" placeholder="ईमेल आईडी">
         <input type="password" id="pass-field" placeholder="पासवर्ड">
-        <button class="auth-btn" onclick="handleSignUp()">अकाउंट बनाएं (Sign Up)</button>
-        <button class="auth-btn" style="background:#334155; color:white;" onclick="handleLogin()">लॉगिन करें (Login)</button>
-        <p id="status" style="font-size:12px; margin-top:15px; color:#fbbf24;"></p>
+        <button class="auth-btn" onclick="handleSignUp()">Sign Up</button>
+        <button class="auth-btn" style="background:#334155; color:white;" onclick="handleLogin()">Login</button>
+        <p id="status" style="font-size:12px; margin-top:10px; color:#fbbf24;"></p>
     </div>
 </div>
 
 <div class="container hidden" id="main-app">
-    <div class="header">
-        <div class="brand-name">KRYA</div>
-        <button onclick="logout()" style="background:none; border:none; color:#f87171; cursor:pointer; font-size:20px;"><i class="fas fa-sign-out-alt"></i></button>
-    </div>
+    <div class="header"><div class="brand-name">KRYA</div><button onclick="logout()" style="background:none; border:none; color:#f87171;"><i class="fas fa-sign-out-alt"></i></button></div>
     <div id="feed-list"></div>
-    <div class="input-area">
-        <textarea id="msgInput" placeholder="संदेश लिखें..."></textarea>
-        <button onclick="sendMessage()" class="send-btn"><i class="fas fa-paper-plane"></i></button>
-    </div>
+    <div class="input-area"><textarea id="msgInput" placeholder="संदेश लिखें..."></textarea><button onclick="sendMessage()" class="send-btn"><i class="fas fa-paper-plane"></i></button></div>
 </div>
 
 <script type="module">
@@ -67,58 +49,50 @@
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // आपका कॉन्फ़िगरेशन
+    // --- आपकी असली चाबी (Firebase Config) ---
     const firebaseConfig = {
-        apiKey: "AIzaSyCtSIGAybHuIga19QpPR51eg...", 
-        authDomain: "krya-94e55.firebaseapp.com",
-        projectId: "krya-94e55",
-        storageBucket: "krya-94e55.firebasestorage.app",
-        messagingSenderId: "1025043894227",
-        appId: "1:1025043894227:web:c725faf720a10b8792926"
+      apiKey: "AIzaSyCtSIGAybHuIga19QpPRS1egRrsbhvJV2c",
+      authDomain: "krya-94e55.firebaseapp.com",
+      projectId: "krya-94e55",
+      storageBucket: "krya-94e55.firebasestorage.app",
+      messagingSenderId: "1025043894227",
+      appId: "1:1025043894227:web:fa57c21ed2f6381a792926"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const authScreen = document.getElementById('auth-screen');
-    const mainApp = document.getElementById('main-app');
-    const status = document.getElementById('status');
-
-    // अकाउंट बनाना + वेरिफिकेशन लिंक भेजना
+    // --- Functions ---
     window.handleSignUp = async () => {
         const email = document.getElementById('email-field').value;
         const pass = document.getElementById('pass-field').value;
         try {
             const userCred = await createUserWithEmailAndPassword(auth, email, pass);
             await sendEmailVerification(userCred.user);
-            status.innerText = "ईमेल वेरिफाई करें! आपके इनबॉक्स में एक लिंक भेजा गया है।";
-        } catch (e) { status.innerText = "त्रुटि: " + e.message; }
+            alert("ईमेल वेरिफाई करें! लिंक भेज दिया गया है।");
+        } catch (e) { alert(e.message); }
     };
 
-    // लॉगिन
     window.handleLogin = async () => {
         const email = document.getElementById('email-field').value;
         const pass = document.getElementById('pass-field').value;
         try {
             const userCred = await signInWithEmailAndPassword(auth, email, pass);
-            if(!userCred.user.emailVerified) {
-                alert("कृपया पहले ईमेल पर आए लिंक को क्लिक करके वेरिफाई करें!");
-                await signOut(auth);
-            }
-        } catch (e) { status.innerText = "लॉगिन फेल: " + e.message; }
+            if(!userCred.user.emailVerified) { alert("ईमेल वेरिफाई करें!"); await signOut(auth); }
+        } catch (e) { alert(e.message); }
     };
 
     window.logout = () => signOut(auth);
 
     onAuthStateChanged(auth, (user) => {
         if (user && user.emailVerified) {
-            authScreen.classList.add('hidden');
-            mainApp.classList.remove('hidden');
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
             loadMessages();
         } else {
-            authScreen.classList.remove('hidden');
-            mainApp.classList.add('hidden');
+            document.getElementById('auth-screen').classList.remove('hidden');
+            document.getElementById('main-app').classList.add('hidden');
         }
     });
 
@@ -142,18 +116,11 @@
             feedList.innerHTML = "";
             snapshot.forEach((doc) => {
                 const data = doc.data();
-                // सिर्फ 'Krya.global@gmail.com' को ग्रीन टिक
                 const isAdmin = (data.email === "Krya.global@gmail.com"); 
                 const tick = isAdmin ? '<i class="fas fa-check-circle v-tick"></i>' : '';
-                
                 const card = document.createElement('div');
                 card.className = "user-card";
-                card.innerHTML = `
-                    <div class="user-img" style="background:${isAdmin ? '#10b981' : '#fbbf24'}">${data.user.charAt(0).toUpperCase()}</div>
-                    <div class="user-details">
-                        <b>@${data.user}</b>${tick}
-                        <p style="margin-top:4px;">${data.text}</p>
-                    </div>`;
+                card.innerHTML = `<div class="user-img" style="background:${isAdmin ? '#10b981' : '#fbbf24'}">${data.user.charAt(0).toUpperCase()}</div><div class="user-details"><b>@${data.user}</b>${tick}<p>${data.text}</p></div>`;
                 feedList.appendChild(card);
             });
         });
