@@ -3,25 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA Messenger - Admin Verified</title>
+    <title>KRYA - Global World & Messenger</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: sans-serif; background: #0b1120; color: white; overflow-x: hidden; }
-        .container { max-width: 500px; margin: auto; background: #0f172a; min-height: 100vh; position: relative; padding-bottom: 80px; }
+        body { font-family: sans-serif; background: #0b1120; color: white; overflow: hidden; }
+        
+        /* 1. Auth Screen Style */
         #auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b1120; z-index: 2000; display: flex; align-items: center; justify-content: center; }
         .auth-box { background: #1e293b; padding: 30px; border-radius: 20px; width: 85%; max-width: 400px; text-align: center; border: 2px solid #fbbf24; }
         .auth-box input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #334155; background: #0b1120; color: white; outline: none; }
         .auth-btn { background: #fbbf24; color: #0f172a; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; }
-        .header { padding: 20px; display: flex; align-items: center; justify-content: space-between; background: #0f172a; border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 100; }
-        .brand-name { font-size: 24px; font-weight: bold; color: #fbbf24; }
-        #feed-list { padding: 15px; display: flex; flex-direction: column-reverse; }
-        .user-card { display: flex; align-items: flex-start; background: white; color: #1e293b; padding: 12px; border-radius: 15px; margin-bottom: 12px; border-left: 5px solid #fbbf24; }
-        .user-img { width: 40px; height: 40px; border-radius: 50%; background: #fbbf24; margin-right: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #0f172a; }
-        .v-tick { color: #10b981; margin-left: 5px; font-size: 14px; }
-        .input-area { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #1e293b; padding: 15px; display: flex; gap: 10px; left: 50%; transform: translateX(-50%); }
-        textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 10px; border-radius: 10px; resize: none; outline: none; }
-        .send-btn { background: #fbbf24; border: none; width: 50px; border-radius: 10px; cursor: pointer; color: #0f172a; }
+
+        /* 2. Main Layout (Map on top, Chat below) */
+        .container { display: flex; flex-direction: column; height: 100vh; max-width: 500px; margin: auto; background: #0f172a; }
+        
+        #map { height: 40%; width: 100%; border-bottom: 2px solid #fbbf24; }
+        
+        .chat-section { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        .header { padding: 15px; display: flex; align-items: center; justify-content: space-between; background: #0f172a; border-bottom: 1px solid #1e293b; }
+        .brand-name { font-size: 20px; font-weight: bold; color: #fbbf24; }
+        
+        #feed-list { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; }
+        .user-card { display: flex; align-items: flex-start; background: white; color: #1e293b; padding: 10px; border-radius: 15px; margin-bottom: 8px; border-left: 5px solid #fbbf24; font-size: 14px; }
+        .user-img { width: 30px; height: 30px; border-radius: 50%; background: #fbbf24; margin-right: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; }
+        .v-tick { color: #10b981; margin-left: 5px; }
+
+        .input-area { background: #1e293b; padding: 10px; display: flex; gap: 10px; }
+        textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 8px; border-radius: 10px; resize: none; height: 40px; outline: none; }
+        .send-btn { background: #fbbf24; border: none; width: 45px; border-radius: 10px; cursor: pointer; color: #0f172a; }
+        
         .hidden { display: none !important; }
     </style>
 </head>
@@ -34,22 +47,33 @@
         <input type="password" id="pass-field" placeholder="पासवर्ड">
         <button class="auth-btn" onclick="handleSignUp()">Sign Up</button>
         <button class="auth-btn" style="background:#334155; color:white;" onclick="handleLogin()">Login</button>
-        <p id="status" style="font-size:12px; margin-top:10px; color:#fbbf24;"></p>
     </div>
 </div>
 
 <div class="container hidden" id="main-app">
-    <div class="header"><div class="brand-name">KRYA</div><button onclick="logout()" style="background:none; border:none; color:#f87171;"><i class="fas fa-sign-out-alt"></i></button></div>
-    <div id="feed-list"></div>
-    <div class="input-area"><textarea id="msgInput" placeholder="संदेश लिखें..."></textarea><button onclick="sendMessage()" class="send-btn"><i class="fas fa-paper-plane"></i></button></div>
+    <div id="map"></div>
+
+    <div class="chat-section">
+        <div class="header">
+            <div class="brand-name">KRYA Messenger</div>
+            <button onclick="logout()" style="background:none; border:none; color:#f87171;"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+        <div id="feed-list"></div>
+        <div class="input-area">
+            <textarea id="msgInput" placeholder="संदेश लिखें..."></textarea>
+            <button onclick="sendMessage()" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
 </div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // --- आपकी असली चाबी (Firebase Config) ---
+    // --- Firebase Config (आपकी अपनी चाबी) ---
     const firebaseConfig = {
       apiKey: "AIzaSyCtSIGAybHuIga19QpPRS1egRrsbhvJV2c",
       authDomain: "krya-94e55.firebaseapp.com",
@@ -63,6 +87,11 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // --- Map Logic ---
+    let map = L.map('map').setView([20, 0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    let markers = {};
+
     // --- Functions ---
     window.handleSignUp = async () => {
         const email = document.getElementById('email-field').value;
@@ -70,7 +99,7 @@
         try {
             const userCred = await createUserWithEmailAndPassword(auth, email, pass);
             await sendEmailVerification(userCred.user);
-            alert("ईमेल वेरिफाई करें! लिंक भेज दिया गया है।");
+            alert("ईमेल चेक करें और वेरिफाई करें!");
         } catch (e) { alert(e.message); }
     };
 
@@ -89,12 +118,43 @@
         if (user && user.emailVerified) {
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('main-app').classList.remove('hidden');
+            startLiveLocation(user);
             loadMessages();
+            loadGlobalUsers();
         } else {
             document.getElementById('auth-screen').classList.remove('hidden');
             document.getElementById('main-app').classList.add('hidden');
         }
     });
+
+    // --- लोकेशन को मैप पर लाइव करना ---
+    function startLiveLocation(user) {
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(async (pos) => {
+                const { latitude, longitude } = pos.coords;
+                map.setView([latitude, longitude], 13);
+                // Firestore में लोकेशन अपडेट करें
+                await setDoc(doc(db, "locations", user.uid), {
+                    user: user.email.split('@')[0],
+                    lat: latitude,
+                    lon: longitude,
+                    lastSeen: serverTimestamp()
+                });
+            });
+        }
+    }
+
+    // --- दूसरे यूजर्स को मैप पर देखना ---
+    function loadGlobalUsers() {
+        onSnapshot(collection(db, "locations"), (snapshot) => {
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                if (markers[doc.id]) map.removeLayer(markers[doc.id]);
+                markers[doc.id] = L.marker([data.lat, data.lon]).addTo(map)
+                    .bindPopup(`@${data.user} यहाँ है!`);
+            });
+        });
+    }
 
     window.sendMessage = async () => {
         const text = document.getElementById('msgInput').value;
@@ -122,6 +182,7 @@
                 card.className = "user-card";
                 card.innerHTML = `<div class="user-img" style="background:${isAdmin ? '#10b981' : '#fbbf24'}">${data.user.charAt(0).toUpperCase()}</div><div class="user-details"><b>@${data.user}</b>${tick}<p>${data.text}</p></div>`;
                 feedList.appendChild(card);
+                feedList.scrollTop = feedList.scrollHeight;
             });
         });
     }
