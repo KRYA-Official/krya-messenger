@@ -51,10 +51,12 @@
 </div>
 
 <script type="module">
+    // Firebase SDK Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+    // Your Firebase Configuration (Verified)
     const firebaseConfig = {
         apiKey: "AIzaSyCtSIGAybHuIga19qPPRIegRrsbhvJV2c",
         authDomain: "krya-94e55.firebaseapp.com",
@@ -68,44 +70,61 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // 1. साइन-अप लॉजिक
     document.getElementById('signup-btn').addEventListener('click', async () => {
         const name = document.getElementById('full-name').value;
         const mobile = document.getElementById('mobile-number').value;
         const email = document.getElementById('email-field').value.trim();
         const pass = document.getElementById('pass-field').value;
 
-        if (!name || !email || !pass) { alert("कृपया पूरी जानकारी भरें"); return; }
+        if (!name || !email || !pass) { 
+            alert("कृपया पूरी जानकारी भरें"); 
+            return; 
+        }
 
         try {
             const userCred = await createUserWithEmailAndPassword(auth, email, pass);
             await sendEmailVerification(userCred.user);
-            alert("वेरिफिकेशन लिंक ईमेल पर भेज दिया गया है!");
+            alert("वेरिफिकेशन लिंक आपके ईमेल पर भेज दिया गया है!");
 
+            // Firestore में डेटा सेव करना
             await setDoc(doc(db, "users", userCred.user.uid), {
-                fullName: name, phone: mobile, email: email, uid: userCred.user.uid, isVerified: false
+                fullName: name,
+                phone: mobile,
+                email: email,
+                uid: userCred.user.uid,
+                isVerified: false
             });
 
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('handle-screen').classList.remove('hidden');
-        } catch (e) { alert("KRYA एरर: " + e.message); }
+        } catch (e) {
+            alert("KRYA एरर: " + e.message);
+        }
     });
 
+    // 2. लॉगिन लॉजिक
     document.getElementById('login-btn').addEventListener('click', async () => {
         const email = document.getElementById('email-field').value.trim();
         const pass = document.getElementById('pass-field').value;
         try {
             const userCred = await signInWithEmailAndPassword(auth, email, pass);
             if (!userCred.user.emailVerified) {
-                alert("कृपया पहले अपना ईमेल इनबॉक्स चेक करें और लिंक पर क्लिक करें!");
+                alert("कृपया पहले ईमेल वेरीफाई करें!");
                 await signOut(auth);
             }
-        } catch (e) { alert("लॉगिन एरर: " + e.message); }
+        } catch (e) {
+            alert("लॉगिन एरर: " + e.message);
+        }
     });
 
+    // 3. हैंडल सेव करने का लॉजिक
     document.getElementById('save-handle-btn').addEventListener('click', async () => {
         const handle = document.getElementById('username-field').value.trim();
         if (handle && auth.currentUser) {
-            await updateDoc(doc(db, "users", auth.currentUser.uid), { handle: "@" + handle });
+            await updateDoc(doc(db, "users", auth.currentUser.uid), { 
+                handle: "@" + handle 
+            });
             alert("आपका KRYA हैंडल @" + handle + " तैयार है!");
             location.reload(); 
         }
@@ -113,6 +132,7 @@
 
     document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
 
+    // 4. मैसेजिंग लॉजिक
     document.getElementById('send-btn').addEventListener('click', async () => {
         const text = document.getElementById('msgInput').value;
         if (text.trim() !== "" && auth.currentUser) {
@@ -125,6 +145,7 @@
         }
     });
 
+    // 5. Auth State Change (लॉगिन स्थिति चेक करना)
     onAuthStateChanged(auth, (user) => {
         if (user && user.emailVerified) {
             document.getElementById('auth-screen').classList.add('hidden');
