@@ -22,12 +22,23 @@
 <body>
 
 <div id="auth-screen">
-    <div class="auth-box">
-        <h2 style="color:#fbbf24;">KRYA Login</h2>
-        <input type="email" id="email-field" placeholder="ईमेल आईडी">
-        <input type="password" id="pass-field" placeholder="पासवर्ड">
-        <button class="auth-btn" id="signup-btn">Sign Up</button>
-        <button class="auth-btn" style="background:#334155; color:white; margin-top:10px;" id="login-btn">Login</button>
+<div id="auth-screen" class="auth-box">
+    <h2 style="color:#fbbf24;">KRYA Login</h2>
+    <input type="text" id="full-name" placeholder="आपका पूरा नाम">
+    <input type="tel" id="mobile-number" placeholder="मोबाइल नंबर">
+    <input type="email" id="email-field" placeholder="ईमेल आईडी">
+    <input type="password" id="pass-field" placeholder="पासवर्ड">
+    <button class="auth-btn" id="signup-btn">साइन-अप करें</button>
+    <button class="auth-btn" style="background:#334155; margin-top:10px;" id="login-btn">लॉगिन</button>
+</div>
+
+<div id="handle-screen" class="auth-box hidden">
+    <h2 style="color:#fbbf24;">KRYA हैंडल चुनें</h2>
+    <p style="font-size: 12px; margin-bottom: 10px;">अपनी पहचान बनाएँ (उदा: @mukesh)</p>
+    <input type="text" id="username-field" placeholder="username">
+    <button class="auth-btn" id="save-handle-btn">हैंडल सेव करें</button>
+</div>
+
     </div>
 </div>
 
@@ -62,54 +73,114 @@
     const db = getFirestore(app);
 
     // --- बटन के तार जोड़ना (Event Listeners) ---
-    document.getElementById('signup-btn').addEventListener('click', async () => {
-        const email = document.getElementById('email-field').value;
-        const pass = document.getElementById('pass-field').value;
-        try {
-            const userCred = await createUserWithEmailAndPassword(auth, email, pass);
-            await sendEmailVerification(userCred.user);
-            alert("ईमेल वेरिफाई करें! लिंक भेज दिया गया है।");
-        } catch (e) { alert("Error: " + e.message); }
-    });
+// --- बटन के काम का लॉजिक (Event Listeners) ---
 
-    document.getElementById('login-btn').addEventListener('click', async () => {
-        const email = document.getElementById('email-field').value;
-        const pass = document.getElementById('pass-field').value;
-        try {
-            const userCred = await signInWithEmailAndPassword(auth, email, pass);
-            if(!userCred.user.emailVerified) { alert("ईमेल वेरिफाई करें!"); await signOut(auth); }
-        } catch (e) { alert("Error: " + e.message); }
-    });
+// 1. साइन-अप लॉजिक (नया फॉर्म डेटा सेव करने के लिए)
+document.getElementById('signup-btn').addEventListener('click', async () => {
+    const name = document.getElementById('full-name').value;
+    const mobile = document.getElementById('mobile-number').value;
+    const email = document.getElementById('email-field').value.trim();
+    const pass = document.getElementById('pass-field').value;
 
-    document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
+    if (!name || !email || !pass) {
+        alert("कृपया पूरी जानकारी भरें");
+        return;
+    }
 
-    document.getElementById('send-btn').addEventListener('click', async () => {
-        const text = document.getElementById('msgInput').value;
-        if(text.trim() !== "") {
-            await addDoc(collection(db, "messages"), {
-                text: text,
-                user: auth.currentUser.email.split('@')[0],
-                createdAt: serverTimestamp()
-            });
-            document.getElementById('msgInput').value = "";
+    try {
+        const userCred = await createUserWithEmailAndPassword(auth, email, pass);
+        const user = userCred.user;
+
+        // ईमेल वेरिफिकेशन भेजें
+        await sendEmailVerification(user);
+        alert("वेरिफिकेशन लिंक आपके ईमेल पर भेज दिया गया है! उसे क्लिक करने के बाद ही लॉगिन करें।");
+
+        // Firestore में यूज़र डेटा सेव करें
+        await setDoc(doc(db, "users", user.uid), {
+            fullName: name,
+            phone: mobile,
+            email: email,
+            uid: user.uid,
+            isVerified: false
+        });
+
+        // अगला कदम: हैंडल स्क्रीन दिखाएँ
+        document.getElementById('auth-screen').classList.add('hidden');
+        document.getElementById('handle-screen').classList.remove('hidden');
+
+    } catch (e) {
+        alert("KRYA एरर: " + e.message);
+    }
+});
+
+// 2. लॉगिन लॉजिक
+document.getElementById('login-btn').addEventListener('click', async () => {
+    const email = document.getElementById('email-field').value.trim();
+    const pass = document.getElementById('pass-field').value;
+    try {
+        const userCred = await signInWithEmailAndPassword(auth, email, pass);
+        if (!userCred.user.emailVerified) {
+            alert("कृपया पहले अपना ईमेल इनबॉक्स चेक करें और लिंक पर क्लिक करके वेरीफाई करें!");
+            await signOut(auth);
         }
-    });
+    } catch (e) { alert("लॉगिन एरर: " + e.message); }
+});
 
-    onAuthStateChanged(auth, (user) => {
-        if (user && user.emailVerified) {
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
-            loadMessages();
-        } else {
-            document.getElementById('auth-screen').classList.remove('hidden');
-            document.getElementById('main-app').classList.add('hidden');
-        }
-    });
+// 3. हैंडल सेव करने का लॉजिक
+document.getElementById('save-handle-btn').addEventListener('click', async () => {
+    const handle = document.getElementById('username-field').value.trim();
+    const user = auth.currentUser;
+    if (handle && user) {
+        await updateDoc(doc(db, "users", user.uid), { handle: "@" + handle });
+        alert("आपका KRYA हैंडल @" + handle + " तैयार है! अब आप ऐप इस्तेमाल कर सकते हैं।");
+        location.reload(); 
+    }
+});
 
-    function loadMessages() {
-        const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
-        onSnapshot(q, (snapshot) => {
-            const feedList = document.getElementById('feed-list');
+// 4. लॉगआउट और मैसेज लॉजिक
+document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
+
+document.getElementById('send-btn').addEventListener('click', async () => {
+    const text = document.getElementById('msgInput').value;
+    if (text.trim() !== "") {
+        await addDoc(collection(db, "messages"), {
+            text: text,
+            user: auth.currentUser.email.split('@')[0],
+            createdAt: serverTimestamp()
+        });
+        document.getElementById('msgInput').value = '';
+    }
+});
+
+// 5. यूज़र लॉगिन स्टेटस चेक करना
+onAuthStateChanged(auth, (user) => {
+    if (user && user.emailVerified) {
+        document.getElementById('auth-screen').classList.add('hidden');
+        document.getElementById('handle-screen').classList.add('hidden');
+        document.getElementById('main-app').classList.remove('hidden');
+        loadMessages();
+    } else {
+        document.getElementById('auth-screen').classList.remove('hidden');
+        document.getElementById('main-app').classList.add('hidden');
+    }
+});
+
+function loadMessages() {
+    const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
+    onSnapshot(q, (snapshot) => {
+        const feedList = document.getElementById('feed-list');
+        feedList.innerHTML = "";
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            const card = document.createElement('div');
+            card.style = "background:#1e293b; padding:10px; border-radius:10px; margin-bottom:10px;";
+            card.innerHTML = `<b>@${data.user}</b><p>${data.text}</p>`;
+            feedList.appendChild(card);
+        });
+        feedList.scrollTop = feedList.scrollHeight;
+    });
+}
+
             feedList.innerHTML = "";
             snapshot.forEach((doc) => {
                 const data = doc.data();
