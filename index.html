@@ -98,7 +98,12 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
             document.getElementById('handle-screen').classList.remove('hidden');
         } catch (e) {
             alert("KRYA एरर: " + e.message);
-    // 2. लॉगिन मोड और लॉगिन प्रोसेस (Super Fixed)
+ 
+                await signOut(auth);
+            }
+        } catch (e) {
+            alert("लॉगिन एरर: " + e.message);
+     // 2. लॉगिन मोड और लॉगिन प्रोसेस (Super Fixed)
     document.getElementById('login-btn').addEventListener('click', async () => {
         const nameField = document.getElementById('full-name');
         const mobileField = document.getElementById('mobile-number');
@@ -128,6 +133,8 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
         } catch (e) {
             alert("लॉगिन एरर: " + e.message);
         }
+    });
+    }
     });
             
             alert("लॉगिन एरर: " + e.message);
