@@ -98,21 +98,33 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
             document.getElementById('handle-screen').classList.remove('hidden');
         } catch (e) {
             alert("KRYA एरर: " + e.message);
-        }
-    });
 
-    // 2. लॉगिन लॉजिक
+                // 2. लॉगिन लॉजिक (Final Verified Code)
     document.getElementById('login-btn').addEventListener('click', async () => {
         const email = document.getElementById('email-field').value.trim();
         const pass = document.getElementById('pass-field').value;
+
+        // अगर ईमेल या पासवर्ड खाली है, तो फॉर्म को लॉगिन मोड में बदलें
+        if (!email || !pass) {
+            document.getElementById('full-name').classList.add('hidden');
+            document.getElementById('mobile-number').classList.add('hidden');
+            document.querySelector('h2').innerText = "KRYA Login";
+            alert("अब अपना ईमेल और पासवर्ड भरकर दोबारा लॉगिन दबाएं।");
+            return;
+        }
+
         try {
             const userCred = await signInWithEmailAndPassword(auth, email, pass);
             if (!userCred.user.emailVerified) {
-                alert("कृपया पहले ईमेल वेरीफाई करें!");
+                alert("कृपया पहले ईमेल वेरीफाई करें! चेक करें: " + email);
                 await signOut(auth);
             }
         } catch (e) {
             alert("लॉगिन एरर: " + e.message);
+        }
+    });
+
+            
         }
     });
 
