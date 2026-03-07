@@ -100,24 +100,25 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
         } // <--- यहाँ ब्रैकेट बंद होना ज़रूरी था
     });
 
-    // 2. लॉगिन बटन का फाइनल फिक्स (With Button Toggle)
+    // 2. लॉगिन बटन का सुपर फिक्स (Class-based Toggle)
     document.getElementById('login-btn').addEventListener('click', async (e) => {
         e.preventDefault(); 
         const nameField = document.getElementById('full-name');
         const mobileField = document.getElementById('mobile-number');
-        const signupBtn = document.getElementById('signup-btn'); // साइन-अप बटन को पहचाना
+        const signupBtn = document.getElementById('signup-btn');
         const emailField = document.getElementById('email-field');
         const passField = document.getElementById('pass-field');
 
-        // अगर नाम वाला बॉक्स दिख रहा है, तो उसे और पीले बटन को छुपाएं
-        if (nameField.style.display !== 'none') {
-            nameField.style.display = 'none';
-            mobileField.style.display = 'none';
-            signupBtn.style.display = 'none'; // यहाँ पीला बटन गायब होगा
+        // अगर नाम वाला बॉक्स छुपा हुआ नहीं है, तो लॉगिन मोड चालू करें
+        if (!nameField.classList.contains('hidden')) {
+            nameField.classList.add('hidden');
+            mobileField.classList.add('hidden');
+            signupBtn.classList.add('hidden');
             document.querySelector('h2').innerText = "KRYA Login Mode";
             return;
         }
 
+        // असली लॉगिन प्रक्रिया
         const email = emailField.value.trim();
         const pass = passField.value;
 
@@ -132,6 +133,11 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
                 alert("कृपया पहले ईमेल वेरीफाई करें!");
                 await signOut(auth);
             }
+        } catch (error) {
+            alert("लॉगिन एरर: " + error.message);
+        }
+    });
+    
         } catch (error) {
             alert("लॉगिन एरर: " + error.message);
         }
