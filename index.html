@@ -98,24 +98,28 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
             document.getElementById('handle-screen').classList.remove('hidden');
         } catch (e) {
             alert("KRYA एरर: " + e.message);
-     // 2. लॉगिन मोड स्विच और लॉगिन प्रक्रिया
-    document.getElementById('login-btn').addEventListener('click', async () => {
+    // 2. लॉगिन बटन का फाइनल फिक्स (Direct Style Change)
+    document.getElementById('login-btn').addEventListener('click', async (e) => {
+        e.preventDefault(); 
         const nameField = document.getElementById('full-name');
         const mobileField = document.getElementById('mobile-number');
-        const email = document.getElementById('email-field').value.trim();
-        const pass = document.getElementById('pass-field').value;
+        const emailField = document.getElementById('email-field');
+        const passField = document.getElementById('pass-field');
 
-        // स्टेप 1: अगर नाम वाला बॉक्स दिख रहा है, तो उसे गायब करो (लॉगिन मोड चालू)
-        if (!nameField.classList.contains('hidden')) {
-            nameField.classList.add('hidden');
-            mobileField.classList.add('hidden');
+        // अगर नाम वाला बॉक्स दिख रहा है, तो उसे तुरंत छुपाएं
+        if (nameField.style.display !== 'none') {
+            nameField.style.display = 'none';
+            mobileField.style.display = 'none';
             document.querySelector('h2').innerText = "KRYA Login Mode";
-            return; // यहाँ रुकें ताकि यूजर ईमेल/पासवर्ड भर सके
+            return;
         }
 
-        // स्टेप 2: अगर बॉक्स पहले से छिपे हैं, तो ही लॉगिन की कोशिश करें
+        // अगर बॉक्स पहले से छिपे हैं, तो लॉगिन करें
+        const email = emailField.value.trim();
+        const pass = passField.value;
+
         if (!email || !pass) {
-            alert("कृपया लॉगिन के लिए ईमेल और पासवर्ड भरें!");
+            alert("कृपया ईमेल और पासवर्ड भरें!");
             return;
         }
 
@@ -125,33 +129,11 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
                 alert("कृपया पहले ईमेल वेरीफाई करें!");
                 await signOut(auth);
             }
-        } catch (e) {
-            alert("लॉगिन एरर: " + e.message);
+        } catch (error) {
+            alert("लॉगिन एरर: " + error.message);
         }
     });
             
-
-        try {
-            const userCred = await signInWithEmailAndPassword(auth, email, pass);
-            if (!userCred.user.emailVerified) {
-                alert("कृपया ईमेल वेरीफाई करें!");
-                await signOut(auth);
-            }
-        } catch (e) {
-            alert("लॉगिन एरर: " + e.message);
-        }
-    });
-    }
-    });
-            
-            alert("लॉगिन एरर: " + e.message);
-        }
-    });
-                
-
-            
-        }
-    });
 
     // 3. हैंडल सेव करने का लॉजिक
     document.getElementById('save-handle-btn').addEventListener('click', async () => {
