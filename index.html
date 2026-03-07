@@ -98,31 +98,38 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
             document.getElementById('handle-screen').classList.remove('hidden');
         } catch (e) {
             alert("KRYA एरर: " + e.message);
-
-    // 2. लॉगिन लॉजिक (Final Corrected Code - Use this to fix button)
+    // 2. लॉगिन मोड और लॉगिन प्रोसेस (Super Fixed)
     document.getElementById('login-btn').addEventListener('click', async () => {
-        const fullName = document.getElementById('full-name');
-        const mobileNum = document.getElementById('mobile-number');
+        const nameField = document.getElementById('full-name');
+        const mobileField = document.getElementById('mobile-number');
         const email = document.getElementById('email-field').value.trim();
         const pass = document.getElementById('pass-field').value;
 
-        // अगर नाम वाला बॉक्स अभी भी दिख रहा है, तो उसे छुपाएं और लॉगिन मोड चालू करें
-        if (fullName.style.display !== 'none') {
-            fullName.style.display = 'none';
-            mobileNum.style.display = 'none';
-            document.querySelector('h2').innerText = "KRYA Login";
-            alert("लॉगिन मोड सक्रिय! अब अपना ईमेल और पासवर्ड भरें।");
+        // अगर नाम वाला बॉक्स दिख रहा है, तो उसे छुपाकर लॉगिन मोड में बदलें
+        if (!nameField.classList.contains('hidden')) {
+            nameField.classList.add('hidden');
+            mobileField.classList.add('hidden');
+            document.querySelector('h2').innerText = "KRYA Login Mode";
+            return; 
+        }
+
+        // अगर ईमेल या पासवर्ड खाली है
+        if (!email || !pass) {
+            alert("कृपया ईमेल और पासवर्ड भरें!");
             return;
         }
 
-        // अगर बॉक्स पहले से छिपे हैं, तो असली लॉगिन प्रक्रिया शुरू करें
         try {
             const userCred = await signInWithEmailAndPassword(auth, email, pass);
             if (!userCred.user.emailVerified) {
-                alert("कृपया पहले ईमेल वेरीफाई करें: " + email);
+                alert("कृपया ईमेल वेरीफाई करें!");
                 await signOut(auth);
             }
         } catch (e) {
+            alert("लॉगिन एरर: " + e.message);
+        }
+    });
+            
             alert("लॉगिन एरर: " + e.message);
         }
     });
