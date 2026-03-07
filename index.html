@@ -99,30 +99,34 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
         } catch (e) {
             alert("KRYA एरर: " + e.message);
 
-                // 2. लॉगिन लॉजिक (Final Verified Code)
+    // 2. लॉगिन लॉजिक (Final Corrected Code - Use this to fix button)
     document.getElementById('login-btn').addEventListener('click', async () => {
+        const fullName = document.getElementById('full-name');
+        const mobileNum = document.getElementById('mobile-number');
         const email = document.getElementById('email-field').value.trim();
         const pass = document.getElementById('pass-field').value;
 
-        // अगर ईमेल या पासवर्ड खाली है, तो फॉर्म को लॉगिन मोड में बदलें
-        if (!email || !pass) {
-            document.getElementById('full-name').classList.add('hidden');
-            document.getElementById('mobile-number').classList.add('hidden');
+        // अगर नाम वाला बॉक्स अभी भी दिख रहा है, तो उसे छुपाएं और लॉगिन मोड चालू करें
+        if (fullName.style.display !== 'none') {
+            fullName.style.display = 'none';
+            mobileNum.style.display = 'none';
             document.querySelector('h2').innerText = "KRYA Login";
-            alert("अब अपना ईमेल और पासवर्ड भरकर दोबारा लॉगिन दबाएं।");
+            alert("लॉगिन मोड सक्रिय! अब अपना ईमेल और पासवर्ड भरें।");
             return;
         }
 
+        // अगर बॉक्स पहले से छिपे हैं, तो असली लॉगिन प्रक्रिया शुरू करें
         try {
             const userCred = await signInWithEmailAndPassword(auth, email, pass);
             if (!userCred.user.emailVerified) {
-                alert("कृपया पहले ईमेल वेरीफाई करें! चेक करें: " + email);
+                alert("कृपया पहले ईमेल वेरीफाई करें: " + email);
                 await signOut(auth);
             }
         } catch (e) {
             alert("लॉगिन एरर: " + e.message);
         }
     });
+                
 
             
         }
