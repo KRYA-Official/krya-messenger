@@ -39,31 +39,28 @@
 </div>
     
 
+
+</div>
+
+<script type="module">
+
+    // 1. Firebase SDK Imports  
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     
-    <div class="input-area">
-        <textarea id="msgInput" placeholder="संदेश लिखें..."></textarea>
-        <button id="send-btn" class="send-btn"><i class="fas fa-paper-plane"></i></button>
-    </div>
-</div>
-
-<script type="module">
-    // Firebase SDK Imports
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-    // Your Firebase Configuration (Verified)
+    
+    // 2. Your Firebase Configuration (Verified)
     const firebaseConfig = {
         apiKey: "AIzaSyCtSIGAybHuIga19qPPRIegRrsbhvJV2c",
         authDomain: "krya-94e55.firebaseapp.com",
         projectId: "krya-94e55",
         storageBucket: "krya-94e55.firebasestorage.app",
         messagingSenderId: "1025043894227",
-        appId: "1:1025043894227:web:fa57c21ed2f6381a792926"
+        appId: "1:1025043894227:web:fa57c21ed2f6381a792926",
     };
+    
+    
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
