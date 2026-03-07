@@ -98,31 +98,38 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
             document.getElementById('handle-screen').classList.remove('hidden');
         } catch (e) {
             alert("KRYA एरर: " + e.message);
- 
-                await signOut(auth);
-            }
-        } catch (e) {
-            alert("लॉगिन एरर: " + e.message);
-     // 2. लॉगिन मोड और लॉगिन प्रोसेस (Super Fixed)
+     // 2. लॉगिन मोड स्विच और लॉगिन प्रक्रिया
     document.getElementById('login-btn').addEventListener('click', async () => {
         const nameField = document.getElementById('full-name');
         const mobileField = document.getElementById('mobile-number');
         const email = document.getElementById('email-field').value.trim();
         const pass = document.getElementById('pass-field').value;
 
-        // अगर नाम वाला बॉक्स दिख रहा है, तो उसे छुपाकर लॉगिन मोड में बदलें
+        // स्टेप 1: अगर नाम वाला बॉक्स दिख रहा है, तो उसे गायब करो (लॉगिन मोड चालू)
         if (!nameField.classList.contains('hidden')) {
             nameField.classList.add('hidden');
             mobileField.classList.add('hidden');
             document.querySelector('h2').innerText = "KRYA Login Mode";
-            return; 
+            return; // यहाँ रुकें ताकि यूजर ईमेल/पासवर्ड भर सके
         }
 
-        // अगर ईमेल या पासवर्ड खाली है
+        // स्टेप 2: अगर बॉक्स पहले से छिपे हैं, तो ही लॉगिन की कोशिश करें
         if (!email || !pass) {
-            alert("कृपया ईमेल और पासवर्ड भरें!");
+            alert("कृपया लॉगिन के लिए ईमेल और पासवर्ड भरें!");
             return;
         }
+
+        try {
+            const userCred = await signInWithEmailAndPassword(auth, email, pass);
+            if (!userCred.user.emailVerified) {
+                alert("कृपया पहले ईमेल वेरीफाई करें!");
+                await signOut(auth);
+            }
+        } catch (e) {
+            alert("लॉगिन एरर: " + e.message);
+        }
+    });
+            
 
         try {
             const userCred = await signInWithEmailAndPassword(auth, email, pass);
