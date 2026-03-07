@@ -68,7 +68,7 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // 1. साइन-अप लॉजिक
+        // 1. साइन-अप लॉजिक
     document.getElementById('signup-btn').addEventListener('click', async () => {
         const name = document.getElementById('full-name').value;
         const mobile = document.getElementById('mobile-number').value;
@@ -85,7 +85,6 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
             await sendEmailVerification(userCred.user);
             alert("वेरिफिकेशन लिंक आपके ईमेल पर भेज दिया गया है!");
 
-            // Firestore में डेटा सेव करना
             await setDoc(doc(db, "users", userCred.user.uid), {
                 fullName: name,
                 phone: mobile,
@@ -98,6 +97,9 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
             document.getElementById('handle-screen').classList.remove('hidden');
         } catch (e) {
             alert("KRYA एरर: " + e.message);
+        } // <--- यहाँ ब्रैकेट बंद होना ज़रूरी था
+    });
+
     // 2. लॉगिन बटन का फाइनल फिक्स (Direct Style Change)
     document.getElementById('login-btn').addEventListener('click', async (e) => {
         e.preventDefault(); 
@@ -106,7 +108,7 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
         const emailField = document.getElementById('email-field');
         const passField = document.getElementById('pass-field');
 
-        // अगर नाम वाला बॉक्स दिख रहा है, तो उसे तुरंत छुपाएं
+        // अगर नाम वाला बॉक्स दिख रहा है, तो उसे तुरंत छुपाएं (लॉगिन मोड)
         if (nameField.style.display !== 'none') {
             nameField.style.display = 'none';
             mobileField.style.display = 'none';
@@ -114,7 +116,6 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
             return;
         }
 
-        // अगर बॉक्स पहले से छिपे हैं, तो लॉगिन करें
         const email = emailField.value.trim();
         const pass = passField.value;
 
@@ -133,7 +134,7 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
             alert("लॉगिन एरर: " + error.message);
         }
     });
-            
+    
 
     // 3. हैंडल सेव करने का लॉजिक
     document.getElementById('save-handle-btn').addEventListener('click', async () => {
