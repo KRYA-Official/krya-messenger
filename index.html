@@ -13,22 +13,23 @@
         .auth-btn { background: #fbbf24; color: #0f172a; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; }
         .container { max-width: 500px; margin: auto; background: #0f172a; height: 100vh; display: flex; flex-direction: column; }
         #feed-list { flex: 1; overflow-y: auto; padding: 15px; }
-        .input-area { background: #1e293b; padding: 15px; display: flex; gap: 10px; }
-        textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 10px; border-radius: 10px; resize: none; }
-        .send-btn { background: #fbbf24; border: none; width: 50px; border-radius: 10px; color: #0f172a; }
+        .input-area { background: #1e293b; padding: 15px; display: flex; gap: 10px; border-top: 1px solid #334155; }
+        textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 10px; border-radius: 10px; resize: none; height: 45px; }
+        .send-btn { background: #fbbf24; border: none; width: 50px; border-radius: 10px; color: #0f172a; cursor: pointer; font-size: 1.2rem; }
         .hidden { display: none !important; }
+        .header { background: #1e293b; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #fbbf24; }
     </style>
 </head>
 <body>
 
 <div id="auth-screen" class="auth-box">
-    <h2 style="color:#fbbf24;">KRYA Login</h2>
+    <h2 id="auth-title" style="color:#fbbf24; margin-bottom: 15px;">KRYA Login</h2>
     <input type="text" id="full-name" placeholder="आपका पूरा नाम">
     <input type="tel" id="mobile-number" placeholder="मोबाइल नंबर">
     <input type="email" id="email-field" placeholder="ईमेल आईडी">
     <input type="password" id="pass-field" placeholder="पासवर्ड">
     <button class="auth-btn" id="signup-btn">साइन-अप करें</button>
-    <button class="auth-btn" style="background:#334155; margin-top:10px;" id="login-btn">लॉगिन</button>
+    <button class="auth-btn" style="background:#334155; margin-top:10px; color:white;" id="login-btn">लॉगिन</button>
 </div>
 
 <div id="handle-screen" class="auth-box hidden">
@@ -37,20 +38,24 @@
     <input type="text" id="username-field" placeholder="username">
     <button class="auth-btn" id="save-handle-btn">हैंडल सेव करें</button>
 </div>
-    
 
-
+<div id="main-app" class="container hidden">
+    <div class="header">
+        <h3 style="color:#fbbf24;">KRYA Messenger</h3>
+        <button id="logout-btn" style="background:none; border:none; color:#ff4d4d; cursor:pointer;"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+    <div id="feed-list"></div>
+    <div class="input-area">
+        <textarea id="msgInput" placeholder="अपना संदेश लिखें..."></textarea>
+        <button id="send-btn" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+    </div>
 </div>
 
 <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // 1. Firebase SDK Imports  
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    
-    
-    // 2. Your Firebase Configuration (Updated with Official Key)
     const firebaseConfig = {
         apiKey: "AIzaSyCtSIGAybHuIga19QpPRS1egRrsbhvJV2c",
         authDomain: "krya-94e55.firebaseapp.com",
@@ -60,72 +65,55 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
         appId: "1:1025043894227:web:fa57c21ed2f6381a792926",
         measurementId: "G-VMC9CDSCXK"
     };
-    
-    
-    
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-        // 1. साइन-अप लॉजिक
+    // --- 1. साइन-अप लॉजिक ---
     document.getElementById('signup-btn').addEventListener('click', async () => {
         const name = document.getElementById('full-name').value;
         const mobile = document.getElementById('mobile-number').value;
         const email = document.getElementById('email-field').value.trim();
         const pass = document.getElementById('pass-field').value;
 
-        if (!name || !email || !pass) { 
-            alert("कृपया पूरी जानकारी भरें"); 
-            return; 
-        }
+        if (!name || !email || !pass) { alert("कृपया पूरी जानकारी भरें"); return; }
 
         try {
             const userCred = await createUserWithEmailAndPassword(auth, email, pass);
             await sendEmailVerification(userCred.user);
-            alert("वेरिफिकेशन लिंक आपके ईमेल पर भेज दिया गया है!");
+            alert("वेरिफिकेशन लिंक ईमेल पर भेजा गया!");
 
             await setDoc(doc(db, "users", userCred.user.uid), {
-                fullName: name,
-                phone: mobile,
-                email: email,
-                uid: userCred.user.uid,
-                isVerified: false
+                fullName: name, phone: mobile, email: email, uid: userCred.user.uid
             });
 
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('handle-screen').classList.remove('hidden');
-        } catch (e) {
-            alert("KRYA एरर: " + e.message);
-        } // <--- यहाँ ब्रैकेट बंद होना ज़रूरी था
+        } catch (e) { alert("साइन-अप एरर: " + e.message); }
     });
 
-    // 2. लॉगिन बटन का फाइनल वर्किंग कोड (Class-based Fix)
+    // --- 2. लॉगिन लॉजिक (सुपर फिक्स) ---
     document.getElementById('login-btn').addEventListener('click', async (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
         const nameField = document.getElementById('full-name');
         const mobileField = document.getElementById('mobile-number');
         const signupBtn = document.getElementById('signup-btn');
         const emailField = document.getElementById('email-field');
         const passField = document.getElementById('pass-field');
 
-        // अगर नाम वाला बॉक्स 'hidden' नहीं है, तो लॉगिन मोड चालू करें
+        // अगर नाम वाला बॉक्स 'hidden' नहीं है, तो उसे छुपाकर लॉगिन मोड सक्रिय करें
         if (!nameField.classList.contains('hidden')) {
             nameField.classList.add('hidden');
             mobileField.classList.add('hidden');
             signupBtn.classList.add('hidden');
-            document.querySelector('h2').innerText = "KRYA Login Mode";
+            document.getElementById('auth-title').innerText = "KRYA Login Mode";
             return;
         }
 
-        // लॉगिन करने की प्रक्रिया
         const email = emailField.value.trim();
         const pass = passField.value;
-
-        if (!email || !pass) {
-            alert("कृपया ईमेल और पासवर्ड भरें!");
-            return;
-        }
+        if (!email || !pass) { alert("ईमेल और पासवर्ड भरें!"); return; }
 
         try {
             const userCred = await signInWithEmailAndPassword(auth, email, pass);
@@ -133,41 +121,20 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
                 alert("कृपया पहले ईमेल वेरीफाई करें!");
                 await signOut(auth);
             }
-        } catch (error) {
-            alert("लॉगिन एरर: " + error.message);
-        }
+        } catch (error) { alert("लॉगिन एरर: " + error.message); }
     });
-    
-            }
-        } catch (error) {
-            alert("लॉगिन एरर: " + error.message);
-        }
-    });
-    
-        } catch (error) {
-            alert("लॉगिन एरर: " + error.message);
-        }
-    });
-    
-        }
-    });
-    
 
-    // 3. हैंडल सेव करने का लॉजिक
+    // --- 3. हैंडल सेव लॉजिक ---
     document.getElementById('save-handle-btn').addEventListener('click', async () => {
         const handle = document.getElementById('username-field').value.trim();
         if (handle && auth.currentUser) {
-            await updateDoc(doc(db, "users", auth.currentUser.uid), { 
-                handle: "@" + handle 
-            });
+            await updateDoc(doc(db, "users", auth.currentUser.uid), { handle: "@" + handle });
             alert("आपका KRYA हैंडल @" + handle + " तैयार है!");
             location.reload(); 
         }
     });
 
-    document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
-
-    // 4. मैसेजिंग लॉजिक
+    // --- 4. मैसेज भेजना ---
     document.getElementById('send-btn').addEventListener('click', async () => {
         const text = document.getElementById('msgInput').value;
         if (text.trim() !== "" && auth.currentUser) {
@@ -180,19 +147,24 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
         }
     });
 
-    // 5. Auth State Change (लॉगिन स्थिति चेक करना)
+    // --- 5. ऑथेंटिकेशन स्थिति चेक करना ---
     onAuthStateChanged(auth, (user) => {
+        const authScreen = document.getElementById('auth-screen');
+        const mainApp = document.getElementById('main-app');
+        const handleScreen = document.getElementById('handle-screen');
+
         if (user && user.emailVerified) {
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('handle-screen').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
+            authScreen.classList.add('hidden');
+            handleScreen.classList.add('hidden');
+            mainApp.classList.remove('hidden');
             loadMessages();
         } else {
-            document.getElementById('auth-screen').classList.remove('hidden');
-            document.getElementById('main-app').classList.add('hidden');
+            authScreen.classList.remove('hidden');
+            mainApp.classList.add('hidden');
         }
     });
 
+    // --- 6. मैसेज लोड करना ---
     function loadMessages() {
         const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
         onSnapshot(q, (snapshot) => {
@@ -201,13 +173,15 @@ import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderB
             snapshot.forEach((doc) => {
                 const data = doc.data();
                 const card = document.createElement('div');
-                card.style = "background:#1e293b; padding:10px; border-radius:10px; margin-bottom:10px;";
-                card.innerHTML = `<b>@${data.user}</b><p>${data.text}</p>`;
+                card.style = "background:#1e293b; padding:10px; border-radius:10px; margin-bottom:10px; border-left: 3px solid #fbbf24;";
+                card.innerHTML = `<small style="color:#fbbf24;">@${data.user}</small><p style="margin-top:5px;">${data.text}</p>`;
                 feedList.appendChild(card);
             });
             feedList.scrollTop = feedList.scrollHeight;
         });
     }
+
+    document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
 </script>
 </body>
 </html>
