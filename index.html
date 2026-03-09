@@ -7,17 +7,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: sans-serif; background: #0b1120; color: white; }
-        .auth-box { background: #1e293b; padding: 30px; border-radius: 20px; width: 85%; max-width: 400px; margin: 100px auto; text-align: center; border: 2px solid #fbbf24; }
-        .auth-box input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #334155; background: #0b1120; color: white; }
-        .auth-btn { background: #fbbf24; color: #0f172a; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; }
-        .container { max-width: 500px; margin: auto; background: #0f172a; height: 100vh; display: flex; flex-direction: column; }
-        #feed-list { flex: 1; overflow-y: auto; padding: 15px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b1120; color: white; }
+        .auth-box { background: #1e293b; padding: 30px; border-radius: 20px; width: 85%; max-width: 400px; margin: 100px auto; text-align: center; border: 2px solid #fbbf24; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .auth-box input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #334155; background: #0b1120; color: white; outline: none; }
+        .auth-btn { background: #fbbf24; color: #0f172a; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; transition: 0.3s; }
+        .auth-btn:hover { background: #eab308; }
+        .container { max-width: 500px; margin: auto; background: #0f172a; height: 100vh; display: flex; flex-direction: column; position: relative; }
+        
+        /* Premium Header Design */
+        .app-header { background: #1e293b; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #fbbf24; position: sticky; top: 0; z-index: 1000; }
+        .brand-name { font-size: 1.4rem; font-weight: bold; color: #fbbf24; letter-spacing: 2px; text-transform: uppercase; }
+        .header-icon { color: white; font-size: 1.2rem; cursor: pointer; transition: 0.2s; }
+        .header-icon:hover { color: #fbbf24; }
+
+        #feed-list { flex: 1; overflow-y: auto; padding: 15px; scrollbar-width: thin; }
         .input-area { background: #1e293b; padding: 15px; display: flex; gap: 10px; border-top: 1px solid #334155; }
-        textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 10px; border-radius: 10px; resize: none; height: 45px; }
-        .send-btn { background: #fbbf24; border: none; width: 50px; border-radius: 10px; color: #0f172a; cursor: pointer; font-size: 1.2rem; }
+        textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 10px; border-radius: 10px; resize: none; height: 45px; outline: none; }
+        .send-btn { background: #fbbf24; border: none; width: 55px; border-radius: 10px; color: #0f172a; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
         .hidden { display: none !important; }
-        .header { background: #1e293b; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #fbbf24; }
     </style>
 </head>
 <body>
@@ -40,9 +47,13 @@
 </div>
 
 <div id="main-app" class="container hidden">
-    <div class="header">
-        <h3 style="color:#fbbf24;">KRYA Messenger</h3>
-        <button id="logout-btn" style="background:none; border:none; color:#ff4d4d; cursor:pointer;"><i class="fas fa-sign-out-alt"></i></button>
+    <div class="app-header">
+        <i class="fas fa-bars header-icon" id="menu-btn"></i>
+        <div class="brand-name">KRYA</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <i class="fas fa-search header-icon"></i>
+            <i class="fas fa-sign-out-alt header-icon" id="logout-btn" style="color: #ff4d4d;"></i>
+        </div>
     </div>
     <div id="feed-list"></div>
     <div class="input-area">
@@ -69,6 +80,7 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    
 
     // --- 1. साइन-अप लॉजिक ---
     document.getElementById('signup-btn').addEventListener('click', async () => {
