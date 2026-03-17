@@ -218,6 +218,47 @@
     }
 
     document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
+
+// --- 7. Global Search Logic (New) ---
+
+// सर्च बार को दिखाने और छुपाने का काम
+document.getElementById('search-btn').addEventListener('click', () => {
+    const searchContainer = document.getElementById('search-container');
+    searchContainer.classList.toggle('hidden');
+    if (!searchContainer.classList.contains('hidden')) {
+        document.getElementById('search-input').focus();
+    }
+});
+
+// 'X' बटन दबाने पर सर्च बार बंद करना
+document.getElementById('close-search').addEventListener('click', () => {
+    document.getElementById('search-container').classList.add('hidden');
+});
+
+// हैंडल सर्च करने का असली लॉजिक (Enter दबाने पर)
+document.getElementById('search-input').addEventListener('keypress', async (e) => {
+    if (e.key === 'Enter') {
+        const handle = e.target.value.trim().toLowerCase().replace('@', '');
+        if (!handle) return;
+
+        try {
+            const handleRef = doc(db, "handles", handle);
+            const handleSnap = await getDoc(handleRef);
+
+            if (handleSnap.exists()) {
+                const userData = handleSnap.data();
+                alert("यूजर मिल गया! @" + handle + "\nअब आप इनसे जुड़ सकते हैं।");
+            } else {
+                alert("माफ़ करें, @" + handle + " नाम का कोई यूजर नहीं मिला।");
+            }
+        } catch (err) {
+            console.error("सर्च एरर:", err);
+            alert("सर्च करने में कुछ दिक्कत आई।");
+        }
+    }
+});
+    
+    
 </script>
 </body>
 </html>
