@@ -136,28 +136,45 @@
         } catch (error) { alert("लॉगिन एरर: " + error.message); }
     });
 
-    // --- 3. हैंडल सेव लॉजिक ---
+    // --- 3. हैंडल सेव लॉजिक (UNIQUE CHECK FIXED) ---
     document.getElementById('save-handle-btn').addEventListener('click', async () => {
-        const handle = document.getElementById('username-field').value.trim();
+        const handle = document.getElementById('username-field').value.trim().toLowerCase();
         if (handle && auth.currentUser) {
-            await updateDoc(doc(db, "users", auth.currentUser.uid), { handle: "@" + handle });
-            alert("आपका KRYA हैंडल @" + handle + " तैयार है!");
-            location.reload(); 
+            try {
+                // पहले चेक करें कि क्या यह हैंडल किसी और ने लिया है
+                const handleRef = doc(db, "handles", handle);
+                const handleSnap = await getDoc(handleRef); 
+
+                if (handleSnap.exists()) {
+                    alert("यह हैंडल पहले से बुक है! कृपया दूसरा चुनें।");
+                } else {
+                    // हैंडल को रिजर्व करें और यूजर प्रोफाइल अपडेट करें
+                    await setDoc(handleRef, { uid: auth.currentUser.uid });
+                    await updateDoc(doc(db, "users", auth.currentUser.uid), { handle: "@" + handle });
+                    alert("बधाई हो! आपका यूनिक KRYA हैंडल @" + handle + " तैयार है।");
+                    location.reload(); 
+                }
+            } catch (e) { alert("हैंडल एरर: " + e.message); }
         }
     });
 
-    // --- 4. मैसेज भेजना ---
+    // --- 4. मैसेज भेजना (STORAGE MANAGER ENABLED) ---
     document.getElementById('send-btn').addEventListener('click', async () => {
         const text = document.getElementById('msgInput').value;
         if (text.trim() !== "" && auth.currentUser) {
+            // 48 घंटे बाद का समय सेट करें (Storage को खाली रखने के लिए)
+            const expiryTime = Date.now() + (48 * 60 * 60 * 1000); 
+
             await addDoc(collection(db, "messages"), {
                 text: text,
                 user: auth.currentUser.email.split('@')[0],
-                createdAt: serverTimestamp()
+                createdAt: serverTimestamp(),
+                expiresAt: expiryTime // यह मैनेजर को बताएगा कि कब डिलीट करना है
             });
             document.getElementById('msgInput').value = '';
         }
     });
+
 
     // --- 5. ऑथेंटिकेशन स्थिति चेक करना ---
     onAuthStateChanged(auth, (user) => {
