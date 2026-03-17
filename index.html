@@ -51,10 +51,16 @@
         <i class="fas fa-bars header-icon" id="menu-btn"></i>
         <div class="brand-name">KRYA</div>
         <div style="display: flex; gap: 15px; align-items: center;">
-            <i class="fas fa-search header-icon"></i>
+            <i class="fas fa-search header-icon" id="search-btn"></i>
             <i class="fas fa-sign-out-alt header-icon" id="logout-btn" style="color: #ff4d4d;"></i>
         </div>
     </div>
+
+    <div id="search-container" class="hidden" style="background: #1e293b; padding: 10px; border-bottom: 2px solid #fbbf24; display: flex; gap: 10px;">
+        <input type="text" id="search-input" placeholder="हैंडल सर्च करें (उदा: mukesh)..." style="flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 8px; border-radius: 5px; outline: none;">
+        <button id="close-search" style="background: none; border: none; color: #fbbf24; cursor: pointer;"><i class="fas fa-times"></i></button>
+    </div>
+
     <div id="feed-list"></div>
     <div class="input-area">
         <textarea id="msgInput" placeholder="अपना संदेश लिखें..."></textarea>
@@ -65,7 +71,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCtSIGAybHuIga19QpPRS1egRrsbhvJV2c",
@@ -76,6 +82,7 @@
         appId: "1:1025043894227:web:fa57c21ed2f6381a792926",
         measurementId: "G-VMC9CDSCXK"
     };
+    
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
