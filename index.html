@@ -13,22 +13,19 @@
         .auth-btn { background: #fbbf24; color: #0f172a; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; transition: 0.3s; }
         .auth-btn:hover { background: #eab308; }
         .container { max-width: 500px; margin: auto; background: #0f172a; height: 100vh; display: flex; flex-direction: column; position: relative; }
-        
-        /* Premium Header Design */
         .app-header { background: #1e293b; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #fbbf24; position: sticky; top: 0; z-index: 1000; }
         .brand-name { font-size: 1.4rem; font-weight: bold; color: #fbbf24; letter-spacing: 2px; text-transform: uppercase; }
         .header-icon { color: white; font-size: 1.2rem; cursor: pointer; transition: 0.2s; }
         .header-icon:hover { color: #fbbf24; }
-
         #feed-list { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; scrollbar-width: thin; }
-.msg { max-width: 80%; padding: 10px; border-radius: 12px; margin-bottom: 10px; position: relative; display: flex; flex-direction: column; }
-.sent { align-self: flex-end; background: #fbbf24 !important; color: #0f172a !important; border-bottom-right-radius: 2px; }
-.received { align-self: flex-start; background: #1e293b !important; color: white !important; border-bottom-left-radius: 2px; border: 1px solid #334155; }
-.input-area { background: #1e293b; padding: 15px; display: flex; gap: 10px; border-top: 1px solid #334155; }
-textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 10px; border-radius: 10px; resize: none; height: 45px; }
-.send-btn { background: #fbbf24; border: none; width: 55px; border-radius: 10px; color: #0f172a; cursor: pointer; }
-.hidden { display: none !important; }
-        
+        .msg { max-width: 80%; padding: 10px; border-radius: 12px; margin-bottom: 10px; position: relative; display: flex; flex-direction: column; }
+        .sent { align-self: flex-end; background: #fbbf24 !important; color: #0f172a !important; border-bottom-right-radius: 2px; }
+        .received { align-self: flex-start; background: #1e293b !important; color: white !important; border-bottom-left-radius: 2px; border: 1px solid #334155; }
+        .input-area { background: #1e293b; padding: 15px; display: flex; gap: 10px; border-top: 1px solid #334155; }
+        textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 10px; border-radius: 10px; resize: none; height: 45px; }
+        .send-btn { background: #fbbf24; border: none; width: 55px; border-radius: 10px; color: #0f172a; cursor: pointer; }
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
 
@@ -44,7 +41,6 @@ textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white
 
 <div id="handle-screen" class="auth-box hidden">
     <h2 style="color:#fbbf24;">KRYA हैंडल चुनें</h2>
-    <p style="font-size: 12px; margin-bottom: 10px;">अपनी पहचान बनाएँ (उदा: @mukesh)</p>
     <input type="text" id="username-field" placeholder="username">
     <button class="auth-btn" id="save-handle-btn">हैंडल सेव करें</button>
 </div>
@@ -58,12 +54,6 @@ textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white
             <i class="fas fa-sign-out-alt header-icon" id="logout-btn" style="color: #ff4d4d;"></i>
         </div>
     </div>
-
-    <div id="search-container" class="hidden" style="background: #1e293b; padding: 10px; border-bottom: 2px solid #fbbf24; display: flex; gap: 10px;">
-        <input type="text" id="search-input" placeholder="हैंडल सर्च करें (उदा: mukesh)..." style="flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 8px; border-radius: 5px; outline: none;">
-        <button id="close-search" style="background: none; border: none; color: #fbbf24; cursor: pointer;"><i class="fas fa-times"></i></button>
-    </div>
-
     <div id="feed-list"></div>
     <div class="input-area">
         <textarea id="msgInput" placeholder="अपना संदेश लिखें..."></textarea>
@@ -85,198 +75,74 @@ textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white
         appId: "1:1025043894227:web:fa57c21ed2f6381a792926",
         measurementId: "G-VMC9CDSCXK"
     };
-    
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    
 
-    // --- 1. साइन-अप लॉजिक ---
+    // साइन-अप
     document.getElementById('signup-btn').addEventListener('click', async () => {
         const name = document.getElementById('full-name').value;
-        const mobile = document.getElementById('mobile-number').value;
         const email = document.getElementById('email-field').value.trim();
         const pass = document.getElementById('pass-field').value;
-
-        if (!name || !email || !pass) { alert("कृपया पूरी जानकारी भरें"); return; }
-
         try {
             const userCred = await createUserWithEmailAndPassword(auth, email, pass);
-            await sendEmailVerification(userCred.user);
-            alert("वेरिफिकेशन लिंक ईमेल पर भेजा गया!");
-
-            await setDoc(doc(db, "users", userCred.user.uid), {
-                fullName: name, phone: mobile, email: email, uid: userCred.user.uid
-            });
-
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('handle-screen').classList.remove('hidden');
-        } catch (e) { alert("साइन-अप एरर: " + e.message); }
+            await setDoc(doc(db, "users", userCred.user.uid), { fullName: name, email: email, uid: userCred.user.uid });
+            location.reload();
+        } catch (e) { alert(e.message); }
     });
 
-    // --- 2. लॉगिन लॉजिक (सुपर फिक्स) ---
-    document.getElementById('login-btn').addEventListener('click', async (e) => {
-        e.preventDefault();
-        const nameField = document.getElementById('full-name');
-        const mobileField = document.getElementById('mobile-number');
-        const signupBtn = document.getElementById('signup-btn');
-        const emailField = document.getElementById('email-field');
-        const passField = document.getElementById('pass-field');
-
-        // अगर नाम वाला बॉक्स 'hidden' नहीं है, तो उसे छुपाकर लॉगिन मोड सक्रिय करें
-        if (!nameField.classList.contains('hidden')) {
-            nameField.classList.add('hidden');
-            mobileField.classList.add('hidden');
-            signupBtn.classList.add('hidden');
-            document.getElementById('auth-title').innerText = "KRYA Login Mode";
-            return;
-        }
-
-        const email = emailField.value.trim();
-        const pass = passField.value;
-        if (!email || !pass) { alert("ईमेल और पासवर्ड भरें!"); return; }
-
-        try {
-            const userCred = await signInWithEmailAndPassword(auth, email, pass);
-            if (!userCred.user.emailVerified) {
-                alert("कृपया पहले ईमेल वेरीफाई करें!");
-                await signOut(auth);
-            }
-        } catch (error) { alert("लॉगिन एरर: " + error.message); }
+    // लॉगिन
+    document.getElementById('login-btn').addEventListener('click', async () => {
+        const email = document.getElementById('email-field').value.trim();
+        const pass = document.getElementById('pass-field').value;
+        try { await signInWithEmailAndPassword(auth, email, pass); } catch (e) { alert(e.message); }
     });
 
-    // --- 3. हैंडल सेव लॉजिक (UNIQUE CHECK FIXED) ---
-    document.getElementById('save-handle-btn').addEventListener('click', async () => {
-        const handle = document.getElementById('username-field').value.trim().toLowerCase();
-        if (handle && auth.currentUser) {
-            try {
-                // पहले चेक करें कि क्या यह हैंडल किसी और ने लिया है
-                const handleRef = doc(db, "handles", handle);
-                const handleSnap = await getDoc(handleRef); 
-
-                if (handleSnap.exists()) {
-                    alert("यह हैंडल पहले से बुक है! कृपया दूसरा चुनें।");
-                } else {
-                    // हैंडल को रिजर्व करें और यूजर प्रोफाइल अपडेट करें
-                    await setDoc(handleRef, { uid: auth.currentUser.uid });
-                    await updateDoc(doc(db, "users", auth.currentUser.uid), { handle: "@" + handle });
-                    alert("बधाई हो! आपका यूनिक KRYA हैंडल @" + handle + " तैयार है।");
-                    location.reload(); 
-                }
-            } catch (e) { alert("हैंडल एरर: " + e.message); }
-        }
-    });
-
-    // --- 4. मैसेज भेजना (STORAGE MANAGER ENABLED) ---
+    // मैसेज भेजना
     document.getElementById('send-btn').addEventListener('click', async () => {
         const text = document.getElementById('msgInput').value;
         if (text.trim() !== "" && auth.currentUser) {
-            // 48 घंटे बाद का समय सेट करें (Storage को खाली रखने के लिए)
-            const expiryTime = Date.now() + (48 * 60 * 60 * 1000); 
-
             await addDoc(collection(db, "messages"), {
                 text: text,
                 user: auth.currentUser.email.split('@')[0],
-                createdAt: serverTimestamp(),
-                expiresAt: expiryTime // यह मैनेजर को बताएगा कि कब डिलीट करना है
+                createdAt: serverTimestamp()
             });
             document.getElementById('msgInput').value = '';
         }
     });
 
-
-    // --- 5. ऑथेंटिकेशन स्थिति चेक करना ---
+    // ऑथेंटिकेशन चेक
     onAuthStateChanged(auth, (user) => {
-        const authScreen = document.getElementById('auth-screen');
-        const mainApp = document.getElementById('main-app');
-        const handleScreen = document.getElementById('handle-screen');
-
-        if (user && user.emailVerified) {
-            authScreen.classList.add('hidden');
-            handleScreen.classList.add('hidden');
-            mainApp.classList.remove('hidden');
+        if (user) {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
             loadMessages();
         } else {
-            authScreen.classList.remove('hidden');
-            mainApp.classList.add('hidden');
+            document.getElementById('auth-screen').classList.remove('hidden');
+            document.getElementById('main-app').classList.add('hidden');
         }
     });
 
     function loadMessages() {
-    const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
-    onSnapshot(q, (snapshot) => {
-        const feedList = document.getElementById('feed-list');
-        feedList.innerHTML = "";
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            const card = document.createElement('div');
-            
-            const currentUserHandle = auth.currentUser ? auth.currentUser.email.split('@')[0] : "";
-            const isMe = (data.user === currentUserHandle);
-            
-            card.className = `msg ${isMe ? 'sent' : 'received'}`;
-            card.innerHTML = `
-                <small style="font-weight:bold; color: ${isMe ? '#0f172a' : '#fbbf24'};">@${data.user}</small>
-                <p style="margin-top:5px;">${data.text}</p>
-            `;
-            feedList.appendChild(card);
-        });
-        feedList.scrollTop = feedList.scrollHeight;
-    });
-            }
-            
-    });
-            }
-            
-    });
-            }
-            
+        const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
+        onSnapshot(q, (snapshot) => {
+            const feedList = document.getElementById('feed-list');
+            feedList.innerHTML = "";
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                const currentUserHandle = auth.currentUser ? auth.currentUser.email.split('@')[0] : "";
+                const isMe = (data.user === currentUserHandle);
+                const card = document.createElement('div');
+                card.className = `msg ${isMe ? 'sent' : 'received'}`;
+                card.innerHTML = `<small style="font-weight:bold; color:${isMe ? '#0f172a' : '#fbbf24'};">@${data.user}</small><p>${data.text}</p>`;
+                feedList.appendChild(card);
+            });
+            feedList.scrollTop = feedList.scrollHeight;
         });
     }
 
     document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
-
-// --- 7. Global Search Logic (New) ---
-
-// सर्च बार को दिखाने और छुपाने का काम
-document.getElementById('search-btn').addEventListener('click', () => {
-    const searchContainer = document.getElementById('search-container');
-    searchContainer.classList.toggle('hidden');
-    if (!searchContainer.classList.contains('hidden')) {
-        document.getElementById('search-input').focus();
-    }
-});
-
-// 'X' बटन दबाने पर सर्च बार बंद करना
-document.getElementById('close-search').addEventListener('click', () => {
-    document.getElementById('search-container').classList.add('hidden');
-});
-
-// हैंडल सर्च करने का असली लॉजिक (Enter दबाने पर)
-document.getElementById('search-input').addEventListener('keypress', async (e) => {
-    if (e.key === 'Enter') {
-        const handle = e.target.value.trim().toLowerCase().replace('@', '');
-        if (!handle) return;
-
-        try {
-            const handleRef = doc(db, "handles", handle);
-            const handleSnap = await getDoc(handleRef);
-
-            if (handleSnap.exists()) {
-                const userData = handleSnap.data();
-                alert("यूजर मिल गया! @" + handle + "\nअब आप इनसे जुड़ सकते हैं।");
-            } else {
-                alert("माफ़ करें, @" + handle + " नाम का कोई यूजर नहीं मिला।");
-            }
-        } catch (err) {
-            console.error("सर्च एरर:", err);
-            alert("सर्च करने में कुछ दिक्कत आई।");
-        }
-    }
-});
-    
-    
 </script>
 </body>
 </html>
