@@ -20,12 +20,15 @@
         .header-icon { color: white; font-size: 1.2rem; cursor: pointer; transition: 0.2s; }
         .header-icon:hover { color: #fbbf24; }
 
-        #feed-list { flex: 1; overflow-y: auto; padding: 15px; scrollbar-width: thin; }
-        .input-area { background: #1e293b; padding: 15px; display: flex; gap: 10px; border-top: 1px solid #334155; }
-        textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 10px; border-radius: 10px; resize: none; height: 45px; outline: none; }
-        .send-btn { background: #fbbf24; border: none; width: 55px; border-radius: 10px; color: #0f172a; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
-        .hidden { display: none !important; }
-    </style>
+        #feed-list { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; scrollbar-width: thin; }
+.msg { max-width: 80%; padding: 10px; border-radius: 12px; margin-bottom: 10px; position: relative; display: flex; flex-direction: column; }
+.sent { align-self: flex-end; background: #fbbf24 !important; color: #0f172a !important; border-bottom-right-radius: 2px; }
+.received { align-self: flex-start; background: #1e293b !important; color: white !important; border-bottom-left-radius: 2px; border: 1px solid #334155; }
+.input-area { background: #1e293b; padding: 15px; display: flex; gap: 10px; border-top: 1px solid #334155; }
+textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 10px; border-radius: 10px; resize: none; height: 45px; }
+.send-btn { background: #fbbf24; border: none; width: 55px; border-radius: 10px; color: #0f172a; cursor: pointer; }
+.hidden { display: none !important; }
+        
 </head>
 <body>
 
@@ -200,20 +203,30 @@
         }
     });
 
-    // --- 6. मैसेज लोड करना ---
     function loadMessages() {
-        const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
-        onSnapshot(q, (snapshot) => {
-            const feedList = document.getElementById('feed-list');
-            feedList.innerHTML = "";
-            snapshot.forEach((doc) => {
-                const data = doc.data();
-                const card = document.createElement('div');
-                card.style = "background:#1e293b; padding:10px; border-radius:10px; margin-bottom:10px; border-left: 3px solid #fbbf24;";
-                card.innerHTML = `<small style="color:#fbbf24;">@${data.user}</small><p style="margin-top:5px;">${data.text}</p>`;
-                feedList.appendChild(card);
-            });
-            feedList.scrollTop = feedList.scrollHeight;
+    const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
+    onSnapshot(q, (snapshot) => {
+        const feedList = document.getElementById('feed-list');
+        feedList.innerHTML = "";
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            const card = document.createElement('div');
+            
+            // खुद के मैसेज की पहचान (ईमेल से)
+            const currentUserHandle = auth.currentUser ? auth.currentUser.email.split('@')[0] : "";
+            const isMe = (data.user === currentUserHandle);
+            
+            card.className = `msg ${isMe ? 'sent' : 'received'}`;
+            card.innerHTML = `
+                <small style="font-weight:bold; color: ${isMe ? '#0f172a' : '#fbbf24'};">@${data.user}</small>
+                <p style="margin-top:5px;">${data.text}</p>
+            `;
+            feedList.appendChild(card);
+        });
+        feedList.scrollTop = feedList.scrollHeight;
+    });
+            }
+            
         });
     }
 
