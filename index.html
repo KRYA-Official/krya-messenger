@@ -212,7 +212,6 @@ textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white
             const data = doc.data();
             const card = document.createElement('div');
             
-            // खुद के मैसेज की पहचान (ईमेल से)
             const currentUserHandle = auth.currentUser ? auth.currentUser.email.split('@')[0] : "";
             const isMe = (data.user === currentUserHandle);
             
@@ -224,6 +223,9 @@ textarea { flex: 1; background: #0b1120; border: 1px solid #334155; color: white
             feedList.appendChild(card);
         });
         feedList.scrollTop = feedList.scrollHeight;
+    });
+            }
+            
     });
             }
             
