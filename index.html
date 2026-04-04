@@ -9,8 +9,6 @@
         :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
         body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
-        
-        /* Auth & Handle Screens */
         .overlay-screen { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
         .auth-card { background: var(--card); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; border: 2px solid var(--primary); text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
         .auth-card h2 { color: var(--primary); margin-bottom: 20px; letter-spacing: 1px; }
@@ -19,24 +17,17 @@
         .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
         .btn-main { background: var(--primary); color: #0f172a; }
         .btn-sub { background: #334155; color: white; }
-        
-        /* Main App Layout */
         .app-container { max-width: 600px; margin: 0 auto; background: #0f172a; height: 100vh; display: flex; flex-direction: column; border-left: 1px solid #334155; border-right: 1px solid #334155; }
         .header { background: var(--card); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); }
         .brand { font-size: 1.5rem; font-weight: 900; color: var(--primary); }
-        
-        /* Chat Area */
         #chat-flow { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
         .bubble { max-width: 80%; padding: 10px 15px; border-radius: 15px; position: relative; font-size: 0.95rem; line-height: 1.4; }
         .bubble .u-name { display: block; font-size: 0.7rem; font-weight: bold; margin-bottom: 4px; opacity: 0.8; }
         .my-msg { align-self: flex-end; background: var(--primary); color: #0f172a; border-bottom-right-radius: 2px; }
         .other-msg { align-self: flex-start; background: var(--card); color: white; border-bottom-left-radius: 2px; border: 1px solid #334155; }
-        
-        /* Input Area */
         .footer-input { background: var(--card); padding: 15px; display: flex; gap: 10px; align-items: center; }
         #msg-input { flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 12px; border-radius: 12px; resize: none; height: 45px; outline: none; }
         .send-icon { background: var(--primary); color: #0f172a; border: none; width: 45px; height: 45px; border-radius: 12px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
-        
         .hidden { display: none !important; }
     </style>
 </head>
@@ -44,7 +35,7 @@
 
 <div id="screen-auth" class="overlay-screen">
     <div class="auth-card">
-        <h2>KRYA MESSENGER</h2>
+        <h2 id="auth-title">KRYA MESSENGER</h2>
         <div id="signup-fields">
             <input type="text" id="reg-name" placeholder="आपका पूरा नाम">
         </div>
@@ -96,7 +87,7 @@
 
     let isLoginMode = false;
 
-    // Toggle Login/Signup
+    // UI Toggle
     document.getElementById('btn-toggle').addEventListener('click', () => {
         isLoginMode = !isLoginMode;
         document.getElementById('signup-fields').classList.toggle('hidden', isLoginMode);
@@ -108,23 +99,37 @@
     document.getElementById('btn-action').addEventListener('click', async () => {
         const email = document.getElementById('reg-email').value.trim();
         const pass = document.getElementById('reg-pass').value;
-        const name = document.getElementById('reg-name').value;
+        const name = document.getElementById('reg-name').value.trim();
+        const btn = document.getElementById('btn-action');
+
+        if(!email || !pass) return alert("ईमेल और पासवर्ड भरें!");
+        
+        btn.disabled = true;
+        btn.innerText = "प्रोसेसिंग...";
 
         try {
             if (isLoginMode) {
                 await signInWithEmailAndPassword(auth, email, pass);
             } else {
-                if(!name) return alert("नाम लिखें");
+                if(!name) { 
+                    btn.disabled = false;
+                    btn.innerText = "साइन-अप करें";
+                    return alert("नाम लिखें"); 
+                }
                 const res = await createUserWithEmailAndPassword(auth, email, pass);
                 await setDoc(doc(db, "users", res.user.uid), { fullName: name, email, uid: res.user.uid });
             }
-        } catch (err) { alert(err.message); }
+        } catch (err) { 
+            alert("एरर: " + err.message);
+            btn.disabled = false;
+            btn.innerText = isLoginMode ? "लॉगिन करें" : "साइन-अप करें";
+        }
     });
 
     // Save Handle
     document.getElementById('btn-save-handle').addEventListener('click', async () => {
         const h = document.getElementById('input-handle').value.trim().toLowerCase().replace('@','');
-        if(!h) return;
+        if(!h) return alert("हैंडल लिखें!");
         
         const hRef = doc(db, "handles", h);
         const snap = await getDoc(hRef);
@@ -132,13 +137,13 @@
 
         await setDoc(hRef, { uid: auth.currentUser.uid });
         await setDoc(doc(db, "users", auth.currentUser.uid), { handle: "@"+h }, { merge: true });
+        location.reload(); // Refresh to sync state
     });
 
-    // Send Message
+    // Chat Functions
     async function doSend() {
         const txt = document.getElementById('msg-input').value.trim();
         if(!txt || !auth.currentUser) return;
-
         const uSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
         await addDoc(collection(db, "messages"), {
             text: txt,
@@ -152,7 +157,7 @@
     document.getElementById('btn-send').addEventListener('click', doSend);
     document.getElementById('msg-input').addEventListener('keydown', e => { if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); doSend(); }});
 
-    // Auth Watcher
+    // Auth Sync
     onAuthStateChanged(auth, async user => {
         const sAuth = document.getElementById('screen-auth');
         const sHand = document.getElementById('screen-handle');
