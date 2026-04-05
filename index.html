@@ -9,54 +9,64 @@
         :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
-        .auth-card { background: var(--card); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; border: 2px solid var(--primary); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .auth-card h2 { color: var(--primary); margin-bottom: 20px; font-weight: 800; }
+        .auth-card { background: var(--card); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; border: 2px solid var(--primary); text-align: center; }
         input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; outline: none; }
-        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .btn-main { background: var(--primary); color: #0f172a; }
-        .btn-sub { background: #334155; color: white; margin-top: 15px; font-size: 0.9rem; }
+        .btn-sub { background: #334155; color: white; margin-top: 15px; font-size: 0.8rem; }
         .hidden { display: none !important; }
         #app-main { width: 100%; height: 100vh; display: flex; flex-direction: column; background: #0f172a; }
         .header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); }
         #chat-flow { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
         .footer { padding: 15px; background: var(--card); display: flex; gap: 10px; }
-        #msg-input { flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 10px; border-radius: 10px; outline: none; }
+        #msg-input { flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 10px; border-radius: 10px; }
+        /* Scratch Card Style */
+        #scratch-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 15px; z-index: 100; text-align: center; border: 4px solid var(--primary); }
     </style>
 </head>
 <body>
 
 <div id="screen-auth" class="auth-card">
-    <h2 id="auth-title">KRYA MESSENGER</h2>
-    <div id="signup-fields">
-        <input type="text" id="reg-name" placeholder="आपका पूरा नाम">
-    </div>
+    <h2>KRYA MESSENGER</h2>
+    <div id="signup-fields"><input type="text" id="reg-name" placeholder="आपका पूरा नाम"></div>
     <input type="email" id="reg-email" placeholder="ईमेल आईडी">
     <input type="password" id="reg-pass" placeholder="पासवर्ड">
     <button class="btn btn-main" id="btn-action">साइन-अप करें</button>
+    <p id="btn-reset" class="hidden" style="color:var(--primary); cursor:pointer; margin-top:10px; font-size:0.8rem; text-decoration:underline;">पासवर्ड भूल गए?</p>
     <button class="btn btn-sub" id="btn-toggle">पहले से अकाउंट है? लॉगिन</button>
 </div>
 
 <div id="screen-handle" class="auth-card hidden">
     <h2>अपना हैंडल चुनें</h2>
-    <input type="text" id="input-handle" placeholder="username (जैसे: @mukesh)">
+    <input type="text" id="input-handle" placeholder="username जैसे: @mukesh">
     <button class="btn btn-main" id="btn-save-handle">प्रोफ़ाइल सेट करें</button>
 </div>
 
 <div id="app-main" class="hidden">
     <div class="header">
         <div style="color:var(--primary); font-size:1.5rem; font-weight:bold;">KRYA</div>
-        <i class="fas fa-sign-out-alt" id="btn-logout" style="color:#ef4444; cursor:pointer;"></i>
+        <div>
+            <i class="fas fa-gift" id="show-scratch" style="color:var(--primary); margin-right:20px; cursor:pointer;"></i>
+            <i class="fas fa-sign-out-alt" id="btn-logout" style="color:#ef4444; cursor:pointer;"></i>
+        </div>
     </div>
     <div id="chat-flow"></div>
     <div class="footer">
         <input type="text" id="msg-input" placeholder="संदेश लिखें...">
-        <button id="btn-send" style="background:var(--primary); border:none; padding:10px 15px; border-radius:10px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button>
+        <button id="btn-send" style="background:var(--primary); border:none; padding:10px 15px; border-radius:10px;"><i class="fas fa-paper-plane"></i></button>
     </div>
+</div>
+
+<div id="scratch-box" class="hidden">
+    <h3 style="color:#0b1120; margin-bottom:10px;">आपका लकी कार्ड!</h3>
+    <canvas id="scratch-canvas" width="200" height="100" style="background:#888; border-radius:10px;"></canvas>
+    <p id="scratch-msg" style="color:green; font-weight:bold; margin-top:10px;" class="hidden">बधाई हो! आपने कूपन जीता।</p>
+    <button onclick="document.getElementById('scratch-box').classList.add('hidden')" style="margin-top:10px; background:#0b1120; color:white; border:none; padding:5px 10px; border-radius:5px;">बंद करें</button>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -74,95 +84,105 @@
 
     let isLoginMode = false;
 
-    // लॉगिन/साइन-अप बटन बदलना
+    // Toggle Mode
     document.getElementById('btn-toggle').onclick = () => {
         isLoginMode = !isLoginMode;
         document.getElementById('signup-fields').classList.toggle('hidden', isLoginMode);
+        document.getElementById('btn-reset').classList.toggle('hidden', !isLoginMode);
         document.getElementById('btn-action').innerText = isLoginMode ? 'लॉगिन करें' : 'साइन-अप करें';
         document.getElementById('btn-toggle').innerText = isLoginMode ? 'नया अकाउंट बनाएँ' : 'पहले से अकाउंट है? लॉगिन';
     };
 
-    // मुख्य एक्शन बटन
-    document.getElementById('btn-action').onclick = async () => {
+    // Password Reset
+    document.getElementById('btn-reset').onclick = async () => {
         const email = document.getElementById('reg-email').value.trim();
-        const pass = document.getElementById('reg-pass').value;
-        const name = document.getElementById('reg-name').value.trim();
-
-        if(!email || !pass) return alert("ईमेल और पासवर्ड भरें!");
-
+        if(!email) return alert("ईमेल भरें!");
         try {
-            if(isLoginMode) {
-                await signInWithEmailAndPassword(auth, email, pass);
-            } else {
-                if(!name) return alert("नाम लिखें!");
-                const res = await createUserWithEmailAndPassword(auth, email, pass);
-                await setDoc(doc(db, "users", res.user.uid), { fullName: name, email, uid: res.user.uid });
+            await sendPasswordResetEmail(auth, email);
+            alert("पासवर्ड रिसेट लिंक आपके ईमेल पर भेज दिया गया है!");
+        } catch (e) { alert(e.message); }
+    };
+
+    // Auth Action
+    document.getElementById('btn-action').onclick = async () => {
+        const e = document.getElementById('reg-email').value.trim();
+        const p = document.getElementById('reg-pass').value;
+        const n = document.getElementById('reg-name').value.trim();
+        if(!e || !p) return alert("विवरण भरें!");
+        try {
+            if(isLoginMode) { await signInWithEmailAndPassword(auth, e, p); }
+            else { 
+                const res = await createUserWithEmailAndPassword(auth, e, p);
+                await setDoc(doc(db, "users", res.user.uid), { fullName: n, email: e, uid: res.user.uid });
             }
         } catch (err) { alert(err.message); }
     };
 
-    // हैंडल सेव करना
+    // Handle Logic
     document.getElementById('btn-save-handle').onclick = async () => {
         const h = document.getElementById('input-handle').value.trim().toLowerCase().replace('@','');
-        if(!h) return alert("हैंडल चुनें!");
+        if(!h) return alert("हैंडल चुनें");
         const hRef = doc(db, "handles", h);
         const snap = await getDoc(hRef);
-        if(snap.exists()) return alert("यह नाम पहले से बुक है!");
+        if(snap.exists()) return alert("यह नाम बुक है");
         await setDoc(hRef, { uid: auth.currentUser.uid });
         await setDoc(doc(db, "users", auth.currentUser.uid), { handle: "@"+h }, { merge: true });
         location.reload();
     };
 
-    // मैसेज भेजना
-    async function sendMessage() {
+    // Chat logic
+    document.getElementById('btn-send').onclick = async () => {
         const txt = document.getElementById('msg-input').value.trim();
         if(!txt) return;
-        const uSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
-        await addDoc(collection(db, "messages"), {
-            text: txt,
-            user: uSnap.data().handle || "User",
-            uid: auth.currentUser.uid,
-            time: serverTimestamp()
-        });
+        const u = await getDoc(doc(db, "users", auth.currentUser.uid));
+        await addDoc(collection(db, "messages"), { text: txt, user: u.data().handle, uid: auth.currentUser.uid, time: serverTimestamp() });
         document.getElementById('msg-input').value = "";
-    }
-    document.getElementById('btn-send').onclick = sendMessage;
+    };
 
-    // ऑथेंटिकेशन वॉचर
     onAuthStateChanged(auth, async user => {
-        const sAuth = document.getElementById('screen-auth');
-        const sHand = document.getElementById('screen-handle');
-        const sMain = document.getElementById('app-main');
-
+        const sAuth = document.getElementById('screen-auth'), sHand = document.getElementById('screen-handle'), sMain = document.getElementById('app-main');
         if(user) {
-            const uSnap = await getDoc(doc(db, "users", user.uid));
-            if(uSnap.exists() && uSnap.data().handle) {
+            const u = await getDoc(doc(db, "users", user.uid));
+            if(u.exists() && u.data().handle) {
                 sAuth.classList.add('hidden'); sHand.classList.add('hidden'); sMain.classList.remove('hidden');
                 initChat();
-            } else {
-                sAuth.classList.add('hidden'); sHand.classList.remove('hidden'); sMain.classList.add('hidden');
-            }
-        } else {
-            sAuth.classList.remove('hidden'); sHand.classList.add('hidden'); sMain.classList.add('hidden');
-        }
+            } else { sAuth.classList.add('hidden'); sHand.classList.remove('hidden'); }
+        } else { sAuth.classList.remove('hidden'); sMain.classList.add('hidden'); }
     });
 
     function initChat() {
-        const q = query(collection(db, "messages"), orderBy("time", "asc"));
-        onSnapshot(q, snap => {
+        onSnapshot(query(collection(db, "messages"), orderBy("time", "asc")), snap => {
             const flow = document.getElementById('chat-flow');
             flow.innerHTML = "";
             snap.forEach(d => {
                 const m = d.data();
-                const isMe = m.uid === auth.currentUser.uid;
                 const div = document.createElement('div');
-                div.style = `max-width:80%; padding:10px; border-radius:15px; margin-bottom:10px; ${isMe ? 'align-self:flex-end; background:var(--primary); color:#0f172a;' : 'align-self:flex-start; background:var(--card); color:white; border:1px solid #334155;'}`;
-                div.innerHTML = `<small style="display:block; font-weight:bold; font-size:0.7rem; margin-bottom:4px;">${m.user}</small>${m.text}`;
+                const isMe = m.uid === auth.currentUser.uid;
+                div.style = `max-width:80%; padding:10px; border-radius:15px; margin-bottom:10px; align-self:${isMe ? 'flex-end' : 'flex-start'}; background:${isMe ? 'var(--primary)' : 'var(--card)'}; color:${isMe ? '#000' : '#fff'}`;
+                div.innerHTML = `<small style="display:block; font-size:10px;">${m.user}</small>${m.text}`;
                 flow.appendChild(div);
             });
             flow.scrollTop = flow.scrollHeight;
         });
     }
+
+    // Scratch Logic
+    document.getElementById('show-scratch').onclick = () => {
+        const box = document.getElementById('scratch-box');
+        box.classList.remove('hidden');
+        const canvas = document.getElementById('scratch-canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#888';
+        ctx.fillRect(0,0,200,100);
+        canvas.ontouchmove = (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.touches[0].clientX - rect.left;
+            const y = e.touches[0].clientY - rect.top;
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath(); ctx.arc(x, y, 15, 0, Math.PI*2); ctx.fill();
+            document.getElementById('scratch-msg').classList.remove('hidden');
+        };
+    };
 
     document.getElementById('btn-logout').onclick = () => signOut(auth);
 </script>
