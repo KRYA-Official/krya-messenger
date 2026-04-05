@@ -7,8 +7,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
-            // आपकी सही Public Key यहाँ सेट है (बड़ा J)
-            emailjs.init("msEHlMxmJBbBoqnn");
+            emailjs.init("msEHMlMxmjBbBoqnn");
         })();
     </script>
     <style>
@@ -18,73 +17,58 @@
         input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
         button { width: 100%; padding: 12px; background-color: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; }
         #otpSection { display: none; }
-        .success { color: green; margin-top: 10px; font-weight: bold; }
-        .error { color: red; margin-top: 10px; font-size: 14px; }
+        .message { margin-top: 15px; font-size: 14px; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <h2>KRYA Messenger</h2>
-    
     <div id="emailSection">
-        <p>लॉगिन करने के लिए अपना ईमेल डालें</p>
+        <p>लॉगिन करने के लिए ईमेल डालें</p>
         <input type="email" id="userEmail" placeholder="example@gmail.com">
         <button onclick="sendOTP()">OTP भेजें</button>
     </div>
-
     <div id="otpSection">
-        <p>ईमेल पर भेजा गया 6 अंकों का कोड डालें</p>
+        <p>6 अंकों का कोड यहाँ डालें</p>
         <input type="number" id="otpInput" placeholder="000000">
         <button onclick="verifyOTP()">वेरिफाई करें</button>
     </div>
-
-    <div id="statusMsg"></div>
+    <div id="statusMsg" class="message"></div>
 </div>
 
 <script>
-    let currentOTP;
-
+    let generatedOTP;
     function sendOTP() {
         const email = document.getElementById('userEmail').value;
         const status = document.getElementById('statusMsg');
-        
-                if(!email) {
-            status.innerHTML = "<p class='error'>कृपया ईमेल लिखें</p>";
-            return;
-                }
-        
-
-        status.innerHTML = "<p style='color: blue;'>भेजा जा रहा है...</p>";
-        currentOTP = Math.floor(100000 + Math.random() * 900000);
-
-        const params = {
-            email: email,
-            otp: currentOTP
-        };
-
-        // Service ID और Template ID यहाँ सेट है
-        emailjs.send('service_gls676h', 'template_6touhl4', params)
+        if(!email) { status.innerText = "कृपया ईमेल डालें"; return; }
+        status.style.color = "blue";
+        status.innerText = "OTP भेजा जा रहा है...";
+        generatedOTP = Math.floor(100000 + Math.random() * 900000);
+        emailjs.send('service_gls676h', 'template_6touhl4', { email: email, otp: generatedOTP })
             .then(function() {
-               status.innerHTML = "<p class='success'>OTP आपके ईमेल पर भेज दिया गया है!</p>";
+               status.style.color = "green";
+               status.innerText = "OTP भेज दिया गया है!";
                document.getElementById('emailSection').style.display = 'none';
                document.getElementById('otpSection').style.display = 'block';
             }, function(err) {
-               status.innerHTML = "<p class='error'>त्रुटि: " + err.text + "</p>";
+               status.style.color = "red";
+               status.innerText = "Error: " + err.text;
             });
     }
-
     function verifyOTP() {
         const userInput = document.getElementById('otpInput').value;
         const status = document.getElementById('statusMsg');
-
-        if(userInput == currentOTP) {
-            status.innerHTML = "<p class='success'>लॉगिन सफल! KRYA में आपका स्वागत है।</p>";
+        if(userInput == generatedOTP) {
+            status.style.color = "green";
+            status.innerText = "लॉगिन सफल! KRYA में स्वागत है।";
         } else {
-            status.innerHTML = "<p class='error'>गलत OTP, फिर से कोशिश करें।</p>";
+            status.style.color = "red";
+            status.innerText = "गलत OTP, फिर से प्रयास करें।";
         }
     }
 </script>
-
 </body>
 </html>
+
