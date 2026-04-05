@@ -104,18 +104,18 @@
                 document.getElementById('email-step').classList.add('hidden');
                 document.getElementById('otp-step').classList.remove('hidden');
                 status.innerText = "";
-            });
-    }
-
     window.verifyOTP = async function() {
         const input = document.getElementById('otp-input').value;
-        if(input == generatedOTP) {
+        if(!input) return alert("कृपया OTP दर्ज करें!");
+
+        if(input.toString() === generatedOTP.toString()) {
             userLoggedIn = true;
             checkUserProfile();
         } else {
-            alert("गलत OTP!");
+            alert("गलत OTP! कृपया ईमेल दोबारा चेक करें।");
         }
     }
+                
 
     async function checkUserProfile() {
         // चूंकि हमने पासवर्ड हटाया है, हम ईमेल को ही ID मानेंगे
