@@ -72,14 +72,13 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // Firebase कॉन्फ़िगरेशन
     const firebaseConfig = {
-        apiKey: "AIzaSyCtSIGAybHuIga19QpPRS1egRrsbhvJV2c",
-        authDomain: "krya-94e55.firebaseapp.com",
-        projectId: "krya-94e55",
-        storageBucket: "krya-94e55.firebasestorage.app",
-        messagingSenderId: "1025043894227",
-        appId: "1:1025043894227:web:fa57c21ed2f6381a792926"
+      apiKey: "AIzaSyCBC5iztNy0P-4-vY6Djec5ff26mTtJk30",
+      authDomain: "sample-firebase-ai-app-37d2b.firebaseapp.com",
+      projectId: "sample-firebase-ai-app-37d2b",
+      storageBucket: "sample-firebase-ai-app-37d2b.firebasestorage.app",
+      messagingSenderId: "652996597348",
+      appId: "1:652996597348:web:6bfed4775ccb1c9572b171"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -116,7 +115,7 @@
 
         if(input.toString() === generatedOTP.toString()) {
             userLoggedIn = true;
-            checkUserProfile();
+            await checkUserProfile();
         } else {
             alert("गलत OTP! कृपया फिर से प्रयास करें।");
         }
