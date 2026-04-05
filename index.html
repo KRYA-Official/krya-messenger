@@ -90,7 +90,7 @@
     let userEmail;
     let userLoggedIn = false;
 
-    // --- OTP सिस्टम शुरू ---
+        // --- OTP सिस्टम शुरू ---
     window.sendOTP = function() {
         userEmail = document.getElementById('user-email').value;
         const status = document.getElementById('status-msg');
@@ -104,6 +104,12 @@
                 document.getElementById('email-step').classList.add('hidden');
                 document.getElementById('otp-step').classList.remove('hidden');
                 status.innerText = "";
+            }).catch(err => {
+                alert("EmailJS Error: " + err.text);
+                status.innerText = "Error!";
+            });
+    };
+
     window.verifyOTP = async function() {
         const input = document.getElementById('otp-input').value;
         if(!input) return alert("कृपया OTP दर्ज करें!");
@@ -112,9 +118,10 @@
             userLoggedIn = true;
             checkUserProfile();
         } else {
-            alert("गलत OTP! कृपया ईमेल दोबारा चेक करें।");
+            alert("गलत OTP! कृपया फिर से प्रयास करें।");
         }
-    }
+    };
+    
                 
 
     async function checkUserProfile() {
