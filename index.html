@@ -7,19 +7,19 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
-            // आपकी Public Key यहाँ सेट है
-            emailjs.init("msEHlMxmjjBbBoqnn");
+            // आपकी सही Public Key यहाँ सेट है (बड़ा J)
+            emailjs.init("msEHlMxmJBbBoqnn");
         })();
     </script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-        h2 { color: #1a73e8; margin-bottom: 1.5rem; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
+        h2 { color: #1a73e8; }
         input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
-        button { width: 100%; padding: 12px; background-color: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background 0.3s; }
-        button:hover { background-color: #1557b0; }
-        .message { margin-top: 15px; font-size: 14px; }
+        button { width: 100%; padding: 12px; background-color: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; }
         #otpSection { display: none; }
+        .success { color: green; margin-top: 10px; font-weight: bold; }
+        .error { color: red; margin-top: 10px; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -29,63 +29,58 @@
     
     <div id="emailSection">
         <p>लॉगिन करने के लिए अपना ईमेल डालें</p>
-        <input type="email" id="userEmail" placeholder="example@gmail.com" required>
+        <input type="email" id="userEmail" placeholder="example@gmail.com">
         <button onclick="sendOTP()">OTP भेजें</button>
     </div>
 
     <div id="otpSection">
-        <p>आपके ईमेल पर भेजा गया कोड यहाँ डालें</p>
-        <input type="number" id="otpInput" placeholder="6 अंकों का कोड">
+        <p>ईमेल पर भेजा गया 6 अंकों का कोड डालें</p>
+        <input type="number" id="otpInput" placeholder="000000">
         <button onclick="verifyOTP()">वेरिफाई करें</button>
     </div>
 
-    <div id="msg" class="message"></div>
+    <div id="statusMsg"></div>
 </div>
 
 <script>
-    let generatedOTP;
+    let currentOTP;
 
     function sendOTP() {
         const email = document.getElementById('userEmail').value;
-        const msgDiv = document.getElementById('msg');
+        const status = document.getElementById('statusMsg');
         
         if(!email) {
-            msgDiv.innerText = "कृपया सही ईमेल डालें।";
+            status.innerHTML = "<p class='error'>कृपया ईमेल लिखें</p>";
             return;
         }
 
-        msgDiv.innerText = "भेजा जा रहा है...";
-        generatedOTP = Math.floor(100000 + Math.random() * 900000);
+        status.innerHTML = "<p style='color: blue;'>भेजा जा रहा है...</p>";
+        currentOTP = Math.floor(100000 + Math.random() * 900000);
 
-        const templateParams = {
+        const params = {
             email: email,
-            otp: generatedOTP
+            otp: currentOTP
         };
 
-        // आपकी Service ID और Template ID यहाँ सेट है
-        emailjs.send('service_gls676h', 'template_6touhl4', templateParams)
-            .then(function(response) {
-               msgDiv.style.color = "green";
-               msgDiv.innerText = "OTP आपके ईमेल पर भेज दिया गया है!";
+        // Service ID और Template ID यहाँ सेट है
+        emailjs.send('service_gls676h', 'template_6touhl4', params)
+            .then(function() {
+               status.innerHTML = "<p class='success'>OTP आपके ईमेल पर भेज दिया गया है!</p>";
                document.getElementById('emailSection').style.display = 'none';
                document.getElementById('otpSection').style.display = 'block';
-            }, function(error) {
-               msgDiv.style.color = "red";
-               msgDiv.innerText = "भेजने में विफल: " + JSON.stringify(error);
+            }, function(err) {
+               status.innerHTML = "<p class='error'>त्रुटि: " + err.text + "</p>";
             });
     }
 
     function verifyOTP() {
         const userInput = document.getElementById('otpInput').value;
-        const msgDiv = document.getElementById('msg');
+        const status = document.getElementById('statusMsg');
 
-        if(userInput == generatedOTP) {
-            msgDiv.style.color = "green";
-            msgDiv.innerText = "सफलतापूर्वक लॉगिन हो गया! KRYA में आपका स्वागत है।";
-            // यहाँ आप यूजर को अपने मेन पेज पर भेज सकते हैं
+        if(userInput == currentOTP) {
+            status.innerHTML = "<p class='success'>लॉगिन सफल! KRYA में आपका स्वागत है।</p>";
         } else {
-            msgDiv.style.color = "red";
-            msgDiv.innerText = "गलत OTP, कृपया फिर से प्रयास करें।";
+            status.innerHTML = "<p class='error'>गलत OTP, फिर से कोशिश करें।</p>";
         }
     }
 </script>
