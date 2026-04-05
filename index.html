@@ -49,10 +49,11 @@
         const email = document.getElementById('userEmail').value;
         const status = document.getElementById('statusMsg');
         
-        if(!email) {
+                if(!email) {
             status.innerHTML = "<p class='error'>कृपया ईमेल लिखें</p>";
             return;
-        }
+                }
+        
 
         status.innerHTML = "<p style='color: blue;'>भेजा जा रहा है...</p>";
         currentOTP = Math.floor(100000 + Math.random() * 900000);
