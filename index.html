@@ -46,7 +46,7 @@
         status.style.color = "blue";
         status.innerText = "OTP भेजा जा रहा है...";
         generatedOTP = Math.floor(100000 + Math.random() * 900000);
-        emailjs.send('service_gls676h', 'template_6touhl4', { email: email, otp: generatedOTP })
+        emailjs.send('service_gls676h', 'template_6teuhl4', { email: email, otp: generatedOTP })
             .then(function() {
                status.style.color = "green";
                status.innerText = "OTP भेज दिया गया है!";
