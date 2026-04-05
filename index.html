@@ -3,188 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA Messenger - Official</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>KRYA Messenger - Jio Mukesh</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            // आपकी Public Key यहाँ सेट है
+            emailjs.init("msEHlMxmjjBbBoqnn");
+        })();
+    </script>
     <style>
-        :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
-        .auth-card { background: var(--card); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; border: 2px solid var(--primary); text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; outline: none; }
-        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .btn-main { background: var(--primary); color: #0f172a; }
-        .btn-sub { background: #334155; color: white; margin-top: 15px; font-size: 0.8rem; }
-        .hidden { display: none !important; }
-        #app-main { width: 100%; height: 100vh; display: flex; flex-direction: column; background: #0f172a; }
-        .header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); }
-        #chat-flow { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .footer { padding: 15px; background: var(--card); display: flex; gap: 10px; }
-        #msg-input { flex: 1; background: #0b1120; border: 1px solid #334155; color: white; padding: 10px; border-radius: 10px; }
-        /* Scratch Card Style */
-        #scratch-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 15px; z-index: 100; text-align: center; border: 4px solid var(--primary); }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        h2 { color: #1a73e8; margin-bottom: 1.5rem; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 12px; background-color: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background 0.3s; }
+        button:hover { background-color: #1557b0; }
+        .message { margin-top: 15px; font-size: 14px; }
+        #otpSection { display: none; }
     </style>
 </head>
 <body>
 
-<div id="screen-auth" class="auth-card">
-    <h2>KRYA MESSENGER</h2>
-    <div id="signup-fields"><input type="text" id="reg-name" placeholder="आपका पूरा नाम"></div>
-    <input type="email" id="reg-email" placeholder="ईमेल आईडी">
-    <input type="password" id="reg-pass" placeholder="पासवर्ड">
-    <button class="btn btn-main" id="btn-action">साइन-अप करें</button>
-    <p id="btn-reset" class="hidden" style="color:var(--primary); cursor:pointer; margin-top:10px; font-size:0.8rem; text-decoration:underline;">पासवर्ड भूल गए?</p>
-    <button class="btn btn-sub" id="btn-toggle">पहले से अकाउंट है? लॉगिन</button>
-</div>
-
-<div id="screen-handle" class="auth-card hidden">
-    <h2>अपना हैंडल चुनें</h2>
-    <input type="text" id="input-handle" placeholder="username जैसे: @mukesh">
-    <button class="btn btn-main" id="btn-save-handle">प्रोफ़ाइल सेट करें</button>
-</div>
-
-<div id="app-main" class="hidden">
-    <div class="header">
-        <div style="color:var(--primary); font-size:1.5rem; font-weight:bold;">KRYA</div>
-        <div>
-            <i class="fas fa-gift" id="show-scratch" style="color:var(--primary); margin-right:20px; cursor:pointer;"></i>
-            <i class="fas fa-sign-out-alt" id="btn-logout" style="color:#ef4444; cursor:pointer;"></i>
-        </div>
+<div class="card">
+    <h2>KRYA Messenger</h2>
+    
+    <div id="emailSection">
+        <p>लॉगिन करने के लिए अपना ईमेल डालें</p>
+        <input type="email" id="userEmail" placeholder="example@gmail.com" required>
+        <button onclick="sendOTP()">OTP भेजें</button>
     </div>
-    <div id="chat-flow"></div>
-    <div class="footer">
-        <input type="text" id="msg-input" placeholder="संदेश लिखें...">
-        <button id="btn-send" style="background:var(--primary); border:none; padding:10px 15px; border-radius:10px;"><i class="fas fa-paper-plane"></i></button>
+
+    <div id="otpSection">
+        <p>आपके ईमेल पर भेजा गया कोड यहाँ डालें</p>
+        <input type="number" id="otpInput" placeholder="6 अंकों का कोड">
+        <button onclick="verifyOTP()">वेरिफाई करें</button>
     </div>
+
+    <div id="msg" class="message"></div>
 </div>
 
-<div id="scratch-box" class="hidden">
-    <h3 style="color:#0b1120; margin-bottom:10px;">आपका लकी कार्ड!</h3>
-    <canvas id="scratch-canvas" width="200" height="100" style="background:#888; border-radius:10px;"></canvas>
-    <p id="scratch-msg" style="color:green; font-weight:bold; margin-top:10px;" class="hidden">बधाई हो! आपने कूपन जीता।</p>
-    <button onclick="document.getElementById('scratch-box').classList.add('hidden')" style="margin-top:10px; background:#0b1120; color:white; border:none; padding:5px 10px; border-radius:5px;">बंद करें</button>
-</div>
+<script>
+    let generatedOTP;
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    function sendOTP() {
+        const email = document.getElementById('userEmail').value;
+        const msgDiv = document.getElementById('msg');
+        
+        if(!email) {
+            msgDiv.innerText = "कृपया सही ईमेल डालें।";
+            return;
+        }
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCtSIGAybHuIga19QpPRS1egRrsbhvJV2c",
-        authDomain: "krya-94e55.firebaseapp.com",
-        projectId: "krya-94e55",
-        storageBucket: "krya-94e55.firebasestorage.app",
-        messagingSenderId: "1025043894227",
-        appId: "1:1025043894227:web:fa57c21ed2f6381a792926"
-    };
+        msgDiv.innerText = "भेजा जा रहा है...";
+        generatedOTP = Math.floor(100000 + Math.random() * 900000);
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+        const templateParams = {
+            email: email,
+            otp: generatedOTP
+        };
 
-    let isLoginMode = false;
-
-    // Toggle Mode
-    document.getElementById('btn-toggle').onclick = () => {
-        isLoginMode = !isLoginMode;
-        document.getElementById('signup-fields').classList.toggle('hidden', isLoginMode);
-        document.getElementById('btn-reset').classList.toggle('hidden', !isLoginMode);
-        document.getElementById('btn-action').innerText = isLoginMode ? 'लॉगिन करें' : 'साइन-अप करें';
-        document.getElementById('btn-toggle').innerText = isLoginMode ? 'नया अकाउंट बनाएँ' : 'पहले से अकाउंट है? लॉगिन';
-    };
-
-    // Password Reset
-    document.getElementById('btn-reset').onclick = async () => {
-        const email = document.getElementById('reg-email').value.trim();
-        if(!email) return alert("ईमेल भरें!");
-        try {
-            await sendPasswordResetEmail(auth, email);
-            alert("पासवर्ड रिसेट लिंक आपके ईमेल पर भेज दिया गया है!");
-        } catch (e) { alert(e.message); }
-    };
-
-    // Auth Action
-    document.getElementById('btn-action').onclick = async () => {
-        const e = document.getElementById('reg-email').value.trim();
-        const p = document.getElementById('reg-pass').value;
-        const n = document.getElementById('reg-name').value.trim();
-        if(!e || !p) return alert("विवरण भरें!");
-        try {
-            if(isLoginMode) { await signInWithEmailAndPassword(auth, e, p); }
-            else { 
-                const res = await createUserWithEmailAndPassword(auth, e, p);
-                await setDoc(doc(db, "users", res.user.uid), { fullName: n, email: e, uid: res.user.uid });
-            }
-        } catch (err) { alert(err.message); }
-    };
-
-    // Handle Logic
-    document.getElementById('btn-save-handle').onclick = async () => {
-        const h = document.getElementById('input-handle').value.trim().toLowerCase().replace('@','');
-        if(!h) return alert("हैंडल चुनें");
-        const hRef = doc(db, "handles", h);
-        const snap = await getDoc(hRef);
-        if(snap.exists()) return alert("यह नाम बुक है");
-        await setDoc(hRef, { uid: auth.currentUser.uid });
-        await setDoc(doc(db, "users", auth.currentUser.uid), { handle: "@"+h }, { merge: true });
-        location.reload();
-    };
-
-    // Chat logic
-    document.getElementById('btn-send').onclick = async () => {
-        const txt = document.getElementById('msg-input').value.trim();
-        if(!txt) return;
-        const u = await getDoc(doc(db, "users", auth.currentUser.uid));
-        await addDoc(collection(db, "messages"), { text: txt, user: u.data().handle, uid: auth.currentUser.uid, time: serverTimestamp() });
-        document.getElementById('msg-input').value = "";
-    };
-
-    onAuthStateChanged(auth, async user => {
-        const sAuth = document.getElementById('screen-auth'), sHand = document.getElementById('screen-handle'), sMain = document.getElementById('app-main');
-        if(user) {
-            const u = await getDoc(doc(db, "users", user.uid));
-            if(u.exists() && u.data().handle) {
-                sAuth.classList.add('hidden'); sHand.classList.add('hidden'); sMain.classList.remove('hidden');
-                initChat();
-            } else { sAuth.classList.add('hidden'); sHand.classList.remove('hidden'); }
-        } else { sAuth.classList.remove('hidden'); sMain.classList.add('hidden'); }
-    });
-
-    function initChat() {
-        onSnapshot(query(collection(db, "messages"), orderBy("time", "asc")), snap => {
-            const flow = document.getElementById('chat-flow');
-            flow.innerHTML = "";
-            snap.forEach(d => {
-                const m = d.data();
-                const div = document.createElement('div');
-                const isMe = m.uid === auth.currentUser.uid;
-                div.style = `max-width:80%; padding:10px; border-radius:15px; margin-bottom:10px; align-self:${isMe ? 'flex-end' : 'flex-start'}; background:${isMe ? 'var(--primary)' : 'var(--card)'}; color:${isMe ? '#000' : '#fff'}`;
-                div.innerHTML = `<small style="display:block; font-size:10px;">${m.user}</small>${m.text}`;
-                flow.appendChild(div);
+        // आपकी Service ID और Template ID यहाँ सेट है
+        emailjs.send('service_gls676h', 'template_6touhl4', templateParams)
+            .then(function(response) {
+               msgDiv.style.color = "green";
+               msgDiv.innerText = "OTP आपके ईमेल पर भेज दिया गया है!";
+               document.getElementById('emailSection').style.display = 'none';
+               document.getElementById('otpSection').style.display = 'block';
+            }, function(error) {
+               msgDiv.style.color = "red";
+               msgDiv.innerText = "भेजने में विफल: " + JSON.stringify(error);
             });
-            flow.scrollTop = flow.scrollHeight;
-        });
     }
 
-    // Scratch Logic
-    document.getElementById('show-scratch').onclick = () => {
-        const box = document.getElementById('scratch-box');
-        box.classList.remove('hidden');
-        const canvas = document.getElementById('scratch-canvas');
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#888';
-        ctx.fillRect(0,0,200,100);
-        canvas.ontouchmove = (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const x = e.touches[0].clientX - rect.left;
-            const y = e.touches[0].clientY - rect.top;
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.beginPath(); ctx.arc(x, y, 15, 0, Math.PI*2); ctx.fill();
-            document.getElementById('scratch-msg').classList.remove('hidden');
-        };
-    };
+    function verifyOTP() {
+        const userInput = document.getElementById('otpInput').value;
+        const msgDiv = document.getElementById('msg');
 
-    document.getElementById('btn-logout').onclick = () => signOut(auth);
+        if(userInput == generatedOTP) {
+            msgDiv.style.color = "green";
+            msgDiv.innerText = "सफलतापूर्वक लॉगिन हो गया! KRYA में आपका स्वागत है।";
+            // यहाँ आप यूजर को अपने मेन पेज पर भेज सकते हैं
+        } else {
+            msgDiv.style.color = "red";
+            msgDiv.innerText = "गलत OTP, कृपया फिर से प्रयास करें।";
+        }
+    }
 </script>
+
 </body>
 </html>
