@@ -1,72 +1,166 @@
-<style>
-    /* नेविगेशन बार को हमेशा नीचे फिक्स रखने के लिए */
-    .bottom-nav { 
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 70px; /* फिक्स हाइट */
-        background: white; 
-        display: flex; 
-        justify-content: space-around; 
-        align-items: center; 
-        border-top: 1px solid #eee; 
-        z-index: 1000; /* सबसे ऊपर रखने के लिए */
-        padding-bottom: env(safe-area-inset-bottom); /* iPhone/Android नेविगेशन बार के लिए जगह */
-    }
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>KRYA - दुनिया की एक पहचान</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <style>
+        :root { 
+            --krya-navy: #0b1426; 
+            --krya-gold: #d4af37; 
+            --bg-gradient: linear-gradient(180deg, #0b1426 0%, #1a2a44 100%); 
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        
+        body { 
+            background: var(--krya-navy); 
+            height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            overflow: hidden; 
+            color: white; 
+        }
 
-    /* ऐप के कंटेंट को नेविगेशन के पीछे छिपने से बचाने के लिए */
-    .content-card { 
-        flex: 1; 
-        background: white; 
-        border-top-left-radius: 40px; 
-        border-top-right-radius: 40px; 
-        margin-top: 15px; 
-        padding: 20px 10px 80px 10px; /* नीचे 80px का गैप ताकि बटन कंटेंट को न ढकें */
-        overflow-y: auto; 
-    }
+        .app-container { 
+            width: 100%; 
+            max-width: 450px; 
+            background: var(--bg-gradient); 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            height: 100%; 
+        }
 
-    .nav-item { 
-        flex: 1; 
-        text-align: center; 
-        color: #9ca3af; 
-        font-size: 11px; 
-        cursor: pointer; 
-        padding: 5px 0;
-    }
+        /* --- 1. Auth Screens --- */
+        .auth-card { padding: 40px 30px; text-align: center; display: flex; flex-direction: column; justify-content: center; height: 100%; }
+        .auth-card h1 { color: var(--krya-gold); font-size: 42px; margin-bottom: 10px; letter-spacing: 5px; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        input { width: 100%; padding: 15px; margin: 15px 0; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; outline: none; font-size: 16px; }
+        .btn-gold { width: 100%; padding: 16px; background: var(--krya-gold); color: black; border: none; border-radius: 35px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
+        .hidden { display: none !important; }
 
-    .nav-item i { 
-        font-size: 20px; 
-        display: block; 
-        margin-bottom: 3px; 
-    }
+        /* --- 2. Main App Header --- */
+        .header { padding: 45px 20px 15px; text-align: center; flex-shrink: 0; }
+        .header h1 { color: var(--krya-gold); font-size: 30px; letter-spacing: 4px; }
+        .header p { font-size: 13px; opacity: 0.9; margin-top: 4px; }
 
-    .nav-item.active { 
-        color: var(--krya-navy); 
-        font-weight: bold; 
-    }
+        /* --- 3. Content Area (White Card) --- */
+        .content-card { 
+            flex: 1; 
+            background: white; 
+            border-top-left-radius: 40px; 
+            border-top-right-radius: 40px; 
+            margin-top: 15px; 
+            padding: 25px 15px 100px 15px; /* Bottom padding for Nav */
+            overflow-y: auto; 
+            color: #333; 
+            position: relative; 
+        }
+        
+        .list-item { display: flex; align-items: center; padding: 18px; border-bottom: 1px solid #f1f1f1; cursor: pointer; transition: 0.2s; }
+        .list-item:active { background: #f9f9f9; }
+        .avatar-img { width: 55px; height: 55px; border-radius: 50%; border: 2.5px solid var(--krya-gold); margin-right: 15px; object-fit: cover; }
+        
+        /* --- 4. Floating Action Button --- */
+        .fab-add { 
+            position: fixed; 
+            bottom: 90px; 
+            right: 25px; 
+            width: 60px; 
+            height: 60px; 
+            background: var(--krya-navy); 
+            color: var(--krya-gold); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 26px; 
+            border: 2px solid var(--krya-gold); 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3); 
+            cursor: pointer; 
+            z-index: 100; 
+        }
 
-    /* फ्लोटिंग बटन (+) को भी थोड़ा ऊपर सेट किया गया है */
-    .fab-add { 
-        position: fixed; 
-        bottom: 90px; /* नेविगेशन बार से ठीक ऊपर */
-        right: 20px; 
-        width: 55px; 
-        height: 55px; 
-        background: var(--krya-navy); 
-        color: var(--krya-gold); 
-        border-radius: 50%; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        font-size: 24px; 
-        border: 2px solid var(--krya-gold); 
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
-        z-index: 999; 
-    }
-</style>
+        /* --- 5. Navigation Fix (Master Positioning) --- */
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 75px; 
+            background: white; 
+            display: flex; 
+            justify-content: space-around; 
+            align-items: center; 
+            border-top: 1px solid #eee; 
+            z-index: 1000; 
+            padding-bottom: env(safe-area-inset-bottom); 
+        }
+        
+        .nav-item { flex: 1; text-align: center; color: #9ca3af; font-size: 10px; cursor: pointer; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 5px; }
+        .nav-item.active { color: var(--krya-navy); font-weight: bold; }
+
+        /* --- 6. Chat & Registry Overlays --- */
+        .overlay-view { position: fixed; inset: 0; background: white; z-index: 2000; display: none; flex-direction: column; }
+        .overlay-header { background: var(--krya-navy); color: var(--krya-gold); padding: 15px; display: flex; align-items: center; gap: 15px; }
+        
+        .message-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; background: #e5ddd5; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); }
+        .bubble { padding: 10px 15px; border-radius: 15px; max-width: 80%; font-size: 15px; color: black; line-height: 1.4; position: relative; }
+        .mine { align-self: flex-end; background: #dcf8c6; border-top-right-radius: 2px; }
+        .theirs { align-self: flex-start; background: #fff; border-top-left-radius: 2px; }
+    </style>
+</head>
+<body>
+
+<div id="screen-otp" class="auth-card">
+    <h1>KRYA</h1>
+    <div id="email-step">
+        <p>सुरक्षित लॉगिन के लिए अपना ईमेल डालें</p>
+        <input type="email" id="user-email" placeholder="example@gmail.com">
+        <button class="btn-gold" onclick="sendOTP()">OTP भेजें</button>
+    </div>
+    <div id="otp-step" class="hidden">
+        <p style="color:var(--krya-gold)">OTP आपके ईमेल पर भेज दिया गया है</p>
+        <input type="number" id="otp-input" placeholder="000000">
+        <button class="btn-gold" onclick="verifyOTP()">OTP वेरिफाई करें</button>
+    </div>
+</div>
+
+<div id="screen-handle" class="auth-card hidden">
+    <h1>KRYA</h1>
+    <p>अपना यूनिक हैंडल चुनें</p>
+    <input type="text" id="input-handle" placeholder="@mukesh_jee">
+    <button class="btn-gold" id="btn-save-handle">प्रोफ़ाइल सेट करें</button>
+</div>
 
 <div id="app-main" class="app-container hidden">
+    <div class="header">
+        <h1>KRYA</h1>
+        <p>दुनिया की एक पहचान</p>
+    </div>
+
+    <div class="content-card">
+        <div class="list-item" onclick="openChat('Global', 'GlobalTalk')">
+            <img src="https://ui-avatars.com/api/?name=GT&background=d4af37&color=fff" class="avatar-img">
+            <div>
+                <h4 style="display:flex; align-items:center;">GlobalTalk <i class="fas fa-check-circle" style="color:#00c2cb; margin-left:6px;"></i></h4>
+                <p style="font-size:12px; color:#888;">सत्य आधारित संदेश</p>
+            </div>
+        </div>
+        
+        <div class="list-item" onclick="openChat('Founder', 'Mukesh Jee')">
+            <img src="https://ui-avatars.com/api/?name=MR&background=0b1426&color=d4af37" class="avatar-img">
+            <div>
+                <h4 style="display:flex; align-items:center;">@Mukesh_Jee_KRYA <i class="fas fa-check-circle" style="color:#00c2cb; margin-left:6px;"></i></h4>
+                <p style="font-size:12px; color:#888;">KRYA Handle</p>
+            </div>
+        </div>
+    </div>
+
     <div class="fab-add"><i class="fas fa-plus"></i></div>
 
     <div class="bottom-nav">
@@ -77,3 +171,126 @@
         <div class="nav-item" onclick="location.reload()"><i class="fas fa-user-circle"></i>Account</div>
     </div>
 </div>
+
+<div class="overlay-view" id="chat-view">
+    <div class="overlay-header">
+        <i class="fas fa-arrow-left" onclick="closeChat()" style="cursor:pointer;"></i>
+        <span id="chat-name" style="font-weight:bold;"></span>
+    </div>
+    <div class="message-area" id="msg-flow"></div>
+    <div style="padding:15px; background:#f0f0f0; display:flex; gap:10px;">
+        <input type="text" id="msg-input" placeholder="संदेश लिखें..." style="margin:0; flex:1; border-radius:30px;">
+        <button id="send-btn" style="background:var(--krya-navy); color:var(--krya-gold); border:none; width:48px; height:48px; border-radius:50%;"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<div class="overlay-view" id="registry-view">
+    <div class="overlay-header">
+        <i class="fas fa-arrow-left" onclick="document.getElementById('registry-view').style.display='none'"></i>
+        <span style="font-weight:bold;">KRYA Registry Records</span>
+    </div>
+    <div style="padding: 10px; display:flex; gap:10px; overflow-x: auto; background: #f8fafc; border-bottom: 1px solid #ddd;">
+        <button onclick="loadReg('https://biharbhumi.bihar.gov.in/Biharbhumi/ViewJamabandi')" style="padding:8px 15px; border-radius:20px; border:1px solid var(--krya-gold); background:white; white-space:nowrap;">जमाबंदी देखें</button>
+        <button onclick="loadReg('https://biharbhumi.bihar.gov.in/Biharbhumi/UserLogin')" style="padding:8px 15px; border-radius:20px; border:1px solid var(--krya-gold); background:white; white-space:nowrap;">अपना खाता</button>
+    </div>
+    <iframe id="reg-frame" src="https://biharbhumi.bihar.gov.in/" style="flex:1; border:none; width:100%;"></iframe>
+</div>
+
+<script type="module">
+    // --- Firebase & System Init ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCBC5iztNy0P-4-vY6Djec5ff26mTtJk30",
+        authDomain: "sample-firebase-ai-app-37d2b.firebaseapp.com",
+        projectId: "sample-firebase-ai-app-37d2b",
+        storageBucket: "sample-firebase-ai-app-37d2b.firebasestorage.app",
+        messagingSenderId: "652996597348",
+        appId: "1:652996597348:web:6bfed4775ccb1c9572b171"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    emailjs.init("msEHMlMxmjBbBoqnn");
+
+    let genOTP, uEmail, myHandle, myUid;
+
+    // --- OTP & Login Logic ---
+    window.sendOTP = function() {
+        uEmail = document.getElementById('user-email').value;
+        if(!uEmail.includes('@')) return alert("सही ईमेल डालें");
+        genOTP = Math.floor(100000 + Math.random() * 900000);
+        
+        emailjs.send('service_gls676h', 'template_6teuhl4', { email: uEmail, otp: genOTP })
+            .then(() => {
+                document.getElementById('email-step').classList.add('hidden');
+                document.getElementById('otp-step').classList.remove('hidden');
+            });
+    };
+
+    window.verifyOTP = async function() {
+        if(document.getElementById('otp-input').value == genOTP) {
+            myUid = btoa(uEmail);
+            const userDoc = await getDoc(doc(db, "users", myUid));
+            document.getElementById('screen-otp').classList.add('hidden');
+            if(userDoc.exists()) startApp(userDoc.data().handle);
+            else document.getElementById('screen-handle').classList.remove('hidden');
+        } else alert("गलत OTP!");
+    };
+
+    document.getElementById('btn-save-handle').onclick = async () => {
+        const h = document.getElementById('input-handle').value.trim();
+        if(!h) return;
+        await setDoc(doc(db, "users", myUid), { handle: h, email: uEmail });
+        startApp(h);
+    };
+
+    function startApp(handle) {
+        myHandle = handle;
+        document.getElementById('screen-handle').classList.add('hidden');
+        document.getElementById('app-main').classList.remove('hidden');
+        if ("Notification" in window) Notification.requestPermission();
+    }
+
+    // --- Real-time Chat Logic ---
+    let unsub = null;
+    window.openChat = (id, name) => {
+        document.getElementById('chat-view').style.display = 'flex';
+        document.getElementById('chat-name').innerText = name;
+        const q = query(collection(db, "krya_global"), orderBy("time", "asc"));
+        unsub = onSnapshot(q, snap => {
+            const flow = document.getElementById('msg-flow');
+            flow.innerHTML = "";
+            snap.forEach(d => {
+                const m = d.data();
+                const isMe = m.user === myHandle;
+                flow.innerHTML += `<div class="bubble ${isMe?'mine':'theirs'}">
+                    <small style="display:block; font-size:10px; opacity:0.6; font-weight:bold;">${m.user}</small>
+                    ${m.text}
+                </div>`;
+                if (!isMe && document.hidden) new Notification("KRYA: " + m.user, { body: m.text });
+            });
+            flow.scrollTop = flow.scrollHeight;
+        });
+    };
+
+    document.getElementById('send-btn').onclick = async () => {
+        const inp = document.getElementById('msg-input');
+        if(!inp.value) return;
+        await addDoc(collection(db, "krya_global"), { text: inp.value, user: myHandle, time: serverTimestamp() });
+        inp.value = "";
+    };
+
+    window.closeChat = () => { 
+        document.getElementById('chat-view').style.display = 'none'; 
+        if(unsub) unsub();
+    };
+
+    // --- Registry Logic ---
+    window.openRegistry = () => document.getElementById('registry-view').style.display='flex';
+    window.loadReg = (url) => document.getElementById('reg-frame').src = url;
+</script>
+</body>
+                             </html>
+            
