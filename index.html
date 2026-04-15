@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA - सच्चाई का सफर</title>
+    <title>KRYA - सच्चाई और एकता</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
@@ -11,88 +11,96 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
         
-        /* UI Components */
-        .install-bar { background: #facc15; color: #000; padding: 10px; text-align: center; font-size: 13px; font-weight: 900; cursor: pointer; }
-        .header { background: var(--card); height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #334155; }
+        /* Header with Logo */
+        .header { background: var(--card); height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 100; }
+        .brand-logo { height: 50px; width: auto; object-fit: contain; }
+        
+        .install-bar { background: var(--primary); color: #000; padding: 8px; text-align: center; font-size: 12px; font-weight: bold; cursor: pointer; }
         #main-content { height: calc(100vh - 150px); overflow-y: auto; padding: 15px; }
-        
-        /* Auto Slider */
-        .slider { width: 100%; height: 140px; overflow: hidden; border-radius: 15px; margin-bottom: 20px; border: 1px solid var(--primary); background: #1e293b; }
-        .slides { display: flex; width: 400%; height: 100%; transition: 0.6s ease-in-out; }
-        .slide { width: 25%; display: flex; flex-direction: column; justify-content: center; padding: 20px; text-align: center; }
-        
-        /* Grid Buttons */
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px; }
-        .grid-item { text-align: center; cursor: pointer; }
-        .icon { width: 50px; height: 50px; background: #1e293b; border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 5px; border: 1px solid #334155; }
-        .icon i { color: var(--primary); font-size: 20px; }
-        .grid-item span { font-size: 10px; color: #94a3b8; }
 
-        /* Professional Chat Logic */
-        .chat-pop { position: fixed; bottom: 70px; left: 0; right: 0; background: var(--card); height: 80vh; z-index: 1000; border-radius: 20px 20px 0 0; border-top: 3px solid var(--primary); padding: 15px; display: none; }
-        #msgs-box { height: 75%; overflow-y: auto; display: flex; flex-direction: column; padding: 10px; }
-        .msg { max-width: 80%; padding: 10px; border-radius: 15px; margin-bottom: 10px; font-size: 14px; line-height: 1.4; }
-        .msg.me { align-self: flex-end; background: var(--primary); color: #000; border-bottom-right-radius: 2px; }
+        /* Auto Slider */
+        .slider-container { width: 100%; height: 140px; overflow: hidden; border-radius: 15px; margin-bottom: 20px; border: 1px solid var(--primary); background: #1e293b; }
+        .slides { display: flex; width: 400%; height: 100%; transition: 0.8s ease-in-out; }
+        .slide { width: 25%; display: flex; flex-direction: column; justify-content: center; padding: 15px; text-align: center; background: linear-gradient(135deg, #1e293b, #0f172a); }
+        .slide h3 { color: var(--primary); font-size: 16px; margin-bottom: 5px; }
+
+        /* Grid System */
+        .service-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 25px; }
+        .service-item { text-align: center; cursor: pointer; }
+        .icon-box { width: 52px; height: 52px; background: #1e293b; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; border: 1px solid #334155; }
+        .icon-box i { font-size: 20px; color: var(--primary); }
+        .service-item span { font-size: 10px; color: #94a3b8; }
+
+        /* Professional Chat UI */
+        .chat-popup { position: fixed; bottom: 70px; left: 0; right: 0; background: var(--card); height: 80vh; z-index: 500; border-radius: 20px 20px 0 0; border-top: 3px solid var(--primary); padding: 15px; display: none; }
+        #private-msgs { height: 70%; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 10px; }
+        .msg { max-width: 80%; padding: 10px 14px; border-radius: 15px; font-size: 14px; line-height: 1.4; }
+        .msg.me { align-self: flex-end; background: var(--primary); color: #0b1120; border-bottom-right-radius: 2px; }
         .msg.other { align-self: flex-start; background: #334155; color: #fff; border-bottom-left-radius: 2px; }
 
-        .nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px; border-top: 1px solid #334155; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; }
+        .nav-item { text-align: center; color: #94a3b8; font-size: 10px; cursor: pointer; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; }
         .hidden { display: none !important; }
-        .btn-send { background: var(--primary); border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; }
+        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: bold; background: var(--primary); color: #0b1120; }
+        input { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; }
     </style>
 </head>
 <body>
 
-<div id="auth" class="header" style="height:100vh; flex-direction:column; justify-content:center; text-align:center;">
-    <h1 style="color:var(--primary); font-size:40px;">KRYA</h1>
-    <p style="margin-bottom:20px; opacity:0.7;">सच्चाई की जीत, एकता की शक्ति</p>
-    <input type="email" id="email" placeholder="Email ID" style="width:80%; padding:15px; border-radius:10px; margin-bottom:10px;">
-    <button onclick="sendOTP()" style="width:80%; padding:15px; background:var(--primary); border:none; border-radius:10px; font-weight:bold;">OTP पायें</button>
+<div id="screen-auth" class="header" style="height:100vh; flex-direction:column; justify-content:center; text-align:center;">
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgp81E_qFaGe8oUsDj9jYK1M3w3stlE2nlSDQXYLlhbWJpVjNsVCW-c-hEo8asC_UnkRi89v77-DbMRetmobOD7tPB_AVoR0ludO07WqRjuPtcuIbzUPROx86kQtw_t_xZwi8qvinOGv4zfPUaNTW_HTUVbp6V2Rpj7JyMayQx7kN5JpuTliNlODLrimwc/s600/1000529408.jpg" style="width:150px; margin-bottom:20px; border-radius:20px;">
+    <h1 style="color:var(--primary)">KRYA लॉगिन</h1>
+    <p style="margin-bottom:20px; opacity:0.7;">सच्चाई और एकता का मंच</p>
+    <input type="email" id="user-email" placeholder="Email ID लिखें" style="width:80%;">
+    <button class="btn" onclick="sendOTP()" style="width:80%;">OTP पायें</button>
 </div>
 
-<div id="app" class="hidden">
+<div id="app-main" class="hidden">
     <div class="install-bar" onclick="alert('Add to Home Screen चुनें')">KRYA ऐप इंस्टॉल करें (Install)</div>
+    
     <div class="header">
-        <b style="color:var(--primary); font-size:20px;">KRYA</b>
-        <span id="u-name" style="font-size:12px; border:1px solid var(--primary); padding:4px 8px; border-radius:15px;"></span>
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgp81E_qFaGe8oUsDj9jYK1M3w3stlE2nlSDQXYLlhbWJpVjNsVCW-c-hEo8asC_UnkRi89v77-DbMRetmobOD7tPB_AVoR0ludO07WqRjuPtcuIbzUPROx86kQtw_t_xZwi8qvinOGv4zfPUaNTW_HTUVbp6V2Rpj7JyMayQx7kN5JpuTliNlODLrimwc/s600/1000529408.jpg" class="brand-logo" alt="KRYA">
+        <div id="user-tag" style="font-size:11px; border:1px solid var(--primary); padding:4px 10px; border-radius:20px; color:var(--primary); cursor:pointer;" onclick="adminLogout()"></div>
     </div>
 
     <div id="main-content">
-        <div class="slider">
-            <div class="slides" id="slide-track">
-                <div class="slide"><h3>धमाका ऑफर 🇮🇳</h3><p>₹99 में सच्चाई का बैज और 1 साल VIP</p></div>
-                <div class="slide"><h3>सुरक्षित चैट</h3><p>व्यापारियों के लिए सीधा और गुप्त संवाद</p></div>
-                <div class="slide"><h3>हुनर की पहचान</h3><p>बांका के हर हाथ को काम, हर चेहरे को पहचान</p></div>
-                <div class="slide"><h3>जल्द आ रहा है</h3><p>रिचार्ज, बिल और सरकारी सेवाएं एक ही जगह</p></div>
+        <div class="slider-container" onclick="payVIP()">
+            <div class="slides" id="auto-slides">
+                <div class="slide"><h3>धमाका ऑफर 🇮🇳</h3><p>₹99 में साल भर: सच्चाई का बैज पायें।</p></div>
+                <div class="slide"><h3>सच्चाई का विजन</h3><p>KRYA - जहाँ सिर्फ हुनर की कद्र है।</p></div>
+                <div class="slide"><h3>सुरक्षित चैट</h3><p>व्यापारियों के लिए सीधा संवाद मंच।</p></div>
+                <div class="slide"><h3>आने वाली सेवाएँ</h3><p>रिचार्ज और बिल सेवाएँ - जल्द आ रहा है।</p></div>
             </div>
         </div>
 
-        <div class="grid">
-            <div class="grid-item" onclick="location.reload()"><div class="icon"><i class="fas fa-home"></i></div><span>होम</span></div>
-            <div class="grid-item" onclick="pay()"><div class="icon"><i class="fas fa-crown"></i></div><span>VIP अर्निंग</span></div>
-            <div class="grid-item" onclick="share()"><div class="icon"><i class="fas fa-share-alt"></i></div><span>प्रचार</span></div>
-            <div class="grid-item" onclick="support()"><div class="icon"><i class="fas fa-headset"></i></div><span>सपोर्ट</span></div>
+        <div class="service-grid">
+            <div class="service-item" onclick="location.reload()"><div class="icon-box"><i class="fas fa-home"></i></div><span>होम</span></div>
+            <div class="service-item" onclick="payVIP()"><div class="icon-box"><i class="fas fa-crown"></i></div><span>VIP अर्निंग</span></div>
+            <div class="service-item" onclick="shareKRYA()"><div class="icon-box"><i class="fas fa-share-alt"></i></div><span>शेयर</span></div>
+            <div class="service-item" onclick="contactSupport()"><div class="icon-box"><i class="fas fa-headset"></i></div><span>सपोर्ट</span></div>
         </div>
 
-        <div style="font-weight:bold; margin-bottom:10px;">सच्चे भारतीय (मार्केट)</div>
-        <div id="user-list"></div>
+        <div style="font-weight:bold; margin-bottom:12px; font-size:14px;">लाइव मार्केट (सच्चे भारतीय)</div>
+        <div id="market-list"></div>
     </div>
 
-    <div id="chat-ui" class="chat-pop">
-        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-            <b id="chat-with" style="color:var(--primary)">चैट</b>
+    <div id="chat-ui" class="chat-popup">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; padding-bottom:10px;">
+            <b id="partner-name" style="color:var(--primary)">बातचीत</b>
             <i class="fas fa-times" onclick="document.getElementById('chat-ui').style.display='none'"></i>
         </div>
-        <div id="msgs-box"></div>
-        <div style="display:flex; gap:10px; margin-top:10px;">
-            <input type="text" id="m-input" style="flex:1; padding:12px; border-radius:10px; background:#0f172a; color:#fff; border:1px solid #334155;">
-            <button class="btn-send" onclick="sendM()">भेजें</button>
+        <div id="private-msgs"></div>
+        <div style="display:flex; gap:8px;">
+            <input type="text" id="p-input" placeholder="मैसेज लिखें..." style="margin:0;">
+            <button class="btn" style="width:70px;" onclick="sendPM()">भेजें</button>
         </div>
     </div>
 
-    <div class="nav">
-        <i class="fas fa-th-large" style="color:var(--primary)"></i>
-        <i class="fas fa-users" onclick="alert('ग्रुप चैट जल्द आएगा')"></i>
-        <i class="fas fa-user-circle" onclick="support()"></i>
+    <div class="nav-bar">
+        <div class="nav-item" onclick="location.reload()"><i class="fas fa-th-large"></i><br>सेवाएँ</div>
+        <div class="nav-item" onclick="shareKRYA()"><i class="fas fa-bullhorn"></i><br>प्रचार</div>
+        <div class="nav-item" onclick="contactSupport()"><i class="fas fa-user-circle"></i><br>सपोर्ट</div>
     </div>
 </div>
 
@@ -113,71 +121,71 @@
     const db = getFirestore(app);
     emailjs.init("msEHMlMxmjBbBoqnn");
 
-    let user = JSON.parse(localStorage.getItem('k_user'));
-    let activeR = null;
+    let currentUser = JSON.parse(localStorage.getItem('krya_user'));
+    let activeP = null;
+    let sIdx = 0;
 
     window.onload = () => { 
-        if(user) start(); 
-        let s = 0; setInterval(() => { s = (s+1)%4; document.getElementById('slide-track').style.transform = `translateX(-${s*25}%)`; }, 4000);
+        if(currentUser) startApp(); 
+        setInterval(() => { sIdx = (sIdx + 1) % 4; document.getElementById('auto-slides').style.transform = `translateX(-${sIdx * 25}%)`; }, 5000);
     };
 
     window.sendOTP = () => {
-        const e = document.getElementById('email').value;
-        const o = Math.floor(100000 + Math.random()*900000);
-        emailjs.send('service_gls676h','template_6teuhl4',{email:e, otp:o}).then(() => {
-            const input = prompt("OTP दर्ज करें:");
-            if(input == o) {
-                user = { id: btoa(e).replace(/=/g,""), name: e.split('@')[0] };
-                localStorage.setItem('k_user', JSON.stringify(user));
-                start();
+        const email = document.getElementById('user-email').value;
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        emailjs.send('service_gls676h', 'template_6teuhl4', { email, otp }).then(() => {
+            const input = prompt("OTP दर्ज करें जो ईमेल पर आया है:");
+            if(input == otp) {
+                currentUser = { uid: btoa(email).replace(/=/g,""), handle: email.split('@')[0] };
+                localStorage.setItem('krya_user', JSON.stringify(currentUser));
+                startApp();
             }
         });
     };
 
-    function start() {
-        document.getElementById('auth').classList.add('hidden');
-        document.getElementById('app').classList.remove('hidden');
-        document.getElementById('u-name').innerText = "@" + user.name;
-        
+    function startApp() {
+        document.getElementById('screen-auth').classList.add('hidden');
+        document.getElementById('app-main').classList.remove('hidden');
+        document.getElementById('user-tag').innerText = "@" + currentUser.handle;
         onSnapshot(collection(db, "krya_users"), snap => {
-            const list = document.getElementById('user-list'); list.innerHTML = "";
+            const list = document.getElementById('market-list'); list.innerHTML = "";
             snap.forEach(d => {
-                const u = d.data(); if(u.uid == user.id) return;
-                list.innerHTML += `<div onclick="openC('${u.uid}','${u.handle}')" style="background:var(--card); padding:15px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
-                    <span><b>${u.handle}</b> ${u.isVip ? '✅' : ''}</span>
-                    <i class="fas fa-comment-dots" style="color:var(--primary)"></i>
+                const u = d.data(); if(u.uid == currentUser.uid) return;
+                list.innerHTML += `<div onclick="openChat('${u.uid}','${u.handle}')" style="background:var(--card); padding:15px; border-radius:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #334155;">
+                    <div><b>${u.handle}</b> ${u.isVip ? '✅' : ''}</div>
+                    <i class="fas fa-chevron-right" style="color:var(--primary)"></i>
                 </div>`;
             });
         });
     }
 
-    window.openC = (id, n) => {
-        activeR = id; document.getElementById('chat-with').innerText = n;
+    window.openChat = (uid, name) => {
+        activeP = uid; document.getElementById('partner-name').innerText = name;
         document.getElementById('chat-ui').style.display = 'block';
         onSnapshot(query(collection(db, "private_messages"), orderBy("t", "asc")), snap => {
-            const box = document.getElementById('msgs-box'); box.innerHTML = "";
+            const box = document.getElementById('private-msgs'); box.innerHTML = "";
             snap.forEach(d => {
                 const m = d.data();
-                if((m.s==user.id && m.r==id) || (m.s==id && m.r==user.id)) {
-                    const side = m.s == user.id ? 'me' : 'other';
-                    box.innerHTML += `<div class="msg ${side}">${m.m}</div>`;
+                if((m.s==currentUser.uid && m.r==uid) || (m.s==uid && m.r==currentUser.uid)) {
+                    box.innerHTML += `<div class="msg ${m.s == currentUser.uid ? 'me' : 'other'}">${m.m}</div>`;
                 }
             });
             box.scrollTop = box.scrollHeight;
         });
     };
 
-    window.sendM = async () => {
-        const val = document.getElementById('m-input').value;
+    window.sendPM = async () => {
+        const val = document.getElementById('p-input').value;
         if(val) {
-            await addDoc(collection(db, "private_messages"), { s: user.id, r: activeR, m: val, t: serverTimestamp() });
-            document.getElementById('m-input').value = "";
+            await addDoc(collection(db, "private_messages"), { s: currentUser.uid, r: activeP, m: val, t: serverTimestamp() });
+            document.getElementById('p-input').value = "";
         }
     };
 
-    window.pay = () => { window.location.href="upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&am=99&cu=INR"; };
-    window.support = () => { window.open("https://wa.me/916379403821?text=Help", "_blank"); };
-    window.share = () => { navigator.share({title:'KRYA', url: location.href}); };
+    window.payVIP = () => { window.location.href = "upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&am=99&cu=INR"; };
+    window.contactSupport = () => { window.open("https://wa.me/916379403821?text=Help", "_blank"); };
+    window.shareKRYA = () => { navigator.share({title:'KRYA', url: location.href}); };
+    window.adminLogout = () => { if(confirm("लॉगआउट?")) { localStorage.clear(); location.reload(); } };
 </script>
 </body>
 </html>
