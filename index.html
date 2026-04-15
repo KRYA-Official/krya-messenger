@@ -3,61 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA - World's No. 1 Talent Market</title>
+    <title>KRYA - World's No. 1 Market</title>
     
     <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIktSWUEiLAogICJzaG9ydF9uYW1lIjogIktSWUEiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBiMTEyMCIsCiAgInRoZW1lX2NvbG9yIjogI2ZiYmYyNCIKfQ==">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
     <style>
-        :root { --primary: #fbbf24; --secondary: #d97706; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
-
-        /* Auth UI */
-        .full-screen { height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .auth-card { background: var(--card); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid rgba(251, 191, 36, 0.2); text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        .full-screen { height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; position: fixed; width: 100%; top: 0; left: 0; z-index: 100; background: var(--bg); }
+        .auth-card { background: var(--card); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid rgba(251, 191, 36, 0.2); text-align: center; }
         input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; }
-        .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 16px; }
-        .btn-main { background: var(--primary); color: #0b1120; }
-        .btn-main:hover { background: var(--secondary); transform: translateY(-2px); }
-
-        /* Dashboard UI */
-        #app-main { display: flex; flex-direction: column; height: 100vh; }
-        .header { background: var(--card); height: 65px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 10; }
-        .logo { font-size: 24px; font-weight: 900; color: var(--primary); letter-spacing: 1px; }
-
-        /* Tabs & Market */
-        #main-content { flex: 1; overflow-y: auto; padding-bottom: 80px; }
-        .grid-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
-        .menu-card { background: var(--card); padding: 20px; border-radius: 15px; text-align: center; border: 1px solid #334155; cursor: pointer; }
-        .menu-card i { font-size: 30px; color: var(--primary); margin-bottom: 10px; }
-
-        /* Talent Marketplace */
-        .talent-card { background: var(--card); border-radius: 15px; padding: 15px; margin: 15px; border: 1px solid #334155; display: flex; gap: 15px; align-items: center; }
-        .talent-img { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
-        .verified-badge { color: #38bdf8; font-size: 14px; margin-left: 5px; }
-
-        /* Chat System */
-        #chat-window { flex: 1; display: flex; flex-direction: column; background: #0b1120; height: calc(100vh - 130px); }
-        #chat-flow { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { max-width: 80%; padding: 12px; border-radius: 15px; position: relative; animation: fadeIn 0.3s; }
-        .msg-me { align-self: flex-end; background: var(--primary); color: #000; border-bottom-right-radius: 2px; }
-        .msg-them { align-self: flex-start; background: var(--card); color: #fff; border-bottom-left-radius: 2px; }
-
-        /* Bottom Nav */
+        .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; background: var(--primary); color: #0b1120; font-size: 16px; }
+        .header { background: var(--card); height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #334155; }
+        #main-content { height: calc(100vh - 130px); overflow-y: auto; padding: 15px; }
+        .talent-card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #334155; display: flex; align-items: center; gap: 15px; }
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; }
-        .nav-item { text-align: center; color: #94a3b8; cursor: pointer; font-size: 12px; }
-        .nav-item.active { color: var(--primary); }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
-
-        /* Subs Modal */
-        #subs-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .subs-content { background: var(--card); padding: 30px; border-radius: 20px; border: 2px solid var(--primary); text-align: center; }
-
         .hidden { display: none !important; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .logo { font-size: 24px; font-weight: 900; color: var(--primary); }
     </style>
 </head>
 <body>
@@ -65,106 +30,53 @@
 <div id="screen-auth" class="full-screen">
     <div class="auth-card">
         <h1 class="logo">KRYA</h1>
-        <p style="font-size: 14px; margin-bottom: 20px; color: #94a3b8;">दुनिया का नंबर 1 टैलेंट मार्केट</p>
-        
         <div id="step-email">
-            <input type="email" id="user-email" placeholder="अपनी ईमेल यहाँ डालें">
-            <button class="btn btn-main" onclick="sendOTP()">प्रवेश करें (OTP भेजें)</button>
+            <input type="email" id="user-email" placeholder="Email डालें">
+            <button class="btn" onclick="sendOTP()">OTP भेजें</button>
         </div>
-
         <div id="step-otp" class="hidden">
-            <p style="color: var(--primary); font-size: 14px;">OTP आपके ईमेल पर भेजा गया है</p>
             <input type="number" id="otp-input" placeholder="6 अंकों का OTP">
-            <button class="btn btn-main" onclick="verifyOTP()">सत्यापित करें</button>
+            <button class="btn" onclick="verifyOTP()">Verify करें</button>
         </div>
-        <p id="auth-status" style="margin-top: 15px; font-size: 12px;"></p>
+        <p id="auth-status" style="margin-top:10px; font-size:12px;"></p>
     </div>
 </div>
 
 <div id="screen-profile" class="full-screen hidden">
     <div class="auth-card">
         <h2>अपना टैलेंट चुनें</h2>
-        <input type="text" id="prof-handle" placeholder="आपका यूनिक हैंडल (उदा: @mukesh)">
+        <input type="text" id="prof-handle" placeholder="@username (उदा: @Mukesh)">
         <select id="prof-talent">
-            <option value="">आप क्या करते हैं?</option>
             <option value="व्यापारी">दुकानदार / व्यापारी</option>
             <option value="कारीगर">मिस्त्री / कारीगर</option>
-            <option value="डिजिटल">डिजिटल एक्सपर्ट</option>
             <option value="किसान">खेती - किसानी</option>
             <option value="सेवा">अन्य सेवाएँ</option>
         </select>
-        <textarea id="prof-bio" placeholder="अपनी दुकान या टैलेंट के बारे में लिखें..."></textarea>
-        <button class="btn btn-main" onclick="saveProfile()">KRYA मार्केट में जुड़ें</button>
+        <textarea id="prof-bio" placeholder="अपने बारे में लिखें..."></textarea>
+        <button class="btn" onclick="saveProfile()">KRYA मार्केट में जुड़ें</button>
     </div>
 </div>
 
 <div id="app-main" class="hidden">
     <div class="header">
         <div class="logo">KRYA</div>
-        <div id="user-display" style="font-size: 12px; border: 1px solid var(--primary); padding: 5px 10px; border-radius: 20px;">@user</div>
+        <div id="user-tag" style="font-size:12px; color:var(--primary)"></div>
     </div>
-
     <div id="main-content">
-        <div id="view-dash" class="">
-            <div class="grid-menu">
-                <div class="menu-card" onclick="switchTab('market')">
-                    <i class="fas fa-store"></i>
-                    <p>मार्केट</p>
-                </div>
-                <div class="menu-card" onclick="switchTab('chat')">
-                    <i class="fas fa-comments"></i>
-                    <p>ग्लोबल टॉक</p>
-                </div>
-                <div class="menu-card" onclick="window.open('https://biharbhumi.bihar.gov.in/', '_blank')">
-                    <i class="fas fa-file-contract"></i>
-                    <p>रजिस्ट्री डेस्क</p>
-                </div>
-                <div class="menu-card" onclick="alert('Coming Soon: आपका अर्निंग डैशबोर्ड')">
-                    <i class="fas fa-wallet"></i>
-                    <p>मेरी कमाई</p>
-                </div>
-            </div>
-            
-            <h3 style="padding-left: 20px; margin-top: 20px;">Top टैलेंट आपके पास</h3>
-            <div id="market-list">
-                </div>
-        </div>
-
-        <div id="view-chat" class="hidden">
-            <div id="chat-window">
-                <div id="chat-flow"></div>
-                <div style="padding: 15px; display: flex; gap: 10px; background: var(--card);">
-                    <input type="text" id="msg-input" placeholder="सन्देश लिखें..." style="margin:0;">
-                    <button onclick="sendMsg()" class="btn btn-main" style="width: 60px; margin:0;"><i class="fas fa-paper-plane"></i></button>
-                </div>
-            </div>
-        </div>
+        <h3 style="margin-bottom:15px;">लाइव मार्केट</h3>
+        <div id="market-list"></div>
     </div>
-
     <div class="nav-bar">
-        <div class="nav-item active" onclick="switchTab('dash')"><i class="fas fa-home"></i>होम</div>
-        <div class="nav-item" onclick="switchTab('market')"><i class="fas fa-search"></i>खोजें</div>
-        <div class="nav-item" onclick="switchTab('chat')"><i class="fas fa-comment-dots"></i>चैट</div>
-        <div class="nav-item" onclick="location.reload()"><i class="fas fa-user-circle"></i>प्रोफाइल</div>
-    </div>
-</div>
-
-<div id="subs-modal" class="hidden">
-    <div class="subs-content">
-        <h2 style="color: var(--primary);">आपका फ्री ट्रायल समाप्त!</h2>
-        <p style="margin: 15px 0;">KRYA ग्लोबल मार्केट में बने रहने के लिए ₹99 का प्लान एक्टिवेट करें।</p>
-        <div style="background: white; padding: 10px; display: inline-block; border-radius: 10px; margin-bottom: 15px;">
-            <p style="color: black; font-weight: bold;">UPI: mukesh@upi</p> 
-        </div>
-        <button class="btn btn-main" onclick="window.location.href='upi://pay?pa=mukesh@upi&pn=KRYA&am=99&cu=INR'">अभी भुगतान करें</button>
+        <div onclick="location.reload()"><i class="fas fa-home"></i><br>होम</div>
+        <div onclick="alert('खोज जारी है...')"><i class="fas fa-search"></i><br>खोजें</div>
+        <div onclick="alert('कमीशन और अर्निंग जल्द आएगी')"><i class="fas fa-wallet"></i><br>कमाई</div>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // --- Firebase & EmailJS (Mukesh Jee's Old Keys) ---
     const firebaseConfig = {
       apiKey: "AIzaSyCBC5iztNy0P-4-vY6Djec5ff26mTtJk30",
       authDomain: "sample-firebase-ai-app-37d2b.firebaseapp.com",
@@ -178,44 +90,40 @@
     const db = getFirestore(app);
     emailjs.init("msEHMlMxmjBbBoqnn");
 
-    let generatedOTP = null;
-    let currentUser = null;
+    let tempOTP = null;
+    let tempEmail = "";
 
-    // --- OTP & Auth Logic ---
+    // Functions attached to window for HTML buttons
     window.sendOTP = function() {
-        const email = document.getElementById('user-email').value;
-        if(!email.includes('@')) return alert("कृपया सही ईमेल डालें");
+        tempEmail = document.getElementById('user-email').value;
+        if(!tempEmail.includes('@')) return alert("सही ईमेल लिखें");
         
-        generatedOTP = Math.floor(100000 + Math.random() * 900000);
-        document.getElementById('auth-status').innerText = "OTP भेजा जा रहा है...";
+        tempOTP = Math.floor(100000 + Math.random() * 900000);
+        document.getElementById('auth-status').innerText = "भेजा जा रहा है...";
         
-        emailjs.send('service_gls676h', 'template_6teuhl4', { email: email, otp: generatedOTP })
+        emailjs.send('service_gls676h', 'template_6teuhl4', { email: tempEmail, otp: tempOTP })
             .then(() => {
                 document.getElementById('step-email').classList.add('hidden');
                 document.getElementById('step-otp').classList.remove('hidden');
-                document.getElementById('auth-status').innerText = "";
-            });
+                document.getElementById('auth-status').innerText = "OTP भेज दिया गया!";
+            }).catch(err => alert("Email Error: " + err));
     };
 
     window.verifyOTP = async function() {
         const input = document.getElementById('otp-input').value;
-        if(generatedOTP && input == generatedOTP) {
-            // OTP Block/Expire Logic
-            generatedOTP = null; 
-            const email = document.getElementById('user-email').value;
-            const uid = btoa(email);
-            
+        if(tempOTP && input == tempOTP) {
+            tempOTP = null; // Block OTP after use
+            const uid = btoa(tempEmail);
             const userDoc = await getDoc(doc(db, "krya_users", uid));
-            document.getElementById('screen-auth').classList.add('hidden');
             
+            document.getElementById('screen-auth').classList.add('hidden');
             if(userDoc.exists()) {
-                startApp(userDoc.data());
+                loadApp(userDoc.data());
             } else {
                 document.getElementById('screen-profile').classList.remove('hidden');
-                currentUser = { email, uid };
             }
         } else {
-            alert("OTP गलत है या एक्सपायर हो गया है!");
+            alert("गलत OTP!");
         }
     };
 
@@ -224,50 +132,24 @@
         const talent = document.getElementById('prof-talent').value;
         const bio = document.getElementById('prof-bio').value;
 
-        if(!handle || !talent) return alert("कृपया सभी जानकारी भरें");
+        if(!handle || !talent) return alert("नाम और टैलेंट जरूरी है");
 
-        const userData = {
-            ...currentUser,
-            handle: handle,
-            talent: talent,
-            bio: bio,
-            joined: Date.now(),
-            isPro: true // First month free
-        };
+        const uid = btoa(tempEmail);
+        const userData = { handle, talent, bio, email: tempEmail, uid, joined: Date.now() };
 
-        await setDoc(doc(db, "krya_users", currentUser.uid), userData);
-        document.getElementById('screen-profile').classList.add('hidden');
-        startApp(userData);
-    };
-
-    function startApp(user) {
-        currentUser = user;
-        document.getElementById('app-main').classList.remove('hidden');
-        document.getElementById('user-display').innerText = user.handle;
-        
-        // Subscription Check (1 month logic)
-        const oneMonth = 30 * 24 * 60 * 60 * 1000;
-        if(Date.now() - user.joined > oneMonth && !user.isPaid) {
-            document.getElementById('subs-modal').classList.remove('hidden');
+        try {
+            await setDoc(doc(doc(db, "krya_users", uid)), userData);
+            document.getElementById('screen-profile').classList.add('hidden');
+            loadApp(userData);
+        } catch(e) {
+            alert("डेटाबेस एरर: कृपया Firebase Rules चेक करें। " + e.message);
         }
-
-        loadMarket();
-        initGlobalChat();
-    }
-
-    // --- Tab Switching ---
-    window.switchTab = function(tab) {
-        document.getElementById('view-dash').classList.add('hidden');
-        document.getElementById('view-chat').classList.add('hidden');
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-
-        if(tab === 'dash') document.getElementById('view-dash').classList.remove('hidden');
-        if(tab === 'chat') document.getElementById('view-chat').classList.remove('hidden');
-        if(tab === 'market') document.getElementById('view-dash').classList.remove('hidden');
     };
 
-    // --- Market Logic ---
-    function loadMarket() {
+    function loadApp(user) {
+        document.getElementById('app-main').classList.remove('hidden');
+        document.getElementById('user-tag').innerText = user.handle;
+        
         const list = document.getElementById('market-list');
         onSnapshot(collection(db, "krya_users"), snap => {
             list.innerHTML = "";
@@ -276,57 +158,17 @@
                 const card = document.createElement('div');
                 card.className = 'talent-card';
                 card.innerHTML = `
-                    <div class="talent-img" style="display:flex; align-items:center; justify-content:center; background:#334155;">
-                        <i class="fas fa-user" style="font-size:30px; color:var(--primary)"></i>
-                    </div>
+                    <div style="width:50px; height:50px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#000; font-weight:bold;">${u.handle[1]}</div>
                     <div style="flex:1">
-                        <div style="font-weight:bold">${u.handle} <i class="fas fa-check-circle verified-badge"></i></div>
-                        <div style="color:var(--primary); font-size:12px;">${u.talent}</div>
-                        <div style="font-size:12px; color:#94a3b8">${u.bio.substring(0,40)}...</div>
+                        <div style="font-weight:bold">${u.handle}</div>
+                        <div style="font-size:12px; color:var(--primary)">${u.talent}</div>
+                        <div style="font-size:11px; opacity:0.7">${u.bio}</div>
                     </div>
-                    <button onclick="alert('चैट शुरू करें: ${u.handle}')" style="background:var(--primary); border:none; padding:8px; border-radius:10px;"><i class="fas fa-paper-plane"></i></button>
                 `;
                 list.appendChild(card);
             });
         });
     }
-
-    // --- Global Chat ---
-    function initGlobalChat() {
-        const flow = document.getElementById('chat-flow');
-        onSnapshot(query(collection(db, "krya_global"), orderBy("time", "asc")), snap => {
-            flow.innerHTML = "";
-            snap.forEach(d => {
-                const m = d.data();
-                const isMe = m.uid === currentUser.uid;
-                const div = document.createElement('div');
-                div.className = isMe ? 'msg msg-me' : 'msg msg-them';
-                div.innerHTML = `<small style="font-size:9px; display:block; font-weight:bold;">${m.handle}</small>${m.text}`;
-                flow.appendChild(div);
-            });
-            flow.scrollTop = flow.scrollHeight;
-        });
-    }
-
-    window.sendMsg = async function() {
-        const input = document.getElementById('msg-input');
-        const txt = input.value.trim();
-        if(!txt) return;
-        input.value = "";
-        await addDoc(collection(db, "krya_global"), {
-            text: txt,
-            handle: currentUser.handle,
-            uid: currentUser.uid,
-            time: serverTimestamp()
-        });
-    };
-
-    // PWA Install Logic
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        console.log("KRYA App Ready to Install");
-    });
 </script>
-
 </body>
 </html>
