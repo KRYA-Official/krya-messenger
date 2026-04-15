@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>KRYA - दुनिया की एक पहचान</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -10,65 +10,57 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
         
         body { background: var(--krya-navy); height: 100vh; display: flex; justify-content: center; overflow: hidden; }
-        .app-container { width: 100%; max-width: 450px; background: var(--bg-gradient); display: flex; flex-direction: column; position: relative; }
+        .app-container { width: 100%; max-width: 450px; background: var(--bg-gradient); display: flex; flex-direction: column; position: relative; height: 100%; }
 
-        /* Header Premium Design */
-        .header { padding: 40px 20px 20px; text-align: center; }
+        /* Header */
+        .header { padding: 40px 20px 10px; text-align: center; flex-shrink: 0; }
         .header h1 { color: var(--krya-gold); font-size: 32px; letter-spacing: 4px; font-weight: 700; text-transform: uppercase; }
-        .header p { color: #fff; font-size: 14px; opacity: 0.8; margin-top: 5px; letter-spacing: 1px; }
+        .header p { color: #fff; font-size: 14px; opacity: 0.8; margin-top: 5px; }
 
-        /* User List Area (White Card) */
-        .content-card { flex: 1; background: white; border-top-left-radius: 40px; border-top-right-radius: 40px; margin-top: 20px; padding: 20px 10px; overflow-y: auto; position: relative; }
+        /* Content Area - Adjusted to not overlap buttons */
+        .content-card { flex: 1; background: white; border-top-left-radius: 40px; border-top-right-radius: 40px; margin-top: 15px; padding: 20px 10px; overflow-y: auto; position: relative; margin-bottom: 0; }
 
-        .list-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #f1f1f1; transition: 0.3s; cursor: pointer; }
-        .list-item:hover { background: #f9f9f9; }
-        
-        .avatar-frame { position: relative; width: 60px; height: 60px; margin-right: 15px; }
-        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--krya-gold); }
-        
-        .user-details { flex: 1; }
+        .list-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #f1f1f1; cursor: pointer; }
+        .avatar-img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--krya-gold); margin-right: 15px; }
         .user-details h4 { font-size: 16px; color: #333; display: flex; align-items: center; }
-        .user-details p { font-size: 12px; color: #888; margin-top: 2px; }
         .verify-icon { color: #00c2cb; margin-left: 5px; font-size: 14px; }
 
-        /* Floating Plus Button */
-        .fab-add { position: absolute; bottom: 30px; right: 25px; width: 55px; height: 55px; background: var(--krya-navy); color: var(--krya-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2px solid var(--krya-gold); box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; }
+        /* Floating Button */
+        .fab-add { position: absolute; bottom: 90px; right: 20px; width: 55px; height: 55px; background: var(--krya-navy); color: var(--krya-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2px solid var(--krya-gold); box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; z-index: 10; }
 
-        /* Bottom Premium Navigation */
-        .bottom-nav { height: 80px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; padding: 0 10px; }
-        .nav-item { text-align: center; color: #999; font-size: 10px; cursor: pointer; transition: 0.3s; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 5px; }
+        /* Bottom Nav - Fixed Position */
+        .bottom-nav { height: 75px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; flex-shrink: 0; padding-bottom: env(safe-area-inset-bottom); }
+        .nav-item { flex: 1; text-align: center; color: #999; font-size: 10px; cursor: pointer; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
         .nav-item.active { color: var(--krya-navy); font-weight: bold; }
 
-        /* Chat Overlay System */
-        .chat-view { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f5; z-index: 2000; display: none; flex-direction: column; }
+        /* Chat Overlay */
+        .chat-view { position: fixed; inset: 0; background: #e5ddd5; z-index: 2000; display: none; flex-direction: column; }
         .chat-header { background: var(--krya-navy); color: var(--krya-gold); padding: 15px; display: flex; align-items: center; gap: 15px; }
-        .message-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .message-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); }
         
-        /* WhatsApp Alignment Logic */
-        .bubble { padding: 10px 15px; border-radius: 15px; max-width: 80%; font-size: 15px; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .mine { align-self: flex-end; background: #dcf8c6; border-bottom-right-radius: 2px; }
-        .theirs { align-self: flex-start; background: #fff; border-bottom-left-radius: 2px; }
-        
-        .chat-input-bar { padding: 15px; background: #fff; display: flex; gap: 10px; align-items: center; }
-        .chat-input-bar input { flex: 1; padding: 12px 20px; border-radius: 30px; border: 1px solid #ddd; outline: none; }
+        .bubble { padding: 10px 15px; border-radius: 12px; max-width: 75%; font-size: 15px; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
+        .mine { align-self: flex-end; background: #dcf8c6; border-top-right-radius: 2px; }
+        .theirs { align-self: flex-start; background: #fff; border-top-left-radius: 2px; }
+
+        .chat-input-bar { padding: 10px; background: #f0f0f0; display: flex; gap: 10px; }
+        .chat-input-bar input { flex: 1; padding: 12px; border-radius: 25px; border: none; outline: none; }
         .send-btn { background: var(--krya-navy); color: var(--krya-gold); border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }
 
-        /* Login Screen */
-        #login { position: fixed; inset: 0; background: var(--krya-navy); z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; }
-        .login-box { width: 100%; max-width: 320px; text-align: center; }
-        .login-box input { width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 10px; border: none; font-size: 16px; }
-        .login-box button { width: 100%; padding: 15px; background: var(--krya-gold); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        /* Login */
+        #login { position: fixed; inset: 0; background: var(--krya-navy); z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; }
+        .login-box input { width: 100%; padding: 15px; margin: 20px 0; border-radius: 10px; border: none; }
+        .login-box button { background: var(--krya-gold); padding: 15px 40px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; width: 100%; }
     </style>
 </head>
 <body>
 
 <div id="login">
     <div class="login-box">
-        <h1 style="color:var(--krya-gold); margin-bottom:10px;">KRYA</h1>
-        <p style="color:white; margin-bottom:30px;">प्रीमियम मैसेंजर में आपका स्वागत है</p>
+        <h1 style="color:var(--krya-gold);">KRYA</h1>
+        <p style="color:white;">आपका नाम आपकी पहचान है</p>
         <input type="text" id="username" placeholder="अपना नाम लिखें...">
-        <button onclick="enterKrya()">शुरू करें</button>
+        <button onclick="enterKrya()">प्रवेश करें</button>
     </div>
 </div>
 
@@ -78,31 +70,22 @@
         <p>दुनिया की एक पहचान</p>
     </div>
 
-    <div class="content-card" id="main-list">
+    <div class="content-card">
         <div class="list-item" onclick="openChat('GlobalTalk', 'Global Chat')">
-            <div class="avatar-frame"><img src="https://ui-avatars.com/api/?name=Global+Talk&background=d4af37&color=fff" class="avatar-img"></div>
+            <img src="https://ui-avatars.com/api/?name=GT&background=d4af37&color=fff" class="avatar-img">
             <div class="user-details">
                 <h4>GlobalTalk <i class="fas fa-check-circle verify-icon"></i></h4>
-                <p>@KRYA Handle</p>
+                <p>सबके साथ जुड़ें</p>
             </div>
         </div>
-        
-        <div class="list-item" onclick="openChat('Mukesh', 'Mukesh Jee KRYA')">
-            <div class="avatar-frame"><img src="https://ui-avatars.com/api/?name=Mukesh+Rai&background=0b1426&color=d4af37" class="avatar-img"></div>
-            <div class="user-details">
-                <h4>@Mukesh_Jee_KRYA <i class="fas fa-check-circle verify-icon"></i></h4>
-                <p>@KRYA Handle</p>
-            </div>
-        </div>
-        
         <div class="fab-add"><i class="fas fa-plus"></i></div>
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active"><i class="fas fa-globe"></i>Global Feed</div>
-        <div class="nav-item"><i class="fas fa-users"></i>My Family</div>
+        <div class="nav-item active"><i class="fas fa-globe"></i>Feed</div>
+        <div class="nav-item"><i class="fas fa-users"></i>Family</div>
         <div class="nav-item"><i class="fas fa-shield-alt"></i>Security</div>
-        <div class="nav-item"><i class="fas fa-file-invoice"></i>Registry</div>
+        <div class="nav-item" onclick="alert('Registry coming soon!')"><i class="fas fa-file-contract"></i>Registry</div>
         <div class="nav-item"><i class="fas fa-user-circle"></i>Account</div>
     </div>
 </div>
@@ -110,11 +93,11 @@
 <div class="chat-view" id="chat-view">
     <div class="chat-header">
         <i class="fas fa-arrow-left" onclick="closeChat()"></i>
-        <span id="chat-name" style="font-weight: bold; font-size: 18px;"></span>
+        <span id="chat-name"></span>
     </div>
     <div class="message-area" id="msg-flow"></div>
     <div class="chat-input-bar">
-        <input type="text" id="msg-input" placeholder="संदेश टाइप करें...">
+        <input type="text" id="msg-input" placeholder="मैसेज लिखें...">
         <button class="send-btn" id="send-btn"><i class="fas fa-paper-plane"></i></button>
     </div>
 </div>
@@ -135,16 +118,24 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     let myName = "";
+    let firstLoad = true;
+
+    // --- Notification Permission ---
+    async function requestNotif() {
+        if ("Notification" in window) {
+            await Notification.requestPermission();
+        }
+    }
 
     window.enterKrya = () => {
         const name = document.getElementById('username').value.trim();
         if(!name) return;
         myName = name;
         document.getElementById('login').style.display = 'none';
+        requestNotif();
     };
 
     let unsub = null;
-
     window.openChat = (id, name) => {
         document.getElementById('chat-view').style.display = 'flex';
         document.getElementById('chat-name').innerText = name;
@@ -157,11 +148,17 @@
                 const m = doc.data();
                 const isMe = m.user === myName;
                 flow.innerHTML += `<div class="bubble ${isMe ? 'mine' : 'theirs'}">
-                    <small style="font-size:10px; color:#555; display:block;">${m.user}</small>
+                    <small style="font-size:10px; opacity:0.6; display:block;">${m.user}</small>
                     ${m.text}
                 </div>`;
+                
+                // --- Notification Logic ---
+                if (!isMe && !firstLoad && document.hidden) {
+                    new Notification("KRYA: " + m.user, { body: m.text });
+                }
             });
             flow.scrollTop = flow.scrollHeight;
+            firstLoad = false;
         });
     };
 
