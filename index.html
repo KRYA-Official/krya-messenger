@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
-        :root { --krya-navy: #0b1426; --krya-gold: #d4af37; --bg-gradient: linear-gradient(180deg, #0b1426 0%, #1a2a44 100%); --card: #1e293b; }
+        :root { --krya-navy: #0b1426; --krya-gold: #d4af37; --bg-gradient: linear-gradient(180deg, #0b1426 0%, #1a2a44 100%); }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
         
         body { background: var(--krya-navy); height: 100vh; display: flex; justify-content: center; overflow: hidden; color: white; }
@@ -15,36 +15,41 @@
 
         /* Auth Screens */
         .auth-card { padding: 40px 30px; text-align: center; display: flex; flex-direction: column; justify-content: center; height: 100%; }
-        .auth-card h1 { color: var(--krya-gold); font-size: 40px; margin-bottom: 10px; letter-spacing: 5px; }
-        input { width: 100%; padding: 15px; margin: 15px 0; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; outline: none; }
-        .btn-gold { width: 100%; padding: 15px; background: var(--krya-gold); color: black; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .auth-card h1 { color: var(--krya-gold); font-size: 42px; margin-bottom: 10px; letter-spacing: 5px; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        input { width: 100%; padding: 15px; margin: 15px 0; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; outline: none; font-size: 16px; }
+        .btn-gold { width: 100%; padding: 16px; background: var(--krya-gold); color: black; border: none; border-radius: 35px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
         .hidden { display: none !important; }
 
         /* App Header */
-        .header { padding: 40px 20px 10px; text-align: center; flex-shrink: 0; border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
-        .header h1 { color: var(--krya-gold); font-size: 28px; letter-spacing: 3px; }
+        .header { padding: 45px 20px 15px; text-align: center; flex-shrink: 0; }
+        .header h1 { color: var(--krya-gold); font-size: 30px; letter-spacing: 4px; }
+        .header p { font-size: 13px; opacity: 0.9; margin-top: 4px; }
 
         /* Content Area */
-        .content-card { flex: 1; background: white; border-top-left-radius: 40px; border-top-right-radius: 40px; margin-top: 15px; padding: 20px 10px; overflow-y: auto; color: #333; }
-        .list-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #f1f1f1; cursor: pointer; }
-        .avatar-img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--krya-gold); margin-right: 15px; }
+        .content-card { flex: 1; background: white; border-top-left-radius: 40px; border-top-right-radius: 40px; margin-top: 15px; padding: 25px 15px; overflow-y: auto; color: #333; position: relative; }
+        .list-item { display: flex; align-items: center; padding: 18px; border-bottom: 1px solid #f1f1f1; cursor: pointer; transition: 0.2s; }
+        .list-item:active { background: #f9f9f9; }
+        .avatar-img { width: 55px; height: 55px; border-radius: 50%; border: 2.5px solid var(--krya-gold); margin-right: 15px; object-fit: cover; }
         
+        /* Floating Add Button */
+        .fab-add { position: absolute; bottom: 30px; right: 25px; width: 60px; height: 60px; background: var(--krya-navy); color: var(--krya-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; border: 2px solid var(--krya-gold); box-shadow: 0 5px 20px rgba(0,0,0,0.3); cursor: pointer; z-index: 100; }
+
         /* Navigation */
-        .bottom-nav { height: 75px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; }
-        .nav-item { flex: 1; text-align: center; color: #999; font-size: 10px; cursor: pointer; }
-        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .bottom-nav { height: 80px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; padding-bottom: env(safe-area-inset-bottom); }
+        .nav-item { flex: 1; text-align: center; color: #9ca3af; font-size: 10px; cursor: pointer; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 5px; }
         .nav-item.active { color: var(--krya-navy); font-weight: bold; }
 
         /* Chat System */
         .chat-view { position: fixed; inset: 0; background: #e5ddd5; z-index: 2000; display: none; flex-direction: column; }
         .chat-header { background: var(--krya-navy); color: var(--krya-gold); padding: 15px; display: flex; align-items: center; gap: 15px; }
-        .message-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); }
-        .bubble { padding: 10px 15px; border-radius: 12px; max-width: 75%; font-size: 15px; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
-        .mine { align-self: flex-end; background: #dcf8c6; color: black; }
-        .theirs { align-self: flex-start; background: #fff; color: black; }
+        .message-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); }
+        .bubble { padding: 10px 15px; border-radius: 15px; max-width: 80%; font-size: 15px; line-height: 1.4; position: relative; }
+        .mine { align-self: flex-end; background: #dcf8c6; color: black; border-top-right-radius: 2px; }
+        .theirs { align-self: flex-start; background: #fff; color: black; border-top-left-radius: 2px; }
 
-        /* Scratch Card Box */
-        #scratch-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 20px; z-index: 3000; text-align: center; border: 4px solid var(--krya-gold); color: black; }
+        /* Registry Overlay */
+        .registry-view { position: fixed; inset: 0; background: white; z-index: 2500; display: none; flex-direction: column; }
     </style>
 </head>
 <body>
@@ -57,7 +62,7 @@
         <button class="btn-gold" onclick="sendOTP()">OTP भेजें</button>
     </div>
     <div id="otp-step" class="hidden">
-        <p style="color:var(--krya-gold)">OTP आपके ईमेल पर भेजा गया है</p>
+        <p style="color:var(--krya-gold)">OTP आपके ईमेल पर भेज दिया गया है</p>
         <input type="number" id="otp-input" placeholder="000000">
         <button class="btn-gold" onclick="verifyOTP()">वेरिफाई करें</button>
     </div>
@@ -66,51 +71,67 @@
 <div id="screen-handle" class="auth-card hidden">
     <h1>KRYA</h1>
     <p>अपना यूनिक हैंडल चुनें</p>
-    <input type="text" id="input-handle" placeholder="@mukesh_krya">
+    <input type="text" id="input-handle" placeholder="@mukesh_jee">
     <button class="btn-gold" id="btn-save-handle">प्रोफ़ाइल सेट करें</button>
 </div>
 
 <div id="app-main" class="app-container hidden">
     <div class="header">
         <h1>KRYA</h1>
-        <p style="font-size: 12px;">दुनिया की एक पहचान</p>
+        <p>दुनिया की एक पहचान</p>
     </div>
 
     <div class="content-card">
-        <div class="list-item" onclick="openChat('Global', 'Global Broadcast')">
+        <div class="list-item" onclick="openChat('Global', 'GlobalTalk')">
             <img src="https://ui-avatars.com/api/?name=GT&background=d4af37&color=fff" class="avatar-img">
             <div>
-                <h4 style="display:flex; align-items:center;">GlobalTalk <i class="fas fa-check-circle" style="color:#00c2cb; margin-left:5px;"></i></h4>
+                <h4 style="display:flex; align-items:center;">GlobalTalk <i class="fas fa-check-circle" style="color:#00c2cb; margin-left:6px;"></i></h4>
                 <p style="font-size:12px; color:#888;">सत्य आधारित संदेश</p>
             </div>
         </div>
+        
+        <div class="list-item" onclick="openChat('Mukesh', 'Mukesh Jee (Founder)')">
+            <img src="https://ui-avatars.com/api/?name=MR&background=0b1426&color=d4af37" class="avatar-img">
+            <div>
+                <h4 style="display:flex; align-items:center;">@Mukesh_Jee_KRYA <i class="fas fa-check-circle" style="color:#00c2cb; margin-left:6px;"></i></h4>
+                <p style="font-size:12px; color:#888;">KRYA Handle</p>
+            </div>
+        </div>
+
+        <div class="fab-add"><i class="fas fa-plus"></i></div>
     </div>
 
     <div class="bottom-nav">
         <div class="nav-item active"><i class="fas fa-globe"></i>Feed</div>
-        <div class="nav-item" onclick="showScratch()"><i class="fas fa-gift"></i>Rewards</div>
-        <div class="nav-item" onclick="alert('Registry Records coming soon!')"><i class="fas fa-file-contract"></i>Registry</div>
-        <div class="nav-item" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i>Logout</div>
+        <div class="nav-item"><i class="fas fa-users"></i>My Family</div>
+        <div class="nav-item"><i class="fas fa-shield-alt"></i>Security</div>
+        <div class="nav-item" onclick="openRegistry()"><i class="fas fa-file-contract"></i>Registry</div>
+        <div class="nav-item" onclick="location.reload()"><i class="fas fa-user-circle"></i>Account</div>
     </div>
 </div>
 
 <div class="chat-view" id="chat-view">
     <div class="chat-header">
-        <i class="fas fa-arrow-left" onclick="closeChat()"></i>
-        <span id="chat-name" style="font-weight:bold;"></span>
+        <i class="fas fa-arrow-left" onclick="closeChat()" style="cursor:pointer;"></i>
+        <span id="chat-name" style="font-weight:bold; font-size: 18px;"></span>
     </div>
     <div class="message-area" id="msg-flow"></div>
-    <div style="padding:10px; background:#f0f0f0; display:flex; gap:10px;">
-        <input type="text" id="msg-input" placeholder="संदेश लिखें..." style="margin:0; flex:1;">
-        <button id="send-btn" style="background:var(--krya-navy); color:var(--krya-gold); border:none; width:45px; border-radius:50%; cursor:pointer;"><i class="fas fa-paper-plane"></i></button>
+    <div style="padding:15px; background:#f0f0f0; display:flex; gap:10px; align-items:center;">
+        <input type="text" id="msg-input" placeholder="संदेश लिखें..." style="margin:0; flex:1; border-radius: 30px;">
+        <button id="send-btn" style="background:var(--krya-navy); color:var(--krya-gold); border:none; width:48px; height:48px; border-radius:50%; cursor:pointer;"><i class="fas fa-paper-plane"></i></button>
     </div>
 </div>
 
-<div id="scratch-box" class="hidden">
-    <h3>आपका लकी कार्ड!</h3>
-    <canvas id="scratch-canvas" width="200" height="100" style="background:#888; border-radius:10px; margin:15px 0;"></canvas>
-    <p id="scratch-msg" class="hidden" style="color:green; font-weight:bold;">बधाई हो! आपने कूपन जीता।</p>
-    <button onclick="document.getElementById('scratch-box').classList.add('hidden')" style="background:var(--krya-navy); color:white; border:none; padding:10px 20px; border-radius:10px;">बंद करें</button>
+<div class="registry-view" id="registry-view">
+    <div style="background:var(--krya-navy); padding:15px; color:var(--krya-gold); display:flex; align-items:center; gap:15px;">
+        <i class="fas fa-arrow-left" onclick="document.getElementById('registry-view').style.display='none'"></i>
+        <span style="font-weight:bold;">KRYA Registry Records</span>
+    </div>
+    <div style="padding: 10px; display:flex; gap:10px; overflow-x: auto; background: #f8fafc;">
+        <button onclick="loadReg('https://biharbhumi.bihar.gov.in/Biharbhumi/ViewJamabandi')" style="padding:8px 15px; border-radius:20px; border:1px solid var(--krya-gold); white-space:nowrap; background:white;">जमाबंदी देखें</button>
+        <button onclick="loadReg('https://biharbhumi.bihar.gov.in/Biharbhumi/UserLogin')" style="padding:8px 15px; border-radius:20px; border:1px solid var(--krya-gold); white-space:nowrap; background:white;">अपना खाता</button>
+    </div>
+    <iframe id="reg-frame" src="https://biharbhumi.bihar.gov.in/" style="flex:1; border:none; width:100%;"></iframe>
 </div>
 
 <script type="module">
@@ -132,7 +153,7 @@
 
     let genOTP, uEmail, myHandle, myUid;
 
-    // --- OTP Logic ---
+    // --- Secure Login ---
     window.sendOTP = function() {
         uEmail = document.getElementById('user-email').value;
         if(!uEmail.includes('@')) return alert("सही ईमेल डालें");
@@ -146,18 +167,13 @@
     };
 
     window.verifyOTP = async function() {
-        const input = document.getElementById('otp-input').value;
-        if(input == genOTP) {
+        if(document.getElementById('otp-input').value == genOTP) {
             myUid = btoa(uEmail);
             const userDoc = await getDoc(doc(db, "users", myUid));
             document.getElementById('screen-otp').classList.add('hidden');
-            
-            if(userDoc.exists()) {
-                startApp(userDoc.data().handle);
-            } else {
-                document.getElementById('screen-handle').classList.remove('hidden');
-            }
-        } else { alert("गलत OTP!"); }
+            if(userDoc.exists()) startApp(userDoc.data().handle);
+            else document.getElementById('screen-handle').classList.remove('hidden');
+        } else alert("गलत OTP!");
     };
 
     document.getElementById('btn-save-handle').onclick = async () => {
@@ -171,9 +187,10 @@
         myHandle = handle;
         document.getElementById('screen-handle').classList.add('hidden');
         document.getElementById('app-main').classList.remove('hidden');
+        if ("Notification" in window) Notification.requestPermission();
     }
 
-    // --- Chat Logic ---
+    // --- Chat & Notification ---
     let unsub = null;
     window.openChat = (id, name) => {
         document.getElementById('chat-view').style.display = 'flex';
@@ -186,9 +203,10 @@
                 const m = d.data();
                 const isMe = m.user === myHandle;
                 flow.innerHTML += `<div class="bubble ${isMe?'mine':'theirs'}">
-                    <small style="display:block; font-size:10px; opacity:0.6;">${m.user}</small>
+                    <small style="display:block; font-size:10px; opacity:0.6; font-weight:bold;">${m.user}</small>
                     ${m.text}
                 </div>`;
+                if (!isMe && document.hidden) new Notification("KRYA: " + m.user, { body: m.text });
             });
             flow.scrollTop = flow.scrollHeight;
         });
@@ -206,21 +224,9 @@
         if(unsub) unsub();
     };
 
-    // --- Scratch Reward Logic ---
-    window.showScratch = () => {
-        document.getElementById('scratch-box').classList.remove('hidden');
-        const cvs = document.getElementById('scratch-canvas');
-        const ctx = cvs.getContext('2d');
-        ctx.fillStyle = '#888'; ctx.fillRect(0,0,200,100);
-        cvs.ontouchmove = (e) => {
-            const r = cvs.getBoundingClientRect();
-            const x = e.touches[0].clientX - r.left;
-            const y = e.touches[0].clientY - r.top;
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.beginPath(); ctx.arc(x,y,15,0,Math.PI*2); ctx.fill();
-            document.getElementById('scratch-msg').classList.remove('hidden');
-        };
-    };
+    // --- Registry Load ---
+    window.openRegistry = () => document.getElementById('registry-view').style.display='flex';
+    window.loadReg = (url) => document.getElementById('reg-frame').src = url;
 </script>
 </body>
 </html>
