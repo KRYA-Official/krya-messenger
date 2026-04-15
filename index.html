@@ -32,7 +32,7 @@
             <button class="btn" onclick="sendOTP()">OTP भेजें</button>
         </div>
         <div id="step-otp" class="hidden">
-            <input type="number" id="otp-input" placeholder="6 अंकों का OTP">
+            <input type="number" id="otp-input" placeholder="OTP यहाँ डालें">
             <button class="btn" onclick="verifyOTP()">Verify करें</button>
         </div>
         <p id="auth-status" style="margin-top:10px; font-size:12px; color:var(--primary)"></p>
@@ -42,7 +42,7 @@
 <div id="screen-profile" class="full-screen hidden">
     <div class="auth-card">
         <h2>अपना टैलेंट चुनें</h2>
-        <input type="text" id="prof-handle" placeholder="@username (उदा: @Mukesh)">
+        <input type="text" id="prof-handle" placeholder="@username">
         <select id="prof-talent">
             <option value="व्यापारी">दुकानदार / व्यापारी</option>
             <option value="कारीगर">मिस्त्री / कारीगर</option>
@@ -64,9 +64,9 @@
         <div id="market-list"></div>
     </div>
     <div class="nav-bar">
-        <div onclick="location.reload()"><i class="fas fa-home"></i><br>होम</div>
+        <div onclick="showHome()"><i class="fas fa-home"></i><br>होम</div>
         <div onclick="alert('खोज जारी है...')"><i class="fas fa-search"></i><br>खोजें</div>
-        <div onclick="alert('कमीशन और अर्निंग जल्द आएगी')"><i class="fas fa-wallet"></i><br>कमाई</div>
+        <div onclick="logout()"><i class="fas fa-sign-out-alt"></i><br>बाहर निकलें</div>
     </div>
 </div>
 
@@ -87,8 +87,17 @@
     const db = getFirestore(app);
     emailjs.init("msEHMlMxmjBbBoqnn");
 
-    let tempOTP = null;
-    let tempEmail = "";
+    let tempOTP = null, tempEmail = "";
+
+    // 1. चेक करें कि क्या यूजर पहले से लॉगिन है
+    window.onload = function() {
+        const savedUser = localStorage.getItem('krya_user');
+        if (savedUser) {
+            const user = JSON.parse(savedUser);
+            document.getElementById('screen-auth').classList.add('hidden');
+            loadApp(user);
+        }
+    };
 
     window.sendOTP = function() {
         tempEmail = document.getElementById('user-email').value;
@@ -106,12 +115,17 @@
     window.verifyOTP = async function() {
         const input = document.getElementById('otp-input').value;
         if(tempOTP && input == tempOTP) {
-            tempOTP = null; 
-            const uid = btoa(tempEmail).replace(/=/g, ""); 
+            tempOTP = null;
+            const uid = btoa(tempEmail).replace(/=/g, "");
             const userDoc = await getDoc(doc(db, "krya_users", uid));
             document.getElementById('screen-auth').classList.add('hidden');
-            if(userDoc.exists()) { loadApp(userDoc.data()); } 
-            else { document.getElementById('screen-profile').classList.remove('hidden'); }
+            if(userDoc.exists()) {
+                const userData = userDoc.data();
+                localStorage.setItem('krya_user', JSON.stringify(userData)); // मेमोरी में सेव करें
+                loadApp(userData);
+            } else {
+                document.getElementById('screen-profile').classList.remove('hidden');
+            }
         } else { alert("गलत OTP!"); }
     };
 
@@ -119,19 +133,25 @@
         const handle = document.getElementById('prof-handle').value.trim();
         const talent = document.getElementById('prof-talent').value;
         const bio = document.getElementById('prof-bio').value;
-        if(!handle || !talent) return alert("नाम और टैलेंट जरूरी है");
-        
+        if(!handle || !talent) return alert("जानकारी पूरी भरें");
+
         const uid = btoa(tempEmail).replace(/=/g, "");
         const userData = { handle, talent, bio, email: tempEmail, uid, joined: Date.now() };
+        await setDoc(doc(db, "krya_users", uid), userData);
+        localStorage.setItem('krya_user', JSON.stringify(userData)); // मेमोरी में सेव करें
+        document.getElementById('screen-profile').classList.add('hidden');
+        loadApp(userData);
+    };
 
-        try {
-            // FIXED LINE BELOW
-            await setDoc(doc(db, "krya_users", uid), userData);
-            document.getElementById('screen-profile').classList.add('hidden');
-            loadApp(userData);
-        } catch(e) {
-            alert("डेटाबेस एरर: " + e.message);
-        }
+    window.showHome = function() {
+        // पेज रिफ्रेश करने के बजाय सिर्फ कंटेंट को रिफ्रेश करें
+        const list = document.getElementById('main-content');
+        list.scrollTop = 0;
+    };
+
+    window.logout = function() {
+        localStorage.removeItem('krya_user');
+        location.reload();
     };
 
     function loadApp(user) {
