@@ -4,71 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KRYA - सच्चाई और एकता</title>
+    <link rel="manifest" href="data:application/manifest+json,{'name':'KRYA','short_name':'KRYA','start_url':'.','display':'standalone','background_color':'#0b1120','theme_color':'#fbbf24','icons':[{'src':'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgp81E_qFaGe8oUsDj9jYK1M3w3stlE2nlSDQXYLlhbWJpVjNsVCW-c-hEo8asC_UnkRi89v77-DbMRetmobOD7tPB_AVoR0ludO07WqRjuPtcuIbzUPROx86kQtw_t_xZwi8qvinOGv4zfPUaNTW_HTUVbp6V2Rpj7JyMayQx7kN5JpuTliNlODLrimwc/s600/1000529408.jpg','sizes':'512x512','type':'image/png'}]}">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
         
-        /* Header & Brand */
         .header { background: var(--card); height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 100; }
-        .brand-text { font-weight: 900; color: var(--primary); font-size: 24px; letter-spacing: 2px; text-shadow: 0 0 10px rgba(251, 191, 36, 0.3); }
+        .brand-text { font-weight: 900; color: var(--primary); font-size: 24px; letter-spacing: 2px; }
         
-        /* Fixed Install Bar */
-        .install-bar { background: var(--primary); color: #000; padding: 10px; text-align: center; font-size: 13px; font-weight: 900; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        /* New Install Button Style */
+        .install-bar { background: var(--primary); color: #000; padding: 12px; text-align: center; font-size: 14px; font-weight: 900; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; border: none; width: 100%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
 
-        #main-content { height: calc(100vh - 150px); overflow-y: auto; padding: 15px; scroll-behavior: smooth; }
-
-        /* Professional 15-Slide Carousel */
-        .slider-container { width: 100%; height: 140px; overflow: hidden; border-radius: 15px; margin-bottom: 20px; border: 1px solid var(--primary); background: #1e293b; position: relative; }
+        #main-content { height: calc(100vh - 150px); overflow-y: auto; padding: 15px; }
+        .slider-container { width: 100%; height: 140px; overflow: hidden; border-radius: 15px; margin-bottom: 20px; border: 1px solid var(--primary); background: #1e293b; }
         .slides { display: flex; width: 1500%; height: 100%; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
         .slide { width: 6.666%; display: flex; flex-direction: column; justify-content: center; padding: 20px; text-align: center; background: linear-gradient(135deg, #1e293b, #0f172a); }
         .slide h3 { color: var(--primary); font-size: 16px; margin-bottom: 5px; }
-        .slide p { font-size: 12px; opacity: 0.9; line-height: 1.4; }
 
-        /* Service Grid */
         .service-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 25px; }
         .service-item { text-align: center; cursor: pointer; }
-        .icon-box { width: 52px; height: 52px; background: #1e293b; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; border: 1px solid #334155; transition: 0.3s; }
-        .icon-box:active { transform: scale(0.9); background: var(--primary); }
+        .icon-box { width: 52px; height: 52px; background: #1e293b; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; border: 1px solid #334155; }
         .icon-box i { font-size: 20px; color: var(--primary); }
-        .icon-box:active i { color: #000; }
-        .service-item span { font-size: 10px; color: #94a3b8; font-weight: 500; }
+        .service-item span { font-size: 10px; color: #94a3b8; }
 
-        /* Chat Pop-up */
-        .chat-popup { position: fixed; bottom: 70px; left: 0; right: 0; background: var(--card); height: 82vh; z-index: 500; border-radius: 20px 20px 0 0; border-top: 3px solid var(--primary); padding: 15px; display: none; box-shadow: 0 -10px 25px rgba(0,0,0,0.5); }
+        .chat-popup { position: fixed; bottom: 70px; left: 0; right: 0; background: var(--card); height: 82vh; z-index: 500; border-radius: 20px 20px 0 0; border-top: 3px solid var(--primary); padding: 15px; display: none; }
         #private-msgs { height: 72%; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 10px; }
-        .msg { max-width: 80%; padding: 10px 14px; border-radius: 15px; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .msg { max-width: 80%; padding: 10px 14px; border-radius: 15px; font-size: 14px; }
         .msg.me { align-self: flex-end; background: var(--primary); color: #0b1120; border-bottom-right-radius: 2px; }
         .msg.other { align-self: flex-start; background: #334155; color: #fff; border-bottom-left-radius: 2px; }
 
-        /* Bottom Nav */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; z-index: 100; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; }
         .nav-item { text-align: center; color: #94a3b8; font-size: 10px; cursor: pointer; }
-        .nav-item.active { color: var(--primary); }
         .nav-item i { font-size: 20px; margin-bottom: 4px; }
-
         .hidden { display: none !important; }
-        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: bold; background: var(--primary); color: #0b1120; font-size: 16px; cursor: pointer; }
+        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: bold; background: var(--primary); color: #0b1120; cursor: pointer; }
         input { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; outline: none; }
     </style>
 </head>
 <body>
 
 <div id="screen-auth" class="header" style="height:100vh; flex-direction:column; justify-content:center; text-align:center;">
-    <h1 style="color:var(--primary); font-size:50px; letter-spacing:5px; margin-bottom:10px;">KRYA</h1>
-    <p style="margin-bottom:30px; opacity:0.7; font-size:14px;">🇮🇳 सच्चाई और एकता का भारतीय मंच 🇮🇳</p>
-    <div style="width:85%; max-width:400px;">
-        <input type="email" id="user-email" placeholder="अपनी Email ID डालें">
-        <button class="btn" onclick="sendOTP()">प्रवेश करें (Get OTP)</button>
+    <h1 style="color:var(--primary); font-size:50px; letter-spacing:5px;">KRYA</h1>
+    <p style="margin-bottom:30px; opacity:0.7;">🇮🇳 सच्चाई और एकता का मंच 🇮🇳</p>
+    <div style="width:85%;">
+        <input type="email" id="user-email" placeholder="Email ID लिखें">
+        <button class="btn" onclick="sendOTP()">प्रवेश करें</button>
     </div>
 </div>
 
 <div id="app-main" class="hidden">
-    <div class="install-bar" onclick="showInstallGuide()">
-        <i class="fas fa-cloud-download-alt"></i> KRYA ऐप इंस्टॉल करें (Install)
-    </div>
+    <button id="btnInstall" class="install-bar">
+        <i class="fas fa-download"></i> KRYA ऐप इंस्टॉल करें (Install)
+    </button>
     
     <div class="header">
         <div class="brand-text">KRYA</div>
@@ -80,19 +72,8 @@
             <div class="slides" id="auto-slides">
                 <div class="slide"><h3>ईमानदारी 💎</h3><p>सच्चाई की राह कठिन हो सकती है, पर मंजिल बहुत खूबसूरत होती है।</p></div>
                 <div class="slide"><h3>KRYA गौरव 🚩</h3><p>बांका का अपना मंच, बांका का अपना गौरव - KRYA।</p></div>
-                <div class="slide"><h3>मेहनत ⏳</h3><p>आपकी 2016 से शुरू हुई मेहनत, अब इतिहास रचेगी।</p></div>
                 <div class="slide"><h3>एकता 🤝</h3><p>जाति और मजहब से ऊपर, हम सब पहले भारतीय हैं।</p></div>
-                <div class="slide"><h3>समाधान 🛠️</h3><p>KRYA: सिर्फ एक ऐप नहीं, आपकी हर समस्या का समाधान है।</p></div>
-                <div class="slide"><h3>भविष्य ⚡</h3><p>जल्द आ रहा है: मोबाइल रिचार्ज और बिजली बिल की आसान सेवा।</p></div>
-                <div class="slide"><h3>हुनर 🎨</h3><p>अपने हुनर को पहचान दें, KRYA मार्केट में आज ही जुड़ें।</p></div>
-                <div class="slide"><h3>भरोसा ✅</h3><p>धोखाधड़ी मुक्त व्यापार, सिर्फ सच्चे भारतीयों के लिए।</p></div>
-                <div class="slide"><h3>मिशन 🚀</h3><p>बड़ा लक्ष्य, बड़ी मेहनत, और बड़ी सफलता - यही हमारा मिशन है।</p></div>
-                <div class="slide"><h3>सहयोग 🙌</h3><p>एक-दूसरे का साथ दें, मिलकर बांका को समृद्ध बनाएं।</p></div>
-                <div class="slide"><h3>डिजिटल क्रांति 📱</h3><p>गाँव-गाँव तक डिजिटल सेवा पहुँचाना ही KRYA का सपना है।</p></div>
-                <div class="slide"><h3>VIP ऑफर 👑</h3><p>मात्र ₹99 में पाएं 'सच्चाई का बैज' और टॉप लिस्टिंग।</p></div>
-                <div class="slide"><h3>व्यापार 💼</h3><p>बिना किसी बिचौलिये के, सीधे ग्राहक से व्यापार की बात करें।</p></div>
-                <div class="slide"><h3>सपोर्ट ☎️</h3><p>कोई भी समस्या हो? सपोर्ट बटन दबाएँ, हम आपके साथ हैं।</p></div>
-                <div class="slide"><h3>वादा 🤝</h3><p>साझेदारी से सफलता तक - KRYA का सच्चा वादा।</p></div>
+                <div class="slide"><h3>हमारा वादा 🤝</h3><p>साझेदारी से सफलता तक - KRYA का सच्चा वादा।</p></div>
             </div>
         </div>
 
@@ -103,17 +84,14 @@
             <div class="service-item" onclick="contactSupport()"><div class="icon-box"><i class="fas fa-headset"></i></div><span>सपोर्ट</span></div>
         </div>
 
-        <div style="font-weight:bold; margin-bottom:12px; font-size:14px; display:flex; justify-content:space-between; align-items:center;">
-            <span>लाइव मार्केट (सच्चे भारतीय)</span>
-            <span style="color:var(--primary); font-size:10px;">● Live</span>
-        </div>
+        <div style="font-weight:bold; margin-bottom:12px; font-size:14px; color:var(--primary);">लाइव मार्केट (सच्चे भारतीय)</div>
         <div id="market-list"></div>
     </div>
 
     <div id="chat-ui" class="chat-popup">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; padding-bottom:12px; margin-bottom:10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; padding-bottom:12px;">
             <b id="partner-name" style="color:var(--primary)">बातचीत</b>
-            <i class="fas fa-times" onclick="document.getElementById('chat-ui').style.display='none'" style="font-size:20px; cursor:pointer;"></i>
+            <i class="fas fa-times" onclick="document.getElementById('chat-ui').style.display='none'"></i>
         </div>
         <div id="private-msgs"></div>
         <div style="display:flex; gap:10px; padding-top:10px;">
@@ -123,9 +101,9 @@
     </div>
 
     <div class="nav-bar">
-        <div class="nav-item active" onclick="location.reload()"><i class="fas fa-th-large"></i><br>सेवाएँ</div>
+        <div class="nav-item" onclick="location.reload()"><i class="fas fa-th-large"></i><br>सेवाएँ</div>
         <div class="nav-item" onclick="shareKRYA()"><i class="fas fa-bullhorn"></i><br>प्रचार</div>
-        <div class="nav-item" onclick="contactSupport()"><i class="fas fa-user-shield"></i><br>सच्चाई बैज</div>
+        <div class="nav-item" onclick="contactSupport()"><i class="fas fa-user-circle"></i><br>सपोर्ट</div>
     </div>
 </div>
 
@@ -147,37 +125,49 @@
     emailjs.init("msEHMlMxmjBbBoqnn");
 
     let currentUser = JSON.parse(localStorage.getItem('krya_user'));
-    let activeP = null;
+    let deferredPrompt;
     let sIdx = 0;
+
+    // --- असली इंस्टॉल लॉजिक ---
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        const btnInstall = document.getElementById('btnInstall');
+        btnInstall.style.display = 'block';
+    });
+
+    document.getElementById('btnInstall').addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                console.log('User accepted install');
+                document.getElementById('btnInstall').style.display = 'none';
+            }
+            deferredPrompt = null;
+        } else {
+            alert("ऐप इंस्टॉल करने के लिए:\n1. ब्राउज़र मेनू (⋮) पर जाएँ\n2. 'Install App' या 'Add to Home Screen' चुनें।");
+        }
+    });
 
     window.onload = () => { 
         if(currentUser) startApp(); 
-        // Auto Slider Logic
         setInterval(() => {
             const track = document.getElementById('auto-slides');
-            if(track) {
-                sIdx = (sIdx + 1) % 15;
-                track.style.transform = `translateX(-${(sIdx * 100) / 15}%)`;
-            }
+            if(track) { sIdx = (sIdx + 1) % 15; track.style.transform = `translateX(-${(sIdx * 100) / 15}%)`; }
         }, 4500);
-    };
-
-    // --- Install Logic ---
-    window.showInstallGuide = () => {
-        alert("KRYA ऐप इंस्टॉल करने के लिए:\n\n1. ऊपर दाएँ कोने में 3 बिंदुओं (⋮) पर क्लिक करें।\n2. 'Add to Home Screen' या 'Install App' चुनें।\n\nअब KRYA आपके फोन की स्क्रीन पर एक ऐप की तरह दिखेगा! 📱");
     };
 
     window.sendOTP = () => {
         const email = document.getElementById('user-email').value;
-        if(!email.includes('@')) return alert("सही ईमेल डालें");
         const otp = Math.floor(100000 + Math.random() * 900000);
         emailjs.send('service_gls676h', 'template_6teuhl4', { email, otp }).then(() => {
-            const input = prompt("OTP दर्ज करें (ईमेल चेक करें):");
+            const input = prompt("OTP दर्ज करें:");
             if(input == otp) {
                 currentUser = { uid: btoa(email).replace(/=/g,""), handle: email.split('@')[0] };
                 localStorage.setItem('krya_user', JSON.stringify(currentUser));
                 startApp();
-            } else { alert("गलत OTP"); }
+            }
         });
     };
 
@@ -185,14 +175,13 @@
         document.getElementById('screen-auth').classList.add('hidden');
         document.getElementById('app-main').classList.remove('hidden');
         document.getElementById('user-tag').innerText = "@" + currentUser.handle;
-        
         onSnapshot(collection(db, "krya_users"), snap => {
             const list = document.getElementById('market-list'); list.innerHTML = "";
             snap.forEach(d => {
                 const u = d.data(); if(u.uid == currentUser.uid) return;
                 list.innerHTML += `<div onclick="openChat('${u.uid}','${u.handle}')" style="background:var(--card); padding:16px; border-radius:15px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; border:1px solid #334155;">
-                    <div><b style="font-size:15px;">${u.handle}</b> ${u.isVip ? '✅' : ''}<br><small style="color:#94a3b8;">${u.talent || 'KRYA मेंबर'}</small></div>
-                    <i class="fas fa-comment-dots" style="color:var(--primary); font-size:18px;"></i>
+                    <div><b>${u.handle}</b> ${u.isVip ? '✅' : ''}<br><small style="color:#94a3b8;">${u.talent || 'मेंबर'}</small></div>
+                    <i class="fas fa-comment-dots" style="color:var(--primary)"></i>
                 </div>`;
             });
         });
@@ -205,7 +194,7 @@
             const box = document.getElementById('private-msgs'); box.innerHTML = "";
             snap.forEach(d => {
                 const m = d.data();
-                if((m.s==currentUser.uid && m.r==uid) || (m.s==uid && m.r==currentUser.uid)) {
+                if((m.s==currentUser.uid && m.r==uid) || (m.s==id && m.r==currentUser.uid)) {
                     box.innerHTML += `<div class="msg ${m.s == currentUser.uid ? 'me' : 'other'}">${m.m}</div>`;
                 }
             });
@@ -215,18 +204,15 @@
 
     window.sendPM = async () => {
         const val = document.getElementById('p-input').value;
-        if(!val) return;
-        await addDoc(collection(db, "private_messages"), { s: currentUser.uid, r: activeP, m: val, t: serverTimestamp() });
-        document.getElementById('p-input').value = "";
+        if(val) {
+            await addDoc(collection(db, "private_messages"), { s: currentUser.uid, r: activeP, m: val, t: serverTimestamp() });
+            document.getElementById('p-input').value = "";
+        }
     };
 
-    window.payVIP = () => { window.location.href = "upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&am=99&cu=INR&tn=KRYA_VIP"; };
-    window.contactSupport = () => { window.open("https://wa.me/916379403821?text=नमस्ते मुकेश जी, मुझे KRYA ऐप में सहायता चाहिए।", "_blank"); };
-    window.shareKRYA = () => {
-        const text = `KRYA - हम सबका अपना डिजिटल मंच! 🇮🇳\nसच्चाई और एकता का सफर। अभी जुड़ें: ${window.location.href}`;
-        if(navigator.share) navigator.share({title:'KRYA', text, url:window.location.href});
-        else window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
-    };
+    window.payVIP = () => { window.location.href = "upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&am=99&cu=INR"; };
+    window.contactSupport = () => { window.open("https://wa.me/916379403821", "_blank"); };
+    window.shareKRYA = () => { navigator.share({title:'KRYA', url: location.href}); };
     window.adminLogout = () => { if(confirm("लॉगआउट?")) { localStorage.clear(); location.reload(); } };
 </script>
 </body>
