@@ -3,99 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA - दुनिया की एक पहचान</title>
+    <title>KRYA Messenger - World Class</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --krya-gold: #d4af37; --krya-bg: #0b1426; --krya-card: #ffffff; --msg-out: #dcf8c6; --msg-in: #ffffff; }
+        :root { --krya-bg: #0b1426; --krya-gold: #d4af37; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background: var(--krya-bg); overflow: hidden; height: 100vh; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 450px; background: white; display: flex; flex-direction: column; position: relative; }
         
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: var(--krya-bg); color: white; height: 100vh; display: flex; justify-content: center; overflow: hidden; }
+        /* Header */
+        .header { background: var(--krya-bg); padding: 20px; text-align: center; color: var(--krya-gold); }
+        .header h1 { font-size: 24px; letter-spacing: 2px; }
 
-        .app-container { width: 100%; max-width: 450px; background: var(--krya-bg); display: flex; flex-direction: column; position: relative; }
-
-        /* Header Area */
-        .header { padding: 40px 20px 20px; text-align: center; }
-        .header h1 { color: var(--krya-gold); font-size: 35px; letter-spacing: 3px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-        .header p { color: var(--krya-gold); font-size: 14px; opacity: 0.8; margin-top: 5px; font-style: italic; }
-
-        /* Navigation Tabs */
-        .tabs { display: flex; justify-content: space-around; background: rgba(255,255,255,0.08); padding: 12px 0; border-radius: 20px; margin: 0 15px 15px; border: 1px solid rgba(212, 175, 55, 0.2); }
-        .tab-btn { color: white; opacity: 0.5; cursor: pointer; border: none; background: none; font-size: 15px; font-weight: 500; transition: 0.3s; }
-        .tab-btn.active { opacity: 1; color: var(--krya-gold); border-bottom: 2px solid var(--krya-gold); }
-
-        /* White Content Area */
-        .main-content { flex: 1; background: var(--krya-card); border-top-left-radius: 35px; border-top-right-radius: 35px; padding: 15px; overflow-y: auto; color: #333; }
+        /* Chat Window */
+        .chat-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #e5ddd5; z-index: 1000; display: none; flex-direction: column; }
+        .chat-header { background: var(--krya-bg); padding: 15px; color: var(--krya-gold); display: flex; align-items: center; gap: 15px; }
         
-        /* List Items (Profiles) */
-        .list-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; gap: 15px; cursor: pointer; }
-        .avatar { width: 55px; height: 55px; border-radius: 50%; background: var(--krya-bg); color: var(--krya-gold); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; border: 2px solid var(--krya-gold); }
-        .item-info { flex: 1; }
-        .item-info h4 { font-size: 17px; color: #0b1426; }
-        .item-info p { font-size: 12px; color: #777; margin-top: 2px; }
-        .verified { color: #1da1f2; font-size: 14px; margin-left: 5px; }
-
-        /* Full Screen Chat Overlay */
-        .chat-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #e5ddd5; z-index: 2000; display: none; flex-direction: column; }
-        .chat-header { background: var(--krya-bg); padding: 15px 20px; display: flex; align-items: center; gap: 15px; color: var(--krya-gold); }
-        
-        /* Message Bubbles (WhatsApp Style) */
+        /* Message Area */
         .message-flow { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); }
         
-        .bubble { padding: 8px 14px; border-radius: 12px; max-width: 75%; font-size: 15px; line-height: 1.4; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        /* व्हाट्सएप स्टाइल बबल्स */
+        .bubble { padding: 10px 15px; border-radius: 12px; max-width: 75%; font-size: 15px; line-height: 1.4; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
         
-        .msg-me { align-self: flex-end; background: var(--msg-out); color: #000; border-top-right-radius: 2px; }
-        .msg-them { align-self: flex-start; background: var(--msg-in); color: #000; border-top-left-radius: 2px; }
-        
-        .msg-user { font-size: 10px; font-weight: bold; color: #075e54; display: block; margin-bottom: 3px; }
+        /* आपका मैसेज (Right Side) */
+        .msg-me { align-self: flex-end; background: #dcf8c6; color: #000; border-top-right-radius: 2px; }
+        /* दूसरे का मैसेज (Left Side) */
+        .msg-them { align-self: flex-start; background: #ffffff; color: #000; border-top-left-radius: 2px; }
 
-        /* Input Area */
-        .input-bar { padding: 10px 15px; background: #f0f0f0; display: flex; gap: 10px; align-items: center; }
-        .input-bar input { flex: 1; padding: 12px 18px; border-radius: 25px; border: 1px solid #ddd; outline: none; font-size: 16px; }
-        .send-btn { background: var(--krya-bg); color: var(--krya-gold); border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 18px; }
+        .msg-user { font-size: 10px; font-weight: bold; margin-bottom: 3px; display: block; }
+        .user-me { color: #075e54; }
+        .user-them { color: #d4af37; }
 
-        /* Floating Button */
-        .fab { position: absolute; bottom: 90px; right: 25px; width: 60px; height: 60px; background: var(--krya-bg); border: 2px solid var(--krya-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--krya-gold); font-size: 25px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 100; }
+        /* Input Bar */
+        .input-bar { padding: 10px; background: #f0f0f0; display: flex; gap: 10px; align-items: center; }
+        .input-bar input { flex: 1; padding: 12px; border-radius: 25px; border: 1px solid #ddd; outline: none; }
+        .send-btn { background: var(--krya-bg); color: var(--krya-gold); border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }
 
-        /* Bottom Nav */
-        .bottom-nav { height: 75px; background: #fff; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; padding-bottom: 5px; }
-        .nav-item { color: #999; text-align: center; font-size: 11px; cursor: pointer; transition: 0.3s; }
-        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
-        .nav-item.active { color: var(--krya-bg); font-weight: bold; }
+        /* Welcome Page */
+        #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--krya-bg); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
+        .login-input { width: 80%; padding: 15px; margin: 15px 0; border-radius: 10px; border: none; }
+        .login-btn { background: var(--krya-gold); color: black; padding: 15px 40px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
+<div id="login-screen">
+    <h1 style="color:var(--krya-gold); margin-bottom: 10px;">KRYA</h1>
+    <p style="color:white; margin-bottom: 30px;">अपना नाम डालें और चैटिंग शुरू करें</p>
+    <input type="text" id="user-name" class="login-input" placeholder="आपका नाम (जैसे: मुकेश)">
+    <button class="login-btn" onclick="startApp()">प्रवेश करें</button>
+</div>
+
 <div class="app-container">
-    <div class="header">
-        <h1>KRYA</h1>
-        <p>दुनिया की एक पहचान</p>
-    </div>
-
-    <div class="tabs">
-        <div class="tab-btn active" id="tab-global" onclick="switchView('global')">Global Connect</div>
-        <div class="tab-btn" id="tab-private" onclick="switchView('private')">Private Messenger</div>
-    </div>
-
-    <div class="main-content" id="list-area">
-        </div>
-
-    <div class="fab" onclick="openChat('global', 'Global Broadcast')"><i class="fas fa-broadcast-tower"></i></div>
-
-    <div class="bottom-nav">
-        <div class="nav-item active"><i class="fas fa-home"></i>Feed</div>
-        <div class="nav-item" onclick="alert('Registry Records coming soon!')"><i class="fas fa-file-contract"></i>Registry</div>
-        <div class="nav-item"><i class="fas fa-shield-alt"></i>Security</div>
-        <div class="nav-item"><i class="fas fa-user-circle"></i>Profile</div>
+    <div class="header"><h1>KRYA Portal</h1></div>
+    <div style="padding: 20px; text-align: center;">
+        <button onclick="openChat('global', 'Global Chat')" style="padding: 15px; width: 100%; border-radius: 10px; border: 2px solid var(--krya-gold); background: var(--krya-bg); color: white; cursor: pointer;">
+            <i class="fas fa-globe"></i> Global Chat खोलें
+        </button>
     </div>
 </div>
 
 <div id="chat-overlay" class="chat-overlay">
     <div class="chat-header">
-        <i class="fas fa-arrow-left" onclick="closeChat()" style="cursor:pointer; font-size: 20px;"></i>
-        <div>
-            <h3 id="chat-title" style="font-size: 18px;"></h3>
-            <small style="opacity: 0.7;">Online</small>
-        </div>
+        <i class="fas fa-arrow-left" onclick="closeChat()"></i>
+        <h3 id="chat-title"></h3>
     </div>
     <div class="message-flow" id="message-flow"></div>
     <div class="input-bar">
@@ -120,102 +91,58 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    let currentMode = 'global';
-    let myHandle = "@Mukesh_KRYA"; // इसे आप अपनी जरूरत अनुसार बदल सकते हैं
+    let myName = "";
 
-    // --- Switch Tabs ---
-    window.switchView = (mode) => {
-        currentMode = mode;
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('tab-' + mode).classList.add('active');
-        renderList();
+    window.startApp = () => {
+        const input = document.getElementById('user-name').value.trim();
+        if(!input) return alert("कृपया नाम डालें");
+        myName = input;
+        document.getElementById('login-screen').style.display = 'none';
     };
 
-    // --- Render List of People or Global ---
-    function renderList() {
-        const area = document.getElementById('list-area');
-        area.innerHTML = "";
-        if(currentMode === 'global') {
-            area.innerHTML = `
-                <div class="list-item" onclick="openChat('global', 'Global Broadcast')">
-                    <div class="avatar" style="background:var(--krya-gold); color:white;">G</div>
-                    <div class="item-info">
-                        <h4>Global Broadcast <i class="fas fa-check-circle verified"></i></h4>
-                        <p>पूरी दुनिया को एक साथ मैसेज भेजें</p>
-                    </div>
-                </div>
-                <div style="padding:20px; text-align:center; color:#999; font-size:12px;">Global Feed में सबका स्वागत है!</div>
-            `;
-        } else {
-            area.innerHTML = `
-                <div class="list-item" onclick="openChat('private', '@Pramod')">
-                    <div class="avatar">P</div>
-                    <div class="item-info">
-                        <h4>@Pramod <i class="fas fa-check-circle verified"></i></h4>
-                        <p>प्राइवेट चैट करने के लिए यहाँ क्लिक करें</p>
-                    </div>
-                </div>
-                <div class="list-item" onclick="openChat('private', '@Support_KRYA')">
-                    <div class="avatar">S</div>
-                    <div class="item-info">
-                        <h4>@Support_KRYA <i class="fas fa-check-circle verified"></i></h4>
-                        <p>KRYA हेल्प डेस्क से जुड़ें</p>
-                    </div>
-                </div>
-            `;
-        }
-    }
-
-    // --- Chat System ---
     let unsubscribe = null;
 
     window.openChat = (type, title) => {
         document.getElementById('chat-overlay').style.display = 'flex';
         document.getElementById('chat-title').innerText = title;
-        loadMessages(type);
-    };
-
-    window.closeChat = () => {
-        document.getElementById('chat-overlay').style.display = 'none';
-        if(unsubscribe) unsubscribe();
-    };
-
-    function loadMessages(type) {
-        const flow = document.getElementById('message-flow');
-        const colName = type === 'global' ? "global_messages" : "private_messages";
-        const q = query(collection(db, colName), orderBy("time", "asc"));
-
+        
+        const q = query(collection(db, "messages"), orderBy("time", "asc"));
+        
         unsubscribe = onSnapshot(q, snap => {
+            const flow = document.getElementById('message-flow');
             flow.innerHTML = "";
             snap.forEach(d => {
                 const m = d.data();
-                const isMe = m.user === myHandle;
+                // मुख्य लॉजिक: अगर मैसेज भेजने वाला 'मेरा नाम' है तो Right, वर्ना Left
+                const isMe = m.user === myName;
                 
                 const div = document.createElement('div');
                 div.className = `bubble ${isMe ? 'msg-me' : 'msg-them'}`;
                 div.innerHTML = `
-                    <small class="msg-user">${isMe ? 'You' : m.user}</small>
+                    <small class="msg-user ${isMe ? 'user-me' : 'user-them'}">${m.user}</small>
                     ${m.text}
                 `;
                 flow.appendChild(div);
             });
             flow.scrollTop = flow.scrollHeight;
         });
+    };
 
-        document.getElementById('send-btn').onclick = async () => {
-            const txt = document.getElementById('chat-input').value.trim();
-            if(!txt) return;
-            document.getElementById('chat-input').value = "";
-            await addDoc(collection(db, colName), {
-                text: txt,
-                user: myHandle,
-                time: serverTimestamp()
-            });
-        };
-    }
+    document.getElementById('send-btn').onclick = async () => {
+        const txt = document.getElementById('chat-input').value.trim();
+        if(!txt) return;
+        document.getElementById('chat-input').value = "";
+        await addDoc(collection(db, "messages"), {
+            text: txt,
+            user: myName,
+            time: serverTimestamp()
+        });
+    };
 
-    // Initial Start
-    renderList();
+    window.closeChat = () => {
+        document.getElementById('chat-overlay').style.display = 'none';
+        if(unsubscribe) unsubscribe();
+    };
 </script>
 </body>
 </html>
