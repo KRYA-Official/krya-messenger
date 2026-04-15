@@ -3,151 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA - सच्चाई की शक्ति</title>
+    <title>KRYA - सच का साथ</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
-        :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
         
-        /* Screens */
         .full-screen { height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; background: var(--bg); }
-        .auth-card { background: var(--card); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid rgba(251, 191, 36, 0.2); text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .auth-card { background: var(--card); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid rgba(251, 191, 36, 0.2); text-align: center; }
         
-        /* Inputs & Buttons */
-        input, select, textarea { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; outline: none; }
-        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; background: var(--primary); color: #0b1120; font-size: 16px; transition: 0.3s; }
-        .btn:active { transform: scale(0.98); }
+        input, select, textarea { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; outline: none; }
+        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; background: var(--primary); color: #0b1120; }
 
         /* App Layout */
-        .header { background: var(--card); height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 100; }
-        #main-content { height: calc(100vh - 130px); overflow-y: auto; padding: 15px; scroll-behavior: smooth; }
-        
+        .header { background: var(--card); height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #334155; }
+        #main-content { height: calc(100vh - 130px); overflow-y: auto; padding: 15px; }
+
+        /* VIP Banner */
+        .vip-offer { background: linear-gradient(45deg, #fbbf24, #d97706); color: #0b1120; padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: center; font-weight: bold; }
+
         /* Slider */
-        .slider { width: 100%; height: 160px; position: relative; overflow: hidden; border-radius: 15px; margin-bottom: 20px; background: #1e293b; border: 1px solid var(--primary); }
-        .slides { display: flex; width: 500%; height: 100%; transition: 0.8s ease-in-out; }
-        .slide { width: 20%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
-        .slide h3 { color: var(--primary); font-size: 18px; margin-bottom: 8px; }
-        .slide p { font-size: 13px; opacity: 0.9; line-height: 1.4; }
+        .slider { width: 100%; height: 140px; overflow: hidden; border-radius: 15px; margin-bottom: 20px; border: 1px solid var(--primary); }
+        .slides { display: flex; width: 500%; height: 100%; transition: 0.8s; }
+        .slide { width: 20%; display: flex; flex-direction: column; justify-content: center; padding: 20px; text-align: center; }
 
-        /* Cards & Chat */
+        /* Chat System */
         .talent-card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 12px; border: 1px solid #334155; display: flex; align-items: center; gap: 15px; }
-        .chat-msg { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 12px; margin-bottom: 10px; border-left: 4px solid var(--primary); }
-        
-        /* Navigation */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; }
-        .nav-item { text-align: center; color: #94a3b8; font-size: 10px; cursor: pointer; }
-        .nav-item.active { color: var(--primary); }
-        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        .private-chat { position: fixed; bottom: 80px; left: 0; right: 0; background: var(--card); height: 300px; z-index: 500; border-radius: 20px 20px 0 0; border-top: 2px solid var(--primary); padding: 20px; display: none; }
 
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; }
         .hidden { display: none !important; }
-        .logo { font-size: 26px; font-weight: 900; color: var(--primary); letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
 <div id="screen-auth" class="full-screen">
     <div class="auth-card">
-        <h1 class="logo">KRYA</h1>
-        <p style="font-size: 12px; margin-bottom: 20px; opacity: 0.7;">सच्चाई और एकता का मंच</p>
+        <h1 style="color:var(--primary)">KRYA</h1>
         <div id="step-email">
-            <input type="email" id="user-email" placeholder="अपनी Email ID डालें">
-            <button class="btn" onclick="sendOTP()">OTP प्राप्त करें</button>
+            <input type="email" id="user-email" placeholder="अपना Email डालें">
+            <button class="btn" onclick="sendOTP()">OTP भेजें</button>
         </div>
         <div id="step-otp" class="hidden">
-            <input type="number" id="otp-input" placeholder="6-अंकों का OTP डालें">
-            <button class="btn" onclick="verifyOTP()">सत्यापित करें</button>
+            <input type="number" id="otp-input" placeholder="6-digit OTP">
+            <button class="btn" onclick="verifyOTP()">Verify</button>
         </div>
-        <p id="auth-status" style="margin-top:15px; font-size:13px; color:var(--primary)"></p>
-    </div>
-</div>
-
-<div id="screen-profile" class="full-screen hidden">
-    <div class="auth-card">
-        <h3>KRYA परिवार में आपका स्वागत है</h3>
-        <p style="font-size:12px; margin-bottom:10px;">अपनी जानकारी भरें (यह हमेशा के लिए है)</p>
-        <input type="text" id="prof-handle" placeholder="आपका नाम या @यूजरनेम">
-        <select id="prof-talent">
-            <option value="भारतीय नागरिक">आम नागरिक (भारतीय)</option>
-            <option value="व्यापारी">दुकानदार / व्यवसायी</option>
-            <option value="कारीगर">हुनरमंद / कारीगर</option>
-            <option value="किसान">अन्नदाता (किसान)</option>
-            <option value="सेवा">समाज सेवा</option>
-        </select>
-        <textarea id="prof-bio" placeholder="अपने बारे में या अपने काम के बारे में सच लिखें..."></textarea>
-        <button class="btn" onclick="saveProfile()">मंच से जुड़ें</button>
     </div>
 </div>
 
 <div id="app-main" class="hidden">
     <div class="header">
-        <div class="logo">KRYA</div>
-        <div id="user-tag" style="font-size:11px; border:1px solid var(--primary); padding:4px 10px; border-radius:20px; color:var(--primary); cursor:pointer" onclick="secretLogout()"></div>
+        <div style="font-weight:900; color:var(--primary); font-size:24px;">KRYA</div>
+        <div id="user-tag" style="font-size:12px; color:var(--primary)"></div>
     </div>
 
     <div id="main-content">
+        <div class="vip-offer" onclick="payVIP()">
+            🔥 धमाका ऑफर: मात्र ₹99 में पूरे 1 साल की सदस्यता!<br>
+            <span style="font-size:11px;">सच्चाई का बैज + टॉप लिस्टिंग + फ्री अपडेट्स</span>
+        </div>
+
         <div class="slider">
             <div class="slides" id="slide-container">
-                <div class="slide">
-                    <h3>🇮🇳 हम सब भारतीय एक हैं</h3>
-                    <p>जाति-पाति से ऊपर, हमारा एकमात्र धर्म भारतीयता है। एकता ही हमारी सबसे बड़ी शक्ति है।</p>
-                </div>
-                <div class="slide">
-                    <h3>⚖️ सिर्फ सच बोलता है</h3>
-                    <p>KRYA पर झूठ की कोई जगह नहीं। यहाँ आपकी सच्चाई और आपका असली हुनर ही आपकी पहचान है।</p>
-                </div>
-                <div class="slide">
-                    <h3>🤝 डिजिटल चौपाल</h3>
-                    <p>गाँव के हर व्यक्ति को डिजिटल ताकत से जोड़ना। यह हम सबका अपना साझा मंच है।</p>
-                </div>
-                <div class="slide">
-                    <h3>🚀 आने वाला भविष्य</h3>
-                    <p>जल्द आ रहा है: डायरेक्ट पेमेंट, ई-कॉमर्स और वीडियो कॉलिंग फीचर।</p>
-                </div>
-                <div class="slide">
-                    <h3>💙 KRYA Verified</h3>
-                    <p>ईमानदार और मेहनती लोगों के लिए विशेष 'Verified' बैज और रिवार्ड्स।</p>
-                </div>
+                <div class="slide"><h3>🇮🇳 हम सब भारतीय एक हैं</h3><p>जाति-पाति छोड़ें, सच्चाई से जुड़ें।</p></div>
+                <div class="slide"><h3>⚖️ सिर्फ सच बोलता है</h3><p>झूठ की यहाँ कोई जगह नहीं है।</p></div>
+                <div class="slide"><h3>📱 प्राइवेट मैसेज</h3><p>अब सीधे सुरक्षित बातचीत करें।</p></div>
+                <div class="slide"><h3>🌟 VIP सदस्यता</h3><p>₹99 में साल भर का साथ।</p></div>
+                <div class="slide"><h3>🚩 डिजिटल चौपाल</h3><p>आपके गाँव की नई पहचान।</p></div>
             </div>
         </div>
 
-        <div id="sec-market">
-            <h4 style="margin: 0 0 15px 5px; display: flex; align-items: center; gap: 8px;">
-                <i class="fas fa-store" style="color:var(--primary)"></i> लाइव मार्केट (सच्चे लोग)
-            </h4>
-            <div id="market-list"></div>
-        </div>
+        <div id="market-list"></div>
+    </div>
 
-        <div id="sec-chat" class="hidden">
-            <h4 style="margin: 0 0 15px 5px;"><i class="fas fa-globe" style="color:var(--primary)"></i> ग्लोबल चौपाल (Paid)</h4>
-            <div id="chat-messages" style="margin-bottom: 80px;"></div>
-            <div style="position: fixed; bottom: 75px; left: 15px; right: 15px; display: flex; gap: 8px;">
-                <input type="text" id="chat-input" placeholder="सच संदेश लिखें (शुल्क ₹9)..." style="margin:0; background:#1e293b;">
-                <button class="btn" style="width: 80px;" onclick="postGlobal()">भेजें</button>
-            </div>
+    <div id="chat-ui" class="private-chat">
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+            <b id="chat-with-name">बातचीत</b>
+            <button onclick="closeChat()" style="background:none; color:white; border:none;">X</button>
+        </div>
+        <div id="private-msgs" style="height:180px; overflow-y:auto; margin-bottom:10px; background:rgba(0,0,0,0.2); padding:10px; border-radius:10px;"></div>
+        <div style="display:flex; gap:5px;">
+            <input type="text" id="p-chat-input" placeholder="सच मैसेज लिखें..." style="margin:0;">
+            <button class="btn" style="width:70px;" onclick="sendPrivateMsg()">भेजें</button>
         </div>
     </div>
 
     <div class="nav-bar">
-        <div class="nav-item active" id="nav-market" onclick="switchTab('market')">
-            <i class="fas fa-home"></i><br>होम
-        </div>
-        <div class="nav-item" id="nav-chat" onclick="switchTab('chat')">
-            <i class="fas fa-comments"></i><br>चौपाल
-        </div>
-        <div class="nav-item" onclick="shareKRYA()">
-            <i class="fas fa-share-nodes"></i><br>शेयर
-        </div>
-        <div class="nav-item" onclick="alert('आपकी सच्चाई की रेटिंग: 5.0 ⭐')">
-            <i class="fas fa-award"></i><br>सम्मान
-        </div>
+        <div onclick="location.reload()"><i class="fas fa-home"></i><br><span style="font-size:10px">होम</span></div>
+        <div onclick="shareKRYA()"><i class="fas fa-share-alt"></i><br><span style="font-size:10px">शेयर</span></div>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, serverTimestamp, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCBC5iztNy0P-4-vY6Djec5ff26mTtJk30",
@@ -160,167 +110,90 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    emailjs.init("msEHMlMxmjBbBoqnn");
-
     let currentUser = null;
-    let tempOTP = null, tempEmail = "";
-    let logoutClicks = 0;
+    let activeChatPartner = null;
 
-    // Check Persistent Login
     window.onload = () => {
         const saved = localStorage.getItem('krya_user');
-        if(saved) {
-            currentUser = JSON.parse(saved);
-            document.getElementById('screen-auth').classList.add('hidden');
-            startApp();
-        }
-        startSlider();
+        if(saved) { currentUser = JSON.parse(saved); startApp(); }
+        setInterval(moveSlider, 4000);
     };
 
-    // --- AUTH LOGIC ---
-    window.sendOTP = () => {
-        tempEmail = document.getElementById('user-email').value;
-        if(!tempEmail.includes('@')) return alert("कृपया सही ईमेल लिखें");
-        tempOTP = Math.floor(100000 + Math.random() * 900000);
-        document.getElementById('auth-status').innerText = "सच्चाई का सफर शुरू हो रहा है... OTP भेजा जा रहा है।";
-        emailjs.send('service_gls676h', 'template_6teuhl4', { email: tempEmail, otp: tempOTP })
-            .then(() => {
-                document.getElementById('step-email').classList.add('hidden');
-                document.getElementById('step-otp').classList.remove('hidden');
-                document.getElementById('auth-status').innerText = "OTP आपके ईमेल पर भेज दिया गया है।";
+    // --- PAYMENT (₹99 for 1 Year) ---
+    window.payVIP = () => {
+        const upiId = "YOUR_UPI_ID@okicici"; 
+        const url = `upi://pay?pa=${upiId}&pn=KRYA&am=99&cu=INR&tn=VIP_1_YEAR`;
+        if(confirm("₹99 में 1 साल की VIP सदस्यता लेने के लिए OK दबाएँ।")) {
+            window.location.href = url;
+            alert("भुगतान के बाद, कृपया हमें व्हाट्सएप पर स्क्रीनशॉट भेजें ताकि आपका VIP बैज एक्टिव हो सके।");
+        }
+    };
+
+    // --- PRIVATE CHAT LOGIC ---
+    window.openChat = (partnerUid, partnerName) => {
+        activeChatPartner = partnerUid;
+        document.getElementById('chat-with-name').innerText = "बातचीत: " + partnerName;
+        document.getElementById('chat-ui').style.display = 'block';
+        loadPrivateMessages(partnerUid);
+    };
+
+    window.closeChat = () => { document.getElementById('chat-ui').style.display = 'none'; };
+
+    window.sendPrivateMsg = async () => {
+        const text = document.getElementById('p-chat-input').value;
+        if(!text) return;
+        await addDoc(collection(db, "private_messages"), {
+            sender: currentUser.uid,
+            receiver: activeChatPartner,
+            message: text,
+            time: serverTimestamp()
+        });
+        document.getElementById('p-chat-input').value = "";
+    };
+
+    function loadPrivateMessages(partnerUid) {
+        const q = query(collection(db, "private_messages"), orderBy("time", "asc"));
+        onSnapshot(q, snap => {
+            const box = document.getElementById('private-msgs');
+            box.innerHTML = "";
+            snap.forEach(d => {
+                const m = d.data();
+                if((m.sender == currentUser.uid && m.receiver == partnerUid) || (m.sender == partnerUid && m.receiver == currentUser.uid)) {
+                    const style = m.sender == currentUser.uid ? "text-align:right; color:var(--primary);" : "text-align:left;";
+                    box.innerHTML += `<div style="${style} margin-bottom:5px; font-size:13px;">${m.message}</div>`;
+                }
             });
-    };
-
-    window.verifyOTP = async () => {
-        const input = document.getElementById('otp-input').value;
-        if(input == tempOTP) {
-            const uid = btoa(tempEmail).replace(/=/g, "");
-            const userDoc = await getDoc(doc(db, "krya_users", uid));
-            document.getElementById('screen-auth').classList.add('hidden');
-            if(userDoc.exists()) {
-                currentUser = userDoc.data();
-                localStorage.setItem('krya_user', JSON.stringify(currentUser));
-                startApp();
-            } else {
-                document.getElementById('screen-profile').classList.remove('hidden');
-            }
-        } else { alert("गलत OTP! कृपया दोबारा देखें।"); }
-    };
-
-    window.saveProfile = async () => {
-        const handle = document.getElementById('prof-handle').value.trim();
-        if(!handle) return alert("नाम लिखना जरूरी है");
-        const uid = btoa(tempEmail).replace(/=/g, "");
-        currentUser = { 
-            handle, 
-            talent: document.getElementById('prof-talent').value, 
-            bio: document.getElementById('prof-bio').value, 
-            email: tempEmail, 
-            uid,
-            joined: Date.now()
-        };
-        await setDoc(doc(db, "krya_users", uid), currentUser);
-        localStorage.setItem('krya_user', JSON.stringify(currentUser));
-        document.getElementById('screen-profile').classList.add('hidden');
-        startApp();
-    };
-
-    // --- NAVIGATION ---
-    window.switchTab = (tab) => {
-        document.getElementById('sec-market').classList.add('hidden');
-        document.getElementById('sec-chat').classList.add('hidden');
-        document.getElementById('nav-market').classList.remove('active');
-        document.getElementById('nav-chat').classList.remove('active');
-        
-        document.getElementById('sec-' + tab).classList.remove('hidden');
-        document.getElementById('nav-' + tab).classList.add('active');
-        document.getElementById('main-content').scrollTop = 0;
-    };
-
-    // --- CHAT LOGIC ---
-    window.postGlobal = async () => {
-        const msg = document.getElementById('chat-input').value;
-        if(!msg) return;
-        if(confirm("ग्लोबल चौपाल में संदेश भेजने का शुल्क ₹9 है। क्या आप सच्चाई के साथ अपनी बात रखना चाहते हैं?")) {
-            await addDoc(collection(db, "global_chat"), {
-                text: msg,
-                user: currentUser.handle,
-                time: serverTimestamp()
-            });
-            document.getElementById('chat-input').value = "";
-        }
-    };
-
-    // --- SHARE LOGIC ---
-    window.shareKRYA = () => {
-        const text = `KRYA - हम सबका अपना डिजिटल मंच! 🇮🇳\n\nनमस्ते भाइयों! हम सब भारतीय एक हैं। 'KRYA' एक ऐसा परिवार है जहाँ सिर्फ सच्चाई की जगह है—यहाँ न कोई झूठ है, न कोई दिखावा।\n\nयह हम सबका अपना पारदर्शी मंच है जहाँ व्यक्ति का असली हुनर ही उसकी पहचान है। आइये, ईमानदारी के साथ साथ चलें।\n\nसच्चाई के इस सफर से अभी जुड़ें: ${window.location.href}`;
-        if (navigator.share) {
-            navigator.share({ title: 'KRYA Network', text: text, url: window.location.href });
-        } else {
-            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
-        }
-    };
-
-    // --- HIDDEN LOGOUT (Only for Mukesh Ji) ---
-    window.secretLogout = () => {
-        logoutClicks++;
-        if(logoutClicks >= 5) {
-            if(confirm("एडमिन: क्या आप बाहर निकलना चाहते हैं?")) {
-                localStorage.removeItem('krya_user');
-                location.reload();
-            }
-            logoutClicks = 0;
-        }
-    };
+            box.scrollTop = box.scrollHeight;
+        });
+    }
 
     // --- APP START ---
     function startApp() {
+        document.getElementById('screen-auth').classList.add('hidden');
         document.getElementById('app-main').classList.remove('hidden');
-        document.getElementById('user-tag').innerText = currentUser.handle;
+        document.getElementById('user-tag').innerText = "@" + currentUser.handle;
 
-        // Load Market
         onSnapshot(collection(db, "krya_users"), snap => {
             const list = document.getElementById('market-list');
-            list.innerHTML = "";
+            list.innerHTML = "<h4>लाइव मार्केट (भारतीय परिवार)</h4>";
             snap.forEach(d => {
                 const u = d.data();
+                if(u.uid == currentUser.uid) return;
                 list.innerHTML += `<div class="talent-card">
-                    <div style="background:var(--primary); width:45px; height:45px; border-radius:50%; color:black; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:20px;">${u.handle[0].toUpperCase()}</div>
-                    <div style="flex:1">
-                        <div style="font-weight:bold; font-size:16px;">${u.handle}</div>
-                        <div style="font-size:12px; color:var(--primary)">${u.talent}</div>
-                        <div style="font-size:11px; opacity:0.7; margin-top:2px;">${u.bio || 'सच्चाई ही मेरी पहचान है।'}</div>
-                    </div>
-                    <i class="fas fa-comment-dots" style="color:var(--primary); font-size:20px;" onclick="alert('प्राइवेट चैट जल्द शुरू होगा')"></i>
-                </div>`;
-            });
-        });
-
-        // Load Global Chat
-        const q = query(collection(db, "global_chat"), orderBy("time", "desc"));
-        onSnapshot(q, snap => {
-            const chatBox = document.getElementById('chat-messages');
-            chatBox.innerHTML = "";
-            snap.forEach(d => {
-                const m = d.data();
-                chatBox.innerHTML += `<div class="chat-msg">
-                    <div style="font-size:10px; color:var(--primary); font-weight:bold; margin-bottom:4px;">@${m.user}</div>
-                    <div style="font-size:14px;">${m.text}</div>
+                    <div style="flex:1"><b>${u.handle}</b><br><small>${u.talent}</small></div>
+                    <button class="btn" style="width:70px; padding:8px; font-size:12px;" onclick="openChat('${u.uid}', '${u.handle}')">मैसेज</button>
                 </div>`;
             });
         });
     }
 
-    function startSlider() {
-        let count = 0;
-        setInterval(() => {
-            const container = document.getElementById('slide-container');
-            if(container) {
-                count++;
-                if(count > 4) count = 0;
-                container.style.transform = `translateX(-${count * 20}%)`;
-            }
-        }, 5000);
+    let slideIdx = 0;
+    function moveSlider() {
+        const container = document.getElementById('slide-container');
+        if(container) {
+            slideIdx = (slideIdx + 1) % 5;
+            container.style.transform = `translateX(-${slideIdx * 20}%)`;
+        }
     }
 </script>
 </body>
