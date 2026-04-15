@@ -3,34 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA - सच का साथ</title>
+    <title>KRYA - सच्चाई का सफर</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
         
+        /* Layout */
+        .header { background: var(--card); height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #334155; }
+        #main-content { height: calc(100vh - 130px); overflow-y: auto; padding: 15px; scroll-behavior: smooth; }
         .full-screen { height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; background: var(--bg); }
-        .auth-card { background: var(--card); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid rgba(251, 191, 36, 0.2); text-align: center; }
         
+        /* Cards */
+        .auth-card { background: var(--card); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid rgba(251, 191, 36, 0.2); text-align: center; }
+        .talent-card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 12px; border: 1px solid #334155; display: flex; align-items: center; gap: 12px; }
+        
+        /* UI Elements */
         input, select, textarea { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; outline: none; }
         .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; background: var(--primary); color: #0b1120; }
-
-        /* App Layout */
-        .header { background: var(--card); height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #334155; }
-        #main-content { height: calc(100vh - 130px); overflow-y: auto; padding: 15px; }
-
-        /* VIP Banner */
-        .vip-offer { background: linear-gradient(45deg, #fbbf24, #d97706); color: #0b1120; padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: center; font-weight: bold; }
-
-        /* Slider */
-        .slider { width: 100%; height: 140px; overflow: hidden; border-radius: 15px; margin-bottom: 20px; border: 1px solid var(--primary); }
-        .slides { display: flex; width: 500%; height: 100%; transition: 0.8s; }
-        .slide { width: 20%; display: flex; flex-direction: column; justify-content: center; padding: 20px; text-align: center; }
-
-        /* Chat System */
-        .talent-card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 12px; border: 1px solid #334155; display: flex; align-items: center; gap: 15px; }
-        .private-chat { position: fixed; bottom: 80px; left: 0; right: 0; background: var(--card); height: 300px; z-index: 500; border-radius: 20px 20px 0 0; border-top: 2px solid var(--primary); padding: 20px; display: none; }
+        
+        /* VIP Banner & Slider */
+        .vip-offer { background: linear-gradient(45deg, #fbbf24, #d97706); color: #0b1120; padding: 12px; border-radius: 15px; margin-bottom: 15px; text-align: center; font-weight: 900; animation: pulse 2s infinite; cursor: pointer; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
+        
+        .slider { width: 100%; height: 130px; overflow: hidden; border-radius: 15px; margin-bottom: 20px; border: 1px solid var(--primary); background: #1e293b; }
+        .slides { display: flex; width: 500%; height: 100%; transition: 0.6s ease-in-out; }
+        .slide { width: 20%; display: flex; flex-direction: column; justify-content: center; padding: 15px; text-align: center; }
+        
+        /* Chat UI */
+        .private-chat-popup { position: fixed; bottom: 70px; left: 0; right: 0; background: var(--card); height: 350px; z-index: 500; border-radius: 20px 20px 0 0; border-top: 3px solid var(--primary); padding: 15px; display: none; box-shadow: 0 -5px 15px rgba(0,0,0,0.5); }
+        #private-msgs { height: 220px; overflow-y: auto; margin-bottom: 10px; padding: 5px; }
 
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; }
         .hidden { display: none !important; }
@@ -40,51 +44,52 @@
 
 <div id="screen-auth" class="full-screen">
     <div class="auth-card">
-        <h1 style="color:var(--primary)">KRYA</h1>
+        <h1 style="color:var(--primary); letter-spacing: 2px;">KRYA</h1>
+        <p style="font-size:12px; margin-bottom:15px; opacity:0.7;">सच्चाई और एकता का भारतीय मंच</p>
         <div id="step-email">
-            <input type="email" id="user-email" placeholder="अपना Email डालें">
-            <button class="btn" onclick="sendOTP()">OTP भेजें</button>
+            <input type="email" id="user-email" placeholder="Email ID लिखें">
+            <button class="btn" onclick="sendOTP()">OTP पायें</button>
         </div>
         <div id="step-otp" class="hidden">
-            <input type="number" id="otp-input" placeholder="6-digit OTP">
-            <button class="btn" onclick="verifyOTP()">Verify</button>
+            <input type="number" id="otp-input" placeholder="6-अंकों का OTP">
+            <button class="btn" onclick="verifyOTP()">सत्यापित करें</button>
         </div>
     </div>
 </div>
 
 <div id="app-main" class="hidden">
     <div class="header">
-        <div style="font-weight:900; color:var(--primary); font-size:24px;">KRYA</div>
-        <div id="user-tag" style="font-size:12px; color:var(--primary)"></div>
+        <div style="font-weight:900; color:var(--primary); font-size:22px;">KRYA</div>
+        <div id="user-tag" style="font-size:11px; border:1px solid var(--primary); padding:4px 10px; border-radius:20px; color:var(--primary); cursor:pointer;" onclick="adminLogout()"></div>
     </div>
 
     <div id="main-content">
         <div class="vip-offer" onclick="payVIP()">
-            🔥 धमाका ऑफर: मात्र ₹99 में पूरे 1 साल की सदस्यता!<br>
-            <span style="font-size:11px;">सच्चाई का बैज + टॉप लिस्टिंग + फ्री अपडेट्स</span>
+            🇮🇳 धमाका: ₹99 में पूरा 1 साल फ्री! 🌟<br>
+            <span style="font-size:10px;">सच्चाई का बैज + नंबर 1 लिस्टिंग (सीमित समय)</span>
         </div>
 
         <div class="slider">
             <div class="slides" id="slide-container">
-                <div class="slide"><h3>🇮🇳 हम सब भारतीय एक हैं</h3><p>जाति-पाति छोड़ें, सच्चाई से जुड़ें।</p></div>
-                <div class="slide"><h3>⚖️ सिर्फ सच बोलता है</h3><p>झूठ की यहाँ कोई जगह नहीं है।</p></div>
-                <div class="slide"><h3>📱 प्राइवेट मैसेज</h3><p>अब सीधे सुरक्षित बातचीत करें।</p></div>
-                <div class="slide"><h3>🌟 VIP सदस्यता</h3><p>₹99 में साल भर का साथ।</p></div>
-                <div class="slide"><h3>🚩 डिजिटल चौपाल</h3><p>आपके गाँव की नई पहचान।</p></div>
+                <div class="slide"><h3>हम सब भारतीय एक हैं</h3><p>जाति-पाति मुक्त, सिर्फ हुनर की कद्र।</p></div>
+                <div class="slide"><h3>सच्चाई की जीत</h3><p>यहाँ झूठ और दिखावा नहीं चलता।</p></div>
+                <div class="slide"><h3>प्राइवेट चैट</h3><p>अब सुरक्षित तरीके से व्यापार करें।</p></div>
+                <div class="slide"><h3>VIP सदस्य बनें</h3><p>₹99 में साल भर का साथ पायें।</p></div>
+                <div class="slide"><h3>डिजिटल चौपाल</h3><p>गाँव-गाँव की नई पहचान।</p></div>
             </div>
         </div>
 
         <div id="market-list"></div>
     </div>
 
-    <div id="chat-ui" class="private-chat">
-        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-            <b id="chat-with-name">बातचीत</b>
-            <button onclick="closeChat()" style="background:none; color:white; border:none;">X</button>
+    <div id="chat-ui" class="private-chat-popup">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; padding-bottom:8px;">
+            <b id="chat-partner-name" style="color:var(--primary)">बातचीत</b>
+            <i class="fas fa-times" onclick="closeChat()" style="cursor:pointer"></i>
         </div>
-        <div id="private-msgs" style="height:180px; overflow-y:auto; margin-bottom:10px; background:rgba(0,0,0,0.2); padding:10px; border-radius:10px;"></div>
-        <div style="display:flex; gap:5px;">
-            <input type="text" id="p-chat-input" placeholder="सच मैसेज लिखें..." style="margin:0;">
+        <div id="private-msgs"></div>
+        <div style="display:flex; gap:8px;">
+            <input type="text" id="p-chat-input" placeholder="मैसेज लिखें..." style="margin:0;">
             <button class="btn" style="width:70px;" onclick="sendPrivateMsg()">भेजें</button>
         </div>
     </div>
@@ -92,12 +97,13 @@
     <div class="nav-bar">
         <div onclick="location.reload()"><i class="fas fa-home"></i><br><span style="font-size:10px">होम</span></div>
         <div onclick="shareKRYA()"><i class="fas fa-share-alt"></i><br><span style="font-size:10px">शेयर</span></div>
+        <div onclick="alert('सच्चाई का सम्मान: जल्द आ रहा है')"><i class="fas fa-award"></i><br><span style="font-size:10px">सम्मान</span></div>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, serverTimestamp, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCBC5iztNy0P-4-vY6Djec5ff26mTtJk30",
@@ -110,90 +116,123 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    emailjs.init("msEHMlMxmjBbBoqnn");
+
     let currentUser = null;
     let activeChatPartner = null;
+    let logoutClicks = 0;
 
     window.onload = () => {
         const saved = localStorage.getItem('krya_user');
-        if(saved) { currentUser = JSON.parse(saved); startApp(); }
-        setInterval(moveSlider, 4000);
+        if(saved) {
+            currentUser = JSON.parse(saved);
+            startApp();
+        }
+        setInterval(moveSlider, 4500);
     };
 
-    // --- PAYMENT (₹99 for 1 Year) ---
+    // --- UPI PAYMENT WITH YOUR REAL ID ---
     window.payVIP = () => {
-        const upiId = "YOUR_UPI_ID@okicici"; 
-        const url = `upi://pay?pa=${upiId}&pn=KRYA&am=99&cu=INR&tn=VIP_1_YEAR`;
-        if(confirm("₹99 में 1 साल की VIP सदस्यता लेने के लिए OK दबाएँ।")) {
-            window.location.href = url;
-            alert("भुगतान के बाद, कृपया हमें व्हाट्सएप पर स्क्रीनशॉट भेजें ताकि आपका VIP बैज एक्टिव हो सके।");
+        const myUPI = "93690mukeshkumar@axl"; 
+        const amount = "99";
+        const upiUrl = `upi://pay?pa=${myUPI}&pn=KRYA_Mukesh_Rai&am=${amount}&cu=INR&tn=KRYA_1Year_VIP`;
+        
+        if(confirm("₹99 में 1 साल की VIP सदस्यता के लिए PhonePe/Paytm खोलें?")) {
+            window.location.href = upiUrl;
+            alert("पेमेंट के बाद अपना नाम लिखकर हमें WhatsApp करें ताकि हम आपका 'सच्चाई का बैज' लगा सकें।");
         }
     };
 
-    // --- PRIVATE CHAT LOGIC ---
-    window.openChat = (partnerUid, partnerName) => {
-        activeChatPartner = partnerUid;
-        document.getElementById('chat-with-name').innerText = "बातचीत: " + partnerName;
+    // --- APP LOGIC ---
+    window.openChat = (uid, name) => {
+        activeChatPartner = uid;
+        document.getElementById('chat-partner-name').innerText = name;
         document.getElementById('chat-ui').style.display = 'block';
-        loadPrivateMessages(partnerUid);
+        loadMsgs(uid);
     };
 
-    window.closeChat = () => { document.getElementById('chat-ui').style.display = 'none'; };
+    window.closeChat = () => document.getElementById('chat-ui').style.display = 'none';
 
     window.sendPrivateMsg = async () => {
         const text = document.getElementById('p-chat-input').value;
         if(!text) return;
         await addDoc(collection(db, "private_messages"), {
-            sender: currentUser.uid,
-            receiver: activeChatPartner,
-            message: text,
-            time: serverTimestamp()
+            s: currentUser.uid,
+            r: activeChatPartner,
+            m: text,
+            t: serverTimestamp()
         });
         document.getElementById('p-chat-input').value = "";
     };
 
-    function loadPrivateMessages(partnerUid) {
-        const q = query(collection(db, "private_messages"), orderBy("time", "asc"));
+    function loadMsgs(partner) {
+        const q = query(collection(db, "private_messages"), orderBy("t", "asc"));
         onSnapshot(q, snap => {
             const box = document.getElementById('private-msgs');
             box.innerHTML = "";
             snap.forEach(d => {
                 const m = d.data();
-                if((m.sender == currentUser.uid && m.receiver == partnerUid) || (m.sender == partnerUid && m.receiver == currentUser.uid)) {
-                    const style = m.sender == currentUser.uid ? "text-align:right; color:var(--primary);" : "text-align:left;";
-                    box.innerHTML += `<div style="${style} margin-bottom:5px; font-size:13px;">${m.message}</div>`;
+                if((m.s == currentUser.uid && m.r == partner) || (m.s == partner && m.r == currentUser.uid)) {
+                    const side = m.s == currentUser.uid ? "text-align:right; color:var(--primary);" : "text-align:left; color:#94a3b8;";
+                    box.innerHTML += `<div style="${side} margin-bottom:8px; font-size:14px;">${m.m}</div>`;
                 }
             });
             box.scrollTop = box.scrollHeight;
         });
     }
 
-    // --- APP START ---
+    window.adminLogout = () => {
+        logoutClicks++;
+        if(logoutClicks >= 5) {
+            if(confirm("Admin: लॉगआउट करें?")) { localStorage.removeItem('krya_user'); location.reload(); }
+            logoutClicks = 0;
+        }
+    };
+
+    window.shareKRYA = () => {
+        const text = `KRYA - हम सबका अपना डिजिटल मंच! 🇮🇳\n\nनमस्ते भाइयों! हम सब भारतीय एक हैं। 'KRYA' एक ऐसा परिवार है जहाँ सिर्फ सच्चाई की जगह है।\n\nयहाँ व्यक्ति का असली हुनर ही उसकी पहचान है। अभी जुड़ें: ${window.location.href}`;
+        if(navigator.share) navigator.share({title: 'KRYA', text: text, url: window.location.href});
+        else window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+    };
+
+    // ... (Auth & Slider logic remains same as V5.0) ...
+    window.sendOTP = () => {
+        const email = document.getElementById('user-email').value;
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        window.tempOTP = otp; window.tempEmail = email;
+        emailjs.send('service_gls676h', 'template_6teuhl4', { email, otp })
+            .then(() => { document.getElementById('step-email').classList.add('hidden'); document.getElementById('step-otp').classList.remove('hidden'); });
+    };
+
+    window.verifyOTP = async () => {
+        if(document.getElementById('otp-input').value == window.tempOTP) {
+            const uid = btoa(window.tempEmail).replace(/=/g,"");
+            currentUser = { handle: window.tempEmail.split('@')[0], uid, email: window.tempEmail };
+            localStorage.setItem('krya_user', JSON.stringify(currentUser));
+            startApp();
+        } else alert("गलत OTP");
+    };
+
     function startApp() {
         document.getElementById('screen-auth').classList.add('hidden');
         document.getElementById('app-main').classList.remove('hidden');
         document.getElementById('user-tag').innerText = "@" + currentUser.handle;
-
         onSnapshot(collection(db, "krya_users"), snap => {
-            const list = document.getElementById('market-list');
-            list.innerHTML = "<h4>लाइव मार्केट (भारतीय परिवार)</h4>";
+            const list = document.getElementById('market-list'); list.innerHTML = "";
             snap.forEach(d => {
-                const u = d.data();
-                if(u.uid == currentUser.uid) return;
+                const u = d.data(); if(u.uid == currentUser.uid) return;
                 list.innerHTML += `<div class="talent-card">
                     <div style="flex:1"><b>${u.handle}</b><br><small>${u.talent}</small></div>
-                    <button class="btn" style="width:70px; padding:8px; font-size:12px;" onclick="openChat('${u.uid}', '${u.handle}')">मैसेज</button>
+                    <button class="btn" style="width:70px; padding:8px; font-size:12px;" onclick="openChat('${u.uid}','${u.handle}')">मैसेज</button>
                 </div>`;
             });
         });
     }
 
-    let slideIdx = 0;
+    let sIdx = 0;
     function moveSlider() {
-        const container = document.getElementById('slide-container');
-        if(container) {
-            slideIdx = (slideIdx + 1) % 5;
-            container.style.transform = `translateX(-${slideIdx * 20}%)`;
-        }
+        const c = document.getElementById('slide-container');
+        if(c) { sIdx = (sIdx + 1) % 5; c.style.transform = `translateX(-${sIdx * 20}%)`; }
     }
 </script>
 </body>
