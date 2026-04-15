@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA - Market</title>
+    <title>KRYA - Global Network</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
@@ -12,67 +12,79 @@
         body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
         .full-screen { height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; position: fixed; width: 100%; top: 0; left: 0; z-index: 100; background: var(--bg); }
         .auth-card { background: var(--card); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid rgba(251, 191, 36, 0.2); text-align: center; }
-        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; outline: none; }
-        .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; background: var(--primary); color: #0b1120; font-size: 16px; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; outline: none; }
+        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; background: var(--primary); color: #0b1120; }
         .header { background: var(--card); height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #334155; }
         #main-content { height: calc(100vh - 130px); overflow-y: auto; padding: 15px; }
-        .talent-card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #334155; display: flex; align-items: center; gap: 15px; }
+        .chat-box { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 10px; margin-bottom: 10px; border-left: 3px solid var(--primary); }
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; }
         .hidden { display: none !important; }
-        .logo { font-size: 24px; font-weight: 900; color: var(--primary); }
+        .talent-card { background: var(--card); border-radius: 15px; padding: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; border: 1px solid #334155; }
     </style>
 </head>
 <body>
 
 <div id="screen-auth" class="full-screen">
     <div class="auth-card">
-        <h1 class="logo">KRYA</h1>
+        <h1 style="color:var(--primary); margin-bottom:10px;">KRYA</h1>
         <div id="step-email">
-            <input type="email" id="user-email" placeholder="Email डालें">
+            <input type="email" id="user-email" placeholder="अपना Email डालें">
             <button class="btn" onclick="sendOTP()">OTP भेजें</button>
         </div>
         <div id="step-otp" class="hidden">
-            <input type="number" id="otp-input" placeholder="OTP यहाँ डालें">
+            <input type="number" id="otp-input" placeholder="6-अंकों का OTP">
             <button class="btn" onclick="verifyOTP()">Verify करें</button>
         </div>
-        <p id="auth-status" style="margin-top:10px; font-size:12px; color:var(--primary)"></p>
+        <p id="auth-status" style="font-size:12px; margin-top:10px;"></p>
     </div>
 </div>
 
 <div id="screen-profile" class="full-screen hidden">
     <div class="auth-card">
-        <h2>अपना टैलेंट चुनें</h2>
+        <h2>KRYA प्रोफाइल बनाएँ</h2>
         <input type="text" id="prof-handle" placeholder="@username">
         <select id="prof-talent">
-            <option value="व्यापारी">दुकानदार / व्यापारी</option>
-            <option value="कारीगर">मिस्त्री / कारीगर</option>
-            <option value="किसान">खेती - किसानी</option>
-            <option value="सेवा">अन्य सेवाएँ</option>
+            <option value="व्यापारी">दुकानदार</option>
+            <option value="कारीगर">मिस्त्री/कारीगर</option>
+            <option value="किसान">किसान</option>
         </select>
-        <textarea id="prof-bio" placeholder="अपने बारे में लिखें..."></textarea>
-        <button class="btn" onclick="saveProfile()">KRYA मार्केट में जुड़ें</button>
+        <textarea id="prof-bio" placeholder="अपने काम के बारे में लिखें..."></textarea>
+        <button class="btn" onclick="saveProfile()">शुरू करें</button>
     </div>
 </div>
 
 <div id="app-main" class="hidden">
     <div class="header">
-        <div class="logo">KRYA</div>
-        <div id="user-tag" style="font-size:12px; color:var(--primary); cursor:pointer;" onclick="adminClick()"></div>
+        <div style="font-weight:900; color:var(--primary); font-size:22px;">KRYA</div>
+        <div id="user-tag" style="font-size:11px; border:1px solid var(--primary); padding:3px 8px; border-radius:15px;"></div>
     </div>
+
     <div id="main-content">
-        <h3 style="margin-bottom:15px;">लाइव मार्केट</h3>
-        <div id="market-list"></div>
+        <div id="sec-market">
+            <h4 style="margin-bottom:10px;">लाइव मार्केट</h4>
+            <div id="market-list"></div>
+        </div>
+
+        <div id="sec-chat" class="hidden">
+            <h4 style="margin-bottom:10px;">ग्लोबल चैट (Paid)</h4>
+            <div id="global-messages" style="height: 300px; overflow-y: auto; margin-bottom: 10px;"></div>
+            <div style="display:flex; gap:5px;">
+                <input type="text" id="chat-input" placeholder="मैसेज लिखें (₹9 चार्ज)..." style="margin:0;">
+                <button class="btn" style="width:70px;" onclick="postGlobal()">भेजें</button>
+            </div>
+        </div>
     </div>
+
     <div class="nav-bar">
-        <div onclick="showHome()"><i class="fas fa-home"></i><br><span style="font-size:10px">होम</span></div>
-        <div onclick="alert('खोज जारी है...')"><i class="fas fa-search"></i><br><span style="font-size:10px">खोजें</span></div>
-        <div onclick="alert('आपकी कुल कमाई: ₹0')"><i class="fas fa-wallet"></i><br><span style="font-size:10px">कमाई</span></div>
+        <div onclick="switchSec('market')"><i class="fas fa-store"></i><br><span style="font-size:10px">मार्केट</span></div>
+        <div onclick="switchSec('chat')"><i class="fas fa-globe"></i><br><span style="font-size:10px">ग्लोबल</span></div>
+        <div onclick="shareApp()"><i class="fas fa-share-alt"></i><br><span style="font-size:10px">शेयर</span></div>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCBC5iztNy0P-4-vY6Djec5ff26mTtJk30",
@@ -87,95 +99,111 @@
     const db = getFirestore(app);
     emailjs.init("msEHMlMxmjBbBoqnn");
 
+    let currentUser = null;
     let tempOTP = null, tempEmail = "";
-    let clickCount = 0;
 
-    window.onload = function() {
-        const savedUser = localStorage.getItem('krya_user');
-        if (savedUser) {
-            const user = JSON.parse(savedUser);
+    window.onload = () => {
+        const saved = localStorage.getItem('krya_user');
+        if(saved) {
+            currentUser = JSON.parse(saved);
             document.getElementById('screen-auth').classList.add('hidden');
-            loadApp(user);
+            loadApp();
         }
     };
 
-    window.sendOTP = function() {
+    // Auth Functions
+    window.sendOTP = () => {
         tempEmail = document.getElementById('user-email').value;
-        if(!tempEmail.includes('@')) return alert("सही ईमेल लिखें");
         tempOTP = Math.floor(100000 + Math.random() * 900000);
-        document.getElementById('auth-status').innerText = "भेजा जा रहा है...";
+        document.getElementById('auth-status').innerText = "OTP भेजा जा रहा है...";
         emailjs.send('service_gls676h', 'template_6teuhl4', { email: tempEmail, otp: tempOTP })
             .then(() => {
                 document.getElementById('step-email').classList.add('hidden');
                 document.getElementById('step-otp').classList.remove('hidden');
-                document.getElementById('auth-status').innerText = "OTP भेज दिया गया!";
-            }).catch(err => alert("Email Error"));
+            });
     };
 
-    window.verifyOTP = async function() {
+    window.verifyOTP = async () => {
         const input = document.getElementById('otp-input').value;
-        if(tempOTP && input == tempOTP) {
-            tempOTP = null;
+        if(input == tempOTP) {
             const uid = btoa(tempEmail).replace(/=/g, "");
             const userDoc = await getDoc(doc(db, "krya_users", uid));
             document.getElementById('screen-auth').classList.add('hidden');
             if(userDoc.exists()) {
-                const userData = userDoc.data();
-                localStorage.setItem('krya_user', JSON.stringify(userData));
-                loadApp(userData);
-            } else {
-                document.getElementById('screen-profile').classList.remove('hidden');
-            }
-        } else { alert("गलत OTP!"); }
+                currentUser = userDoc.data();
+                localStorage.setItem('krya_user', JSON.stringify(currentUser));
+                loadApp();
+            } else { document.getElementById('screen-profile').classList.remove('hidden'); }
+        } else { alert("गलत OTP"); }
     };
 
-    window.saveProfile = async function() {
-        const handle = document.getElementById('prof-handle').value.trim();
-        const talent = document.getElementById('prof-talent').value;
-        const bio = document.getElementById('prof-bio').value;
-        if(!handle || !talent) return alert("जानकारी भरें");
+    window.saveProfile = async () => {
+        const handle = document.getElementById('prof-handle').value;
         const uid = btoa(tempEmail).replace(/=/g, "");
-        const userData = { handle, talent, bio, email: tempEmail, uid, joined: Date.now() };
-        await setDoc(doc(db, "krya_users", uid), userData);
-        localStorage.setItem('krya_user', JSON.stringify(userData));
+        currentUser = { handle, talent: document.getElementById('prof-talent').value, bio: document.getElementById('prof-bio').value, email: tempEmail, uid };
+        await setDoc(doc(db, "krya_users", uid), currentUser);
+        localStorage.setItem('krya_user', JSON.stringify(currentUser));
         document.getElementById('screen-profile').classList.add('hidden');
-        loadApp(userData);
+        loadApp();
     };
 
-    window.showHome = function() {
-        document.getElementById('main-content').scrollTop = 0;
+    // Navigation
+    window.switchSec = (sec) => {
+        document.getElementById('sec-market').classList.add('hidden');
+        document.getElementById('sec-chat').classList.add('hidden');
+        document.getElementById('sec-' + sec).classList.remove('hidden');
     };
 
-    window.adminClick = function() {
-        clickCount++;
-        if(clickCount >= 5) {
-            if(confirm("क्या आप लॉगआउट करना चाहते हैं?")) {
-                localStorage.removeItem('krya_user');
-                location.reload();
-            }
-            clickCount = 0;
+    // Global Chat Logic
+    window.postGlobal = async () => {
+        const msg = document.getElementById('chat-input').value;
+        if(!msg) return;
+        if(confirm("ग्लोबल चैट में मैसेज भेजने का शुल्क ₹9 है। क्या आप सहमत हैं?")) {
+            await addDoc(collection(db, "global_chat"), {
+                text: msg,
+                user: currentUser.handle,
+                time: serverTimestamp()
+            });
+            document.getElementById('chat-input').value = "";
         }
     };
 
-    function loadApp(user) {
+    // Share Logic
+    window.shareApp = () => {
+        const text = `प्रणाम! KRYA - हमारे ग्राम विकास बैंक का आमंत्रण। यहाँ बांका के सभी बेहतरीन कारीगर और दुकानदार मौजूद हैं। अभी जुड़ें: ${window.location.href}`;
+        if (navigator.share) {
+            navigator.share({ title: 'KRYA', text: text, url: window.location.href });
+        } else {
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+        }
+    };
+
+    function loadApp() {
         document.getElementById('app-main').classList.remove('hidden');
-        document.getElementById('user-tag').innerText = user.handle;
-        const list = document.getElementById('market-list');
+        document.getElementById('user-tag').innerText = currentUser.handle;
+
+        // Load Market
         onSnapshot(collection(db, "krya_users"), snap => {
+            const list = document.getElementById('market-list');
             list.innerHTML = "";
             snap.forEach(d => {
                 const u = d.data();
-                const card = document.createElement('div');
-                card.className = 'talent-card';
-                card.innerHTML = `
-                    <div style="width:50px; height:50px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#000; font-weight:bold;">${u.handle[1] || 'K'}</div>
-                    <div style="flex:1">
-                        <div style="font-weight:bold">${u.handle}</div>
-                        <div style="font-size:12px; color:var(--primary)">${u.talent}</div>
-                        <div style="font-size:11px; opacity:0.7">${u.bio}</div>
-                    </div>
-                `;
-                list.appendChild(card);
+                list.innerHTML += `<div class="talent-card">
+                    <div style="background:var(--primary); width:40px; height:40px; border-radius:50%; color:black; display:flex; align-items:center; justify-content:center; font-weight:bold;">${u.handle[1]}</div>
+                    <div style="flex:1"><b>${u.handle}</b><br><small>${u.talent}</small></div>
+                    <button onclick="alert('प्राइवेट चैट जल्द आ रहा है')" style="background:none; border:1px solid var(--primary); color:var(--primary); padding:5px; border-radius:5px; font-size:10px;">मैसेज</button>
+                </div>`;
+            });
+        });
+
+        // Load Global Chat
+        const q = query(collection(db, "global_chat"), orderBy("time", "desc"));
+        onSnapshot(q, snap => {
+            const chatBox = document.getElementById('global-messages');
+            chatBox.innerHTML = "";
+            snap.forEach(d => {
+                const m = d.data();
+                chatBox.innerHTML += `<div class="chat-box"><b>${m.user}:</b><br>${m.text}</div>`;
             });
         });
     }
