@@ -6,52 +6,61 @@
     <title>KRYA - दुनिया की एक पहचान</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --krya-gold: #d4af37; --krya-bg: #0b1426; --krya-card: #ffffff; --krya-text: #0b1426; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background: var(--krya-bg); color: white; overflow: hidden; height: 100vh; display: flex; justify-content: center; }
+        :root { --krya-gold: #d4af37; --krya-bg: #0b1426; --krya-card: #ffffff; --msg-out: #dcf8c6; --msg-in: #ffffff; }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: var(--krya-bg); color: white; height: 100vh; display: flex; justify-content: center; overflow: hidden; }
 
         .app-container { width: 100%; max-width: 450px; background: var(--krya-bg); display: flex; flex-direction: column; position: relative; }
 
-        /* Header */
-        .header { padding: 30px 20px 15px; text-align: center; }
-        .header h1 { color: var(--krya-gold); font-size: 28px; letter-spacing: 2px; }
-        .header p { color: var(--krya-gold); font-size: 12px; opacity: 0.7; }
+        /* Header Area */
+        .header { padding: 40px 20px 20px; text-align: center; }
+        .header h1 { color: var(--krya-gold); font-size: 35px; letter-spacing: 3px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .header p { color: var(--krya-gold); font-size: 14px; opacity: 0.8; margin-top: 5px; font-style: italic; }
 
-        /* Tabs */
-        .tabs { display: flex; justify-content: space-around; background: rgba(255,255,255,0.05); padding: 10px 0; border-radius: 15px; margin: 0 15px 15px; }
-        .tab-btn { color: white; opacity: 0.5; cursor: pointer; border: none; background: none; font-size: 14px; }
-        .tab-btn.active { opacity: 1; color: var(--krya-gold); font-weight: bold; }
+        /* Navigation Tabs */
+        .tabs { display: flex; justify-content: space-around; background: rgba(255,255,255,0.08); padding: 12px 0; border-radius: 20px; margin: 0 15px 15px; border: 1px solid rgba(212, 175, 55, 0.2); }
+        .tab-btn { color: white; opacity: 0.5; cursor: pointer; border: none; background: none; font-size: 15px; font-weight: 500; transition: 0.3s; }
+        .tab-btn.active { opacity: 1; color: var(--krya-gold); border-bottom: 2px solid var(--krya-gold); }
 
-        /* Main Content Area */
-        .main-content { flex: 1; background: var(--krya-card); border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 15px; overflow-y: auto; color: var(--krya-text); }
+        /* White Content Area */
+        .main-content { flex: 1; background: var(--krya-card); border-top-left-radius: 35px; border-top-right-radius: 35px; padding: 15px; overflow-y: auto; color: #333; }
         
-        /* Chat Layouts */
-        .chat-item { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #eee; gap: 12px; cursor: pointer; transition: 0.2s; }
-        .chat-item:hover { background: #f9f9f9; }
-        .avatar { width: 45px; height: 45px; border-radius: 50%; background: var(--krya-bg); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        .chat-info { flex: 1; }
-        .chat-info h4 { font-size: 15px; }
-        .chat-info p { font-size: 11px; color: #777; }
+        /* List Items (Profiles) */
+        .list-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; gap: 15px; cursor: pointer; }
+        .avatar { width: 55px; height: 55px; border-radius: 50%; background: var(--krya-bg); color: var(--krya-gold); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; border: 2px solid var(--krya-gold); }
+        .item-info { flex: 1; }
+        .item-info h4 { font-size: 17px; color: #0b1426; }
+        .item-info p { font-size: 12px; color: #777; margin-top: 2px; }
+        .verified { color: #1da1f2; font-size: 14px; margin-left: 5px; }
 
-        /* Chat Overlay */
-        .chat-window { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--krya-bg); z-index: 1000; display: none; flex-direction: column; }
-        .chat-header { padding: 20px; border-bottom: 1px solid #1e293b; display: flex; align-items: center; gap: 15px; }
-        .messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .msg-bubble { padding: 10px 15px; border-radius: 15px; max-width: 80%; font-size: 14px; }
-        .msg-in { background: #1e293b; color: white; align-self: flex-start; }
-        .msg-out { background: var(--krya-gold); color: black; align-self: flex-end; }
-
-        .chat-input-area { padding: 15px; display: flex; gap: 10px; background: rgba(255,255,255,0.05); }
-        input { flex: 1; padding: 12px; border-radius: 25px; border: none; outline: none; }
+        /* Full Screen Chat Overlay */
+        .chat-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #e5ddd5; z-index: 2000; display: none; flex-direction: column; }
+        .chat-header { background: var(--krya-bg); padding: 15px 20px; display: flex; align-items: center; gap: 15px; color: var(--krya-gold); }
         
-        /* FAB */
-        .fab { position: absolute; bottom: 85px; right: 20px; width: 55px; height: 55px; background: var(--krya-bg); border: 2px solid var(--krya-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--krya-gold); font-size: 20px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
+        /* Message Bubbles (WhatsApp Style) */
+        .message-flow { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); }
+        
+        .bubble { padding: 8px 14px; border-radius: 12px; max-width: 75%; font-size: 15px; line-height: 1.4; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        
+        .msg-me { align-self: flex-end; background: var(--msg-out); color: #000; border-top-right-radius: 2px; }
+        .msg-them { align-self: flex-start; background: var(--msg-in); color: #000; border-top-left-radius: 2px; }
+        
+        .msg-user { font-size: 10px; font-weight: bold; color: #075e54; display: block; margin-bottom: 3px; }
 
-        /* Navigation */
-        .nav { height: 70px; background: white; border-top: 1px solid #eee; display: flex; justify-content: space-around; align-items: center; }
-        .nav-item { color: #aaa; text-align: center; font-size: 10px; cursor: pointer; }
-        .nav-item i { font-size: 20px; display: block; }
-        .nav-item.active { color: var(--krya-bg); }
+        /* Input Area */
+        .input-bar { padding: 10px 15px; background: #f0f0f0; display: flex; gap: 10px; align-items: center; }
+        .input-bar input { flex: 1; padding: 12px 18px; border-radius: 25px; border: 1px solid #ddd; outline: none; font-size: 16px; }
+        .send-btn { background: var(--krya-bg); color: var(--krya-gold); border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 18px; }
+
+        /* Floating Button */
+        .fab { position: absolute; bottom: 90px; right: 25px; width: 60px; height: 60px; background: var(--krya-bg); border: 2px solid var(--krya-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--krya-gold); font-size: 25px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 100; }
+
+        /* Bottom Nav */
+        .bottom-nav { height: 75px; background: #fff; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; padding-bottom: 5px; }
+        .nav-item { color: #999; text-align: center; font-size: 11px; cursor: pointer; transition: 0.3s; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .nav-item.active { color: var(--krya-bg); font-weight: bold; }
     </style>
 </head>
 <body>
@@ -63,8 +72,8 @@
     </div>
 
     <div class="tabs">
-        <div class="tab-btn active" id="tab-global" onclick="switchView('global')">Global Feed</div>
-        <div class="tab-btn" id="tab-private" onclick="switchView('private')">Private Chat</div>
+        <div class="tab-btn active" id="tab-global" onclick="switchView('global')">Global Connect</div>
+        <div class="tab-btn" id="tab-private" onclick="switchView('private')">Private Messenger</div>
     </div>
 
     <div class="main-content" id="list-area">
@@ -72,29 +81,32 @@
 
     <div class="fab" onclick="openChat('global', 'Global Broadcast')"><i class="fas fa-broadcast-tower"></i></div>
 
-    <div class="nav">
-        <div class="nav-item active"><i class="fas fa-home"></i>Home</div>
-        <div class="nav-item"><i class="fas fa-file-invoice"></i>Registry</div>
+    <div class="bottom-nav">
+        <div class="nav-item active"><i class="fas fa-home"></i>Feed</div>
+        <div class="nav-item" onclick="alert('Registry Records coming soon!')"><i class="fas fa-file-contract"></i>Registry</div>
         <div class="nav-item"><i class="fas fa-shield-alt"></i>Security</div>
-        <div class="nav-item"><i class="fas fa-user"></i>Account</div>
+        <div class="nav-item"><i class="fas fa-user-circle"></i>Profile</div>
     </div>
 </div>
 
-<div id="chat-window" class="chat-window">
+<div id="chat-overlay" class="chat-overlay">
     <div class="chat-header">
-        <i class="fas fa-arrow-left" onclick="closeChat()" style="cursor:pointer"></i>
-        <h3 id="chat-title" style="color:var(--krya-gold)"></h3>
+        <i class="fas fa-arrow-left" onclick="closeChat()" style="cursor:pointer; font-size: 20px;"></i>
+        <div>
+            <h3 id="chat-title" style="font-size: 18px;"></h3>
+            <small style="opacity: 0.7;">Online</small>
+        </div>
     </div>
-    <div class="messages" id="message-flow"></div>
-    <div class="chat-input-area">
+    <div class="message-flow" id="message-flow"></div>
+    <div class="input-bar">
         <input type="text" id="chat-input" placeholder="संदेश लिखें...">
-        <button id="send-btn" style="background:var(--krya-gold); border:none; width:45px; border-radius:50%;"><i class="fas fa-paper-plane"></i></button>
+        <button class="send-btn" id="send-btn"><i class="fas fa-paper-plane"></i></button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCBC5iztNy0P-4-vY6Djec5ff26mTtJk30",
@@ -108,10 +120,10 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    let currentMode = 'global'; 
-    let myHandle = "@Mukesh_KRYA"; // इसे लॉगिन से बदला जा सकता है
+    let currentMode = 'global';
+    let myHandle = "@Mukesh_KRYA"; // इसे आप अपनी जरूरत अनुसार बदल सकते हैं
 
-    // --- Views Logic ---
+    // --- Switch Tabs ---
     window.switchView = (mode) => {
         currentMode = mode;
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -119,52 +131,73 @@
         renderList();
     };
 
+    // --- Render List of People or Global ---
     function renderList() {
         const area = document.getElementById('list-area');
         area.innerHTML = "";
         if(currentMode === 'global') {
-            area.innerHTML = `<div class="chat-item" onclick="openChat('global', 'Global Feed')">
-                <div class="avatar" style="background:var(--krya-gold)">G</div>
-                <div class="chat-info"><h4>Global Broadcast</h4><p>पूरी दुनिया के लिए संदेश...</p></div>
-            </div>`;
+            area.innerHTML = `
+                <div class="list-item" onclick="openChat('global', 'Global Broadcast')">
+                    <div class="avatar" style="background:var(--krya-gold); color:white;">G</div>
+                    <div class="item-info">
+                        <h4>Global Broadcast <i class="fas fa-check-circle verified"></i></h4>
+                        <p>पूरी दुनिया को एक साथ मैसेज भेजें</p>
+                    </div>
+                </div>
+                <div style="padding:20px; text-align:center; color:#999; font-size:12px;">Global Feed में सबका स्वागत है!</div>
+            `;
         } else {
-            // यहाँ आप अपने संपर्कों (Contacts) की लिस्ट दिखा सकते हैं
-            area.innerHTML = `<div class="chat-item" onclick="openChat('private', '@Pramod')">
-                <div class="avatar">P</div>
-                <div class="chat-info"><h4>@Pramod <i class="fas fa-check-circle" style="color:#1da1f2"></i></h4><p>प्राइवेट संदेश भेजने के लिए क्लिक करें</p></div>
-            </div>`;
+            area.innerHTML = `
+                <div class="list-item" onclick="openChat('private', '@Pramod')">
+                    <div class="avatar">P</div>
+                    <div class="item-info">
+                        <h4>@Pramod <i class="fas fa-check-circle verified"></i></h4>
+                        <p>प्राइवेट चैट करने के लिए यहाँ क्लिक करें</p>
+                    </div>
+                </div>
+                <div class="list-item" onclick="openChat('private', '@Support_KRYA')">
+                    <div class="avatar">S</div>
+                    <div class="item-info">
+                        <h4>@Support_KRYA <i class="fas fa-check-circle verified"></i></h4>
+                        <p>KRYA हेल्प डेस्क से जुड़ें</p>
+                    </div>
+                </div>
+            `;
         }
     }
 
-    // --- Chat Logic ---
-    let chatListener = null;
+    // --- Chat System ---
+    let unsubscribe = null;
 
     window.openChat = (type, title) => {
-        document.getElementById('chat-window').style.display = 'flex';
+        document.getElementById('chat-overlay').style.display = 'flex';
         document.getElementById('chat-title').innerText = title;
-        loadMessages(type, title);
+        loadMessages(type);
     };
 
     window.closeChat = () => {
-        document.getElementById('chat-window').style.display = 'none';
-        if(chatListener) chatListener(); // स्टॉप लिसनर
+        document.getElementById('chat-overlay').style.display = 'none';
+        if(unsubscribe) unsubscribe();
     };
 
-    async function loadMessages(type, title) {
+    function loadMessages(type) {
         const flow = document.getElementById('message-flow');
         const colName = type === 'global' ? "global_messages" : "private_messages";
-        
         const q = query(collection(db, colName), orderBy("time", "asc"));
-        
-        chatListener = onSnapshot(q, snap => {
+
+        unsubscribe = onSnapshot(q, snap => {
             flow.innerHTML = "";
             snap.forEach(d => {
                 const m = d.data();
                 const isMe = m.user === myHandle;
-                flow.innerHTML += `<div class="msg-bubble ${isMe ? 'msg-out' : 'msg-in'}">
-                    <small style="display:block; font-size:9px; opacity:0.6">${m.user}</small>
+                
+                const div = document.createElement('div');
+                div.className = `bubble ${isMe ? 'msg-me' : 'msg-them'}`;
+                div.innerHTML = `
+                    <small class="msg-user">${isMe ? 'You' : m.user}</small>
                     ${m.text}
-                </div>`;
+                `;
+                flow.appendChild(div);
             });
             flow.scrollTop = flow.scrollHeight;
         });
@@ -176,15 +209,13 @@
             await addDoc(collection(db, colName), {
                 text: txt,
                 user: myHandle,
-                to: type === 'global' ? 'all' : title,
                 time: serverTimestamp()
             });
         };
     }
 
-    // Initial Load
+    // Initial Start
     renderList();
-
 </script>
 </body>
 </html>
