@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA - सुपर ऐप</title>
+    <title>KRYA - एडवांस सुपर ऐप</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -12,149 +12,156 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
         
-        /* Header & Wallet */
         .header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 1000; }
         .wallet-badge { background: rgba(251, 191, 36, 0.1); border: 1px solid var(--primary); padding: 5px 12px; border-radius: 20px; color: var(--coin); font-weight: bold; display: flex; align-items: center; gap: 5px; }
 
-        /* ID Card Styles */
-        .id-card { border-radius: 20px; padding: 20px; margin: 20px auto; width: 92%; position: relative; min-height: 200px; }
-        .classic { border: 2.5px solid #a3a3a3; background: linear-gradient(135deg, #1e293b, #0f172a); }
-        .gold { border: 2.5px solid var(--primary); background: linear-gradient(135deg, #2a1f0a, #000); box-shadow: 0 0 20px rgba(251, 191, 36, 0.6); }
+        /* Status Section */
+        .status-bar { display: flex; gap: 15px; overflow-x: auto; padding: 15px; background: #161e2e; border-bottom: 1px solid #334155; }
+        .status-node { min-width: 65px; text-align: center; }
+        .status-circle { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--primary); padding: 2px; position: relative; }
+        .status-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .add-status { position: absolute; bottom: 0; right: 0; background: var(--success); border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg); }
+
+        .id-card { border-radius: 20px; padding: 20px; margin: 20px auto; width: 92%; position: relative; min-height: 180px; border: 2px solid var(--primary); background: linear-gradient(135deg, #1e293b, #000); }
+        .btn { width: 90%; padding: 15px; margin: 10px 5%; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; display: block; text-align: center; transition: 0.3s; font-size: 16px; }
+        .btn-voice { background: #3b82f6; color: white; border-radius: 50%; width: 70px; height: 70px; margin: 10px auto; font-size: 28px; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
         
-        /* Layout Elements */
-        .btn { width: 90%; padding: 15px; margin: 10px 5%; border-radius: 12px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; display: block; text-align: center; text-decoration: none; transition: 0.3s; }
-        .btn-save { background: var(--primary); color: #000; }
-        .btn-mall { background: #8b5cf6; color: white; }
-        .btn-voice { background: #3b82f6; color: white; border-radius: 50%; width: 60px; height: 60px; margin: 20px auto; font-size: 24px; }
-        
-        /* Shopping Mall Overlay */
         .overlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; flex-direction: column; padding: 20px; overflow-y: auto; }
         .mall-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .product-card { background: var(--card); border-radius: 15px; padding: 10px; border: 1px solid #334155; position: relative; }
-        .product-card img { width: 100%; height: 120px; border-radius: 10px; object-fit: cover; }
+        .product-card { background: var(--card); border-radius: 15px; padding: 10px; border: 1px solid #334155; }
+        .product-card img { width: 100%; height: 110px; border-radius: 10px; object-fit: cover; }
         
-        /* UI Inputs */
-        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; background: #1a202c; border: 1px solid #334155; border-radius: 10px; color: white; outline: none; }
-        
+        input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: #1a202c; border: 1px solid #334155; border-radius: 10px; color: white; }
         .nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; }
-        .nav-item { text-align: center; color: #94a3b8; cursor: pointer; }
+        .nav-item { text-align: center; color: #94a3b8; font-size: 12px; cursor: pointer; }
         .nav-item.active { color: var(--primary); }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <b style="color:var(--primary); font-size:22px;">KRYA मॉल</b>
-        <div class="wallet-badge">
-            <i class="fas fa-coins"></i> <span id="balance-display">0</span>
+        <b style="color:var(--primary); font-size:22px;">KRYA PRO</b>
+        <div class="wallet-badge"><i class="fas fa-coins"></i> <span id="balance-display">0</span></div>
+    </div>
+
+    <div class="status-bar" id="status-container">
+        <div class="status-node" onclick="openSettings()">
+            <div class="status-circle">
+                <img id="my-status-img" src="https://via.placeholder.com/60">
+                <div class="add-status"><i class="fas fa-plus"></i></div>
+            </div>
+            <small>आपका स्टेटस</small>
         </div>
     </div>
 
     <div id="capture-area">
-        <div id="final-card" class="id-card classic">
-            <span id="badge-text" class="verified-tag" style="position: absolute; top: 15px; right: 15px; font-size: 10px;">Verified ✅</span>
-            <h4 style="margin-bottom:15px; border-bottom:1px solid rgba(251,191,36,0.3); padding-bottom:5px;">KRYA डिजिटल नागरिक</h4>
+        <div class="id-card">
+            <span style="position:absolute; top:15px; right:15px; color:var(--success); font-size:10px;">PRO Verified ✅</span>
+            <h4 style="margin-bottom:12px; border-bottom:1px solid rgba(251,191,36,0.3);">KRYA डिजिटल आईडी</h4>
             <div style="display:flex; gap:15px;">
-                <img id="disp-img" src="https://via.placeholder.com/100" style="width:90px; height:110px; border-radius:12px; border:2px solid var(--primary); object-fit:cover;">
-                <div style="font-size:14px; line-height:1.6;">
-                    <b id="disp-name" style="font-size:18px; color:var(--primary);">लोड हो रहा है...</b><br>
-                    <span>पेशा: <span id="disp-skill">...</span></span><br>
-                    <span>पता: <span id="disp-address">...</span></span>
+                <img id="disp-img" src="https://via.placeholder.com/100" style="width:85px; height:105px; border-radius:12px; object-fit:cover; border:2px solid var(--primary);">
+                <div style="font-size:14px;">
+                    <b id="disp-name" style="font-size:18px; color:var(--primary);">...</b><br>
+                    <span>🏢 <span id="disp-skill">...</span></span><br>
+                    <span>📍 <span id="disp-address">...</span></span>
                 </div>
             </div>
         </div>
     </div>
 
-    <div style="text-align:center; padding: 10px;">
-        <p style="font-size: 14px; color: #94a3b8;">अपनी समस्या बताने के लिए दबाएं</p>
+    <div style="text-align:center; padding: 20px;">
         <button class="btn btn-voice" onclick="startAI()"><i class="fas fa-microphone"></i></button>
-        <p id="ai-status" style="font-size: 12px; color: var(--primary);"></p>
+        <p id="ai-status" style="font-size: 13px; color: var(--primary); font-weight: bold; margin-top: 10px;">KRYA AI से बात करें</p>
     </div>
 
-    <button class="btn btn-mall" onclick="openMall()"><i class="fas fa-shopping-bag"></i> KRYA मॉल खोलें</button>
-    <button id="setup-btn" class="btn btn-save" onclick="openSettings()"><i class="fas fa-user-edit"></i> प्रोफाइल बदलें</button>
+    <button class="btn" style="background:#8b5cf6; color:white;" onclick="openMall()"><i class="fas fa-shopping-cart"></i> KRYA क्रांतिकारी मॉल</button>
 
     <div id="mall-ui" class="overlay">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2>KRYA शॉपिंग मॉल</h2>
-            <button onclick="closeMall()" style="background:none; border:none; color:var(--danger); font-size:24px;">&times;</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2>KRYA मॉल</h2>
+            <i class="fas fa-times" onclick="closeMall()" style="font-size:24px; color:var(--danger);"></i>
         </div>
-        <button class="btn btn-save" onclick="openAddProduct()">अपना प्रोडक्ट जोड़ें (+)</button>
-        
-        <div class="mall-grid" id="product-list">
-            </div>
-    </div>
-
-    <div id="add-product-ui" class="overlay" style="z-index:3000;">
-        <h2>नया प्रोडक्ट लिस्ट करें</h2>
-        <input type="file" id="p-img" accept="image/*">
-        <input type="text" id="p-name" placeholder="प्रोडक्ट का नाम">
-        <input type="number" id="p-price" placeholder="कीमत (Coins)">
-        <button class="btn btn-save" onclick="saveProduct()">लिस्ट करें</button>
-        <button class="btn" style="background:#444;" onclick="closeAddProduct()">रद्द करें</button>
+        <button class="btn" style="background:var(--success); color:white;" onclick="openAddProduct()">+ नया प्रोडक्ट लिस्ट करें</button>
+        <div class="mall-grid" id="product-list"></div>
     </div>
 
     <div id="settings-ui" class="overlay">
-        <h2 style="color:var(--primary);">प्रोफाइल सेटअप</h2>
+        <h2 style="color:var(--primary);">प्रोफाइल और स्टेटस सेट करें</h2>
+        <label>अपनी फोटो चुनें:</label>
         <input type="file" id="in-photo" accept="image/*" onchange="handleFile(event)">
-        <input type="text" id="in-name" placeholder="अपना नाम">
-        <input type="text" id="in-skill" placeholder="पेशा">
+        <input type="text" id="in-name" placeholder="आपका नाम">
+        <input type="text" id="in-skill" placeholder="आपका पेशा">
         <input type="text" id="in-address" placeholder="शहर, राज्य">
-        <button class="btn btn-save" onclick="finalSave()">सेव करें</button>
-        <button class="btn" style="background:#444;" onclick="closeSettings()">वापस</button>
+        <button class="btn" style="background:var(--primary); color:black;" onclick="finalSave()">सेव करें</button>
+        <button class="btn" style="background:#444; color:white;" onclick="closeSettings()">बंद करें</button>
+    </div>
+
+    <div id="add-product-ui" class="overlay">
+        <h2>प्रोडक्ट जोड़ें</h2>
+        <input type="file" id="p-img" accept="image/*">
+        <input type="text" id="p-name" placeholder="प्रोडक्ट का नाम">
+        <input type="number" id="p-price" placeholder="कीमत">
+        <button class="btn" style="background:var(--primary); color:black;" onclick="saveProduct()">लिस्ट करें</button>
+        <button class="btn" style="background:#444; color:white;" onclick="closeAddProduct()">रद्द करें</button>
     </div>
 
     <nav class="nav">
-        <div class="nav-item active" onclick="location.reload()"><i class="fas fa-home"></i><br><small>होम</small></div>
-        <div class="nav-item" onclick="openMall()"><i class="fas fa-store"></i><br><small>मॉल</small></div>
-        <div class="nav-item" onclick="openSettings()"><i class="fas fa-user"></i><br><small>प्रोफाइल</small></div>
+        <div class="nav-item active" onclick="location.reload()"><i class="fas fa-home"></i><br>होम</div>
+        <div class="nav-item" onclick="openMall()"><i class="fas fa-store"></i><br>मॉल</div>
+        <div class="nav-item" onclick="openSettings()"><i class="fas fa-user-cog"></i><br>सेटिंग्स</div>
     </nav>
 
 <script>
-    // --- डेटा मैनेजमेंट ---
     let userData = JSON.parse(localStorage.getItem('krya_user')) || {
         name: "मुकेश राय", skill: "डिजिटल उद्यमी", address: "बांका, बिहार",
-        balance: 500, photo: "", products: []
+        balance: 700, photo: "", products: []
     };
+
+    const apiKey = "AIzaSyD8uts-FMY4A9emoiGvo1l2XnQmiCE_s30";
 
     function updateUI() {
         document.getElementById('disp-name').innerText = userData.name;
         document.getElementById('disp-skill').innerText = userData.skill;
         document.getElementById('disp-address').innerText = userData.address;
         document.getElementById('balance-display').innerText = userData.balance;
-        if(userData.photo) document.getElementById('disp-img').src = userData.photo;
-        
+        if(userData.photo) {
+            document.getElementById('disp-img').src = userData.photo;
+            document.getElementById('my-status-img').src = userData.photo;
+        }
         renderProducts();
         localStorage.setItem('krya_user', JSON.stringify(userData));
     }
 
-    // --- AI वॉइस असिस्टेंट ---
-    function startAI() {
+    // AI Voice System
+    async function startAI() {
         const status = document.getElementById('ai-status');
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'hi-IN';
-
-        recognition.onstart = () => { status.innerText = "सुन रहा हूँ... बोलिए"; };
-        recognition.onresult = (event) => {
-            const text = event.results[0][0].transcript;
-            status.innerText = "आपने कहा: " + text;
-            processSolution(text);
+        recognition.onstart = () => { status.innerText = "KRYA सुन रहा है..."; };
+        recognition.onresult = async (event) => {
+            const query = event.results[0][0].transcript;
+            status.innerText = "आपने पूछा: " + query;
+            
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: "तुम KRYA के स्मार्ट असिस्टेंट हो। नाम " + userData.name + "। इस समस्या का छोटा समाधान हिंदी में दो: " + query }] }]
+                    })
+                });
+                const data = await response.json();
+                const aiText = data.candidates[0].content.parts[0].text;
+                status.innerText = aiText;
+                const speech = new SpeechSynthesisUtterance(aiText);
+                speech.lang = 'hi-IN';
+                window.speechSynthesis.speak(speech);
+            } catch (e) { status.innerText = "AI अभी कनेक्ट नहीं हो पाया।"; }
         };
         recognition.start();
     }
 
-    function processSolution(query) {
-        let answer = "KRYA आपकी समस्या पर काम कर रहा है। ";
-        if(query.includes("पैसे")) answer += "पैसे कमाने के लिए प्रोडक्ट लिस्ट करें और सेल बढ़ाएं।";
-        else if(query.includes("मदद")) answer += "जी, मैं आपकी हर संभव मदद करूँगा।";
-        else answer += "यह एक क्रांतिकारी सवाल है, इसका समाधान जल्द ही अपडेट होगा।";
-
-        const speech = new SpeechSynthesisUtterance(answer);
-        speech.lang = 'hi-IN';
-        window.speechSynthesis.speak(speech);
-    }
-
-    // --- शॉपिंग मॉल लॉजिक ---
+    // Mall Functions
     function openMall() { document.getElementById('mall-ui').style.display = 'flex'; }
     function closeMall() { document.getElementById('mall-ui').style.display = 'none'; }
     function openAddProduct() { document.getElementById('add-product-ui').style.display = 'flex'; }
@@ -164,47 +171,40 @@
         const name = document.getElementById('p-name').value;
         const price = document.getElementById('p-price').value;
         const file = document.getElementById('p-img').files[0];
-
         if(name && price && file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = (e) => {
                 userData.products.push({ name, price, img: e.target.result });
-                updateUI();
-                closeAddProduct();
-                alert("प्रोडक्ट क्रांतिकारी तरीके से लिस्ट हो गया!");
+                updateUI(); closeAddProduct(); alert("प्रोडक्ट क्रांतिकारी तरीके से लिस्ट हुआ!");
             };
             reader.readAsDataURL(file);
         }
     }
 
     function renderProducts() {
-        const list = document.getElementById('product-list');
-        list.innerHTML = userData.products.map(p => `
+        document.getElementById('product-list').innerHTML = userData.products.map(p => `
             <div class="product-card">
                 <img src="${p.img}">
                 <p><b>${p.name}</b></p>
                 <p style="color:var(--coin)">🪙 ${p.price}</p>
-                <button class="btn-save" style="width:100%; padding:5px; margin-top:5px; border-radius:5px; border:none; font-size:12px;">खरीदें</button>
+                <button onclick="alert('खरीदारी सफल!')" style="width:100%; background:var(--primary); border:none; border-radius:5px; padding:5px; margin-top:5px;">Buy</button>
             </div>
         `).join('');
     }
 
-    // --- प्रोफाइल लॉजिक ---
+    // Profile Functions
     function openSettings() { document.getElementById('settings-ui').style.display = 'flex'; }
     function closeSettings() { document.getElementById('settings-ui').style.display = 'none'; }
-    
+    function handleFile(e) {
+        const reader = new FileReader();
+        reader.onload = () => { userData.photo = reader.result; updateUI(); };
+        reader.readAsDataURL(e.target.files[0]);
+    }
     function finalSave() {
         userData.name = document.getElementById('in-name').value || userData.name;
         userData.skill = document.getElementById('in-skill').value || userData.skill;
         userData.address = document.getElementById('in-address').value || userData.address;
-        updateUI();
-        closeSettings();
-    }
-
-    function handleFile(event) {
-        const reader = new FileReader();
-        reader.onload = function(){ userData.photo = reader.result; updateUI(); };
-        reader.readAsDataURL(event.target.files[0]);
+        updateUI(); closeSettings();
     }
 
     updateUI();
