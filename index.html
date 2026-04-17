@@ -3,118 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA - बिजनेस एडिशन</title>
+    <title>KRYA - सुपर ऐप</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+
+        /* Auth Screen */
+        .auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; }
         
+        /* App Layout */
         .header { background: var(--card); height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #334155; }
-        .brand { font-weight: 900; color: var(--primary); font-size: 24px; letter-spacing: 2px; }
+        .content { height: calc(100vh - 130px); overflow-y: auto; padding: 15px; padding-bottom: 80px; }
         
-        #main-content { height: calc(100vh - 140px); overflow-y: auto; padding: 15px; }
-        .search-bar { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: white; margin-bottom: 15px; }
+        /* KRYA Identity Card Style */
+        .identity-card { width: 100%; background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid var(--primary); border-radius: 15px; padding: 15px; position: relative; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .card-header { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(251,191,36,0.3); padding-bottom: 10px; margin-bottom: 10px; }
+        .card-body { display: flex; gap: 15px; }
+        .user-photo { width: 90px; height: 110px; border: 2px solid var(--primary); border-radius: 8px; object-fit: cover; }
+        .user-info { font-size: 12px; flex: 1; }
+        .id-number { font-family: monospace; font-size: 16px; color: var(--primary); font-weight: bold; margin-top: 5px; }
 
-        /* Market Cards */
-        .user-card { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 10px; border: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; }
-        
-        /* Fixed Chat Overlays */
-        .chat-view { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: none; flex-direction: column; }
-        .chat-head { background: var(--card); padding: 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #334155; }
-        .msg-list { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .msg-item { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 14px; }
-        .msg-item.sent { align-self: flex-end; background: var(--primary); color: #000; }
-        .msg-item.received { align-self: flex-start; background: #334155; color: #fff; }
-        
-        .input-box { background: var(--card); padding: 15px; display: flex; gap: 10px; }
-        .btn-send { background: var(--primary); border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; }
+        /* Services Grid */
+        .service-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; }
+        .s-item { background: var(--card); padding: 12px 5px; border-radius: 12px; text-align: center; border: 1px solid #334155; cursor: pointer; transition: 0.2s; }
+        .s-item:active { transform: scale(0.9); background: var(--primary); color: #000; }
+        .s-item i { font-size: 20px; color: var(--primary); margin-bottom: 5px; }
+        .s-item:active i { color: #000; }
+        .s-item span { font-size: 10px; display: block; font-weight: bold; }
 
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; }
-        .nav-item { text-align: center; color: #94a3b8; font-size: 10px; cursor: pointer; }
+        /* Overlay Systems */
+        .overlay { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: none; flex-direction: column; }
+        .overlay-head { background: var(--card); padding: 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #334155; }
+
+        .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-weight: 900; background: var(--primary); color: #0b1120; cursor: pointer; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; }
+
+        .nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; }
+        .nav-item { text-align: center; font-size: 10px; color: #94a3b8; cursor: pointer; }
+        .active { color: var(--primary); }
     </style>
 </head>
 <body>
 
-<div id="app">
-    <div class="header">
-        <div class="brand">KRYA</div>
-        <div id="user-display" style="color:var(--primary); font-size:12px;"></div>
-    </div>
-
-    <div id="main-content">
-        <input type="text" id="search" class="search-bar" placeholder="हुनरमंदों को खोजें..." onkeyup="doSearch()">
-        <div id="market"></div>
-    </div>
-
-    <div id="global-overlay" class="chat-view">
-        <div class="chat-head"><i class="fas fa-arrow-left" onclick="closeChat('global-overlay')"></i> <b>ग्लोबल चैट 🇮🇳</b></div>
-        <div id="g-messages" class="msg-list"></div>
-        <div class="input-box">
-            <input type="text" id="g-input" class="search-bar" style="margin:0" placeholder="मैसेज लिखें...">
-            <button class="btn-send" id="btn-g-send"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-
-    <div class="nav-bar">
-        <div class="nav-item" onclick="location.reload()"><i class="fas fa-home"></i><br>होम</div>
-        <div class="nav-item" onclick="showGlobalChat()"><i class="fas fa-comments"></i><br>ग्लोबल चैट</div>
-        <div class="nav-item" onclick="window.open('https://wa.me/916379403821')"><i class="fas fa-headset"></i><br>सपोर्ट</div>
+<div id="auth" class="auth-screen">
+    <h1 style="color:var(--primary); font-size:40px;">KRYA</h1>
+    <p style="opacity:0.7; margin-bottom:20px;">बांका की अपनी डिजिटल पहचान 🇮🇳</p>
+    <div id="login-form" style="width:100%">
+        <input type="text" id="reg-name" placeholder="आपका पूरा नाम">
+        <input type="text" id="reg-father" placeholder="पिता का नाम">
+        <input type="text" id="reg-dob" placeholder="जन्मतिथि (DD/MM/YYYY)">
+        <input type="text" id="reg-address" placeholder="लोकल पता">
+        <select id="reg-skill">
+            <option value="">अपना हुनर चुनें</option>
+            <option value="दुकानदार">दुकानदार</option>
+            <option value="मिस्त्री">मिस्त्री</option>
+            <option value="व्यापारी">व्यापारी</option>
+            <option value="कारीगर">कारीगर</option>
+        </select>
+        <p style="font-size:10px; margin:10px 0;">अपनी फोटो अपलोड करें:</p>
+        <input type="file" id="reg-img" accept="image/*">
+        <button class="btn" onclick="generateCard()">कार्ड बनाएं और प्रवेश करें</button>
     </div>
 </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<div id="main-app" style="display:none">
+    <div class="header">
+        <div style="font-weight:900; color:var(--primary); font-size:22px;">KRYA</div>
+        <div id="tag" style="font-size:10px; border:1px solid var(--primary); padding:3px 10px; border-radius:15px; color:var(--primary);"></div>
+    </div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCBC5iztNy0P-4-vY6Djec5ff26mTtJk30",
-      authDomain: "sample-firebase-ai-app-37d2b.firebaseapp.com",
-      projectId: "sample-firebase-ai-app-37d2b",
-      storageBucket: "sample-firebase-ai-app-37d2b.firebasestorage.app",
-      messagingSenderId: "652996597348",
-      appId: "1:652996597348:web:6bfed4775ccb1c9572b171"
-    };
+    <div class="content">
+        <div class="identity-card" id="my-card">
+            <div class="card-header">
+                <b>KRYA सच्चाई कार्ड</b>
+                <span>🇮🇳</span>
+            </div>
+            <div class="card-body">
+                <img id="card-img" src="" class="user-photo">
+                <div class="user-info">
+                    <div id="card-name" style="font-size:16px; font-weight:bold;"></div>
+                    <div id="card-father" style="opacity:0.8;"></div>
+                    <div id="card-dob" style="opacity:0.8;"></div>
+                    <div id="card-address" style="opacity:0.8;"></div>
+                    <div id="card-skill" style="color:var(--primary); margin-top:5px; font-weight:bold;"></div>
+                    <div class="id-number" id="card-id"></div>
+                </div>
+            </div>
+            <div style="text-align:right; margin-top:10px;">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=KRYA-User" style="width:40px; border:2px solid white;">
+            </div>
+        </div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+        <button class="btn" onclick="shareCard()" style="margin-bottom:20px;">
+            <i class="fas fa-share-alt"></i> कार्ड व्हाट्सएप स्टेटस पर लगाएं
+        </button>
 
-    // मुकेश जी, यहाँ हम यूजर का नाम सेट कर रहे हैं
-    const myName = "Mukesh Rai"; 
-    document.getElementById('user-display').innerText = "@" + myName;
+        <div class="service-grid">
+            <div class="s-item" onclick="show('chat-box')"><i class="fas fa-comments"></i><span>चैट</span></div>
+            <div class="s-item" onclick="show('market')"><i class="fas fa-store"></i><span>बाजार</span></div>
+            <div class="s-item" onclick="show('khata')"><i class="fas fa-book"></i><span>खाता</span></div>
+            <div class="s-item" onclick="alert('जल्द आ रहा है!')"><i class="fas fa-gift"></i><span>लकी ड्रा</span></div>
+        </div>
+        
+        <h4 style="color:var(--primary); margin-bottom:10px;">लाइव मार्केट</h4>
+        <div id="user-market-list"></div>
+    </div>
 
-    // 1. ग्लोबल मैसेज भेजने का फंक्शन
-    async function sendGlobal() {
-        const text = document.getElementById('g-input').value;
-        if(!text) return;
-        await addDoc(collection(db, "global_chat"), {
-            user: myName,
-            msg: text,
-            time: serverTimestamp()
-        });
-        document.getElementById('g-input').value = "";
+    <div class="nav">
+        <div class="nav-item active" onclick="location.reload()"><i class="fas fa-home" style="font-size:20px;"></i><br>होम</div>
+        <div class="nav-item" onclick="show('chat-box')"><i class="fas fa-globe" style="font-size:20px;"></i><br>चैट</div>
+        <div class="nav-item" onclick="window.open('https://wa.me/916379403821')"><i class="fas fa-headset" style="font-size:20px;"></i><br>सपोर्ट</div>
+    </div>
+</div>
+
+<div id="chat-box" class="overlay">
+    <div class="overlay-head"><i class="fas fa-arrow-left" onclick="hide('chat-box')"></i> <b>ग्लोबल चैट 🇮🇳</b></div>
+    <div id="msg-list" style="flex:1; overflow-y:auto; padding:15px;"></div>
+    <div style="padding:15px; display:flex; gap:10px;">
+        <input type="text" id="m-input" placeholder="मैसेज लिखें..." style="margin:0">
+        <button class="btn" style="width:60px;" onclick="send()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<script>
+    let userData = JSON.parse(localStorage.getItem('krya_session'));
+
+    function generateCard() {
+        const name = document.getElementById('reg-name').value;
+        const imgInput = document.getElementById('reg-img').files[0];
+        if(!name || !imgInput) return alert("कृपया फोटो और नाम भरें!");
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const id = "2026-" + Math.floor(1000 + Math.random() * 9000) + "-" + Math.floor(1000 + Math.random() * 9000);
+            userData = {
+                name, id,
+                father: document.getElementById('reg-father').value,
+                dob: document.getElementById('reg-dob').value,
+                addr: document.getElementById('reg-address').value,
+                skill: document.getElementById('reg-skill').value,
+                img: e.target.result
+            };
+            localStorage.setItem('krya_session', JSON.stringify(userData));
+            startApp();
+        };
+        reader.readAsDataURL(imgInput);
     }
 
-    document.getElementById('btn-g-send').onclick = sendGlobal;
+    function startApp() {
+        document.getElementById('auth').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+        document.getElementById('tag').innerText = "@" + userData.name;
+        document.getElementById('card-img').src = userData.img;
+        document.getElementById('card-name').innerText = userData.name;
+        document.getElementById('card-father').innerText = "पिता: " + userData.father;
+        document.getElementById('card-dob').innerText = "DOB: " + userData.dob;
+        document.getElementById('card-address').innerText = "पता: " + userData.addr;
+        document.getElementById('card-skill').innerText = userData.skill;
+        document.getElementById('card-id').innerText = userData.id;
+    }
 
-    // 2. ग्लोबल मैसेज लाइव दिखाने का फंक्शन
-    onSnapshot(query(collection(db, "global_chat"), orderBy("time", "asc")), (snap) => {
-        const box = document.getElementById('g-messages');
-        box.innerHTML = "";
-        snap.forEach(doc => {
-            const data = doc.data();
-            const isMe = data.user === myName;
-            box.innerHTML += `<div class="msg-item ${isMe ? 'sent' : 'received'}">
-                <small style="font-size:10px; display:block;">${data.user}</small>
-                ${data.msg}
-            </div>`;
-        });
-        box.scrollTop = box.scrollHeight;
-    });
+    function show(id) { document.getElementById(id).style.display = 'flex'; }
+    function hide(id) { document.getElementById(id).style.display = 'none'; }
+    
+    function shareCard() {
+        if (navigator.share) {
+            navigator.share({ title: 'KRYA कार्ड', text: 'मेरा KRYA सच्चाई कार्ड!', url: window.location.href });
+        } else {
+            alert("कृपया स्क्रीनशॉट लेकर व्हाट्सएप पर शेयर करें!");
+        }
+    }
 
-    window.showGlobalChat = () => { document.getElementById('global-overlay').style.display = 'flex'; };
-    window.closeChat = (id) => { document.getElementById(id).style.display = 'none'; };
-
+    if(userData) startApp();
 </script>
 </body>
 </html>
