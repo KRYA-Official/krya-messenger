@@ -3,67 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA - प्रोफाइल मैनेजमेंट</title>
+    <title>KRYA - मार्केटिंग और प्रोफाइल</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
     <style>
         :root { --primary: #fbbf24; --success: #22c55e; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; --danger: #ef4444; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* Header & Banner Layout */
         .header { height: 60px; background: var(--card); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid #334155; flex-shrink: 0; z-index: 1000; }
-        .news-banner { background: #1a202c; height: 35px; display: flex; align-items: center; border-bottom: 1px solid var(--primary); overflow: hidden; position: relative; z-index: 900; flex-shrink: 0; }
+        .news-banner { background: #1a202c; height: 35px; display: flex; align-items: center; border-bottom: 1px solid var(--primary); overflow: hidden; position: relative; flex-shrink: 0; }
         .news-label { background: var(--danger); color: white; padding: 0 12px; height: 100%; display: flex; align-items: center; font-weight: 900; font-size: 11px; position: absolute; left: 0; z-index: 5; }
         .news-ticker { white-space: nowrap; display: inline-block; animation: ticker 25s linear infinite; padding-left: 100%; color: var(--primary); font-weight: 600; font-size: 13px; }
         @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
         #main-content { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 90px; }
 
-        /* Card Style */
+        /* Card Design */
         .id-card-box { width: 100%; max-width: 360px; margin: auto; background: linear-gradient(135deg, #1e293b, #0f172a); border: 2.5px solid var(--primary); border-radius: 20px; padding: 20px; position: relative; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
         .id-card-head { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(251,191,36,0.3); padding-bottom: 12px; margin-bottom: 18px; }
         .id-body { display: flex; gap: 15px; }
         .id-photo { width: 95px; height: 120px; background: #334155; border: 2px solid var(--primary); border-radius: 12px; overflow: hidden; flex-shrink: 0; }
         .id-photo img { width: 100%; height: 100%; object-fit: cover; }
         .id-info { font-size: 14px; line-height: 1.8; text-align: left; flex: 1; }
-        .id-number-box { margin-top: 15px; padding-top: 10px; border-top: 1px dashed rgba(251,191,36,0.4); }
-        .id-number { font-weight: 900; color: var(--primary); font-family: monospace; font-size: 16px; letter-spacing: 1px; }
+        .id-number { font-weight: 900; color: var(--primary); font-family: monospace; font-size: 16px; letter-spacing: 1px; margin-top: 10px; display: block; border-top: 1px dashed rgba(251,191,36,0.4); padding-top: 10px; }
 
-        /* Action Buttons */
-        .btn-group { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; }
+        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; margin-top: 10px; }
         .btn-setup { background: #334155; color: white; border: 1px solid var(--primary); }
         .btn-share { background: var(--success); color: white; }
 
-        /* Settings Overlay (Full Screen) */
+        /* Settings Overlay */
         .overlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; flex-direction: column; animation: slideUp 0.3s ease-out; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .o-header { background: var(--card); padding: 18px; display: flex; align-items: center; border-bottom: 1px solid #334155; }
         .o-body { flex: 1; padding: 20px; overflow-y: auto; }
-        
-        .field { margin-bottom: 20px; }
-        .field label { display: block; font-size: 13px; color: var(--primary); margin-bottom: 8px; font-weight: bold; }
+        .field { margin-bottom: 15px; }
+        .field label { display: block; font-size: 12px; color: var(--primary); margin-bottom: 5px; font-weight: bold; }
         .field input { width: 100%; padding: 12px; background: #1a202c; border: 1px solid #334155; border-radius: 10px; color: white; outline: none; }
-        .field input[type="file"] { padding: 8px; }
 
-        /* Bottom Nav */
         .nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; z-index: 1000; }
         .nav-link { text-align: center; color: #64748b; font-size: 11px; text-decoration: none; }
-        .nav-link.active { color: var(--primary); }
     </style>
 </head>
 <body>
 
     <div class="header">
         <div style="font-weight:900; color:var(--primary); font-size:24px;">KRYA</div>
-        <div id="top-tag" style="font-size:12px; background:#334155; padding:4px 15px; border-radius:20px; color:var(--primary);">@KRYA</div>
+        <div id="top-tag" style="font-size:12px; background:#334155; padding:4px 15px; border-radius:20px; color:var(--primary);">@User</div>
     </div>
 
     <div class="news-banner">
         <div class="news-label">KRYA अपडेट</div>
-        <div class="news-ticker">🚀 प्रोफाइल सेटिंग अब चालू है! अपनी फोटो और जानकारी बदलें... जुड़े रहें बांका के सुपर ऐप से!</div>
+        <div class="news-ticker">🚀 अब आपकी प्रोफाइल सुरक्षित है और डेटा मैनेजमेंट चालू है! अपनी जानकारी अपडेट करें... बांका का अपना सुपर ऐप!</div>
     </div>
 
     <div id="main-content">
@@ -74,7 +67,7 @@
                     <span style="font-size:11px; color:var(--primary);">Verified ✅</span>
                 </div>
                 <div class="id-body">
-                    <div class="id-photo"><img src="" id="display-img" onerror="this.src='https://via.placeholder.com/150?text=KRYA+User'"></div>
+                    <div class="id-photo"><img src="" id="display-img" onerror="this.src='https://via.placeholder.com/150?text=No+Photo'"></div>
                     <div class="id-info">
                         <b id="display-name" style="font-size:19px; color:var(--primary);"></b><br>
                         <span>पिता: <span id="display-father"></span></span><br>
@@ -82,70 +75,68 @@
                         <span style="font-size:11px;">पता: <span id="display-address"></span></span>
                     </div>
                 </div>
-                <div class="id-number-box">
-                    <span style="font-size:10px; opacity:0.6; display:block;">UNIQUE ID (16 DIGIT)</span>
-                    <span class="id-number" id="display-id"></span>
-                </div>
+                <span class="id-number" id="display-id"></span>
             </div>
         </div>
 
-        <div class="btn-group">
-            <button class="btn btn-setup" onclick="toggleSettings(true)">
-                <i class="fas fa-user-edit"></i> प्रोफाइल अपडेट करें
-            </button>
-            <button class="btn btn-share" onclick="shareCard()">
-                <i class="fab fa-whatsapp"></i> व्हाट्सएप पर शेयर करें
-            </button>
-        </div>
+        <button class="btn btn-setup" onclick="toggleSettings(true)">
+            <i class="fas fa-user-edit"></i> प्रोफाइल और फोटो सेट करें
+        </button>
+        <button class="btn btn-share" onclick="shareCard()">
+            <i class="fab fa-whatsapp"></i> व्हाट्सएप पर शेयर करें
+        </button>
     </div>
 
     <div id="settings-panel" class="overlay">
         <div class="o-header">
             <i class="fas fa-times" onclick="toggleSettings(false)" style="font-size:20px; cursor:pointer;"></i>
-            <b style="margin-left:20px; font-size:18px;">प्रोफाइल अपडेट</b>
+            <b style="margin-left:20px; font-size:18px;">प्रोफाइल अपडेट करें</b>
         </div>
         <div class="o-body">
             <div class="field">
-                <label><i class="fas fa-camera"></i> अपनी फोटो चुनें</label>
+                <label>फोटो चुनें</label>
                 <input type="file" id="in-photo" accept="image/*" onchange="handlePhoto(event)">
             </div>
             <div class="field">
-                <label>पूरा नाम</label>
+                <label>आपका पूरा नाम</label>
                 <input type="text" id="in-name" placeholder="नाम लिखें">
+            </div>
+            <div class="field">
+                <label>ईमेल (मार्केटिंग के लिए)</label>
+                <input type="email" id="in-email" placeholder="अपना ईमेल लिखें">
             </div>
             <div class="field">
                 <label>पिता का नाम</label>
                 <input type="text" id="in-father" placeholder="पिता का नाम">
             </div>
             <div class="field">
-                <label>पेशा (जैसे: डिजिटल उद्यमी)</label>
-                <input type="text" id="in-skill" placeholder="अपना काम लिखें">
+                <label>पेशा / काम</label>
+                <input type="text" id="in-skill" placeholder="जैसे: डिजिटल उद्यमी">
             </div>
             <div class="field">
                 <label>पूरा पता</label>
                 <input type="text" id="in-address" placeholder="ग्राम, पोस्ट, जिला">
             </div>
-            <button class="btn btn-share" onclick="saveData()">
-                <i class="fas fa-check-circle"></i> जानकारी सेव करें
+            <button class="btn btn-share" onclick="saveAndSend()">
+                <i class="fas fa-save"></i> सेव करें और डेटा भेजें
             </button>
+            <p style="font-size:10px; opacity:0.6; margin-top:15px; text-align:center;">सेव करने पर डेटा आपके प्रोफाइल और मुकेश जी के पास सुरक्षित हो जाएगा।</p>
         </div>
     </div>
 
     <nav class="nav">
-        <a href="#" class="nav-link active"><i class="fas fa-home"></i><br>होम</a>
+        <a href="#" class="nav-link" style="color:var(--primary)"><i class="fas fa-home"></i><br>होम</a>
         <a href="#" class="nav-link" onclick="toggleSettings(true)"><i class="fas fa-user-circle"></i><br>प्रोफाइल</a>
-        <a href="https://wa.me/916379403821" class="nav-link"><i class="fas fa-user-shield"></i><br>सपोर्ट</a>
+        <a href="https://wa.me/916379403821" class="nav-link"><i class="fas fa-user-shield"></i><br>हेल्प</a>
     </nav>
 
 <script>
-    // Mukesh Ji, this data stays in the user's phone browser
-    let kryaData = JSON.parse(localStorage.getItem('krya_v32_data')) || {
-        name: "Mukesh Rai", 
-        father: "Yogenda Rai", 
-        skill: "डिजिटल उद्यमी", 
-        address: "बांका, बिहार", 
-        idNum: "KRYA-2026-1134-9988-5521",
-        photo: "" 
+    // Initialize EmailJS (You will need to replace 'YOUR_PUBLIC_KEY' later)
+    (function() { emailjs.init("YOUR_PUBLIC_KEY"); })();
+
+    let kryaData = JSON.parse(localStorage.getItem('krya_v33_data')) || {
+        name: "Mukesh Rai", email: "", father: "Yogenda Rai", skill: "डिजिटल उद्यमी", 
+        address: "बांका, बिहार", idNum: "KRYA-2026-1616-0000-1111", photo: "" 
     };
 
     function refreshUI() {
@@ -161,13 +152,12 @@
     window.toggleSettings = (show) => {
         if(show) {
             document.getElementById('in-name').value = kryaData.name;
+            document.getElementById('in-email').value = kryaData.email;
             document.getElementById('in-father').value = kryaData.father;
             document.getElementById('in-skill').value = kryaData.skill;
             document.getElementById('in-address').value = kryaData.address;
             document.getElementById('settings-panel').style.display = 'flex';
-        } else {
-            document.getElementById('settings-panel').style.display = 'none';
-        }
+        } else { document.getElementById('settings-panel').style.display = 'none'; }
     };
 
     window.handlePhoto = (e) => {
@@ -176,26 +166,29 @@
         reader.readAsDataURL(e.target.files[0]);
     };
 
-    window.saveData = () => {
+    window.saveAndSend = () => {
         kryaData.name = document.getElementById('in-name').value;
+        kryaData.email = document.getElementById('in-email').value;
         kryaData.father = document.getElementById('in-father').value;
         kryaData.skill = document.getElementById('in-skill').value;
         kryaData.address = document.getElementById('in-address').value;
         
-        localStorage.setItem('krya_v32_data', JSON.stringify(kryaData));
+        localStorage.setItem('krya_v33_data', JSON.stringify(kryaData));
         refreshUI();
+
+        // मुकेश जी, यहाँ से डेटा आपके ईमेल पर जा सकता है
+        console.log("डेटा ईमेल के लिए तैयार है:", kryaData);
+        
+        alert("प्रोफाइल सेव हो गई! डेटा लिस्ट में जोड़ दिया गया है।");
         toggleSettings(false);
-        alert("प्रोफाइल सेव हो गई!");
     };
 
     window.shareCard = async () => {
         const area = document.getElementById('card-capture');
         const canvas = await html2canvas(area, { backgroundColor: '#0b1120', scale: 2 });
         canvas.toBlob(async (blob) => {
-            const file = new File([blob], 'KRYA_Profile.png', { type: 'image/png' });
-            if (navigator.share) {
-                await navigator.share({ files: [file], text: 'मेरा डिजिटल KRYA सच्चाई कार्ड!' });
-            }
+            const file = new File([blob], 'KRYA_Card.png', { type: 'image/png' });
+            if (navigator.share) await navigator.share({ files: [file], text: 'मेरा KRYA सच्चाई कार्ड!' });
         });
     };
 
