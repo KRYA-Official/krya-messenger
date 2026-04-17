@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA - दुनिया का नंबर वन कार्ड</title>
+    <title>KRYA - सच्चाई कार्ड और वॉलेट</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; --success: #22c55e; }
+        :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; --success: #22c55e; --coin: #ffd700; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
         body { background: var(--bg); color: var(--text); padding-bottom: 80px; }
-        .header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
+        .header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 1000; }
+        .wallet-badge { background: rgba(251, 191, 36, 0.1); border: 1px solid var(--primary); padding: 5px 12px; border-radius: 20px; color: var(--coin); font-weight: bold; display: flex; align-items: center; gap: 5px; }
         .id-card { border-radius: 20px; padding: 20px; margin: 20px auto; width: 92%; position: relative; transition: 0.5s; }
         .classic { border: 2.5px solid #a3a3a3; background: linear-gradient(135deg, #1e293b, #0f172a); }
         .silver { border: 2.5px solid #d1d5db; background: linear-gradient(135deg, #374151, #1f2937); box-shadow: 0 0 10px rgba(209, 213, 219, 0.4); }
@@ -22,26 +23,29 @@
         .btn-save { background: var(--primary); color: #000; }
         .btn-share { background: var(--success); color: #fff; }
         .overlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; flex-direction: column; padding: 20px; overflow-y: auto; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #1a202c; border: 1px solid #334155; border-radius: 10px; color: white; outline: none; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: #1a202c; border: 1px solid #334155; border-radius: 10px; color: white; outline: none; }
         label { font-size: 12px; color: var(--primary); margin-bottom: 5px; display: block; }
         .nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; }
         .nav-item { text-align: center; color: #94a3b8; cursor: pointer; }
         .nav-item.active { color: var(--primary); }
         .design-box { display: flex; gap: 10px; margin-bottom: 20px; }
-        .design-opt { flex: 1; padding: 15px; border-radius: 10px; text-align: center; border: 2px solid #334155; cursor: pointer; }
+        .design-opt { flex: 1; padding: 10px; border-radius: 10px; text-align: center; border: 2px solid #334155; cursor: pointer; font-size: 12px; }
         .design-opt.selected { border-color: var(--primary); background: rgba(251,191,36,0.1); }
+        .coin-cost { display: block; font-size: 10px; color: var(--coin); }
     </style>
 </head>
 <body>
 
     <div class="header">
         <b style="color:var(--primary); font-size:24px;">KRYA</b>
-        <span id="user-tag" style="background:#334155; padding:5px 15px; border-radius:20px; font-size:12px;">@Guest</span>
+        <div class="wallet-badge">
+            <i class="fas fa-coins"></i> <span id="balance-display">0</span>
+        </div>
     </div>
 
     <div id="capture-area">
         <div id="final-card" class="id-card classic">
-            <span class="verified-tag">Verified ✅</span>
+            <span id="badge-text" class="verified-tag">Verified ✅</span>
             <h4 style="margin-bottom:15px; border-bottom:1px solid rgba(251,191,36,0.3); padding-bottom:5px;">KRYA सच्चाई कार्ड</h4>
             <div style="display:flex; gap:15px;">
                 <img id="disp-img" src="https://via.placeholder.com/100" style="width:95px; height:120px; border-radius:12px; border:2px solid var(--primary); object-fit:cover;">
@@ -51,14 +55,13 @@
                     <span>पता: <span id="disp-address">बांका, बिहार</span></span>
                 </div>
             </div>
-            <div class="id-text" style="margin-top:15px; padding-top:10px; border-top:1px dashed #444; font-family:monospace; font-weight:bold; font-size:12px;">
-                ID: KRYA-2026-8877-4432
+            <div id="disp-id-box" class="id-text" style="margin-top:15px; padding-top:10px; border-top:1px dashed #444; font-family:monospace; font-weight:bold; font-size:12px;">
+                ID: KRYA-2026-0000
             </div>
         </div>
     </div>
 
-    <button id="setup-btn" class="btn btn-save" onclick="openSettings()"><i class="fas fa-user-edit"></i> प्रोफाइल सेट करें</button>
-    
+    <button id="setup-btn" class="btn btn-save" onclick="openSettings()"><i class="fas fa-user-edit"></i> प्रोफाइल सेट करें (+500 Coins)</button>
     <button class="btn btn-share" onclick="shareMe()"><i class="fab fa-whatsapp"></i> व्हाट्सएप पर शेयर करें</button>
 
     <div id="settings-ui" class="overlay">
@@ -74,15 +77,14 @@
     </div>
 
     <div id="decorate-ui" class="overlay">
-        <h2 style="color:var(--primary); margin-bottom:20px;">कार्ड सजाएं <small>(वीआईपी पेड है)</small></h2>
+        <h2 style="color:var(--primary); margin-bottom:20px;">KRYA स्टोर</h2>
         <div class="design-box">
-            <div id="opt-classic" class="design-opt selected classic" onclick="selectDesign('classic')">Classic</div>
-            <div id="opt-silver" class="design-opt silver" onclick="selectDesign('silver')">Silver</div>
-            <div id="opt-gold" class="design-opt gold" onclick="selectDesign('gold')">Gold HD</div>
+            <div id="opt-classic" class="design-opt selected classic" onclick="selectDesign('classic', 0)">Classic <span class="coin-cost">Free</span></div>
+            <div id="opt-silver" class="design-opt silver" onclick="selectDesign('silver', 200)">Silver <span class="coin-cost">200 C</span></div>
+            <div id="opt-gold" class="design-opt gold" onclick="selectDesign('gold', 500)">Gold HD <span class="coin-cost">500 C</span></div>
         </div>
-        <label>पासवर्ड (एडिट करने के लिए)</label>
+        <label>पासवर्ड (एडमिन केवल)</label>
         <input type="password" id="admin-pass" placeholder="पासवर्ड डालें">
-        
         <button class="btn" style="background:var(--success); color:white;" onclick="checkAdminForEdit()"><i class="fas fa-edit"></i> प्रोफाइल एडिट करें</button>
         <button class="btn" style="background:var(--success); color:white;" onclick="openDevMode()"><i class="fas fa-key"></i> VIP आईडी सेट करें</button>
         <button class="btn" style="background:#444;" onclick="closeDecorate()">वापस</button>
@@ -93,7 +95,7 @@
         <label>VIP ID नंबर</label>
         <input type="text" id="dev-id-num">
         <label>गोल्ड बैज लगायें?</label>
-        <select id="dev-gold-badge" style="width:100%; padding:12px; background:#1a202c; color:white; border-radius:10px;">
+        <select id="dev-gold-badge">
             <option value="no">साधारण</option>
             <option value="yes">VIP (Gold)</option>
         </select>
@@ -104,39 +106,42 @@
     <nav class="nav">
         <div class="nav-item active" onclick="location.reload()"><i class="fas fa-home"></i><br><small>होम</small></div>
         <div class="nav-item" onclick="openDecorate()"><i class="fas fa-palette"></i><br><small>सजाएं</small></div>
-        </nav>
+    </nav>
 
 <script>
     const S_ID = "service_gls676h";
     const T_ID = "template_6teuhi4";
     const P_K = "msEHMIMxmjBbBoqnn";
-
     (function(){ emailjs.init(P_K); })();
 
+    // सुधरा हुआ डेटा स्ट्रक्चर
     let userData = JSON.parse(localStorage.getItem('krya_user')) || {
-        name: "मुकेश राय", skill: "डिजिटल उद्यमी", address: "बांका, बिहार", photo: "", phone: "", design: "classic", vip_id: "KRYA-2026-8877-4432", badge: "verified", isSetupDone: false
+        name: "मुकेश राय", skill: "डिजिटल उद्यमी", address: "बांका, बिहार", 
+        photo: "", phone: "", design: "classic", 
+        vip_id: "KRYA-2026-" + Math.floor(1000 + Math.random() * 9000), 
+        badge: "verified", isSetupDone: false, balance: 0, unlockedDesigns: ['classic']
     };
 
     function updateUI() {
         document.getElementById('disp-name').innerText = userData.name;
         document.getElementById('disp-skill').innerText = userData.skill;
         document.getElementById('disp-address').innerText = userData.address;
-        document.getElementById('user-tag').innerText = "@" + userData.name.split(' ')[0];
-        document.querySelector('.id-text').innerText = "ID: " + userData.vip_id;
-        if(userData.photo) document.getElementById('disp-img').src = userData.photo;
+        document.getElementById('balance-display').innerText = userData.balance;
         
+        // ID FIX: यहाँ 'undefined' को ठीक किया गया है
+        document.getElementById('disp-id-box').innerText = "ID: " + (userData.vip_id || "KRYA-PENDING");
+        
+        if(userData.photo) document.getElementById('disp-img').src = userData.photo;
         document.getElementById('final-card').className = "id-card " + userData.design;
-        const badge = document.querySelector('.verified-tag');
+        
+        const badge = document.getElementById('badge-text');
         if(userData.badge === 'vip') {
             badge.innerText = "VIP MEMBER ⭐️"; badge.style.color = "#fbbf24";
         } else {
             badge.innerText = "Verified ✅"; badge.style.color = "#22c55e";
         }
 
-        // --- बटन कंट्रोल ---
-        if(userData.isSetupDone) {
-            document.getElementById('setup-btn').style.display = 'none'; // सेटअप हो गया तो बटन छुपा दें
-        }
+        if(userData.isSetupDone) document.getElementById('setup-btn').style.display = 'none';
     }
 
     function openSettings() { document.getElementById('settings-ui').style.display = 'flex'; }
@@ -151,67 +156,75 @@
     }
 
     function finalSave() {
+        if(!userData.isSetupDone) {
+            userData.balance += 500; // बोनस सिक्के
+            alert("बधाई हो! आपको 500 KRYA Coins मिले।");
+        }
         userData.name = document.getElementById('in-name').value || userData.name;
         userData.skill = document.getElementById('in-skill').value || userData.skill;
         userData.address = document.getElementById('in-address').value || userData.address;
-        userData.isSetupDone = true; // सेटअप पूरा हुआ
-
-        localStorage.setItem('krya_user', JSON.stringify(userData));
+        userData.isSetupDone = true;
+        saveData();
         emailjs.send(S_ID, T_ID, { from_name: userData.name, user_mobile: document.getElementById('in-phone').value });
-        
-        alert("प्रोफाइल सफलतापूर्वक सेट हो गई!");
         closeSettings();
         updateUI();
     }
 
-    // --- केवल एडमिन ही एडिट कर पाएगा ---
-    function checkAdminForEdit() {
-        const pass = document.getElementById('admin-pass').value;
-        if(pass === 'KRYA2026') {
-            closeDecorate();
-            openSettings();
+    function selectDesign(d, cost) {
+        if(userData.unlockedDesigns.includes(d)) {
+            userData.design = d;
+            document.querySelectorAll('.design-opt').forEach(opt => opt.classList.remove('selected'));
+            document.getElementById('opt-'+d).classList.add('selected');
+        } else if(userData.balance >= cost) {
+            if(confirm(cost + " सिक्के खर्च करें?")) {
+                userData.balance -= cost;
+                userData.unlockedDesigns.push(d);
+                userData.design = d;
+            }
         } else {
-            alert("गलत पासवर्ड! केवल मुकेश जी ही एडिट कर सकते हैं।");
+            alert("सिक्के कम हैं! कार्ड शेयर करके कमाएं।");
         }
+        saveData();
+        updateUI();
+    }
+
+    function checkAdminForEdit() {
+        if(document.getElementById('admin-pass').value === 'KRYA2026') {
+            closeDecorate(); openSettings();
+        } else { alert("गलत पासवर्ड!"); }
     }
 
     function openDevMode() {
-        const pass = document.getElementById('admin-pass').value;
-        if(pass === 'KRYA2026') {
+        if(document.getElementById('admin-pass').value === 'KRYA2026') {
             document.getElementById('dev-ui').style.display = 'flex';
             document.getElementById('dev-id-num').value = userData.vip_id;
-        } else { alert("पासवर्ड गलत है!"); }
+        } else { alert("गलत पासवर्ड!"); }
     }
 
     function applyDevChanges() {
         userData.vip_id = document.getElementById('dev-id-num').value;
         userData.badge = document.getElementById('dev-gold-badge').value === 'yes' ? 'vip' : 'verified';
-        const selectedOpt = document.querySelector('.design-opt.selected');
-        userData.design = selectedOpt.id.replace('opt-', '');
-        localStorage.setItem('krya_user', JSON.stringify(userData));
-        updateUI();
+        saveData(); updateUI();
         document.getElementById('dev-ui').style.display = 'none';
         closeDecorate();
     }
 
-    function selectDesign(d) {
-        document.querySelectorAll('.design-opt').forEach(opt => opt.classList.remove('selected'));
-        document.getElementById('opt-'+d).classList.add('selected');
-        if(d === 'classic') { userData.design = d; updateUI(); }
-        else { alert("यह पेड डिज़ाइन है। पासवर्ड डालकर एक्टिवेट करें।"); }
-    }
-
+    function saveData() { localStorage.setItem('krya_user', JSON.stringify(userData)); }
     function closeDevMode() { document.getElementById('dev-ui').style.display = 'none'; }
 
     async function shareMe() {
         const canvas = await html2canvas(document.getElementById('capture-area'));
         canvas.toBlob(blob => {
             const file = new File([blob], 'krya_card.png', {type: 'image/png'});
-            if(navigator.share) navigator.share({files: [file], text: 'मेरा KRYA सच्चाई कार्ड!'});
+            if(navigator.share) {
+                navigator.share({files: [file], text: 'मेरा KRYA कार्ड!'}).then(() => {
+                    userData.balance += 10; saveData(); updateUI();
+                });
+            }
         });
     }
-
     updateUI();
 </script>
 </body>
-</html>
+    </html>
+    
