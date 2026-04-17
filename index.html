@@ -9,22 +9,20 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
     <style>
-        :root { --primary: #fbbf24; --success: #22c55e; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; }
+        :root { --primary: #fbbf24; --success: #22c55e; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; --danger: #ef4444; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
 
-        .screen { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; flex-direction: column; padding: 20px; overflow-y: auto; }
+        /* News Banner Styling */
+        .news-banner { background: #1a202c; height: 35px; display: flex; align-items: center; border-bottom: 1px solid var(--primary); overflow: hidden; position: relative; z-index: 1100; }
+        .news-label { background: var(--danger); color: white; padding: 0 12px; height: 100%; display: flex; align-items: center; font-weight: 900; font-size: 12px; position: absolute; left: 0; z-index: 2; box-shadow: 5px 0 15px rgba(0,0,0,0.5); }
+        .news-ticker { white-space: nowrap; display: inline-block; animation: ticker 25s linear infinite; padding-left: 100%; color: var(--primary); font-weight: 600; font-size: 14px; }
+        @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
+
+        .screen { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; flex-direction: column; overflow-y: auto; }
         .hidden { display: none !important; }
 
-        .auth-content { margin: auto; width: 100%; text-align: center; max-width: 400px; }
-        input, select { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 16px; }
-        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--primary); color: #000; font-weight: 900; cursor: pointer; font-size: 16px; margin-top: 10px; }
-        .btn-green { background: var(--success); color: white; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
-
-        .header { height: 60px; background: var(--card); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid #334155; }
-        #content-area { height: calc(100vh - 120px); overflow-y: auto; padding: 15px; padding-bottom: 100px; }
-
-        /* KRYA CARD - LOCKED AS PER REQUEST */
+        /* Card Section (LOCKED) */
         .id-card-wrapper { padding: 5px; background: var(--bg); width: 100%; max-width: 360px; margin: auto; }
         .id-card { background: linear-gradient(135deg, #1e293b, #0f172a); border: 2.5px solid var(--primary); border-radius: 20px; padding: 20px; position: relative; color: white; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
         .id-card-head { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(251,191,36,0.3); padding-bottom: 12px; margin-bottom: 18px; }
@@ -35,55 +33,38 @@
         .id-number-box { margin-top: 15px; padding-top: 10px; border-top: 1px dashed rgba(251,191,36,0.4); }
         .id-number { font-weight: 900; color: var(--primary); font-family: monospace; font-size: 18px; letter-spacing: 1px; }
 
-        /* ALL BUTTONS WORKING UI */
-        .feature-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 25px; }
+        /* Buttons & Grid */
+        .btn-green { background: var(--success); color: white; width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin: 15px 0; }
+        .feature-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 10px; }
         .f-item { background: var(--card); padding: 12px 5px; border-radius: 15px; text-align: center; border: 1px solid #334155; cursor: pointer; transition: 0.2s; }
-        .f-item:active { transform: scale(0.9); background: #334155; }
         .f-item i { font-size: 22px; color: var(--primary); margin-bottom: 6px; display: block; }
         .f-item span { font-size: 10px; font-weight: bold; color: #cbd5e1; }
 
-        /* Overlay Systems */
+        /* Overlays */
         .overlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; flex-direction: column; }
         .o-head { background: var(--card); padding: 18px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #334155; }
         .o-body { flex: 1; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #334155; }
+        .nav-item { text-align: center; color: #64748b; font-size: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="screen-auth" class="screen">
-        <div class="auth-content">
-            <h1 style="color:var(--primary); font-size:50px; font-weight:900;">KRYA</h1>
-            <p style="opacity:0.8; margin-bottom:40px;">बांका का अपना सुपर ऐप 🇮🇳</p>
-            <input type="email" id="inp-email" placeholder="ईमेल आईडी भरें">
-            <button class="btn" onclick="sendOTP()">ओटीपी प्राप्त करें</button>
+    <div class="news-banner">
+        <div class="news-label">KRYA अपडेट</div>
+        <div class="news-ticker">
+            🚀 अभी हम ग्लोबल चैट और बांका बाजार को 100% सुरक्षित और कानूनी बनाने पर काम कर रहे हैं... ✅ बड़ी खुशखबरी: आज शाम को 'इनाम' और 'लकी ड्रा' फीचर लाइव कर दिया जाएगा! 🇮🇳 जुड़े रहें, बांका का अपना सुपर ऐप...
         </div>
     </div>
 
-    <div id="screen-setup" class="screen hidden">
-        <div class="auth-content">
-            <h3 style="color:var(--primary); margin-bottom:20px;">डिजिटल सच्चाई कार्ड सेटअप</h3>
-            <input type="text" id="inp-name" placeholder="आपका पूरा नाम">
-            <input type="text" id="inp-father" placeholder="पिता का नाम">
-            <input type="text" id="inp-address" placeholder="पूरा पता (बांका)">
-            <select id="inp-skill">
-                <option value="डिजिटल उद्यमी">डिजिटल उद्यमी</option>
-                <option value="छात्र">छात्र</option>
-                <option value="व्यापारी">व्यापारी</option>
-            </select>
-            <input type="file" id="inp-file" accept="image/*" style="padding:10px;">
-            <button class="btn" onclick="saveProfile()">सच्चाई कार्ड बनाएं</button>
-        </div>
-    </div>
-
-    <div id="screen-app" class="hidden">
-        <div class="header">
+    <div id="screen-app" class="screen">
+        <div class="header" style="height:60px; display:flex; align-items:center; justify-content:space-between; padding:0 15px; background:var(--card);">
             <div style="font-weight:900; color:var(--primary); font-size:24px;">KRYA</div>
-            <div id="user-tag" style="font-size:12px; background:#334155; padding:4px 15px; border-radius:20px; color:var(--primary);"></div>
+            <div id="user-tag" style="font-size:12px; background:#334155; padding:4px 15px; border-radius:20px; color:var(--primary);">@MukeshRai</div>
         </div>
 
-        <div id="content-area">
+        <div id="content-area" style="padding:15px; padding-bottom:100px;">
             <div id="capture-zone" class="id-card-wrapper">
                 <div class="id-card">
                     <div class="id-card-head">
@@ -91,7 +72,7 @@
                         <span style="font-size:11px; color:var(--primary);">Verified ✅</span>
                     </div>
                     <div class="id-body">
-                        <div class="id-photo-box"><img id="card-img" src=""></div>
+                        <div class="id-photo-box"><img src="" id="card-img"></div>
                         <div class="id-info">
                             <b id="card-name" style="font-size:19px; color:var(--primary);"></b><br>
                             <span>पिता: <span id="card-father"></span></span><br>
@@ -106,18 +87,18 @@
                 </div>
             </div>
 
-            <button class="btn btn-green" onclick="shareToWhatsApp()">
+            <button class="btn-green" onclick="shareToWhatsApp()">
                 <i class="fab fa-whatsapp" style="font-size:24px;"></i> कार्ड व्हाट्सएप पर शेयर करें
             </button>
 
             <div class="feature-grid">
-                <div class="f-item" onclick="openTool('ग्लोबल चैट', 'यहाँ बांका के लोग आपस में बात कर पाएंगे। (अगला अपडेट कल सुबह)')"><i class="fas fa-comments"></i><span>चैट</span></div>
-                <div class="f-item" onclick="openTool('बांका बाजार', 'यहाँ से लोग ऑनलाइन शॉपिंग कर पाएंगे।')"><i class="fas fa-store"></i><span>बाजार</span></div>
-                <div class="f-item" onclick="openTool('डिजिटल खाता', 'अपने लेन-देन का हिसाब यहाँ रखें।')"><i class="fas fa-book"></i><span>खाता</span></div>
-                <div class="f-item" onclick="openTool('KRYA पेमेंट', 'स्कैन करके पैसे भेजें। सुरक्षित और तेज।')"><i class="fas fa-qrcode"></i><span>पेमेंट</span></div>
-                <div class="f-item" onclick="openTool('स्क्रैच कार्ड', 'हर शेयर पर पाएं एक लकी स्क्रैच कार्ड।')"><i class="fas fa-gift"></i><span>इनाम</span></div>
-                <div class="f-item" onclick="openTool('लकी ड्रा', 'आज के लकी विजेता की घोषणा रात 9 बजे होगी।')"><i class="fas fa-trophy"></i><span>विजेता</span></div>
-                <div class="f-item" onclick="openTool('VIP मेंबरशिप', 'KRYA VIP बनकर एक्स्ट्रा अर्निंग शुरू करें।')"><i class="fas fa-crown"></i><span>VIP अर्निंग</span></div>
+                <div class="f-item" onclick="openTool('ग्लोबल चैट', 'बांका के लोगों के साथ लाइव चैटिंग जल्द शुरू होगी।')"><i class="fas fa-comments"></i><span>चैट</span></div>
+                <div class="f-item" onclick="openTool('बांका बाजार', 'KRYA बाजार से आप घर बैठे सामान मंगवा सकेंगे।')"><i class="fas fa-store"></i><span>बाजार</span></div>
+                <div class="f-item" onclick="openTool('डिजिटल खाता', 'आपका डिजिटल उधारी और बचत खाता।')"><i class="fas fa-book"></i><span>खाता</span></div>
+                <div class="f-item" onclick="openTool('पेमेंट', 'KRYA सुरक्षित QR पेमेंट सिस्टम।')"><i class="fas fa-qrcode"></i><span>पेमेंट</span></div>
+                <div class="f-item" onclick="openTool('स्क्रैच कार्ड', 'हर कार्ड शेयर पर आपको मिलेगा एक सरप्राइज इनाम।')"><i class="fas fa-gift"></i><span>इनाम</span></div>
+                <div class="f-item" onclick="openTool('लकी ड्रा', 'आज के लकी विजेता की घोषणा यहाँ होगी।')"><i class="fas fa-trophy"></i><span>विजेता</span></div>
+                <div class="f-item" onclick="openTool('VIP अर्निंग', 'KRYA पार्टनर बनकर ₹20,000 महीना कमाएं।')"><i class="fas fa-crown"></i><span>VIP अर्निंग</span></div>
                 <div class="f-item" onclick="window.open('https://wa.me/916379403821')"><i class="fas fa-headset"></i><span>हेल्प</span></div>
             </div>
         </div>
@@ -125,58 +106,29 @@
         <div id="tool-overlay" class="overlay">
             <div class="o-head"><i class="fas fa-arrow-left" onclick="closeTool()"></i> <b id="tool-title"></b></div>
             <div class="o-body">
-                <i id="tool-icon" class="fas fa-tools" style="font-size:60px; color:var(--primary); margin-bottom:20px;"></i>
-                <h2 id="tool-status">Coming Soon</h2>
-                <p id="tool-desc" style="opacity:0.8; margin-top:10px;"></p>
-                <button class="btn" onclick="closeTool()" style="width:200px; margin-top:30px;">वापस जाएं</button>
+                <i class="fas fa-rocket" style="font-size:60px; color:var(--primary); margin-bottom:20px;"></i>
+                <h2 style="color:var(--primary);">जल्द आ रहा है!</h2>
+                <p id="tool-desc" style="opacity:0.8; margin-top:15px; padding:0 20px;"></p>
+                <button onclick="closeTool()" style="margin-top:40px; padding:15px 40px; border-radius:30px; border:none; background:var(--primary); font-weight:900;">वापस जाएं</button>
             </div>
         </div>
 
         <nav class="nav-bar">
             <div class="nav-item" style="color:var(--primary)"><i class="fas fa-home"></i><br>होम</div>
-            <div class="nav-item" onclick="openTool('चैट', 'चैटिंग शुरू होने वाली है...')"><i class="fas fa-comments"></i><br>चैट</div>
-            <div class="nav-item" onclick="openTool('बाजार', 'बाजार खुलने वाला है...')"><i class="fas fa-shopping-cart"></i><br>बाजार</div>
+            <div class="nav-item" onclick="openTool('चैट', 'चैट...')"><i class="fas fa-comments"></i><br>चैट</div>
+            <div class="nav-item" onclick="openTool('बाजार', 'शॉपिंग...')"><i class="fas fa-shopping-cart"></i><br>बाजार</div>
             <div class="nav-item" onclick="window.open('https://wa.me/916379403821')"><i class="fas fa-user-shield"></i><br>सपोर्ट</div>
         </nav>
     </div>
 
 <script>
-    emailjs.init("msEHMlMxmjBbBoqnn");
-    let myData = JSON.parse(localStorage.getItem('krya_final_v1'));
-
-    window.sendOTP = () => {
-        const email = document.getElementById('inp-email').value;
-        const otp = Math.floor(100000 + Math.random() * 900000);
-        emailjs.send('service_gls676h', 'template_6teuhl4', { email, otp }).then(() => {
-            const code = prompt("Email पर आया OTP दर्ज करें:");
-            if(code == otp) {
-                document.getElementById('screen-auth').classList.add('hidden');
-                document.getElementById('screen-setup').classList.remove('hidden');
-            } else { alert("गलत ओटीपी!"); }
-        });
+    // मुकेश जी, यहाँ आपका डेटा लोड करने का सिस्टम है
+    let myData = JSON.parse(localStorage.getItem('krya_final_v1')) || {
+        name: "Mukesh Rai", father: "Yogenda Rai", skill: "डिजिटल उद्यमी", address: "बांका बिहार", idNum: "KRYA-5235-3421", photo: "https://via.placeholder.com/150"
     };
 
-    window.saveProfile = () => {
-        const name = document.getElementById('inp-name').value;
-        const father = document.getElementById('inp-father').value;
-        const skill = document.getElementById('inp-skill').value;
-        const address = document.getElementById('inp-address').value;
-        const idNum = "KRYA-" + Math.floor(1000+Math.random()*9000) + "-" + Math.floor(1000+Math.random()*9000);
-        
-        const file = document.getElementById('inp-file').files[0];
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            myData = { name, father, skill, address, idNum, photo: reader.result || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png" };
-            localStorage.setItem('krya_final_v1', JSON.stringify(myData));
-            launchApp();
-        };
-        if(file) reader.readAsDataURL(file); else reader.onloadend();
-    };
-
-    function launchApp() {
-        document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-        document.getElementById('screen-app').classList.remove('hidden');
-        document.getElementById('user-tag').innerText = "@" + myData.name;
+    function initApp() {
+        document.getElementById('user-tag').innerText = "@" + myData.name.split(' ')[0];
         document.getElementById('card-name').innerText = myData.name;
         document.getElementById('card-father').innerText = myData.father;
         document.getElementById('card-skill').innerText = myData.skill;
@@ -184,16 +136,6 @@
         document.getElementById('card-id').innerText = myData.idNum;
         document.getElementById('card-img').src = myData.photo;
     }
-
-    window.shareToWhatsApp = async () => {
-        const area = document.getElementById('capture-zone');
-        const canvas = await html2canvas(area, { backgroundColor: '#0b1120', scale: 2 });
-        canvas.toBlob(async (blob) => {
-            const file = new File([blob], 'KRYA_Card.png', { type: 'image/png' });
-            const shareMsg = `नमस्ते! मैंने अपना KRYA 'सच्चाई कार्ड' बना लिया है। 🇮🇳\n\nअपनी डिजिटल पहचान पाने के लिए इस लिंक पर क्लिक करें:\n👉 ${window.location.href}`;
-            if (navigator.share) await navigator.share({ title: 'KRYA', text: shareMsg, files: [file] });
-        });
-    };
 
     window.openTool = (title, desc) => {
         document.getElementById('tool-title').innerText = title;
@@ -205,8 +147,17 @@
         document.getElementById('tool-overlay').style.display = 'none';
     };
 
-    if(myData) launchApp();
+    window.shareToWhatsApp = async () => {
+        const area = document.getElementById('capture-zone');
+        const canvas = await html2canvas(area, { backgroundColor: '#0b1120', scale: 2 });
+        canvas.toBlob(async (blob) => {
+            const file = new File([blob], 'KRYA_Card.png', { type: 'image/png' });
+            const shareMsg = `नमस्ते! मैंने अपना KRYA 'सच्चाई कार्ड' बना लिया है। 🇮🇳\n👉 अपना फ्री कार्ड यहाँ बनाएं: ${window.location.href}`;
+            if (navigator.share) await navigator.share({ title: 'KRYA', text: shareMsg, files: [file] });
+        });
+    };
+
+    initApp();
 </script>
 </body>
-                                                                                                                             </html>
-                                                                                                                             
+</html>
