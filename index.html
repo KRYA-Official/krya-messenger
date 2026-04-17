@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA - मुकेश राय</title>
+    <title>KRYA - दुनिया का नंबर वन कार्ड</title>
+    <link rel="manifest" href="manifest.json">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -15,20 +16,42 @@
         
         .header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
         
-        .id-card { border: 2.5px solid var(--primary); border-radius: 20px; padding: 20px; margin: 20px auto; width: 92%; background: linear-gradient(135deg, #1e293b, #0f172a); position: relative; }
+        /* --- सच्चाई कार्ड के 3 डिज़ाइन --- */
+        .id-card { border-radius: 20px; padding: 20px; margin: 20px auto; width: 92%; position: relative; transition: 0.5s; }
+        
+        /* 1. Classic (फ्री) */
+        .classic { border: 2.5px solid #a3a3a3; background: linear-gradient(135deg, #1e293b, #0f172a); }
+        .classic .id-text { color: #a3a3a3; }
+        
+        /* 2. Silver (Paid) */
+        .silver { border: 2.5px solid #d1d5db; background: linear-gradient(135deg, #374151, #1f2937); box-shadow: 0 0 10px rgba(209, 213, 219, 0.4); }
+        .silver .id-text { color: #d1d5db; font-weight: 700; }
+        
+        /* 3. Gold HD (Premium Paid) */
+        .gold { border: 2.5px solid var(--primary); background: linear-gradient(135deg, #2a1f0a, #000); box-shadow: 0 0 20px rgba(251, 191, 36, 0.6); }
+        .gold h4, .gold #disp-name, .gold #disp-address { text-shadow: 0 0 5px rgba(251, 191, 36, 0.8); }
+        .gold .id-text { color: var(--primary); font-weight: 900; letter-spacing: 1px; }
+
         .verified-tag { position: absolute; top: 15px; right: 15px; color: var(--success); font-size: 10px; font-weight: bold; }
         
         .btn { width: 90%; padding: 15px; margin: 10px 5%; border-radius: 12px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; }
         .btn-save { background: var(--primary); color: #000; }
         .btn-share { background: var(--success); color: #fff; }
         
+        /* ओवरले (सेटिंग्स और सजावट) */
         .overlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; flex-direction: column; padding: 20px; overflow-y: auto; }
         input { width: 100%; padding: 12px; margin-bottom: 15px; background: #1a202c; border: 1px solid #334155; border-radius: 10px; color: white; outline: none; }
         label { font-size: 12px; color: var(--primary); margin-bottom: 5px; display: block; }
         
+        /* नेविगेशन बार */
         .nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; }
         .nav-item { text-align: center; color: #94a3b8; cursor: pointer; }
         .nav-item.active { color: var(--primary); }
+
+        /* डिज़ाइन चॉइस बॉक्स */
+        .design-box { display: flex; gap: 10px; margin-bottom: 20px; }
+        .design-opt { flex: 1; padding: 15px; border-radius: 10px; text-align: center; border: 2px solid #334155; cursor: pointer; }
+        .design-opt.selected { border-color: var(--primary); background: rgba(251,191,36,0.1); }
     </style>
 </head>
 <body>
@@ -39,7 +62,7 @@
     </div>
 
     <div id="capture-area">
-        <div class="id-card">
+        <div id="final-card" class="id-card classic">
             <span class="verified-tag">Verified ✅</span>
             <h4 style="margin-bottom:15px; border-bottom:1px solid rgba(251,191,36,0.3); padding-bottom:5px;">KRYA सच्चाई कार्ड</h4>
             <div style="display:flex; gap:15px;">
@@ -50,13 +73,13 @@
                     <span>पता: <span id="disp-address">बांका, बिहार</span></span>
                 </div>
             </div>
-            <div style="margin-top:15px; padding-top:10px; border-top:1px dashed #444; color:var(--primary); font-family:monospace; font-weight:bold; font-size:12px;">
+            <div class="id-text" style="margin-top:15px; padding-top:10px; border-top:1px dashed #444; font-family:monospace; font-weight:bold; font-size:12px;">
                 ID: KRYA-2026-8877-4432
             </div>
         </div>
     </div>
 
-    <button class="btn btn-save" onclick="openSettings()"><i class="fas fa-user-edit"></i> प्रोफाइल और मोबाइल सेट करें</button>
+    <button class="btn btn-save" onclick="openSettings()"><i class="fas fa-user-edit"></i> प्रोफाइल सेट करें</button>
     <button class="btn btn-share" onclick="shareMe()"><i class="fab fa-whatsapp"></i> व्हाट्सएप पर शेयर करें</button>
 
     <div id="settings-ui" class="overlay">
@@ -84,9 +107,48 @@
         <button class="btn" style="background:#444; color:white;" onclick="closeSettings()">वापस जाएँ</button>
     </div>
 
+    <div id="decorate-ui" class="overlay">
+        <h2 style="color:var(--primary); margin-bottom:20px;">कार्ड सजाएं <small>(वीआईपी पेड है)</small></h2>
+        
+        <div class="design-box">
+            <div id="opt-classic" class="design-opt selected classic" onclick="selectDesign('classic')">
+                Classic<br><small style="color:#a3a3a3;">फ्री</small>
+            </div>
+            <div id="opt-silver" class="design-opt silver" onclick="selectDesign('silver')">
+                Silver<br><small style="color:#d1d5db;">₹500</small>
+            </div>
+            <div id="opt-gold" class="design-opt gold" onclick="selectDesign('gold')">
+                Gold HD<br><small style="color:var(--primary);">₹1000</small>
+            </div>
+        </div>
+
+        <label>डेवलपर पासवर्ड (VIP आईडी के लिए)</label>
+        <input type="password" id="admin-pass" placeholder="पासवर्ड">
+        <button class="btn" style="background:var(--success); color:white;" onclick="openDevMode()"><i class="fas fa-key"></i> VIP आईडी सेट करें</button>
+        
+        <button class="btn" style="background:#444; color:white;" onclick="closeDecorate()">वापस जाएँ</button>
+    </div>
+
+    <div id="dev-ui" class="overlay" style="z-index:3000;">
+        <h2 style="color:var(--success);">डेवलपर मोड - मुकेश जी</h2>
+        
+        <label>वर्तमान यूजर का ID नंबर (इसे बदलें)</label>
+        <input type="text" id="dev-id-num" value="KRYA-2026-8877-4432">
+        
+        <label>गोल्ड बैज लगायें?</label>
+        <select id="dev-gold-badge" style="width:100%; padding:12px; margin-bottom:20px; background:#1a202c; border:1px solid #334155; border-radius:10px; color:white;">
+            <option value="no">साधारण (Verified)</option>
+            <option value="yes">VIP (Gold)</option>
+        </select>
+        
+        <button class="btn btn-save" onclick="applyDevChanges()">VIP बदलाव सेव करें</button>
+        <button class="btn" style="background:#444; color:white;" onclick="closeDevMode()">बंद करें</button>
+    </div>
+
     <nav class="nav">
         <div class="nav-item active" onclick="location.reload()"><i class="fas fa-home"></i><br><small>होम</small></div>
-        <div class="nav-item" onclick="alert('लकी ड्रा शाम को खुलेगा!')"><i class="fas fa-trophy"></i><br><small>इनाम</small></div>
+        <div class="nav-item" onclick="alert('लकी ड्रा शाम 6 बजे खुलेगा!')"><i class="fas fa-trophy"></i><br><small>इनाम</small></div>
+        <div class="nav-item" onclick="openDecorate()"><i class="fas fa-palette"></i><br><small>सजाएं</small></div>
         <div class="nav-item" onclick="openSettings()"><i class="fas fa-user-cog"></i><br><small>सेटिंग</small></div>
     </nav>
 
@@ -99,7 +161,7 @@
     (function(){ emailjs.init(P_K); })();
 
     let userData = JSON.parse(localStorage.getItem('krya_user')) || {
-        name: "मुकेश राय", skill: "डिजिटल उद्यमी", address: "बांका, बिहार", photo: "", phone: ""
+        name: "मुकेश राय", skill: "डिजिटल उद्यमी", address: "बांका, बिहार", photo: "", phone: "", design: "classic", vip_id: "KRYA-2026-8877-4432", badge: "verified"
     };
 
     function updateUI() {
@@ -107,9 +169,72 @@
         document.getElementById('disp-skill').innerText = userData.skill;
         document.getElementById('disp-address').innerText = userData.address;
         document.getElementById('user-tag').innerText = "@" + userData.name.split(' ')[0];
+        document.querySelector('.id-text').innerText = "ID: " + userData.vip_id;
+        
         if(userData.photo) document.getElementById('disp-img').src = userData.photo;
+        
+        // डिज़ाइन अप्लाई करना
+        const card = document.getElementById('final-card');
+        card.className = "id-card " + userData.design;
+        
+        // बैज अप्लाई करना (डेवलपर)
+        const badge = document.querySelector('.verified-tag');
+        if(userData.badge === 'vip') {
+            badge.innerText = "VIP MEMBER ⭐️";
+            badge.style.color = "#fbbf24";
+        } else {
+            badge.innerText = "Verified ✅";
+            badge.style.color = "#22c55e";
+        }
     }
 
+    // --- सजाने के फंक्शंस ---
+    function openDecorate() { document.getElementById('decorate-ui').style.display = 'flex'; }
+    function closeDecorate() { document.getElementById('decorate-ui').style.display = 'none'; }
+
+    function selectDesign(d) {
+        // हाईलाइट करना
+        document.querySelectorAll('.design-opt').forEach(opt => opt.classList.remove('selected'));
+        document.getElementById('opt-'+d).classList.add('selected');
+        
+        // क्लासिक (फ्री) है तो तुरंत सेव करें
+        if(d === 'classic') {
+            userData.design = d;
+            localStorage.setItem('krya_user', JSON.stringify(userData));
+            updateUI();
+        } else {
+            alert("यह डिज़ाइन पेड है। कृपया मुकेश जी से संपर्क करें या डेवलपर मोड से एक्टिवेट करें।");
+        }
+    }
+
+    // --- डेवलपर मोड (Secret Panel) ---
+    function openDevMode() {
+        const pass = document.getElementById('admin-pass').value;
+        if(pass === 'KRYA2026') {
+            document.getElementById('dev-ui').style.display = 'flex';
+            document.getElementById('dev-id-num').value = userData.vip_id;
+        } else {
+            alert("गलत पासवर्ड! यह केवल मुकेश जी के लिए है।");
+        }
+    }
+    function closeDevMode() { document.getElementById('dev-ui').style.display = 'none'; }
+
+    function applyDevChanges() {
+        userData.vip_id = document.getElementById('dev-id-num').value;
+        userData.badge = document.getElementById('dev-gold-badge').value === 'yes' ? 'vip' : 'verified';
+        
+        // जो डिज़ाइन सेलेक्ट की है, उसे पेड होने पर भी अप्लाई करें (Admin Override)
+        const selectedOpt = document.querySelector('.design-opt.selected');
+        userData.design = selectedOpt.id.replace('opt-', '');
+
+        localStorage.setItem('krya_user', JSON.stringify(userData));
+        alert("VIP बदलाव सफलतापूर्वक लागू हो गए!");
+        closeDevMode();
+        closeDecorate();
+        updateUI();
+    }
+
+    // --- प्रोफाइल सेटिंग्स के फंक्शंस ---
     function openSettings() { document.getElementById('settings-ui').style.display = 'flex'; }
     function closeSettings() { document.getElementById('settings-ui').style.display = 'none'; }
 
@@ -124,10 +249,7 @@
         const uPhone = document.getElementById('in-phone').value;
         const uEmail = document.getElementById('in-email').value;
 
-        if(!uPhone || uPhone.length < 10) {
-            alert("कृपया 10 अंकों का मोबाइल नंबर भरें!");
-            return;
-        }
+        if(!uPhone || uPhone.length < 10) { alert("कृपया 10 अंकों का मोबाइल नंबर भरें!"); return; }
 
         userData.name = uName;
         userData.skill = document.getElementById('in-skill').value;
@@ -142,22 +264,26 @@
             user_mobile: uPhone,
             user_email: uEmail,
             user_skill: userData.skill,
-            user_address: userData.address
+            user_address: userData.address,
+            card_design: userData.design
         }).then(() => {
-            alert("बधाई! प्रोफाइल सेव हो गई और आपका डेटा मुकेश जी के पास पहुँच गया।");
+            alert("प्रोफाइल सेव हो गई और आपका डेटा मुकेश जी के पास पहुँच गया।");
             closeSettings();
             updateUI();
-        }).catch(err => alert("Error: " + JSON.stringify(err)));
+        });
     }
 
+    // --- शेयरिंग ---
     async function shareMe() {
         const canvas = await html2canvas(document.getElementById('capture-area'));
         canvas.toBlob(blob => {
             const file = new File([blob], 'krya_card.png', {type: 'image/png'});
             if(navigator.share) navigator.share({files: [file], text: 'मेरा KRYA सच्चाई कार्ड!'});
-            else alert("शेयर फीचर आपके ब्राउज़र में सपोर्ट नहीं करता।");
         });
     }
+
+    // PWA Service Worker (हम बाद में इसे पूरी तरह जोड़ेंगे)
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
     updateUI();
 </script>
