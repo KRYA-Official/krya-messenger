@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA - सच्चाई कार्ड और वॉलेट</title>
+    <title>KRYA - एडमिन कंट्रोल सिस्टम</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -28,10 +28,7 @@
         .nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; }
         .nav-item { text-align: center; color: #94a3b8; cursor: pointer; }
         .nav-item.active { color: var(--primary); }
-        .design-box { display: flex; gap: 10px; margin-bottom: 20px; }
-        .design-opt { flex: 1; padding: 10px; border-radius: 10px; text-align: center; border: 2px solid #334155; cursor: pointer; font-size: 12px; }
-        .design-opt.selected { border-color: var(--primary); background: rgba(251,191,36,0.1); }
-        .coin-cost { display: block; font-size: 10px; color: var(--coin); }
+        .search-box { border: 1px solid var(--success) !important; background: #062016 !important; }
     </style>
 </head>
 <body>
@@ -50,12 +47,12 @@
             <div style="display:flex; gap:15px;">
                 <img id="disp-img" src="https://via.placeholder.com/100" style="width:95px; height:120px; border-radius:12px; border:2px solid var(--primary); object-fit:cover;">
                 <div style="font-size:14px; line-height:1.6;">
-                    <b id="disp-name" style="font-size:20px; color:var(--primary);">मुकेश राय</b><br>
+                    <b id="disp-name">मुकेश राय</b><br>
                     <span>पेशा: <span id="disp-skill">डिजिटल उद्यमी</span></span><br>
                     <span>पता: <span id="disp-address">बांका, बिहार</span></span>
                 </div>
             </div>
-            <div id="disp-id-box" class="id-text" style="margin-top:15px; padding-top:10px; border-top:1px dashed #444; font-family:monospace; font-weight:bold; font-size:12px;">
+            <div id="disp-id-box" style="margin-top:15px; padding-top:10px; border-top:1px dashed #444; font-family:monospace; font-weight:bold; font-size:12px;">
                 ID: KRYA-2026-0000
             </div>
         </div>
@@ -68,58 +65,47 @@
         <h2 style="color:var(--primary); margin-bottom:20px;">प्रोफाइल सेटअप</h2>
         <input type="file" id="in-photo" accept="image/*" onchange="handleFile(event)">
         <input type="text" id="in-name" placeholder="नाम लिखें">
-        <input type="email" id="in-email" placeholder="ईमेल">
-        <input type="tel" id="in-phone" placeholder="मोबाइल नंबर">
         <input type="text" id="in-skill" placeholder="पेशा">
         <input type="text" id="in-address" placeholder="पता">
         <button class="btn btn-save" onclick="finalSave()">सेव और रजिस्टर करें</button>
         <button class="btn" style="background:#444;" onclick="closeSettings()">वापस</button>
     </div>
 
-    <div id="decorate-ui" class="overlay">
-        <h2 style="color:var(--primary); margin-bottom:20px;">KRYA स्टोर</h2>
-        <div class="design-box">
-            <div id="opt-classic" class="design-opt selected classic" onclick="selectDesign('classic', 0)">Classic <span class="coin-cost">Free</span></div>
-            <div id="opt-silver" class="design-opt silver" onclick="selectDesign('silver', 200)">Silver <span class="coin-cost">200 C</span></div>
-            <div id="opt-gold" class="design-opt gold" onclick="selectDesign('gold', 500)">Gold HD <span class="coin-cost">500 C</span></div>
-        </div>
-        <label>पासवर्ड (एडमिन केवल)</label>
-        <input type="password" id="admin-pass" placeholder="पासवर्ड डालें">
-        <button class="btn" style="background:var(--success); color:white;" onclick="checkAdminForEdit()"><i class="fas fa-edit"></i> प्रोफाइल एडिट करें</button>
-        <button class="btn" style="background:var(--success); color:white;" onclick="openDevMode()"><i class="fas fa-key"></i> VIP आईडी सेट करें</button>
-        <button class="btn" style="background:#444;" onclick="closeDecorate()">वापस</button>
-    </div>
-
     <div id="dev-ui" class="overlay" style="z-index:3000;">
-        <h2 style="color:var(--success);">डेवलपर मोड - मुकेश जी</h2>
-        <label>VIP ID नंबर</label>
+        <h2 style="color:var(--success);"><i class="fas fa-tools"></i> मुकेश जी - एडमिन कंट्रोल</h2>
+        
+        <label>यूजर ID से सर्च करें</label>
+        <input type="text" id="search-id" class="search-box" placeholder="उदा: KRYA-2026-1234">
+        <button class="btn" style="background:var(--success); margin-bottom:20px;" onclick="adminSearchUser()">यूजर डेटा खोजें</button>
+
+        <hr style="border:0.5px solid #334155; margin-bottom:20px;">
+        
+        <label>नाम ठीक करें</label>
+        <input type="text" id="dev-name">
+        <label>ID ठीक करें</label>
         <input type="text" id="dev-id-num">
-        <label>गोल्ड बैज लगायें?</label>
+        <label>VIP स्टेटस</label>
         <select id="dev-gold-badge">
-            <option value="no">साधारण</option>
-            <option value="yes">VIP (Gold)</option>
+            <option value="no">साधारण (Verified)</option>
+            <option value="yes">VIP (Gold Badge)</option>
         </select>
-        <button class="btn btn-save" onclick="applyDevChanges()">बदलाव लागू करें</button>
+        
+        <button class="btn btn-save" onclick="applyDevChanges()">बदलाव सुरक्षित करें</button>
         <button class="btn" style="background:#444;" onclick="closeDevMode()">बंद करें</button>
     </div>
 
     <nav class="nav">
         <div class="nav-item active" onclick="location.reload()"><i class="fas fa-home"></i><br><small>होम</small></div>
-        <div class="nav-item" onclick="openDecorate()"><i class="fas fa-palette"></i><br><small>सजाएं</small></div>
+        <div class="nav-item" onclick="openDevMode()"><i class="fas fa-user-shield"></i><br><small>एडमिन</small></div>
     </nav>
 
 <script>
-    const S_ID = "service_gls676h";
-    const T_ID = "template_6teuhi4";
-    const P_K = "msEHMIMxmjBbBoqnn";
-    (function(){ emailjs.init(P_K); })();
-
-    // सुधरा हुआ डेटा स्ट्रक्चर
+    // डेटा लोड और ऑटो-आईडी जनरेशन
     let userData = JSON.parse(localStorage.getItem('krya_user')) || {
         name: "मुकेश राय", skill: "डिजिटल उद्यमी", address: "बांका, बिहार", 
-        photo: "", phone: "", design: "classic", 
+        photo: "", design: "classic", 
         vip_id: "KRYA-2026-" + Math.floor(1000 + Math.random() * 9000), 
-        badge: "verified", isSetupDone: false, balance: 0, unlockedDesigns: ['classic']
+        badge: "verified", isSetupDone: false, balance: 0
     };
 
     function updateUI() {
@@ -127,9 +113,7 @@
         document.getElementById('disp-skill').innerText = userData.skill;
         document.getElementById('disp-address').innerText = userData.address;
         document.getElementById('balance-display').innerText = userData.balance;
-        
-        // ID FIX: यहाँ 'undefined' को ठीक किया गया है
-        document.getElementById('disp-id-box').innerText = "ID: " + (userData.vip_id || "KRYA-PENDING");
+        document.getElementById('disp-id-box').innerText = "ID: " + userData.vip_id;
         
         if(userData.photo) document.getElementById('disp-img').src = userData.photo;
         document.getElementById('final-card').className = "id-card " + userData.design;
@@ -140,73 +124,59 @@
         } else {
             badge.innerText = "Verified ✅"; badge.style.color = "#22c55e";
         }
-
         if(userData.isSetupDone) document.getElementById('setup-btn').style.display = 'none';
     }
 
     function openSettings() { document.getElementById('settings-ui').style.display = 'flex'; }
     function closeSettings() { document.getElementById('settings-ui').style.display = 'none'; }
-    function openDecorate() { document.getElementById('decorate-ui').style.display = 'flex'; }
-    function closeDecorate() { document.getElementById('decorate-ui').style.display = 'none'; }
+    
+    function openDevMode() {
+        let pass = prompt("एडमिन पासवर्ड डालें:");
+        if(pass === 'KRYA2026') {
+            document.getElementById('dev-ui').style.display = 'flex';
+            // डिफ़ॉल्ट रूप से वर्तमान यूजर का डेटा भरें
+            document.getElementById('dev-name').value = userData.name;
+            document.getElementById('dev-id-num').value = userData.vip_id;
+        } else { alert("पहुंच वर्जित!"); }
+    }
 
-    function handleFile(event) {
-        const reader = new FileReader();
-        reader.onload = function(){ userData.photo = reader.result; };
-        reader.readAsDataURL(event.target.files[0]);
+    // एडमिन सर्च फंक्शन
+    function adminSearchUser() {
+        let sid = document.getElementById('search-id').value;
+        if(sid === userData.vip_id) {
+            document.getElementById('dev-name').value = userData.name;
+            document.getElementById('dev-id-num').value = userData.vip_id;
+            alert("यूजर मिल गया!");
+        } else {
+            alert("यह आईडी इस फोन में नहीं मिली। (नोट: अभी डेटाबेस नहीं जुड़ा है, इसलिए केवल स्थानीय डेटा सर्च होगा)");
+        }
+    }
+
+    function applyDevChanges() {
+        userData.name = document.getElementById('dev-name').value;
+        userData.vip_id = document.getElementById('dev-id-num').value;
+        userData.badge = document.getElementById('dev-gold-badge').value === 'yes' ? 'vip' : 'verified';
+        saveData();
+        updateUI();
+        alert("डेटा अपडेट कर दिया गया है!");
+        closeDevMode();
     }
 
     function finalSave() {
-        if(!userData.isSetupDone) {
-            userData.balance += 500; // बोनस सिक्के
-            alert("बधाई हो! आपको 500 KRYA Coins मिले।");
-        }
+        if(!userData.isSetupDone) { userData.balance += 500; }
         userData.name = document.getElementById('in-name').value || userData.name;
         userData.skill = document.getElementById('in-skill').value || userData.skill;
         userData.address = document.getElementById('in-address').value || userData.address;
         userData.isSetupDone = true;
         saveData();
-        emailjs.send(S_ID, T_ID, { from_name: userData.name, user_mobile: document.getElementById('in-phone').value });
+        updateUI();
         closeSettings();
-        updateUI();
     }
 
-    function selectDesign(d, cost) {
-        if(userData.unlockedDesigns.includes(d)) {
-            userData.design = d;
-            document.querySelectorAll('.design-opt').forEach(opt => opt.classList.remove('selected'));
-            document.getElementById('opt-'+d).classList.add('selected');
-        } else if(userData.balance >= cost) {
-            if(confirm(cost + " सिक्के खर्च करें?")) {
-                userData.balance -= cost;
-                userData.unlockedDesigns.push(d);
-                userData.design = d;
-            }
-        } else {
-            alert("सिक्के कम हैं! कार्ड शेयर करके कमाएं।");
-        }
-        saveData();
-        updateUI();
-    }
-
-    function checkAdminForEdit() {
-        if(document.getElementById('admin-pass').value === 'KRYA2026') {
-            closeDecorate(); openSettings();
-        } else { alert("गलत पासवर्ड!"); }
-    }
-
-    function openDevMode() {
-        if(document.getElementById('admin-pass').value === 'KRYA2026') {
-            document.getElementById('dev-ui').style.display = 'flex';
-            document.getElementById('dev-id-num').value = userData.vip_id;
-        } else { alert("गलत पासवर्ड!"); }
-    }
-
-    function applyDevChanges() {
-        userData.vip_id = document.getElementById('dev-id-num').value;
-        userData.badge = document.getElementById('dev-gold-badge').value === 'yes' ? 'vip' : 'verified';
-        saveData(); updateUI();
-        document.getElementById('dev-ui').style.display = 'none';
-        closeDecorate();
+    function handleFile(event) {
+        const reader = new FileReader();
+        reader.onload = function(){ userData.photo = reader.result; saveData(); };
+        reader.readAsDataURL(event.target.files[0]);
     }
 
     function saveData() { localStorage.setItem('krya_user', JSON.stringify(userData)); }
@@ -216,15 +186,11 @@
         const canvas = await html2canvas(document.getElementById('capture-area'));
         canvas.toBlob(blob => {
             const file = new File([blob], 'krya_card.png', {type: 'image/png'});
-            if(navigator.share) {
-                navigator.share({files: [file], text: 'मेरा KRYA कार्ड!'}).then(() => {
-                    userData.balance += 10; saveData(); updateUI();
-                });
-            }
+            if(navigator.share) navigator.share({files: [file], text: 'KRYA ID: ' + userData.vip_id});
         });
     }
+
     updateUI();
 </script>
 </body>
-    </html>
-    
+</html>
