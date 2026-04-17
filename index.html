@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA - Super App</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#fbbf24">
+    <title>KRYA - मुकेश राय</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -13,15 +11,24 @@
     <style>
         :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; --success: #22c55e; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background: var(--bg); color: var(--text); overflow-x: hidden; padding-bottom: 70px; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 80px; }
+        
         .header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
-        .id-card { border: 2.5px solid var(--primary); border-radius: 20px; padding: 20px; margin: 20px auto; width: 92%; background: linear-gradient(135deg, #1e293b, #0f172a); }
+        
+        .id-card { border: 2.5px solid var(--primary); border-radius: 20px; padding: 20px; margin: 20px auto; width: 92%; background: linear-gradient(135deg, #1e293b, #0f172a); position: relative; }
+        .verified-tag { position: absolute; top: 15px; right: 15px; color: var(--success); font-size: 10px; font-weight: bold; }
+        
         .btn { width: 90%; padding: 15px; margin: 10px 5%; border-radius: 12px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; }
         .btn-save { background: var(--primary); color: #000; }
         .btn-share { background: var(--success); color: #fff; }
-        .overlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; flex-direction: column; padding: 20px; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #1a202c; border: 1px solid #334155; border-radius: 10px; color: white; }
+        
+        .overlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; flex-direction: column; padding: 20px; overflow-y: auto; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #1a202c; border: 1px solid #334155; border-radius: 10px; color: white; outline: none; }
+        label { font-size: 12px; color: var(--primary); margin-bottom: 5px; display: block; }
+        
         .nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; }
+        .nav-item { text-align: center; color: #94a3b8; cursor: pointer; }
+        .nav-item.active { color: var(--primary); }
     </style>
 </head>
 <body>
@@ -33,7 +40,8 @@
 
     <div id="capture-area">
         <div class="id-card">
-            <h4 style="margin-bottom:15px; border-bottom:1px solid rgba(251,191,36,0.3); padding-bottom:5px;">KRYA सच्चाई कार्ड <span style="float:right; font-size:10px; color:var(--success);">Verified ✅</span></h4>
+            <span class="verified-tag">Verified ✅</span>
+            <h4 style="margin-bottom:15px; border-bottom:1px solid rgba(251,191,36,0.3); padding-bottom:5px;">KRYA सच्चाई कार्ड</h4>
             <div style="display:flex; gap:15px;">
                 <img id="disp-img" src="https://via.placeholder.com/100" style="width:95px; height:120px; border-radius:12px; border:2px solid var(--primary); object-fit:cover;">
                 <div style="font-size:14px; line-height:1.6;">
@@ -42,34 +50,48 @@
                     <span>पता: <span id="disp-address">बांका, बिहार</span></span>
                 </div>
             </div>
-            <div style="margin-top:15px; padding-top:10px; border-top:1px dashed #444; color:var(--primary); font-family:monospace; font-weight:bold;">
+            <div style="margin-top:15px; padding-top:10px; border-top:1px dashed #444; color:var(--primary); font-family:monospace; font-weight:bold; font-size:12px;">
                 ID: KRYA-2026-8877-4432
             </div>
         </div>
     </div>
 
-    <button class="btn btn-save" onclick="openSettings()">प्रोफाइल और फोटो सेट करें</button>
-    <button class="btn btn-share" onclick="shareMe()">व्हाट्सएप पर शेयर करें</button>
+    <button class="btn btn-save" onclick="openSettings()"><i class="fas fa-user-edit"></i> प्रोफाइल और मोबाइल सेट करें</button>
+    <button class="btn btn-share" onclick="shareMe()"><i class="fab fa-whatsapp"></i> व्हाट्सएप पर शेयर करें</button>
 
     <div id="settings-ui" class="overlay">
-        <h2>प्रोफाइल सेटअप</h2>
+        <h2 style="color:var(--primary); margin-bottom:20px;">प्रोफाइल सेटअप</h2>
+        
+        <label>अपनी फोटो चुनें</label>
         <input type="file" id="in-photo" accept="image/*" onchange="handleFile(event)">
-        <input type="text" id="in-name" placeholder="आपका पूरा नाम">
-        <input type="email" id="in-email" placeholder="आपका ईमेल (डेटा के लिए)">
-        <input type="text" id="in-skill" placeholder="आपका पेशा">
-        <input type="text" id="in-address" placeholder="आपका पता">
+        
+        <label>पूरा नाम</label>
+        <input type="text" id="in-name" placeholder="नाम लिखें" value="मुकेश राय">
+        
+        <label>ईमेल</label>
+        <input type="email" id="in-email" placeholder="email@example.com" value="krya.global@gmail.com">
+        
+        <label>मोबाइल नंबर (WhatsApp)</label>
+        <input type="tel" id="in-phone" placeholder="10 अंकों का नंबर">
+        
+        <label>पेशा</label>
+        <input type="text" id="in-skill" placeholder="जैसे: ऐप डेवलपर">
+        
+        <label>पता</label>
+        <input type="text" id="in-address" placeholder="बांका, बिहार">
+        
         <button class="btn btn-save" onclick="finalSave()">सेव और रजिस्टर करें</button>
-        <button class="btn" style="background:#444; color:white;" onclick="closeSettings()">वापस</button>
+        <button class="btn" style="background:#444; color:white;" onclick="closeSettings()">वापस जाएँ</button>
     </div>
 
     <nav class="nav">
-        <div onclick="location.reload()"><i class="fas fa-home"></i><br><small>होम</small></div>
-        <div onclick="alert('लकी ड्रा शाम 6 बजे खुलेगा!')"><i class="fas fa-trophy"></i><br><small>इनाम</small></div>
-        <div onclick="openSettings()"><i class="fas fa-user-cog"></i><br><small>सेटिंग</small></div>
+        <div class="nav-item active" onclick="location.reload()"><i class="fas fa-home"></i><br><small>होम</small></div>
+        <div class="nav-item" onclick="alert('लकी ड्रा शाम को खुलेगा!')"><i class="fas fa-trophy"></i><br><small>इनाम</small></div>
+        <div class="nav-item" onclick="openSettings()"><i class="fas fa-user-cog"></i><br><small>सेटिंग</small></div>
     </nav>
 
 <script>
-    // --- आपकी ईमेल सेटिंग्स ---
+    // --- आपकी असली ईमेल सेटिंग्स ---
     const S_ID = "service_gls676h";
     const T_ID = "template_6teuhi4";
     const P_K = "msEHMIMxmjBbBoqnn";
@@ -77,7 +99,7 @@
     (function(){ emailjs.init(P_K); })();
 
     let userData = JSON.parse(localStorage.getItem('krya_user')) || {
-        name: "Mukesh Rai", skill: "डिजिटल उद्यमी", address: "बांका, बिहार", photo: ""
+        name: "मुकेश राय", skill: "डिजिटल उद्यमी", address: "बांका, बिहार", photo: "", phone: ""
     };
 
     function updateUI() {
@@ -98,36 +120,44 @@
     }
 
     function finalSave() {
-        userData.name = document.getElementById('in-name').value;
+        const uName = document.getElementById('in-name').value;
+        const uPhone = document.getElementById('in-phone').value;
+        const uEmail = document.getElementById('in-email').value;
+
+        if(!uPhone || uPhone.length < 10) {
+            alert("कृपया 10 अंकों का मोबाइल नंबर भरें!");
+            return;
+        }
+
+        userData.name = uName;
         userData.skill = document.getElementById('in-skill').value;
         userData.address = document.getElementById('in-address').value;
-        const uEmail = document.getElementById('in-email').value;
+        userData.phone = uPhone;
 
         localStorage.setItem('krya_user', JSON.stringify(userData));
 
-        // मुकेश जी को डेटा भेजना
+        // ईमेल भेजें (मुकेश जी को सूचना मिलेगी)
         emailjs.send(S_ID, T_ID, {
-            from_name: userData.name,
+            from_name: uName,
+            user_mobile: uPhone,
             user_email: uEmail,
             user_skill: userData.skill,
             user_address: userData.address
         }).then(() => {
-            alert("डेटा मुकेश जी के पास पहुँच गया! प्रोफाइल सेव हो गई।");
+            alert("बधाई! प्रोफाइल सेव हो गई और आपका डेटा मुकेश जी के पास पहुँच गया।");
             closeSettings();
             updateUI();
-        });
+        }).catch(err => alert("Error: " + JSON.stringify(err)));
     }
 
     async function shareMe() {
         const canvas = await html2canvas(document.getElementById('capture-area'));
         canvas.toBlob(blob => {
             const file = new File([blob], 'krya_card.png', {type: 'image/png'});
-            if(navigator.share) navigator.share({files: [file], text: 'मेरा KRYA कार्ड!'});
+            if(navigator.share) navigator.share({files: [file], text: 'मेरा KRYA सच्चाई कार्ड!'});
+            else alert("शेयर फीचर आपके ब्राउज़र में सपोर्ट नहीं करता।");
         });
     }
-
-    // PWA Service Worker
-    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
     updateUI();
 </script>
