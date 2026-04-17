@@ -1,40 +1,43 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA - एडमिन कंट्रोल सिस्टम</title>
+    <title>KRYA - स्मार्ट आईडी सिस्टम</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; --success: #22c55e; --coin: #ffd700; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background: var(--bg); color: var(--text); padding-bottom: 80px; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+        
         .header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 1000; }
         .wallet-badge { background: rgba(251, 191, 36, 0.1); border: 1px solid var(--primary); padding: 5px 12px; border-radius: 20px; color: var(--coin); font-weight: bold; display: flex; align-items: center; gap: 5px; }
-        .id-card { border-radius: 20px; padding: 20px; margin: 20px auto; width: 92%; position: relative; transition: 0.5s; }
+
+        .id-card { border-radius: 20px; padding: 20px; margin: 20px auto; width: 92%; position: relative; transition: 0.5s; min-height: 200px; }
         .classic { border: 2.5px solid #a3a3a3; background: linear-gradient(135deg, #1e293b, #0f172a); }
         .silver { border: 2.5px solid #d1d5db; background: linear-gradient(135deg, #374151, #1f2937); box-shadow: 0 0 10px rgba(209, 213, 219, 0.4); }
         .gold { border: 2.5px solid var(--primary); background: linear-gradient(135deg, #2a1f0a, #000); box-shadow: 0 0 20px rgba(251, 191, 36, 0.6); }
+        
         .verified-tag { position: absolute; top: 15px; right: 15px; color: var(--success); font-size: 10px; font-weight: bold; }
-        .btn { width: 90%; padding: 15px; margin: 10px 5%; border-radius: 12px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; }
+        .btn { width: 90%; padding: 15px; margin: 10px 5%; border-radius: 12px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; display: block; text-align: center; text-decoration: none; }
         .btn-save { background: var(--primary); color: #000; }
         .btn-share { background: var(--success); color: #fff; }
+        
         .overlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; flex-direction: column; padding: 20px; overflow-y: auto; }
         input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: #1a202c; border: 1px solid #334155; border-radius: 10px; color: white; outline: none; }
-        label { font-size: 12px; color: var(--primary); margin-bottom: 5px; display: block; }
+        
         .nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; }
         .nav-item { text-align: center; color: #94a3b8; cursor: pointer; }
         .nav-item.active { color: var(--primary); }
-        .search-box { border: 1px solid var(--success) !important; background: #062016 !important; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <b style="color:var(--primary); font-size:24px;">KRYA</b>
+        <b style="color:var(--primary); font-size:22px;">KRYA</b>
         <div class="wallet-badge">
             <i class="fas fa-coins"></i> <span id="balance-display">0</span>
         </div>
@@ -47,9 +50,9 @@
             <div style="display:flex; gap:15px;">
                 <img id="disp-img" src="https://via.placeholder.com/100" style="width:95px; height:120px; border-radius:12px; border:2px solid var(--primary); object-fit:cover;">
                 <div style="font-size:14px; line-height:1.6;">
-                    <b id="disp-name">मुकेश राय</b><br>
-                    <span>पेशा: <span id="disp-skill">डिजिटल उद्यमी</span></span><br>
-                    <span>पता: <span id="disp-address">बांका, बिहार</span></span>
+                    <b id="disp-name" style="font-size:18px; color:var(--primary);">लोड हो रहा है...</b><br>
+                    <span>पेशा: <span id="disp-skill">...</span></span><br>
+                    <span>पता: <span id="disp-address">...</span></span>
                 </div>
             </div>
             <div id="disp-id-box" style="margin-top:15px; padding-top:10px; border-top:1px dashed #444; font-family:monospace; font-weight:bold; font-size:12px;">
@@ -58,55 +61,60 @@
         </div>
     </div>
 
-    <button id="setup-btn" class="btn btn-save" onclick="openSettings()"><i class="fas fa-user-edit"></i> प्रोफाइल सेट करें (+500 Coins)</button>
+    <button id="setup-btn" class="btn btn-save" onclick="openSettings()"><i class="fas fa-user-edit"></i> प्रोफाइल सेट करें</button>
     <button class="btn btn-share" onclick="shareMe()"><i class="fab fa-whatsapp"></i> व्हाट्सएप पर शेयर करें</button>
+
+    <div id="dev-ui" class="overlay" style="z-index:3000;">
+        <h2 style="color:var(--success); margin-bottom:20px;">एडमिन कंट्रोल पैनल</h2>
+        <label>यूजर ID सर्च करें</label>
+        <input type="text" id="search-id" placeholder="ID डालें">
+        <button class="btn btn-save" style="margin-bottom:20px;" onclick="adminSearch()">खोजें और सुधारें</button>
+        
+        <hr style="border:0.5px solid #334155;">
+        <label>नाम बदलें</label>
+        <input type="text" id="dev-name">
+        <label>ID बदलें</label>
+        <input type="text" id="dev-id">
+        <button class="btn btn-save" onclick="applyAdminChanges()">अपडेट करें</button>
+        <button class="btn" style="background:#444;" onclick="closeAdmin()">बंद करें</button>
+    </div>
 
     <div id="settings-ui" class="overlay">
         <h2 style="color:var(--primary); margin-bottom:20px;">प्रोफाइल सेटअप</h2>
         <input type="file" id="in-photo" accept="image/*" onchange="handleFile(event)">
-        <input type="text" id="in-name" placeholder="नाम लिखें">
+        <input type="text" id="in-name" placeholder="अपना नाम">
         <input type="text" id="in-skill" placeholder="पेशा">
-        <input type="text" id="in-address" placeholder="पता">
-        <button class="btn btn-save" onclick="finalSave()">सेव और रजिस्टर करें</button>
+        <input type="text" id="in-address" placeholder="शहर, राज्य">
+        <button class="btn btn-save" onclick="finalSave()">सेव करें</button>
         <button class="btn" style="background:#444;" onclick="closeSettings()">वापस</button>
-    </div>
-
-    <div id="dev-ui" class="overlay" style="z-index:3000;">
-        <h2 style="color:var(--success);"><i class="fas fa-tools"></i> मुकेश जी - एडमिन कंट्रोल</h2>
-        
-        <label>यूजर ID से सर्च करें</label>
-        <input type="text" id="search-id" class="search-box" placeholder="उदा: KRYA-2026-1234">
-        <button class="btn" style="background:var(--success); margin-bottom:20px;" onclick="adminSearchUser()">यूजर डेटा खोजें</button>
-
-        <hr style="border:0.5px solid #334155; margin-bottom:20px;">
-        
-        <label>नाम ठीक करें</label>
-        <input type="text" id="dev-name">
-        <label>ID ठीक करें</label>
-        <input type="text" id="dev-id-num">
-        <label>VIP स्टेटस</label>
-        <select id="dev-gold-badge">
-            <option value="no">साधारण (Verified)</option>
-            <option value="yes">VIP (Gold Badge)</option>
-        </select>
-        
-        <button class="btn btn-save" onclick="applyDevChanges()">बदलाव सुरक्षित करें</button>
-        <button class="btn" style="background:#444;" onclick="closeDevMode()">बंद करें</button>
     </div>
 
     <nav class="nav">
         <div class="nav-item active" onclick="location.reload()"><i class="fas fa-home"></i><br><small>होम</small></div>
-        <div class="nav-item" onclick="openDevMode()"><i class="fas fa-user-shield"></i><br><small>एडमिन</small></div>
+        <div class="nav-item" onclick="openAdmin()"><i class="fas fa-user-shield"></i><br><small>एडमिन</small></div>
     </nav>
 
 <script>
-    // डेटा लोड और ऑटो-आईडी जनरेशन
-    let userData = JSON.parse(localStorage.getItem('krya_user')) || {
-        name: "मुकेश राय", skill: "डिजिटल उद्यमी", address: "बांका, बिहार", 
-        photo: "", design: "classic", 
-        vip_id: "KRYA-2026-" + Math.floor(1000 + Math.random() * 9000), 
-        badge: "verified", isSetupDone: false, balance: 0
-    };
+    // डेटा लोड करने का नया और सुरक्षित तरीका
+    function loadData() {
+        let saved = localStorage.getItem('krya_user');
+        let data = saved ? JSON.parse(saved) : {};
+        
+        // अगर डेटा में कुछ भी undefined है, तो उसे ठीक करें
+        return {
+            name: data.name || "मुकेश राय",
+            skill: data.skill || "डिजिटल उद्यमी",
+            address: data.address || "बांका, बिहार",
+            photo: data.photo || "",
+            vip_id: (data.vip_id && data.vip_id !== "undefined") ? data.vip_id : "KRYA-2026-" + Math.floor(1000 + Math.random() * 9000),
+            balance: (data.balance !== undefined && !isNaN(data.balance)) ? data.balance : 0,
+            badge: data.badge || "verified",
+            design: data.design || "classic",
+            isSetupDone: data.isSetupDone || false
+        };
+    }
+
+    let userData = loadData();
 
     function updateUI() {
         document.getElementById('disp-name').innerText = userData.name;
@@ -119,71 +127,62 @@
         document.getElementById('final-card').className = "id-card " + userData.design;
         
         const badge = document.getElementById('badge-text');
-        if(userData.badge === 'vip') {
-            badge.innerText = "VIP MEMBER ⭐️"; badge.style.color = "#fbbf24";
-        } else {
-            badge.innerText = "Verified ✅"; badge.style.color = "#22c55e";
-        }
+        badge.innerText = userData.badge === 'vip' ? "VIP MEMBER ⭐️" : "Verified ✅";
+        badge.style.color = userData.badge === 'vip' ? "#fbbf24" : "#22c55e";
+
         if(userData.isSetupDone) document.getElementById('setup-btn').style.display = 'none';
+        
+        // डेटा को तुरंत सेव करें ताकि 'undefined' वापस न आए
+        localStorage.setItem('krya_user', JSON.stringify(userData));
     }
 
     function openSettings() { document.getElementById('settings-ui').style.display = 'flex'; }
     function closeSettings() { document.getElementById('settings-ui').style.display = 'none'; }
     
-    function openDevMode() {
-        let pass = prompt("एडमिन पासवर्ड डालें:");
-        if(pass === 'KRYA2026') {
-            document.getElementById('dev-ui').style.display = 'flex';
-            // डिफ़ॉल्ट रूप से वर्तमान यूजर का डेटा भरें
-            document.getElementById('dev-name').value = userData.name;
-            document.getElementById('dev-id-num').value = userData.vip_id;
-        } else { alert("पहुंच वर्जित!"); }
+    function openAdmin() {
+        let p = prompt("पासवर्ड:");
+        if(p === "KRYA2026") document.getElementById('dev-ui').style.display = 'flex';
     }
-
-    // एडमिन सर्च फंक्शन
-    function adminSearchUser() {
-        let sid = document.getElementById('search-id').value;
-        if(sid === userData.vip_id) {
-            document.getElementById('dev-name').value = userData.name;
-            document.getElementById('dev-id-num').value = userData.vip_id;
-            alert("यूजर मिल गया!");
-        } else {
-            alert("यह आईडी इस फोन में नहीं मिली। (नोट: अभी डेटाबेस नहीं जुड़ा है, इसलिए केवल स्थानीय डेटा सर्च होगा)");
-        }
-    }
-
-    function applyDevChanges() {
-        userData.name = document.getElementById('dev-name').value;
-        userData.vip_id = document.getElementById('dev-id-num').value;
-        userData.badge = document.getElementById('dev-gold-badge').value === 'yes' ? 'vip' : 'verified';
-        saveData();
-        updateUI();
-        alert("डेटा अपडेट कर दिया गया है!");
-        closeDevMode();
-    }
+    
+    function closeAdmin() { document.getElementById('dev-ui').style.display = 'none'; }
 
     function finalSave() {
-        if(!userData.isSetupDone) { userData.balance += 500; }
         userData.name = document.getElementById('in-name').value || userData.name;
         userData.skill = document.getElementById('in-skill').value || userData.skill;
         userData.address = document.getElementById('in-address').value || userData.address;
+        if(!userData.isSetupDone) userData.balance += 500;
         userData.isSetupDone = true;
-        saveData();
         updateUI();
         closeSettings();
     }
 
     function handleFile(event) {
         const reader = new FileReader();
-        reader.onload = function(){ userData.photo = reader.result; saveData(); };
+        reader.onload = function(){ userData.photo = reader.result; updateUI(); };
         reader.readAsDataURL(event.target.files[0]);
     }
 
-    function saveData() { localStorage.setItem('krya_user', JSON.stringify(userData)); }
-    function closeDevMode() { document.getElementById('dev-ui').style.display = 'none'; }
+    function adminSearch() {
+        let s = document.getElementById('search-id').value;
+        if(s === userData.vip_id) {
+            document.getElementById('dev-name').value = userData.name;
+            document.getElementById('dev-id').value = userData.vip_id;
+            alert("यूजर मिल गया!");
+        } else {
+            alert("यह ID केवल इसी फोन में खोजी जा सकती है (अभी ऑनलाइन डेटाबेस नहीं है)");
+        }
+    }
+
+    function applyAdminChanges() {
+        userData.name = document.getElementById('dev-name').value;
+        userData.vip_id = document.getElementById('dev-id').value;
+        updateUI();
+        alert("बदलाव सफल!");
+        closeAdmin();
+    }
 
     async function shareMe() {
-        const canvas = await html2canvas(document.getElementById('capture-area'));
+        const canvas = await html2canvas(document.getElementById('capture-area'), { backgroundColor: null, scale: 2 });
         canvas.toBlob(blob => {
             const file = new File([blob], 'krya_card.png', {type: 'image/png'});
             if(navigator.share) navigator.share({files: [file], text: 'KRYA ID: ' + userData.vip_id});
