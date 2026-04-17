@@ -6,69 +6,21 @@
     <title>KRYA - बांका का सुपर ऐप</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
     <style>
         :root { --primary: #fbbf24; --success: #22c55e; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; --danger: #ef4444; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
-        
         body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* 1. Header Fix: Isko sabse upar fix rakha hai */
-        .header { 
-            height: 60px; 
-            background: var(--card); 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            padding: 0 15px; 
-            border-bottom: 1px solid #334155; 
-            flex-shrink: 0; 
-            position: relative;
-            z-index: 1200;
-        }
-
-        /* 2. News Banner Fix: Isko Header ke niche alag line di hai */
-        .news-banner { 
-            background: #1a202c; 
-            height: 35px; 
-            display: flex; 
-            align-items: center; 
-            border-bottom: 1px solid var(--primary); 
-            overflow: hidden; 
-            position: relative; 
-            z-index: 1100; 
-            flex-shrink: 0;
-        }
-        .news-label { 
-            background: var(--danger); 
-            color: white; 
-            padding: 0 12px; 
-            height: 100%; 
-            display: flex; 
-            align-items: center; 
-            font-weight: 900; 
-            font-size: 11px; 
-            position: absolute; 
-            left: 0; 
-            z-index: 5; 
-            box-shadow: 5px 0 15px rgba(0,0,0,0.5); 
-        }
-        .news-ticker { 
-            white-space: nowrap; 
-            display: inline-block; 
-            animation: ticker 25s linear infinite; 
-            padding-left: 100%; 
-            color: var(--primary); 
-            font-weight: 600; 
-            font-size: 13px; 
-        }
+        .header { height: 60px; background: var(--card); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid #334155; flex-shrink: 0; z-index: 1200; }
+        
+        .news-banner { background: #1a202c; height: 35px; display: flex; align-items: center; border-bottom: 1px solid var(--primary); overflow: hidden; position: relative; z-index: 1100; flex-shrink: 0; }
+        .news-label { background: var(--danger); color: white; padding: 0 12px; height: 100%; display: flex; align-items: center; font-weight: 900; font-size: 11px; position: absolute; left: 0; z-index: 5; box-shadow: 5px 0 15px rgba(0,0,0,0.5); }
+        .news-ticker { white-space: nowrap; display: inline-block; animation: ticker 25s linear infinite; padding-left: 100%; color: var(--primary); font-weight: 600; font-size: 13px; }
         @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* 3. Content Area: Card and Buttons */
         #content-area { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 100px; }
 
-        /* ID Card Style (No tampering) */
         .id-card-wrapper { padding: 5px; background: var(--bg); width: 100%; max-width: 360px; margin: auto; }
         .id-card { background: linear-gradient(135deg, #1e293b, #0f172a); border: 2.5px solid var(--primary); border-radius: 20px; padding: 20px; position: relative; color: white; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
         .id-card-head { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(251,191,36,0.3); padding-bottom: 12px; margin-bottom: 18px; }
@@ -76,19 +28,22 @@
         .id-photo-box { width: 95px; height: 120px; background: #334155; border: 2px solid var(--primary); border-radius: 12px; overflow: hidden; flex-shrink: 0; }
         .id-photo-box img { width: 100%; height: 100%; object-fit: cover; }
         .id-info { font-size: 14px; line-height: 1.8; text-align: left; flex: 1; }
+        
+        /* Fixed: 16 Digit ID styling */
         .id-number-box { margin-top: 15px; padding-top: 10px; border-top: 1px dashed rgba(251,191,36,0.4); }
-        .id-number { font-weight: 900; color: var(--primary); font-family: monospace; font-size: 18px; letter-spacing: 1px; }
+        .id-number { font-weight: 900; color: var(--primary); font-family: monospace; font-size: 17px; letter-spacing: 1px; }
 
-        /* Feature Grid */
+        .btn-green { background: var(--success); color: white; width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin: 15px 0; }
         .feature-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 10px; }
-        .f-item { background: var(--card); padding: 12px 5px; border-radius: 15px; text-align: center; border: 1px solid #334155; cursor: pointer; transition: 0.2s; }
+        .f-item { background: var(--card); padding: 12px 5px; border-radius: 15px; text-align: center; border: 1px solid #334155; cursor: pointer; }
         .f-item i { font-size: 22px; color: var(--primary); margin-bottom: 6px; display: block; }
         .f-item span { font-size: 10px; font-weight: bold; color: #cbd5e1; }
 
-        .btn-green { background: var(--success); color: white; width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin: 15px 0; }
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #334155; }
+        .nav-item { text-align: center; color: #64748b; font-size: 10px; cursor: pointer; }
+        
         .overlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; flex-direction: column; }
-        .o-head { background: var(--card); padding: 18px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #334155; }
+        .o-head { background: var(--card); padding: 18px; display: flex; align-items: center; gap: 15px; }
         .o-body { flex: 1; padding: 20px; text-align: center; }
     </style>
 </head>
@@ -102,7 +57,7 @@
     <div class="news-banner">
         <div class="news-label">KRYA अपडेट</div>
         <div class="news-ticker">
-            🚀 अभी हम ग्लोबल चैट और बांका बाजार को 100% सुरक्षित और कानूनी बनाने पर काम कर रहे हैं... ✅ बड़ी खुशखबरी: आज शाम को 'इनाम' और 'लकी ड्रा' फीचर लाइव कर दिया जाएगा! 🇮🇳 जुड़े रहें, बांका का अपना सुपर ऐप...
+            🚀 अभी हम ग्लोबल चैट और बांका बाजार को 100% सुरक्षित और कानूनी बनाने पर काम कर रहे हैं... ✅ बड़ी खुशखबरी: आज शाम को 'इनाम' और 'लकी ड्रा' फीचर लाइव कर दिया जाएगा! 🇮🇳 जुड़े रहें...
         </div>
     </div>
 
@@ -134,37 +89,35 @@
         </button>
 
         <div class="feature-grid">
-            <div class="f-item" onclick="openTool('ग्लोबल चैट', 'बांका के लोगों के साथ लाइव चैटिंग जल्द शुरू होगी।')"><i class="fas fa-comments"></i><span>चैट</span></div>
-            <div class="f-item" onclick="openTool('बांका बाजार', 'KRYA बाजार से आप घर बैठे सामान मंगवा सकेंगे।')"><i class="fas fa-store"></i><span>बाजार</span></div>
-            <div class="f-item" onclick="openTool('डिजिटल खाता', 'आपका डिजिटल उधारी और बचत खाता।')"><i class="fas fa-book"></i><span>खाता</span></div>
-            <div class="f-item" onclick="openTool('पेमेंट', 'KRYA सुरक्षित QR पेमेंट सिस्टम।')"><i class="fas fa-qrcode"></i><span>पेमेंट</span></div>
-            <div class="f-item" onclick="openTool('स्क्रैच कार्ड', 'हर कार्ड शेयर पर आपको मिलेगा एक सरप्राइज इनाम।')"><i class="fas fa-gift"></i><span>इनाम</span></div>
-            <div class="f-item" onclick="openTool('लकी ड्रा', 'आज के लकी विजेता की घोषणा यहाँ होगी।')"><i class="fas fa-trophy"></i><span>विजेता</span></div>
-            <div class="f-item" onclick="openTool('VIP अर्निंग', 'KRYA पार्टनर बनकर ₹20,000 महीना कमाएं।')"><i class="fas fa-crown"></i><span>VIP अर्निंग</span></div>
+            <div class="f-item" onclick="openTool('चैट', 'जल्द आ रहा है...')"><i class="fas fa-comments"></i><span>चैट</span></div>
+            <div class="f-item" onclick="openTool('बाजार', 'जल्द आ रहा है...')"><i class="fas fa-store"></i><span>बाजार</span></div>
+            <div class="f-item" onclick="openTool('खाता', 'जल्द आ रहा है...')"><i class="fas fa-book"></i><span>खाता</span></div>
+            <div class="f-item" onclick="openTool('पेमेंट', 'जल्द आ रहा है...')"><i class="fas fa-qrcode"></i><span>पेमेंट</span></div>
+            <div class="f-item" onclick="openTool('इनाम', 'जल्द आ रहा है...')"><i class="fas fa-gift"></i><span>इनाम</span></div>
+            <div class="f-item" onclick="openTool('विजेता', 'जल्द आ रहा है...')"><i class="fas fa-trophy"></i><span>विजेता</span></div>
+            <div class="f-item" onclick="openTool('VIP', 'जल्द आ रहा है...')"><i class="fas fa-crown"></i><span>VIP अर्निंग</span></div>
             <div class="f-item" onclick="window.open('https://wa.me/916379403821')"><i class="fas fa-headset"></i><span>हेल्प</span></div>
         </div>
     </div>
 
     <div id="tool-overlay" class="overlay">
         <div class="o-head"><i class="fas fa-arrow-left" onclick="closeTool()"></i> <b id="tool-title"></b></div>
-        <div class="o-body">
-            <i class="fas fa-rocket" style="font-size:60px; color:var(--primary); margin-bottom:20px;"></i>
-            <h2 style="color:var(--primary);">जल्द आ रहा है!</h2>
-            <p id="tool-desc" style="opacity:0.8; margin-top:15px; padding:0 20px;"></p>
-            <button onclick="closeTool()" style="margin-top:40px; padding:15px 40px; border-radius:30px; border:none; background:var(--primary); font-weight:900;">वापस जाएं</button>
-        </div>
+        <div class="o-body"><h2>Coming Soon</h2><p id="tool-desc"></p><button onclick="closeTool()">Back</button></div>
     </div>
 
     <nav class="nav-bar">
         <div class="nav-item" style="color:var(--primary)"><i class="fas fa-home"></i><br>होम</div>
-        <div class="nav-item" onclick="openTool('चैट', 'चैट...')"><i class="fas fa-comments"></i><br>चैट</div>
-        <div class="nav-item" onclick="openTool('बाजार', 'शॉपिंग...')"><i class="fas fa-shopping-cart"></i><br>बाजार</div>
+        <div class="nav-item" onclick="openTool('चैट', '...')"><i class="fas fa-comments"></i><br>चैट</div>
+        <div class="nav-item" onclick="openTool('बाजार', '...')"><i class="fas fa-shopping-cart"></i><br>बाजार</div>
         <div class="nav-item" onclick="window.open('https://wa.me/916379403821')"><i class="fas fa-user-shield"></i><br>सपोर्ट</div>
     </nav>
 
 <script>
-    let myData = JSON.parse(localStorage.getItem('krya_final_v1')) || {
-        name: "Mukesh Rai", father: "Yogenda Rai", skill: "डिजिटल उद्यमी", address: "बांका बिहार", idNum: "KRYA-5235-3421", photo: "https://via.placeholder.com/150"
+    // 16 Digit ID Logic
+    let myData = {
+        name: "Mukesh Rai", father: "Yogenda Rai", skill: "डिजिटल उद्यमी", address: "बांका बिहार",
+        idNum: "KRYA-5235-3421-9012-7856", // 16 Digits plus Prefix
+        photo: "https://via.placeholder.com/150"
     };
 
     function initApp() {
@@ -183,17 +136,14 @@
         document.getElementById('tool-overlay').style.display = 'flex';
     };
 
-    window.closeTool = () => {
-        document.getElementById('tool-overlay').style.display = 'none';
-    };
+    window.closeTool = () => { document.getElementById('tool-overlay').style.display = 'none'; };
 
     window.shareToWhatsApp = async () => {
         const area = document.getElementById('capture-zone');
         const canvas = await html2canvas(area, { backgroundColor: '#0b1120', scale: 2 });
         canvas.toBlob(async (blob) => {
             const file = new File([blob], 'KRYA_Card.png', { type: 'image/png' });
-            const shareMsg = `नमस्ते! मैंने अपना KRYA 'सच्चाई कार्ड' बना लिया है। 🇮🇳\n👉 अपना फ्री कार्ड यहाँ बनाएं: ${window.location.href}`;
-            if (navigator.share) await navigator.share({ title: 'KRYA', text: shareMsg, files: [file] });
+            if (navigator.share) await navigator.share({ title: 'KRYA', files: [file] });
         });
     };
 
