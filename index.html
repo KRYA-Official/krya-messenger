@@ -2,215 +2,229 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>KRYA PRO - Official</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KRYA SUPER APP - Official</title>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        :root { 
-            --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; 
-            --text: #f8fafc; --coin: #ffd700; --dark-blue: #1e3a8a;
-        }
+        :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; --success: #22c55e; --coin: #ffd700; --danger: #ef4444; }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
         /* Auth Screen */
-        .auth-container { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .auth-card { background: var(--card); padding: 30px; border-radius: 20px; border: 2px solid var(--primary); width: 100%; max-width: 350px; text-align: center; }
+        .auth-container { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .auth-card { background: var(--card); padding: 30px; border-radius: 25px; border: 2px solid var(--primary); width: 100%; max-width: 380px; text-align: center; }
 
-        /* App Layout */
+        /* Main Layout */
+        #app-root { display: none; flex-direction: column; height: 100vh; width: 100%; }
+        
         .header { background: var(--card); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
-        .news-ticker { background: var(--dark-blue); color: var(--primary); padding: 5px 0; font-size: 13px; font-weight: bold; }
+        .news-ticker { background: #1e3a8a; color: var(--primary); padding: 5px 0; border-bottom: 1px solid var(--primary); font-size: 13px; font-weight: bold; }
 
-        .main-content { flex: 1; overflow-y: auto; padding-bottom: 10px; }
-        
-        /* Fixed Chat Positioning (Solving your problem) */
-        #tab-chat { 
-            display: none; 
-            flex-direction: column; 
-            height: calc(100vh - 140px); /* Header + Ticker + Nav की जगह छोड़कर */
-            position: relative;
-        }
-        .chat-flow { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 70px; }
-        
-        /* Message Box Fix */
+        /* Scrollable Content Area */
+        .main-content { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 70px; }
+
+        /* ID Card Style */
+        .id-card { border-radius: 20px; padding: 20px; margin: 10px auto; width: 100%; position: relative; border: 2px solid var(--primary); background: linear-gradient(135deg, #1e293b, #0f172a); }
+        .verified-tag { position: absolute; top: 15px; right: 15px; color: var(--success); font-size: 10px; font-weight: bold; }
+        .id-photo { width: 90px; height: 110px; border-radius: 12px; border: 2px solid var(--primary); object-fit: cover; }
+
+        /* Messenger Fix */
+        #tab-chat { display: none; flex-direction: column; height: 100%; }
+        .chat-flow { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { max-width: 80%; padding: 10px 14px; border-radius: 18px; font-size: 14px; position: relative; margin-bottom: 5px; }
+        .msg-me { align-self: flex-end; background: var(--primary); color: #000; border-bottom-right-radius: 2px; }
+        .msg-them { align-self: flex-start; background: var(--card); color: #fff; border-bottom-left-radius: 2px; }
+
+        /* Chat Input Fix (Always Visible) */
         .chat-input-area { 
-            position: fixed; 
-            bottom: 70px; /* नेविगेशन बार के ठीक ऊपर */
-            left: 0; width: 100%; 
-            background: var(--card); 
-            padding: 10px; 
-            display: flex; 
-            gap: 8px; 
-            border-top: 1px solid #334155;
-            z-index: 100;
+            background: var(--card); padding: 10px; border-top: 1px solid #334155;
+            display: flex; gap: 8px; position: sticky; bottom: 0;
         }
+        .chat-input-area input { flex: 1; padding: 12px; border-radius: 12px; background: #0f172a; border: 1px solid #334155; color: white; }
+        .send-btn { background: var(--primary); border: none; width: 45px; border-radius: 12px; color: black; }
 
-        /* Classic ID Card */
-        .id-card { 
-            background: linear-gradient(135deg, #1e293b, #0f172a); 
-            border: 2px solid var(--primary); margin: 15px; padding: 20px; border-radius: 15px; position: relative;
-        }
-        .id-photo { width: 90px; height: 110px; border: 2px solid var(--primary); border-radius: 10px; object-fit: cover; }
-
-        /* Buttons & Inputs */
-        input { flex: 1; background: #0f172a; border: 1px solid #334155; padding: 12px; border-radius: 10px; color: white; }
-        .btn-p { background: var(--primary); color: #000; border: none; padding: 12px 20px; border-radius: 10px; font-weight: bold; }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: var(--card); display: flex; border-top: 1px solid #334155; z-index: 1000; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94a3b8; font-size: 12px; }
+        /* Navigation Bar */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #334155; z-index: 100; }
+        .nav-item { text-align: center; color: #94a3b8; font-size: 11px; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--primary); }
 
-        .msg { padding: 10px 15px; border-radius: 15px; max-width: 80%; font-size: 14px; }
-        .msg-me { align-self: flex-end; background: var(--primary); color: #000; }
-        .msg-them { align-self: flex-start; background: #334155; color: #fff; }
-
-        .hidden { display: none !important; }
+        /* Overlays */
         .overlay { position: fixed; inset: 0; background: var(--bg); z-index: 5000; display: none; flex-direction: column; padding: 20px; overflow-y: auto; }
+        .btn-p { background: var(--primary); color: #000; padding: 14px; width: 100%; border-radius: 12px; font-weight: bold; border: none; margin-top: 10px; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
 <div id="auth-screen" class="auth-container">
     <div class="auth-card">
-        <h2 style="color:var(--primary); margin-bottom:15px;">KRYA SECURE</h2>
+        <h2 style="color:var(--primary); margin-bottom:10px;">KRYA PRO LOGIN</h2>
         <div id="email-box">
-            <input type="email" id="auth-email" placeholder="email@gmail.com">
-            <button class="btn-p" onclick="sendOTP()" style="width:100%; margin-top:10px;">OTP भेजें</button>
+            <input type="email" id="auth-email" placeholder="ईमेल दर्ज करें" style="width:100%; padding:12px; margin-bottom:10px; border-radius:10px;">
+            <button class="btn-p" onclick="sendSecureOTP()">OTP भेजें</button>
         </div>
         <div id="otp-box" class="hidden">
-            <input type="number" id="auth-otp" placeholder="6-अंकों का OTP">
-            <button class="btn-p" onclick="verifyOTP()" style="width:100%; margin-top:10px;">प्रवेश करें</button>
+            <input type="number" id="auth-otp" placeholder="6 अंकों का OTP" style="width:100%; padding:12px; margin-bottom:10px; border-radius:10px;">
+            <button class="btn-p" onclick="verifySecureOTP()">सत्यापित करें</button>
         </div>
+        <p id="auth-status" style="font-size:12px; margin-top:10px;"></p>
     </div>
 </div>
 
-<div id="app-root" style="display:none; flex-direction:column; height:100%;">
+<div id="app-root">
     <div class="header">
-        <b style="color:var(--primary); font-size:20px;">KRYA PRO</b>
-        <div style="color:var(--coin); font-weight:bold;"><i class="fas fa-coins"></i> <span id="balance">700</span></div>
+        <b style="color:var(--primary);">KRYA PRO</b>
+        <div style="color:var(--coin); font-weight:bold;"><i class="fas fa-coins"></i> <span id="user-balance">700</span></div>
     </div>
 
     <div class="news-ticker">
-        <marquee scrollamount="5">🚀 स्वागत है मुकेश राय! | KRYA मॉल में नए 3D लोगो लाइव हैं | AI से अपनी समस्या पूछें... </marquee>
+        <marquee scrollamount="5">🚀 KRYA प्रो मॉल अब लाइव है! | 3D लोगो बुक करें | Gemini AI आपकी आवाज़ सुनकर जवाब देगा...</marquee>
     </div>
 
-    <div class="main-content">
+    <div class="main-content" id="scroll-area">
         <div id="tab-home">
             <div class="id-card">
+                <span class="verified-tag">PRO Verified ✅</span>
                 <div style="display:flex; gap:15px;">
-                    <img id="u-img" src="https://via.placeholder.com/90" class="id-photo">
-                    <div>
-                        <h3 id="u-name" style="color:var(--primary);">मुकेश राय</h3>
-                        <p id="u-skill" style="font-size:13px; opacity:0.8;">लोड हो रहा है...</p>
-                        <p id="u-addr" style="font-size:12px; margin-top:5px;"><i class="fas fa-map-marker-alt"></i> बांका, बिहार</p>
+                    <img id="card-img" src="https://via.placeholder.com/100" class="id-photo">
+                    <div style="flex:1;">
+                        <h3 id="card-name" style="color:var(--primary);">मुकेश राय</h3>
+                        <p id="card-skill" style="font-size:13px; opacity:0.8;">डिजिटल उद्यमी</p>
+                        <p id="card-address" style="font-size:12px; margin-top:5px;"><i class="fas fa-map-marker-alt"></i> बांका, बिहार</p>
                     </div>
                 </div>
             </div>
-            <center>
-                <button onclick="startAI()" style="width:70px; height:70px; border-radius:50%; background:#3b82f6; border:none; color:white; font-size:30px;"><i class="fas fa-microphone"></i></button>
-                <p id="ai-status" style="margin-top:10px; font-size:14px; color:var(--primary);">AI तैयार है</p>
-            </center>
+            
+            <div style="text-align:center; margin:30px 0;">
+                <button onclick="activateKryaAI()" style="width:70px; height:70px; border-radius:50%; background:#3b82f6; border:none; color:white; font-size:25px; box-shadow:0 0 15px rgba(59,130,246,0.5);"><i class="fas fa-microphone"></i></button>
+                <p id="ai-text" style="margin-top:10px; font-size:13px; color:var(--primary);">KRYA AI से कुछ भी पूछें</p>
+            </div>
+
+            <button class="btn-p" style="background:#8b5cf6; color:white;" onclick="toggleOverlay('mall-ui', true)">🛍️ KRYA क्रांतिकारी मॉल खोलें</button>
         </div>
 
         <div id="tab-chat">
-            <div class="chat-flow" id="msg-list"></div>
+            <div class="chat-flow" id="chat-messages"></div>
             <div class="chat-input-area">
-                <input type="text" id="m-input" placeholder="यहाँ लिखें...">
-                <button class="btn-p" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
+                <input type="text" id="chat-input" placeholder="यहाँ संदेश लिखें...">
+                <button class="send-btn" id="send-msg-btn"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
 
     <div class="nav-bar">
-        <div class="nav-item active" id="n-home" onclick="nav('home')"><i class="fas fa-home"></i><br>होम</div>
-        <div class="nav-item" id="n-chat" onclick="nav('chat')"><i class="fas fa-comments"></i><br>चैट</div>
-        <div class="nav-item" onclick="showSet()"><i class="fas fa-user-cog"></i><br>सेटिंग्स</div>
+        <div class="nav-item active" id="nav-home" onclick="switchTab('home')"><i class="fas fa-home"></i><br>होम</div>
+        <div class="nav-item" id="nav-chat" onclick="switchTab('chat')"><i class="fas fa-comments"></i><br>चैट</div>
+        <div class="nav-item" onclick="toggleOverlay('settings-ui', true)"><i class="fas fa-user-cog"></i><br>सेटिंग्स</div>
     </div>
 </div>
 
-<div id="set-ui" class="overlay">
-    <h2>प्रोफाइल सेटिंग्स</h2>
-    <input type="text" id="s-name" placeholder="नाम">
-    <input type="text" id="s-skill" placeholder="पेशा">
-    <button class="btn-p" onclick="saveSet()">अपडेट करें</button>
-    <button onclick="document.getElementById('set-ui').style.display='none'" style="margin-top:10px; background:none; color:white; border:none;">वापस</button>
+<div id="settings-ui" class="overlay">
+    <h2>प्रोफाइल सेटअप</h2>
+    <input type="file" id="set-photo" accept="image/*" style="margin:15px 0;">
+    <input type="text" id="set-name" placeholder="नाम लिखें">
+    <input type="text" id="set-skill" placeholder="पेशा लिखें">
+    <input type="text" id="set-address" placeholder="पता लिखें">
+    <button class="btn-p" onclick="saveProfile()">अपडेट करें</button>
+    <button class="btn-p" style="background:#444; color:white;" onclick="toggleOverlay('settings-ui', false)">वापस</button>
+</div>
+
+<div id="mall-ui" class="overlay">
+    <div style="display:flex; justify-content:space-between;"><h2>डिजिटल मॉल</h2> <i class="fas fa-times" onclick="toggleOverlay('mall-ui', false)"></i></div>
+    <div id="mall-list" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px;"></div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    const fb = initializeApp({
-        apiKey: "AIzaSyCBC5iztNy0P-4-vY6Djec5ff26mTtJk30",
-        projectId: "sample-firebase-ai-app-37d2b",
-        appId: "1:652996597348:web:6bfed4775ccb1c9572b171"
-    });
-    const db = getFirestore(fb);
+    const firebaseConfig = { apiKey: "AIzaSyCBC5iztNy0P-4-vY6Djec5ff26mTtJk30", authDomain: "sample-firebase-ai-app-37d2b.firebaseapp.com", projectId: "sample-firebase-ai-app-37d2b", storageBucket: "sample-firebase-ai-app-37d2b.firebasestorage.app", messagingSenderId: "652996597348", appId: "1:652996597348:web:6bfed4775ccb1c9572b171" };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
     emailjs.init("msEHMlMxmjBbBoqnn");
 
-    let userOTP, userMail;
-    let data = JSON.parse(localStorage.getItem('krya_v1')) || { name: "मुकेश राय", skill: "डिजिटल उद्यमी", addr: "बांका, बिहार" };
+    let gOTP, uEmail, uUID;
+    let localDB = JSON.parse(localStorage.getItem('krya_pro')) || { name: "मुकेश राय", skill: "डिजिटल उद्यमी", address: "बांका, बिहार", photo: "" };
 
-    window.sendOTP = () => {
-        userMail = document.getElementById('auth-email').value;
-        userOTP = Math.floor(100000 + Math.random()*900000);
-        emailjs.send("service_gls676h", "template_6teuhl4", { email: userMail, otp: userOTP })
-        .then(() => {
+    window.sendSecureOTP = function() {
+        uEmail = document.getElementById('auth-email').value;
+        gOTP = Math.floor(100000 + Math.random() * 900000);
+        emailjs.send('service_gls676h', 'template_6teuhl4', { email: uEmail, otp: gOTP }).then(() => {
             document.getElementById('email-box').classList.add('hidden');
             document.getElementById('otp-box').classList.remove('hidden');
         });
     };
 
-    window.verifyOTP = () => {
-        if(document.getElementById('auth-otp').value == userOTP) {
+    window.verifySecureOTP = function() {
+        if(document.getElementById('auth-otp').value == gOTP) {
+            uUID = btoa(uEmail);
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('app-root').style.display = 'flex';
             loadUI();
-        }
+        } else alert("गलत OTP");
     };
 
     function loadUI() {
-        document.getElementById('u-name').innerText = data.name;
-        document.getElementById('u-skill').innerText = data.skill;
-        onSnapshot(query(collection(db, "messages"), orderBy("time", "asc")), s => {
-            const list = document.getElementById('msg-list');
-            list.innerHTML = "";
-            s.forEach(doc => {
-                const m = doc.data();
-                const div = document.createElement('div');
-                div.className = m.user === data.name ? 'msg msg-me' : 'msg msg-them';
-                div.innerHTML = `<small style="display:block; font-size:10px; opacity:0.7;">${m.user}</small>${m.text}`;
-                list.appendChild(div);
-            });
-            list.scrollTop = list.scrollHeight;
-        });
+        document.getElementById('card-name').innerText = localDB.name;
+        document.getElementById('card-skill').innerText = localDB.skill;
+        document.getElementById('card-address').innerText = localDB.address;
+        if(localDB.photo) document.getElementById('card-img').src = localDB.photo;
+        setupChat();
     }
 
-    window.sendMsg = async () => {
-        const val = document.getElementById('m-input').value;
-        if(!val) return;
-        document.getElementById('m-input').value = "";
-        await addDoc(collection(db, "messages"), { text: val, user: data.name, time: serverTimestamp() });
+    window.saveProfile = function() {
+        localDB.name = document.getElementById('set-name').value || localDB.name;
+        localDB.skill = document.getElementById('set-skill').value || localDB.skill;
+        localDB.address = document.getElementById('set-address').value || localDB.address;
+        const file = document.getElementById('set-photo').files[0];
+        if(file) {
+            const r = new FileReader();
+            r.onload = (e) => { localDB.photo = e.target.result; finishSave(); };
+            r.readAsDataURL(file);
+        } else finishSave();
     };
 
-    window.nav = (t) => {
-        document.getElementById('tab-home').style.display = t === 'home' ? 'block' : 'none';
-        document.getElementById('tab-chat').style.display = t === 'chat' ? 'flex' : 'none';
-        document.getElementById('n-home').classList.toggle('active', t === 'home');
-        document.getElementById('n-chat').classList.toggle('active', t === 'chat');
-    };
-
-    window.showSet = () => document.getElementById('set-ui').style.display = 'flex';
-    window.saveSet = () => {
-        data.name = document.getElementById('s-name').value || data.name;
-        data.skill = document.getElementById('s-skill').value || data.skill;
-        localStorage.setItem('krya_v1', JSON.stringify(data));
+    function finishSave() {
+        localStorage.setItem('krya_pro', JSON.stringify(localDB));
         loadUI();
-        document.getElementById('set-ui').style.display = 'none';
+        toggleOverlay('settings-ui', false);
+    }
+
+    function setupChat() {
+        const flow = document.getElementById('chat-messages');
+        onSnapshot(query(collection(db, "messages"), orderBy("time", "asc")), snap => {
+            flow.innerHTML = "";
+            snap.forEach(d => {
+                const m = d.data();
+                const div = document.createElement('div');
+                div.className = m.uid === uUID ? 'msg msg-me' : 'msg msg-them';
+                div.innerText = m.text;
+                flow.appendChild(div);
+            });
+            flow.scrollTop = flow.scrollHeight;
+        });
+
+        document.getElementById('send-msg-btn').onclick = async () => {
+            const val = document.getElementById('chat-input').value;
+            if(!val) return;
+            document.getElementById('chat-input').value = "";
+            await addDoc(collection(db, "messages"), { text: val, uid: uUID, time: serverTimestamp() });
+        };
+    }
+
+    window.switchTab = (tab) => {
+        document.getElementById('tab-home').style.display = tab === 'home' ? 'block' : 'none';
+        document.getElementById('tab-chat').style.display = tab === 'chat' ? 'flex' : 'none';
+        document.getElementById('nav-home').classList.toggle('active', tab === 'home');
+        document.getElementById('nav-chat').classList.toggle('active', tab === 'chat');
     };
+
+    window.toggleOverlay = (id, show) => document.getElementById(id).style.display = show ? 'flex' : 'none';
 </script>
 </body>
 </html>
