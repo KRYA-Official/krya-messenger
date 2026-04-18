@@ -14,7 +14,6 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
         
-        /* स्क्रीन फिक्स: कीबोर्ड खुलने पर भी दिक्कत नहीं होगी */
         body, html { height: 100%; width: 100%; background: var(--bg); color: var(--text); overflow: hidden; }
 
         #app-root { display: flex; flex-direction: column; height: 100vh; width: 100%; }
@@ -23,32 +22,54 @@
         
         .news-ticker { background: #1e3a8a; color: var(--primary); padding: 5px; font-weight: bold; overflow: hidden; }
 
-        /* मुख्य एरिया जहाँ सब दिखेगा */
         .main-content { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; }
 
-        /* ID कार्ड स्टाइल */
-        .id-card { background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid var(--primary); border-radius: 15px; padding: 15px; position: relative; }
-        .id-photo { width: 80px; height: 100px; border-radius: 8px; border: 1px solid var(--primary); object-fit: cover; }
+        /* --- अपडेटेड ID कार्ड स्टाइल (चौड़ा और प्रीमियम) --- */
+        .id-card { 
+            width: 100%; /* पूरी चौड़ाई */
+            background: linear-gradient(145deg, #1e293b, #0f172a); 
+            border: 2px solid var(--primary); 
+            border-radius: 20px; 
+            padding: 20px; 
+            position: relative; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .id-photo { 
+            width: 90px; 
+            height: 110px; 
+            border-radius: 12px; 
+            border: 2px solid var(--primary); 
+            object-fit: cover; 
+            background: #334155;
+        }
 
-        /* चैट सिस्टम फिक्स */
+        .id-info h4 { font-size: 20px; color: var(--primary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .id-info p { font-size: 13px; color: #cbd5e1; margin-bottom: 3px; }
+
+        /* चैट सिस्टम */
         #tab-chat { display: none; flex-direction: column; height: 100%; }
         .chat-flow { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
         .msg { max-width: 80%; padding: 10px; border-radius: 12px; font-size: 14px; }
         .msg-me { align-self: flex-end; background: var(--primary); color: #000; }
         .msg-them { align-self: flex-start; background: var(--card); }
 
-        /* इनपुट बॉक्स जो कभी नहीं दबेगा */
         .chat-input-footer { 
             background: var(--card); padding: 10px; display: flex; gap: 8px; 
-            border-top: 1px solid #334155; margin-bottom: 60px; /* नेविगेशन के लिए जगह */
+            border-top: 1px solid #334155; margin-bottom: 60px;
         }
-        .chat-input-footer input { flex: 1; padding: 12px; border-radius: 8px; border: none; background: #0f172a; color: white; }
+        .chat-input-footer input { flex: 1; padding: 12px; border-radius: 8px; border: none; background: #0f172a; color: white; outline: none; }
         
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; padding: 10px 0; border-top: 1px solid #334155; }
         .nav-item { flex: 1; text-align: center; color: #94a3b8; font-size: 12px; cursor: pointer; }
         .nav-item.active { color: var(--primary); }
 
-        .btn-p { background: var(--primary); color: black; border: none; padding: 12px; border-radius: 8px; font-weight: bold; width: 100%; cursor: pointer; }
+        .btn-p { background: var(--primary); color: black; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        .btn-p:active { transform: scale(0.98); }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -56,7 +77,7 @@
 
 <div id="app-root">
     <div class="header">
-        <b style="color:var(--primary);">KRYA PRO</b>
+        <b style="color:var(--primary); font-size: 1.2rem;">KRYA PRO</b>
         <span>🪙 <span id="balance">700</span></span>
     </div>
 
@@ -67,32 +88,35 @@
     <div class="main-content">
         <div id="tab-home">
             <div class="id-card">
-                <div style="display:flex; gap:12px;">
-                    <img id="card-img" src="https://via.placeholder.com/80" class="id-photo">
-                    <div>
-                        <h4 id="u-name" style="color:var(--primary);">मुकेश राय</h4>
-                        <p id="u-skill" style="font-size:12px;">टेक स्पेशलिस्ट</p>
-                        <p id="u-addr" style="font-size:11px;">📍 बांका, बिहार</p>
-                    </div>
+                <img id="card-img" src="https://via.placeholder.com/90x110" class="id-photo">
+                <div class="id-info">
+                    <h4 id="u-name">मुकेश राय</h4>
+                    <p id="u-skill"><i class="fas fa-code" style="color:var(--primary);"></i> टेक स्पेशलिस्ट</p>
+                    <p id="u-addr"><i class="fas fa-map-marker-alt" style="color:#ef4444;"></i> बांका, बिहार</p>
+                    <p style="font-size:10px; opacity:0.6; margin-top:5px;">ID: KRYA-2026-001</p>
                 </div>
             </div>
-            <button class="btn-p" style="margin-top:20px; background:#8b5cf6; color:white;" onclick="alert('मॉल खुल रहा है...')">🛍️ क्रांतिकारी मॉल</button>
+            
+            <button class="btn-p" style="margin-top:10px; background:#8b5cf6; color:white;" onclick="alert('मॉल खुल रहा है...')">
+                <i class="fas fa-shopping-cart"></i> क्रांतिकारी मॉल
+            </button>
+            
+            <p style="text-align:center; font-size:12px; margin-top:15px; color:#94a3b8;">आपका डिजिटल पहचान पत्र (Verified by KRYA)</p>
         </div>
 
         <div id="tab-chat">
-            <div class="chat-flow" id="chat-box">
-                </div>
+            <div class="chat-flow" id="chat-box"></div>
             <div class="chat-input-footer">
                 <input type="text" id="m-input" placeholder="संदेश लिखें...">
-                <button onclick="sendMsg()" style="background:var(--primary); border:none; padding:10px; border-radius:8px;"><i class="fas fa-paper-plane"></i></button>
+                <button onclick="sendMsg()" style="background:var(--primary); border:none; width:45px; height:45px; border-radius:10px;"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
 
     <div class="nav-bar">
-        <div class="nav-item active" id="n-home" onclick="go('home')"><i class="fas fa-id-card"></i><br>आईडी</div>
-        <div class="nav-item" id="n-chat" onclick="go('chat')"><i class="fas fa-comments"></i><br>चैट</div>
-        <div class="nav-item" onclick="alert('सेटिंग्स जल्द आएगी')"><i class="fas fa-cog"></i><br>सेटिंग्स</div>
+        <div class="nav-item active" id="n-home" onclick="go('home')"><i class="fas fa-id-card fa-lg"></i><br>आईडी</div>
+        <div class="nav-item" id="n-chat" onclick="go('chat')"><i class="fas fa-comments fa-lg"></i><br>चैट</div>
+        <div class="nav-item" onclick="alert('सेटिंग्स जल्द आएगी')"><i class="fas fa-cog fa-lg"></i><br>सेटिंग्स</div>
     </div>
 </div>
 
