@@ -3,69 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA LIVE | Walkie-Talkie</title>
+    <title>KRYA LIVE | Professional Walkie-Talkie</title>
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #fbbf24; --live: #ef4444; --bg: #0b1120; --card: #1e293b; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; align-items: center; }
-        .header { background: var(--card); width: 100%; padding: 20px; text-align: center; border-bottom: 2px solid var(--primary); }
-        .status-ring { width: 150px; height: 150px; border-radius: 50%; border: 4px solid #334155; display: flex; justify-content: center; align-items: center; margin: 30px 0; }
-        .is-active { border-color: var(--live); box-shadow: 0 0 20px var(--live); animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        .controls { width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 10px; }
-        input { padding: 15px; border-radius: 10px; border: none; background: #334155; color: white; font-size: 16px; text-align: center; }
-        button { padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; }
-        .btn-live { background: var(--primary); color: black; }
-        .btn-call { background: #10b981; color: white; }
+        :root { --primary: #fbbf24; --live: #ef4444; --bg: #0b1120; --card: #1e293b; --success: #10b981; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; align-items: center; overflow: hidden; }
+        
+        .header { background: var(--card); width: 100%; padding: 15px 0; text-align: center; border-bottom: 2px solid var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .header h1 { margin: 0; font-size: 24px; color: var(--primary); letter-spacing: 2px; }
+        #my-id { font-size: 14px; color: var(--primary); background: rgba(251, 191, 36, 0.1); padding: 5px 15px; border-radius: 20px; display: inline-block; margin-top: 10px; border: 1px dashed var(--primary); }
+
+        .main-container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; gap: 25px; }
+
+        .status-ring { width: 160px; height: 160px; border-radius: 50%; border: 4px solid #334155; display: flex; justify-content: center; align-items: center; transition: 0.5s; background: var(--card); position: relative; }
+        .mic-icon { font-size: 60px; color: #334155; transition: 0.3s; }
+        
+        /* जब लाइव हो तब की एनीमेशन */
+        .is-active { border-color: var(--live); box-shadow: 0 0 30px var(--live); animation: pulse 1.5s infinite; }
+        .is-active .mic-icon { color: var(--live); }
+        
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
+
+        .controls { width: 85%; max-width: 350px; display: flex; flex-direction: column; gap: 15px; }
+        input { padding: 18px; border-radius: 12px; border: 2px solid #334155; background: #0f172a; color: white; font-size: 16px; text-align: center; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); }
+
+        .btn { padding: 16px; border-radius: 12px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; }
+        .btn-call { background: var(--success); color: white; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
+        .btn-reload { background: #334155; color: white; }
+        .btn:active { transform: scale(0.96); }
+
+        .footer { padding: 20px; font-size: 12px; color: #64748b; text-align: center; line-height: 1.6; }
     </style>
 </head>
 <body>
-    <div class="header"><h1>KRYA LIVE</h1><p id="my-id">ID लोड हो रही है...</p></div>
-    <div class="status-ring" id="ring"><i class="fas fa-microphone" style="font-size: 50px;"></i></div>
-    <div class="controls">
-        <input type="text" id="remote-id" placeholder="दूसरे फोन की ID यहाँ डालें">
-        <button class="btn-call" onclick="startCall()">📞 दूसरे से जुड़ें (Connect)</button>
-        <button class="btn-live" onclick="window.location.reload()">🔄 रिफ्रेश/स्टॉप</button>
+
+    <div class="header">
+        <h1>KRYA LIVE</h1>
+        <div id="my-id">आपकी ID लोड हो रही है...</div>
     </div>
-    <div style="margin-top: 20px; font-size: 12px; color: #64748b;">मुकेश राय (बांका) की विशेष पहल</div>
+
+    <div class="main-container">
+        <div class="status-ring" id="ring">
+            <i class="fas fa-microphone mic-icon"></i>
+        </div>
+
+        <div class="controls">
+            <input type="text" id="remote-id" placeholder="दूसरे फोन की ID यहाँ डालें">
+            <button class="btn btn-call" onclick="startCall()">
+                <i class="fas fa-phone-alt"></i> Connect & Talk
+            </button>
+            <button class="btn btn-reload" onclick="window.location.reload()">
+                <i class="fas fa-sync-alt"></i> Refresh System
+            </button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p><i class="fas fa-info-circle"></i> दोनों फोन में ID डालकर Connect करें और माइक Allow करें।</p>
+        <strong>मुकेश राय (बांका) - KRYA Brand</strong>
+    </div>
 
     <script>
-        const myIdDisplay = document.getElementById('my-id');
         const ring = document.getElementById('ring');
-        let peer = new Peer(); 
+        const myIdDisplay = document.getElementById('my-id');
+        const remoteIdInput = document.getElementById('remote-id');
 
-        // 1. अपनी ID जनरेट करना
-        peer.on('open', (id) => { myIdDisplay.innerText = "आपकी ID: " + id; });
+        // PeerJS Setup (Free Server)
+        const peer = new Peer();
 
-        // 2. जब कोई दूसरा आपको कॉल करे (आवाज़ आए)
-        peer.on('call', (call) => {
-            navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-                call.answer(stream);
-                call.on('stream', (remoteStream) => {
-                    const audio = new Audio();
-                    audio.srcObject = remoteStream;
-                    audio.play();
-                    ring.classList.add('is-active');
-                });
-            });
+        // 1. अपनी ID दिखाना
+        peer.on('open', (id) => {
+            myIdDisplay.innerText = "आपकी ID: " + id;
         });
 
-        // 3. दूसरे फोन से जुड़ना (आवाज़ भेजना)
-        function startCall() {
-            const remoteId = document.getElementById('remote-id').value;
-            if (!remoteId) return alert("कृपया ID डालें");
-            
-            navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-                const call = peer.call(remoteId, stream);
-                ring.classList.add('is-active');
+        // 2. कॉल रिसीव करना (जब कोई दूसरा आपको कॉल करे)
+        peer.on('call', (call) => {
+            navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+            .then((stream) => {
+                call.answer(stream); // अपनी आवाज़ भेजना शुरू करें
                 call.on('stream', (remoteStream) => {
-                    const audio = new Audio();
-                    audio.srcObject = remoteStream;
-                    audio.play();
+                    playAudio(remoteStream);
+                    ring.classList.add('is-active');
                 });
             }).catch(err => alert("माइक की अनुमति दें!"));
+        });
+
+        // 3. कॉल लगाना (दूसरे फोन से जुड़ना)
+        function startCall() {
+            const id = remoteIdInput.value;
+            if (!id) return alert("कृपया दूसरे फोन की ID डालें!");
+
+            navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+            .then((stream) => {
+                const call = peer.call(id, stream);
+                ring.classList.add('is-active');
+                
+                call.on('stream', (remoteStream) => {
+                    playAudio(remoteStream);
+                });
+            }).catch(err => alert("माइक की अनुमति (Allow) जरूरी है!"));
         }
+
+        // आवाज़ बजाने वाला फंक्शन
+        function playAudio(stream) {
+            const audio = new Audio();
+            audio.srcObject = stream;
+            audio.play();
+        }
+
+        // एरर हैंडलिंग
+        peer.on('error', (err) => {
+            console.error(err);
+            alert("कनेक्शन में समस्या: " + err.type);
+        });
     </script>
 </body>
 </html>
