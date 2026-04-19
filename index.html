@@ -3,121 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA LIVE | Professional Walkie-Talkie</title>
-    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <title>KRYA Messenger | Walkie-Talkie</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
-        :root { --primary: #fbbf24; --live: #ef4444; --bg: #0b1120; --card: #1e293b; --success: #10b981; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; align-items: center; overflow: hidden; }
+        :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; --live: #ef4444; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        .hidden { display: none !important; }
         
-        .header { background: var(--card); width: 100%; padding: 15px 0; text-align: center; border-bottom: 2px solid var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .header h1 { margin: 0; font-size: 24px; color: var(--primary); letter-spacing: 2px; }
-        #my-id { font-size: 14px; color: var(--primary); background: rgba(251, 191, 36, 0.1); padding: 5px 15px; border-radius: 20px; display: inline-block; margin-top: 10px; border: 1px dashed var(--primary); }
+        /* Auth Screen */
+        .auth-card { background: var(--card); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; margin: auto; border: 1px solid rgba(251, 191, 36, 0.3); text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; outline: none; }
+        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-main { background: var(--primary); color: #0f172a; }
 
-        .main-container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; gap: 25px; }
-
-        .status-ring { width: 160px; height: 160px; border-radius: 50%; border: 4px solid #334155; display: flex; justify-content: center; align-items: center; transition: 0.5s; background: var(--card); position: relative; }
-        .mic-icon { font-size: 60px; color: #334155; transition: 0.3s; }
+        /* Main App */
+        #app-main { flex: 1; display: flex; flex-direction: column; }
+        .header { height: 60px; background: var(--card); padding: 0 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
+        #chat-flow { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
         
-        /* जब लाइव हो तब की एनीमेशन */
-        .is-active { border-color: var(--live); box-shadow: 0 0 30px var(--live); animation: pulse 1.5s infinite; }
-        .is-active .mic-icon { color: var(--live); }
+        /* Messages */
+        .msg { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 14px; position: relative; }
+        .msg-me { align-self: flex-end; background: var(--primary); color: #000; border-bottom-right-radius: 2px; }
+        .msg-them { align-self: flex-start; background: var(--card); color: #fff; border-bottom-left-radius: 2px; border: 1px solid #334155; }
+        .msg-audio { color: var(--live); font-weight: bold; }
+
+        /* Controls */
+        .footer { padding: 12px; background: var(--card); display: flex; gap: 10px; align-items: center; border-top: 1px solid #334155; }
+        #msg-input { flex: 1; background: #0f172a; border: 1px solid #334155; color: white; padding: 12px; border-radius: 25px; }
         
-        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
-
-        .controls { width: 85%; max-width: 350px; display: flex; flex-direction: column; gap: 15px; }
-        input { padding: 18px; border-radius: 12px; border: 2px solid #334155; background: #0f172a; color: white; font-size: 16px; text-align: center; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--primary); }
-
-        .btn { padding: 16px; border-radius: 12px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; }
-        .btn-call { background: var(--success); color: white; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
-        .btn-reload { background: #334155; color: white; }
-        .btn:active { transform: scale(0.96); }
-
-        .footer { padding: 20px; font-size: 12px; color: #64748b; text-align: center; line-height: 1.6; }
+        /* Walkie Talkie Button */
+        #btn-mic { width: 50px; height: 50px; border-radius: 50%; border: none; background: #334155; color: white; cursor: pointer; transition: 0.2s; }
+        #btn-mic.recording { background: var(--live); animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
+<div id="screen-otp" class="auth-card">
+    <h2 style="color:var(--primary)">KRYA LIVE</h2>
+    <div id="email-step">
+        <input type="email" id="user-email" placeholder="email@gmail.com">
+        <button class="btn btn-main" onclick="sendOTP()">OTP भेजें</button>
+    </div>
+    <div id="otp-step" class="hidden">
+        <input type="number" id="otp-input" placeholder="000000">
+        <button class="btn btn-main" onclick="verifyOTP()">वेरिफाई करें</button>
+    </div>
+</div>
+
+<div id="screen-handle" class="auth-card hidden">
+    <h2>अपना नाम लिखें</h2>
+    <input type="text" id="input-handle" placeholder="@username">
+    <button class="btn btn-main" id="btn-save-handle">शुरू करें</button>
+</div>
+
+<div id="app-main" class="hidden">
     <div class="header">
-        <h1>KRYA LIVE</h1>
-        <div id="my-id">आपकी ID लोड हो रही है...</div>
+        <div style="color:var(--primary); font-size:1.5rem; font-weight:bold;">KRYA</div>
+        <i class="fas fa-sign-out-alt" onclick="location.reload()" style="color:var(--live); cursor:pointer;"></i>
     </div>
-
-    <div class="main-container">
-        <div class="status-ring" id="ring">
-            <i class="fas fa-microphone mic-icon"></i>
-        </div>
-
-        <div class="controls">
-            <input type="text" id="remote-id" placeholder="दूसरे फोन की ID यहाँ डालें">
-            <button class="btn btn-call" onclick="startCall()">
-                <i class="fas fa-phone-alt"></i> Connect & Talk
-            </button>
-            <button class="btn btn-reload" onclick="window.location.reload()">
-                <i class="fas fa-sync-alt"></i> Refresh System
-            </button>
-        </div>
-    </div>
-
+    <div id="chat-flow"></div>
     <div class="footer">
-        <p><i class="fas fa-info-circle"></i> दोनों फोन में ID डालकर Connect करें और माइक Allow करें।</p>
-        <strong>मुकेश राय (बांका) - KRYA Brand</strong>
+        <button id="btn-mic"><i class="fas fa-microphone"></i></button>
+        <input type="text" id="msg-input" placeholder="संदेश लिखें...">
+        <button id="btn-send" style="background:var(--primary); border:none; width:45px; height:45px; border-radius:50%;"><i class="fas fa-paper-plane"></i></button>
     </div>
+</div>
 
-    <script>
-        const ring = document.getElementById('ring');
-        const myIdDisplay = document.getElementById('my-id');
-        const remoteIdInput = document.getElementById('remote-id');
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // PeerJS Setup (Free Server)
-        const peer = new Peer();
+    const firebaseConfig = {
+      apiKey: "AIzaSyCBC5iztNy0P-4-vY6Djec5ff26mTtJk30",
+      authDomain: "sample-firebase-ai-app-37d2b.firebaseapp.com",
+      projectId: "sample-firebase-ai-app-37d2b",
+      storageBucket: "sample-firebase-ai-app-37d2b.firebasestorage.app",
+      messagingSenderId: "652996597348",
+      appId: "1:652996597348:web:6bfed4775ccb1c9572b171"
+    };
 
-        // 1. अपनी ID दिखाना
-        peer.on('open', (id) => {
-            myIdDisplay.innerText = "आपकी ID: " + id;
-        });
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    emailjs.init("msEHMlMxmjBbBoqnn");
 
-        // 2. कॉल रिसीव करना (जब कोई दूसरा आपको कॉल करे)
-        peer.on('call', (call) => {
-            navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-            .then((stream) => {
-                call.answer(stream); // अपनी आवाज़ भेजना शुरू करें
-                call.on('stream', (remoteStream) => {
-                    playAudio(remoteStream);
-                    ring.classList.add('is-active');
-                });
-            }).catch(err => alert("माइक की अनुमति दें!"));
-        });
+    let generatedOTP, userEmail, myHandle, myUid, mediaRecorder, audioChunks = [];
 
-        // 3. कॉल लगाना (दूसरे फोन से जुड़ना)
-        function startCall() {
-            const id = remoteIdInput.value;
-            if (!id) return alert("कृपया दूसरे फोन की ID डालें!");
+    // --- OTP & LOGIN ---
+    window.sendOTP = function() {
+        userEmail = document.getElementById('user-email').value;
+        if(!userEmail.includes('@')) return alert("सही ईमेल डालें");
+        generatedOTP = Math.floor(100000 + Math.random() * 900000);
+        emailjs.send('service_gls676h', 'template_6teuhl4', { email: userEmail, otp: generatedOTP })
+            .then(() => {
+                document.getElementById('email-step').classList.add('hidden');
+                document.getElementById('otp-step').classList.remove('hidden');
+            });
+    };
 
-            navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-            .then((stream) => {
-                const call = peer.call(id, stream);
-                ring.classList.add('is-active');
-                
-                call.on('stream', (remoteStream) => {
-                    playAudio(remoteStream);
-                });
-            }).catch(err => alert("माइक की अनुमति (Allow) जरूरी है!"));
+    window.verifyOTP = async function() {
+        const input = document.getElementById('otp-input').value;
+        if(input == generatedOTP) {
+            myUid = btoa(userEmail);
+            const u = await getDoc(doc(db, "users", myUid));
+            document.getElementById('screen-otp').classList.add('hidden');
+            if(u.exists()) { showApp(u.data().handle); } 
+            else { document.getElementById('screen-handle').classList.remove('hidden'); }
         }
+    };
 
-        // आवाज़ बजाने वाला फंक्शन
-        function playAudio(stream) {
-            const audio = new Audio();
-            audio.srcObject = stream;
-            audio.play();
-        }
+    document.getElementById('btn-save-handle').onclick = async () => {
+        myHandle = document.getElementById('input-handle').value;
+        await setDoc(doc(db, "users", myUid), { handle: myHandle, email: userEmail });
+        showApp(myHandle);
+    };
 
-        // एरर हैंडलिंग
-        peer.on('error', (err) => {
-            console.error(err);
-            alert("कनेक्शन में समस्या: " + err.type);
+    function showApp(handle) {
+        myHandle = handle;
+        document.getElementById('screen-handle').classList.add('hidden');
+        document.getElementById('app-main').classList.remove('hidden');
+        initChat();
+    }
+
+    // --- CHAT & WALKIE-TALKIE LOGIC ---
+    function initChat() {
+        const flow = document.getElementById('chat-flow');
+        onSnapshot(query(collection(db, "messages"), orderBy("time", "asc")), snap => {
+            snap.docChanges().forEach(change => {
+                if (change.type === "added") {
+                    const m = change.doc.data();
+                    renderMsg(m);
+                    if(m.type === 'audio' && m.uid !== myUid) { playAudio(m.audio); }
+                }
+            });
+            flow.scrollTop = flow.scrollHeight;
         });
-    </script>
+    }
+
+    function renderMsg(m) {
+        const isMe = m.uid === myUid;
+        const div = document.createElement('div');
+        div.className = isMe ? 'msg msg-me' : 'msg msg-them';
+        div.innerHTML = `<small style="font-size:10px; display:block;">${m.user}</small> ${m.type === 'audio' ? '🎤 Audio Message' : m.text}`;
+        document.getElementById('chat-flow').appendChild(div);
+    }
+
+    async function sendMsg(type, content) {
+        await addDoc(collection(db, "messages"), {
+            type: type,
+            text: type === 'text' ? content : '',
+            audio: type === 'audio' ? content : '',
+            user: myHandle,
+            uid: myUid,
+            time: serverTimestamp()
+        });
+    }
+
+    document.getElementById('btn-send').onclick = () => {
+        const val = document.getElementById('msg-input').value;
+        if(val) { sendMsg('text', val); document.getElementById('msg-input').value = ""; }
+    };
+
+    // --- MIC RECORDING ---
+    const micBtn = document.getElementById('btn-mic');
+    micBtn.onmousedown = micBtn.ontouchstart = async (e) => {
+        e.preventDefault();
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+        mediaRecorder.onstop = async () => {
+            const blob = new Blob(audioChunks, { type: 'audio/webm' });
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onloadend = () => sendMsg('audio', reader.result);
+        };
+        mediaRecorder.start();
+        micBtn.classList.add('recording');
+    };
+
+    micBtn.onmouseup = micBtn.ontouchend = () => {
+        if(mediaRecorder) mediaRecorder.stop();
+        micBtn.classList.remove('recording');
+    };
+
+    function playAudio(base64) {
+        const audio = new Audio(base64);
+        audio.play();
+    }
+</script>
 </body>
 </html>
