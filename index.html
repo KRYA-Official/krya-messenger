@@ -3,109 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA LIVE | 24x7 Walkie-Talkie</title>
+    <title>KRYA LIVE | Walkie-Talkie</title>
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #fbbf24; --live: #ef4444; --bg: #0b1120; --card: #1e293b; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
-        
-        .header { background: var(--card); padding: 20px; text-align: center; border-bottom: 2px solid var(--primary); }
-        .header h1 { margin: 0; color: var(--primary); letter-spacing: 3px; font-size: 24px; }
-
-        .main-stage { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 30px; }
-
-        /* लाइव इंडिकेटर एनीमेशन */
-        .status-ring { width: 180px; height: 180px; border-radius: 50%; border: 4px solid #334155; display: flex; justify-content: center; align-items: center; transition: 0.5s; position: relative; }
-        .is-active { border-color: var(--live); box-shadow: 0 0 30px var(--live); animation: pulse 1.5s infinite; }
-        
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-
-        .mic-icon { font-size: 60px; color: #334155; transition: 0.3s; }
-        .is-active .mic-icon { color: var(--live); }
-
-        .controls { display: flex; flex-direction: column; gap: 15px; width: 80%; max-width: 300px; }
-        
-        button { padding: 18px; border-radius: 50px; border: none; font-weight: bold; font-size: 18px; cursor: pointer; transition: 0.2s; }
-        .btn-on { background: var(--primary); color: black; }
-        .btn-stop { background: #334155; color: white; }
-        button:active { transform: scale(0.95); }
-
-        .footer-info { padding: 20px; font-size: 12px; color: #64748b; text-align: center; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; align-items: center; }
+        .header { background: var(--card); width: 100%; padding: 20px; text-align: center; border-bottom: 2px solid var(--primary); }
+        .status-ring { width: 150px; height: 150px; border-radius: 50%; border: 4px solid #334155; display: flex; justify-content: center; align-items: center; margin: 30px 0; }
+        .is-active { border-color: var(--live); box-shadow: 0 0 20px var(--live); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .controls { width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 10px; }
+        input { padding: 15px; border-radius: 10px; border: none; background: #334155; color: white; font-size: 16px; text-align: center; }
+        button { padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; }
+        .btn-live { background: var(--primary); color: black; }
+        .btn-call { background: #10b981; color: white; }
     </style>
 </head>
 <body>
-
-    <div class="header">
-        <h1>KRYA LIVE</h1>
-        <small id="sub-text">सिस्टम तैयार है...</small>
+    <div class="header"><h1>KRYA LIVE</h1><p id="my-id">ID लोड हो रही है...</p></div>
+    <div class="status-ring" id="ring"><i class="fas fa-microphone" style="font-size: 50px;"></i></div>
+    <div class="controls">
+        <input type="text" id="remote-id" placeholder="दूसरे फोन की ID यहाँ डालें">
+        <button class="btn-call" onclick="startCall()">📞 दूसरे से जुड़ें (Connect)</button>
+        <button class="btn-live" onclick="window.location.reload()">🔄 रिफ्रेश/स्टॉप</button>
     </div>
-
-    <div class="main-stage">
-        <div class="status-ring" id="ring">
-            <i class="fas fa-microphone mic-icon"></i>
-        </div>
-
-        <div class="controls">
-            <button class="btn-on" id="onBtn"><i class="fas fa-play"></i> LIVE (ON)</button>
-            <button class="btn-stop" id="stopBtn"><i class="fas fa-power-off"></i> STOP</button>
-        </div>
-    </div>
-
-    <div class="footer-info">
-        <p><i class="fas fa-shield-alt"></i> बैकग्राउंड मोड एक्टिव: स्क्रीन बंद होने पर भी चालू रहेगा</p>
-        <p style="margin-top:5px;">मुकेश राय (बांका) की विशेष पहल</p>
-    </div>
+    <div style="margin-top: 20px; font-size: 12px; color: #64748b;">मुकेश राय (बांका) की विशेष पहल</div>
 
     <script>
-        const onBtn = document.getElementById('onBtn');
-        const stopBtn = document.getElementById('stopBtn');
+        const myIdDisplay = document.getElementById('my-id');
         const ring = document.getElementById('ring');
-        const subText = document.getElementById('sub-text');
-        
-        let wakeLock = null;
+        let peer = new Peer(); 
 
-        // स्क्रीन को जागते रहने के लिए (Wake Lock)
-        async function stayAlive() {
-            if ('wakeLock' in navigator) {
-                try {
-                    wakeLock = await navigator.wakeLock.request('screen');
-                } catch (err) { console.log("WakeLock Error"); }
-            }
-        }
+        // 1. अपनी ID जनरेट करना
+        peer.on('open', (id) => { myIdDisplay.innerText = "आपकी ID: " + id; });
 
-        onBtn.onclick = async () => {
-            try {
-                // माइक्रोफोन की अनुमति मांगें
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                
-                // स्क्रीन लॉक रोकने के लिए
-                await stayAlive();
+        // 2. जब कोई दूसरा आपको कॉल करे (आवाज़ आए)
+        peer.on('call', (call) => {
+            navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+                call.answer(stream);
+                call.on('stream', (remoteStream) => {
+                    const audio = new Audio();
+                    audio.srcObject = remoteStream;
+                    audio.play();
+                    ring.classList.add('is-active');
+                });
+            });
+        });
 
-                // UI अपडेट
-                ring.classList.add('is-active');
-                subText.innerText = "आप अभी लाइव हैं | सब सुन रहे हैं";
-                subText.style.color = "#ef4444";
-                onBtn.style.display = "none";
-                
-                console.log("KRYA LIVE Active...");
-            } catch (err) {
-                alert("वॉकी-टॉकी के लिए माइक्रोफोन की अनुमति दें!");
-            }
-        };
-
-        stopBtn.onclick = () => {
-            ring.classList.remove('is-active');
-            subText.innerText = "सिस्टम बंद है";
-            subText.style.color = "#94a3b8";
-            onBtn.style.display = "block";
+        // 3. दूसरे फोन से जुड़ना (आवाज़ भेजना)
+        function startCall() {
+            const remoteId = document.getElementById('remote-id').value;
+            if (!remoteId) return alert("कृपया ID डालें");
             
-            if (wakeLock) {
-                wakeLock.release();
-                wakeLock = null;
-            }
-            // स्ट्रीम को बंद करने का लॉजिक यहाँ लगेगा
-            location.reload(); // सब कुछ फ्रेश करने के लिए
-        };
+            navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+                const call = peer.call(remoteId, stream);
+                ring.classList.add('is-active');
+                call.on('stream', (remoteStream) => {
+                    const audio = new Audio();
+                    audio.srcObject = remoteStream;
+                    audio.play();
+                });
+            }).catch(err => alert("माइक की अनुमति दें!"));
+        }
     </script>
 </body>
 </html>
