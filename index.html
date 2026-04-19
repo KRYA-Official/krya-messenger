@@ -3,142 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA PRO SUPER APP</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <title>KRYA LIVE | 24x7 Walkie-Talkie</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <style>
-        :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; --success: #22c55e; }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        :root { --primary: #fbbf24; --live: #ef4444; --bg: #0b1120; --card: #1e293b; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
         
-        body, html { height: 100%; width: 100%; background: var(--bg); color: var(--text); overflow: hidden; }
+        .header { background: var(--card); padding: 20px; text-align: center; border-bottom: 2px solid var(--primary); }
+        .header h1 { margin: 0; color: var(--primary); letter-spacing: 3px; font-size: 24px; }
 
-        #app-root { display: flex; flex-direction: column; height: 100vh; width: 100%; }
+        .main-stage { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 30px; }
 
-        .header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; border-bottom: 1px solid #334155; }
+        /* लाइव इंडिकेटर एनीमेशन */
+        .status-ring { width: 180px; height: 180px; border-radius: 50%; border: 4px solid #334155; display: flex; justify-content: center; align-items: center; transition: 0.5s; position: relative; }
+        .is-active { border-color: var(--live); box-shadow: 0 0 30px var(--live); animation: pulse 1.5s infinite; }
         
-        .news-ticker { background: #1e3a8a; color: var(--primary); padding: 5px; font-weight: bold; overflow: hidden; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        .main-content { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; }
+        .mic-icon { font-size: 60px; color: #334155; transition: 0.3s; }
+        .is-active .mic-icon { color: var(--live); }
 
-        /* --- अपडेटेड ID कार्ड स्टाइल (चौड़ा और प्रीमियम) --- */
-        .id-card { 
-            width: 100%; /* पूरी चौड़ाई */
-            background: linear-gradient(145deg, #1e293b, #0f172a); 
-            border: 2px solid var(--primary); 
-            border-radius: 20px; 
-            padding: 20px; 
-            position: relative; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 15px;
-        }
+        .controls { display: flex; flex-direction: column; gap: 15px; width: 80%; max-width: 300px; }
         
-        .id-photo { 
-            width: 90px; 
-            height: 110px; 
-            border-radius: 12px; 
-            border: 2px solid var(--primary); 
-            object-fit: cover; 
-            background: #334155;
-        }
+        button { padding: 18px; border-radius: 50px; border: none; font-weight: bold; font-size: 18px; cursor: pointer; transition: 0.2s; }
+        .btn-on { background: var(--primary); color: black; }
+        .btn-stop { background: #334155; color: white; }
+        button:active { transform: scale(0.95); }
 
-        .id-info h4 { font-size: 20px; color: var(--primary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
-        .id-info p { font-size: 13px; color: #cbd5e1; margin-bottom: 3px; }
-
-        /* चैट सिस्टम */
-        #tab-chat { display: none; flex-direction: column; height: 100%; }
-        .chat-flow { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
-        .msg { max-width: 80%; padding: 10px; border-radius: 12px; font-size: 14px; }
-        .msg-me { align-self: flex-end; background: var(--primary); color: #000; }
-        .msg-them { align-self: flex-start; background: var(--card); }
-
-        .chat-input-footer { 
-            background: var(--card); padding: 10px; display: flex; gap: 8px; 
-            border-top: 1px solid #334155; margin-bottom: 60px;
-        }
-        .chat-input-footer input { flex: 1; padding: 12px; border-radius: 8px; border: none; background: #0f172a; color: white; outline: none; }
-        
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; padding: 10px 0; border-top: 1px solid #334155; }
-        .nav-item { flex: 1; text-align: center; color: #94a3b8; font-size: 12px; cursor: pointer; }
-        .nav-item.active { color: var(--primary); }
-
-        .btn-p { background: var(--primary); color: black; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        .btn-p:active { transform: scale(0.98); }
-        .hidden { display: none !important; }
+        .footer-info { padding: 20px; font-size: 12px; color: #64748b; text-align: center; }
     </style>
 </head>
 <body>
 
-<div id="app-root">
     <div class="header">
-        <b style="color:var(--primary); font-size: 1.2rem;">KRYA PRO</b>
-        <span>🪙 <span id="balance">700</span></span>
+        <h1>KRYA LIVE</h1>
+        <small id="sub-text">सिस्टम तैयार है...</small>
     </div>
 
-    <div class="news-ticker">
-        <marquee>🚀 KRYA प्रो मॉल लाइव है! अपना 3D लोगो बनवाएं | मुकेश राय की पहल...</marquee>
-    </div>
-
-    <div class="main-content">
-        <div id="tab-home">
-            <div class="id-card">
-                <img id="card-img" src="https://via.placeholder.com/90x110" class="id-photo">
-                <div class="id-info">
-                    <h4 id="u-name">मुकेश राय</h4>
-                    <p id="u-skill"><i class="fas fa-code" style="color:var(--primary);"></i> टेक स्पेशलिस्ट</p>
-                    <p id="u-addr"><i class="fas fa-map-marker-alt" style="color:#ef4444;"></i> बांका, बिहार</p>
-                    <p style="font-size:10px; opacity:0.6; margin-top:5px;">ID: KRYA-2026-001</p>
-                </div>
-            </div>
-            
-            <button class="btn-p" style="margin-top:10px; background:#8b5cf6; color:white;" onclick="alert('मॉल खुल रहा है...')">
-                <i class="fas fa-shopping-cart"></i> क्रांतिकारी मॉल
-            </button>
-            
-            <p style="text-align:center; font-size:12px; margin-top:15px; color:#94a3b8;">आपका डिजिटल पहचान पत्र (Verified by KRYA)</p>
+    <div class="main-stage">
+        <div class="status-ring" id="ring">
+            <i class="fas fa-microphone mic-icon"></i>
         </div>
 
-        <div id="tab-chat">
-            <div class="chat-flow" id="chat-box"></div>
-            <div class="chat-input-footer">
-                <input type="text" id="m-input" placeholder="संदेश लिखें...">
-                <button onclick="sendMsg()" style="background:var(--primary); border:none; width:45px; height:45px; border-radius:10px;"><i class="fas fa-paper-plane"></i></button>
-            </div>
+        <div class="controls">
+            <button class="btn-on" id="onBtn"><i class="fas fa-play"></i> LIVE (ON)</button>
+            <button class="btn-stop" id="stopBtn"><i class="fas fa-power-off"></i> STOP</button>
         </div>
     </div>
 
-    <div class="nav-bar">
-        <div class="nav-item active" id="n-home" onclick="go('home')"><i class="fas fa-id-card fa-lg"></i><br>आईडी</div>
-        <div class="nav-item" id="n-chat" onclick="go('chat')"><i class="fas fa-comments fa-lg"></i><br>चैट</div>
-        <div class="nav-item" onclick="alert('सेटिंग्स जल्द आएगी')"><i class="fas fa-cog fa-lg"></i><br>सेटिंग्स</div>
+    <div class="footer-info">
+        <p><i class="fas fa-shield-alt"></i> बैकग्राउंड मोड एक्टिव: स्क्रीन बंद होने पर भी चालू रहेगा</p>
+        <p style="margin-top:5px;">मुकेश राय (बांका) की विशेष पहल</p>
     </div>
-</div>
 
-<script>
-    function go(t) {
-        document.getElementById('tab-home').style.display = t === 'home' ? 'block' : 'none';
-        document.getElementById('tab-chat').style.display = t === 'chat' ? 'flex' : 'none';
-        document.getElementById('n-home').classList.toggle('active', t === 'home');
-        document.getElementById('n-chat').classList.toggle('active', t === 'chat');
-    }
+    <script>
+        const onBtn = document.getElementById('onBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const ring = document.getElementById('ring');
+        const subText = document.getElementById('sub-text');
+        
+        let wakeLock = null;
 
-    function sendMsg() {
-        const inp = document.getElementById('m-input');
-        if(!inp.value) return;
-        const div = document.createElement('div');
-        div.className = 'msg msg-me';
-        div.innerText = inp.value;
-        document.getElementById('chat-box').appendChild(div);
-        inp.value = "";
-        const box = document.getElementById('chat-box');
-        box.scrollTop = box.scrollHeight;
-    }
-</script>
+        // स्क्रीन को जागते रहने के लिए (Wake Lock)
+        async function stayAlive() {
+            if ('wakeLock' in navigator) {
+                try {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                } catch (err) { console.log("WakeLock Error"); }
+            }
+        }
+
+        onBtn.onclick = async () => {
+            try {
+                // माइक्रोफोन की अनुमति मांगें
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                // स्क्रीन लॉक रोकने के लिए
+                await stayAlive();
+
+                // UI अपडेट
+                ring.classList.add('is-active');
+                subText.innerText = "आप अभी लाइव हैं | सब सुन रहे हैं";
+                subText.style.color = "#ef4444";
+                onBtn.style.display = "none";
+                
+                console.log("KRYA LIVE Active...");
+            } catch (err) {
+                alert("वॉकी-टॉकी के लिए माइक्रोफोन की अनुमति दें!");
+            }
+        };
+
+        stopBtn.onclick = () => {
+            ring.classList.remove('is-active');
+            subText.innerText = "सिस्टम बंद है";
+            subText.style.color = "#94a3b8";
+            onBtn.style.display = "block";
+            
+            if (wakeLock) {
+                wakeLock.release();
+                wakeLock = null;
+            }
+            // स्ट्रीम को बंद करने का लॉजिक यहाँ लगेगा
+            location.reload(); // सब कुछ फ्रेश करने के लिए
+        };
+    </script>
 </body>
 </html>
