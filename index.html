@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA LIVE | Digital Walkie-Talkie India</title>
+    <title>KRYA LIVE | Global Beta Walkie-Talkie</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
-        :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; --live: #ef4444; }
+        :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; --live: #ef4444; --beta: #8b5cf6; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         .hidden { display: none !important; }
+
+        /* Beta Tag */
+        .beta-badge { background: var(--beta); color: white; font-size: 10px; padding: 2px 8px; border-radius: 10px; vertical-align: middle; margin-left: 5px; text-transform: uppercase; }
 
         /* Auth Screen */
         .auth-card { background: var(--card); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; margin: auto; border: 1px solid rgba(251, 191, 36, 0.3); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
@@ -38,7 +41,6 @@
         #wt-button.active { background: var(--live); transform: scale(0.9); box-shadow: 0 0 40px var(--live); color: white; }
         .hint-text { font-size: 12px; color: #94a3b8; font-weight: bold; }
 
-        /* Text Input Row */
         .text-row { width: 100%; display: flex; gap: 10px; }
         #msg-input { flex: 1; padding: 12px; border-radius: 25px; border: 1px solid #334155; background: #0f172a; color: white; outline: none; }
         #btn-send { width: 45px; height: 45px; border-radius: 50%; background: var(--primary); border: none; color: #000; display: flex; align-items: center; justify-content: center; }
@@ -47,8 +49,8 @@
 <body>
 
 <div id="screen-otp" class="auth-card">
-    <h2 style="color:var(--primary); margin-bottom: 10px;">KRYA LIVE</h2>
-    <p style="font-size: 13px; margin-bottom: 20px;">हिंदुस्तान का अपना वॉकी-टॉकी</p>
+    <h2 style="color:var(--primary); margin-bottom: 10px;">KRYA LIVE <span class="beta-badge">Beta</span></h2>
+    <p style="font-size: 13px; margin-bottom: 20px;">Global Testing Phase</p>
     <div id="email-step">
         <input type="email" id="user-email" placeholder="अपनी ईमेल आईडी डालें">
         <button class="btn btn-main" onclick="sendOTP()">OTP भेजें</button>
@@ -67,7 +69,7 @@
 
 <div id="app-main" class="hidden">
     <div class="header">
-        <div class="logo">KRYA</div>
+        <div class="logo">KRYA <span class="beta-badge" style="font-size: 12px;">BETA</span></div>
         <div style="display: flex; gap: 15px; align-items: center;">
             <i class="fas fa-sync-alt" onclick="location.reload()" style="color:var(--primary); cursor:pointer;"></i>
             <i class="fas fa-power-off" id="btn-logout" style="color:var(--live); cursor:pointer;"></i>
@@ -84,6 +86,7 @@
             <input type="text" id="msg-input" placeholder="संदेश लिखें...">
             <button id="btn-send"><i class="fas fa-paper-plane"></i></button>
         </div>
+        <p style="font-size: 9px; color: #64748b;">Global Server: Active | KRYA Brand India</p>
     </div>
 </div>
 
@@ -106,7 +109,6 @@
 
     let generatedOTP, userEmail, myHandle, myUid, mediaRecorder, audioChunks = [];
 
-    // --- ऑटो-लॉगिन चेक (Persistent Login) ---
     window.onload = async () => {
         const savedUid = localStorage.getItem('krya_uid');
         if (savedUid) {
@@ -116,7 +118,6 @@
         }
     };
 
-    // --- OTP & LOGIN ---
     window.sendOTP = function() {
         userEmail = document.getElementById('user-email').value;
         if(!userEmail.includes('@')) return alert("सही ईमेल डालें");
@@ -132,7 +133,7 @@
         const input = document.getElementById('otp-input').value;
         if(input == generatedOTP) {
             myUid = btoa(userEmail);
-            localStorage.setItem('krya_uid', myUid); // सेव करें ताकि दोबारा OTP न मांगें
+            localStorage.setItem('krya_uid', myUid);
             const u = await getDoc(doc(db, "users", myUid));
             document.getElementById('screen-otp').classList.add('hidden');
             if(u.exists()) { showApp(u.data().handle); } 
@@ -155,18 +156,14 @@
         initChat();
     }
 
-    // --- असली वॉकी-टॉकी इंजन ---
     function initChat() {
         const flow = document.getElementById('chat-flow');
-        // सिर्फ आखिरी 50 मैसेज लोड करेंगे ताकि रिफ्रेश तेज हो
         const q = query(collection(db, "messages"), orderBy("time", "asc"), limitToLast(50));
-        
         onSnapshot(q, snap => {
             snap.docChanges().forEach(change => {
                 if (change.type === "added") {
                     const m = change.doc.data();
                     renderMsg(m);
-                    // अगर नया ऑडियो आया और वह आपका नहीं है, तो अपने आप बजाएं
                     if(m.type === 'audio' && m.uid !== myUid) { playAudio(m.audio); }
                 }
             });
@@ -178,10 +175,7 @@
         const isMe = m.uid === myUid;
         const div = document.createElement('div');
         div.className = isMe ? 'msg msg-me' : 'msg msg-them';
-        div.innerHTML = `
-            <small class="handle-name">${isMe ? 'You' : m.user}</small>
-            ${m.type === 'audio' ? '🎤 <b>आवाज़ संदेश...</b>' : m.text}
-        `;
+        div.innerHTML = `<small class="handle-name">${isMe ? 'You' : m.user}</small>${m.type === 'audio' ? '🎤 <b>आवाज़...</b>' : m.text}`;
         document.getElementById('chat-flow').appendChild(div);
     }
 
@@ -196,9 +190,7 @@
         });
     }
 
-    // --- माइक रिकॉर्डिंग सिस्टम (Push to Talk) ---
     const wtBtn = document.getElementById('wt-button');
-    
     const startRecording = async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -223,7 +215,6 @@
         }
     };
 
-    // मोबाइल और डेस्कटॉप दोनों के लिए इवेंट्स
     wtBtn.addEventListener('mousedown', startRecording);
     wtBtn.addEventListener('mouseup', stopRecording);
     wtBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startRecording(); });
@@ -236,7 +227,7 @@
 
     function playAudio(base64) {
         const audio = new Audio(base64);
-        audio.play().catch(e => console.log("ऑटोप्ले ब्लॉक हुआ, यूजर ने अभी स्क्रीन नहीं छुई"));
+        audio.play().catch(e => console.log("User interaction required"));
     }
 
     document.getElementById('btn-logout').onclick = () => {
