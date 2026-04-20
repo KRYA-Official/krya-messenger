@@ -1,156 +1,163 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KRYA Quiz Fixed</title>
-
-<style>
-body{font-family:sans-serif;background:#0b1120;color:#fff;text-align:center}
-.box{background:#1e293b;padding:20px;margin:15px;border-radius:10px}
-button{padding:10px;margin:5px;border:none;border-radius:5px;background:#fbbf24;color:#000;cursor:pointer}
-.option{display:block;margin:5px;padding:10px;background:#334155;border-radius:5px;cursor:pointer}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRYA QUIZ - Earn & Learn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); text-align: center; margin: 0; padding: 0; }
+        .box { background: var(--card); padding: 25px; margin: 15px auto; border-radius: 15px; max-width: 400px; border: 1px solid rgba(251, 191, 36, 0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        h2 { color: var(--primary); margin-bottom: 15px; }
+        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; outline: none; }
+        button { padding: 12px 25px; margin: 10px; border: none; border-radius: 10px; background: var(--primary); color: #000; font-weight: bold; cursor: pointer; transition: 0.3s; width: 90%; }
+        button:active { transform: scale(0.95); }
+        .option { display: block; margin: 10px auto; padding: 15px; background: #334155; border-radius: 10px; cursor: pointer; transition: 0.2s; width: 90%; border: 1px solid transparent; }
+        .option:hover { background: #475569; border-color: var(--primary); }
+        .wallet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .badge { font-size: 12px; background: var(--primary); color: #000; padding: 2px 8px; border-radius: 5px; font-weight: bold; }
+        .hidden { display: none; }
+    </style>
 </head>
 
 <body>
 
 <div class="box" id="loginBox">
-<h2>Login</h2>
-<input type="email" id="email" placeholder="Enter Email"><br>
-<button onclick="login()">Login</button>
+    <h2>KRYA QUIZ <span class="badge">BETA</span></h2>
+    <p style="font-size: 13px; opacity: 0.8;">लॉगिन करें और कॉइन्स जीतें</p>
+    <input type="email" id="email" placeholder="अपनी ईमेल आईडी डालें"><br>
+    <button id="btnLogin">लॉगिन करें</button>
 </div>
 
-<div id="appBox" style="display:none">
+<div id="appBox" class="hidden">
+    <div class="box">
+        <div class="wallet-grid">
+            <div>
+                <p style="font-size: 12px; opacity: 0.7;">कुल कॉइन्स</p>
+                <h3 id="coins">0</h3>
+            </div>
+            <div>
+                <p style="font-size: 12px; opacity: 0.7;">जीती हुई राशि</p>
+                <h3 id="winning">₹0</h3>
+            </div>
+        </div>
+    </div>
 
-<div class="box">
-<h2>💰 Wallet</h2>
-<p>Coins: <span id="coins">0</span></p>
-<p>Winning: ₹<span id="winning">0</span></p>
-</div>
-
-<div class="box">
-<h2>🎮 Quiz</h2>
-<p id="question"></p>
-<div id="options"></div>
-<button onclick="startQuiz()">Start Quiz (10 Coins)</button>
-</div>
-
+    <div class="box">
+        <h2>🎮 क्विज़ खेलें</h2>
+        <p id="question" style="font-size: 18px; margin-bottom: 20px; font-weight: bold;"></p>
+        <div id="options"></div>
+        <button id="btnStartQuiz"><i class="fas fa-play"></i> क्विज़ शुरू करें (10 Coins)</button>
+    </div>
 </div>
 
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔥 CONFIG सही डालो
+// 🔥 यहाँ आपका फायरबेस कॉन्फ़िग पहले से सेट है
 const firebaseConfig = {
-apiKey: "PASTE_KEY",
-authDomain: "PASTE_DOMAIN",
-projectId: "PASTE_ID"
+    apiKey: "AIzaSyCBC5iztNy0P-4-vY6Djec5ff26mTtJk30",
+    authDomain: "sample-firebase-ai-app-37d2b.firebaseapp.com",
+    projectId: "sample-firebase-ai-app-37d2b",
+    storageBucket: "sample-firebase-ai-app-37d2b.firebasestorage.app",
+    messagingSenderId: "652996597348",
+    appId: "1:652996597348:web:6bfed4775ccb1c9572b171"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let userId="";
-let currentQuiz=null;
+let userId = "";
+let currentQuiz = null;
 
-// LOGIN
-window.login = async function(){
-let email = document.getElementById("email").value;
+// --- लॉगिन फंक्शन ---
+const login = async () => {
+    let email = document.getElementById("email").value;
+    if(!email.includes('@')){ alert("सही ईमेल डालें"); return; }
 
-if(!email){
-alert("Email डालो");
-return;
-}
+    userId = btoa(email);
+    localStorage.setItem("krya_quiz_uid", userId); // ऑटो लॉगिन के लिए
 
-userId = btoa(email);
+    const ref = doc(db, "users", userId);
+    const snap = await getDoc(ref);
 
-const ref = doc(db,"users",userId);
-const snap = await getDoc(ref);
+    if(!snap.exists()){
+        await setDoc(ref, { email, coins: 100, winning: 0 }); // नए यूजर को 100 फ्री कॉइन्स
+    }
 
-if(!snap.exists()){
-await setDoc(ref,{
-email,
-coins:50,
-winning:0
-});
-}
+    document.getElementById("loginBox").classList.add("hidden");
+    document.getElementById("appBox").classList.remove("hidden");
+    loadWallet();
+};
 
-document.getElementById("loginBox").style.display="none";
-document.getElementById("appBox").style.display="block";
+// --- ऑटो लॉगिन चेक ---
+window.onload = () => {
+    const savedId = localStorage.getItem("krya_quiz_uid");
+    if(savedId){
+        userId = savedId;
+        document.getElementById("loginBox").classList.add("hidden");
+        document.getElementById("appBox").classList.remove("hidden");
+        loadWallet();
+    }
+};
 
-loadWallet();
-}
-
-// LOAD WALLET
 async function loadWallet(){
-const snap = await getDoc(doc(db,"users",userId));
-const data = snap.data();
-
-document.getElementById("coins").innerText = data.coins;
-document.getElementById("winning").innerText = data.winning;
+    const snap = await getDoc(doc(db, "users", userId));
+    const data = snap.data();
+    document.getElementById("coins").innerText = data.coins;
+    document.getElementById("winning").innerText = "₹" + data.winning;
 }
 
-// QUIZ DATA
-const quiz = [
-{q:"भारत की राजधानी?",o:["दिल्ली","मुंबई","पटना","कोलकाता"],a:0},
-{q:"5+5=?",o:["8","9","10","11"],a:2}
+const quizData = [
+    {q:"भारत का राष्ट्रीय पशु कौन सा है?", o:["शेर","बाघ","हाथी","चीता"], a:1},
+    {q:"कंप्यूटर का दिमाग किसे कहते हैं?", o:["RAM","Hard Disk","CPU","Mouse"], a:2},
+    {q:"बांका जिला किस राज्य में है?", o:["बिहार","झारखंड","यूपी","बंगाल"], a:0}
 ];
 
-// START QUIZ
-window.startQuiz = async function(){
+const startQuiz = async () => {
+    const ref = doc(db, "users", userId);
+    const snap = await getDoc(ref);
+    let coins = snap.data().coins;
 
-const ref = doc(db,"users",userId);
-const snap = await getDoc(ref);
-let coins = snap.data().coins;
+    if(coins < 10){ alert("कॉइन्स खत्म हो गए हैं!"); return; }
 
-if(coins < 10){
-alert("Coins कम हैं");
-return;
-}
+    await updateDoc(ref, { coins: coins - 10 });
+    currentQuiz = quizData[Math.floor(Math.random() * quizData.length)];
 
-// coins कटे
-await updateDoc(ref,{coins: coins-10});
+    document.getElementById("question").innerText = currentQuiz.q;
+    document.getElementById("options").innerHTML = "";
 
-currentQuiz = quiz[Math.floor(Math.random()*quiz.length)];
+    currentQuiz.o.forEach((opt, i) => {
+        const div = document.createElement("div");
+        div.className = "option";
+        div.innerText = opt;
+        div.onclick = () => checkAnswer(i);
+        document.getElementById("options").appendChild(div);
+    });
 
-document.getElementById("question").innerText = currentQuiz.q;
+    loadWallet();
+};
 
-let html="";
-currentQuiz.o.forEach((opt,i)=>{
-html += `<div class="option" onclick="checkAnswer(${i})">${opt}</div>`;
-});
+const checkAnswer = async (selectedIndex) => {
+    if(selectedIndex === currentQuiz.a){
+        alert("सही जवाब! आपने ₹20 जीते 🎉");
+        const ref = doc(db, "users", userId);
+        const snap = await getDoc(ref);
+        await updateDoc(ref, { winning: snap.data().winning + 20 });
+    } else {
+        alert("गलत जवाब! सही उत्तर था: " + currentQuiz.o[currentQuiz.a]);
+    }
+    document.getElementById("question").innerText = "";
+    document.getElementById("options").innerHTML = "";
+    loadWallet();
+};
 
-document.getElementById("options").innerHTML = html;
-
-loadWallet();
-}
-
-// CHECK ANSWER
-window.checkAnswer = async function(i){
-
-if(i === currentQuiz.a){
-alert("सही जवाब 🎉");
-
-const ref = doc(db,"users",userId);
-const snap = await getDoc(ref);
-let win = snap.data().winning;
-
-await updateDoc(ref,{winning: win + 20});
-
-}else{
-alert("गलत जवाब ❌");
-}
-
-document.getElementById("question").innerText="";
-document.getElementById("options").innerHTML="";
-
-loadWallet();
-}
+// इवेंट लिसनर्स (Module में यही तरीका सही है)
+document.getElementById("btnLogin").onclick = login;
+document.getElementById("btnStartQuiz").onclick = startQuiz;
 
 </script>
-
 </body>
 </html>
