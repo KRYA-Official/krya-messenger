@@ -3,26 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KRYA Digital Services</title>
+<title>KryaLive.com</title>
 
 <style>
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    background: #0f172a;
     color: white;
 }
 
-/* Heading */
-h2 {
+/* Top Bar */
+.header {
+    background: black;
+    padding: 10px;
     text-align: center;
-    font-size: 32px;
-    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #00ffcc;
 }
 
-.subtitle {
-    text-align: center;
-    color: #ccc;
+/* News Ticker */
+.ticker {
+    background: #111;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ticker p {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scroll 15s linear infinite;
+}
+
+@keyframes scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
 }
 
 /* Services */
@@ -30,171 +46,126 @@ h2 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 25px;
-    padding: 40px 20px;
+    padding: 30px;
+    gap: 20px;
 }
 
 .card {
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    padding: 25px;
-    border-radius: 15px;
-    width: 280px;
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 12px;
+    width: 260px;
     text-align: center;
-    transition: 0.4s;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    transition: 0.3s;
 }
 
 .card:hover {
     transform: scale(1.05);
 }
 
-.price {
-    font-size: 20px;
-    color: #00ffcc;
-    font-weight: bold;
-}
-
-/* Button */
 .btn {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 10px 18px;
-    background: linear-gradient(45deg, #00ffcc, #00c3ff);
+    background: #00ffcc;
     color: black;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.btn:hover {
-    transform: scale(1.1);
-}
-
-/* Trust Section */
-.trust {
-    text-align: center;
-    padding: 30px;
-}
-
-.trust span {
-    display: inline-block;
-    margin: 10px;
-    padding: 10px 15px;
-    background: rgba(255,255,255,0.1);
+    padding: 8px 15px;
     border-radius: 20px;
+    text-decoration: none;
 }
 
-/* Contact */
-form {
-    max-width: 500px;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+/* Live Users */
+.live-box {
+    text-align: center;
     padding: 20px;
+    color: #00ffcc;
 }
 
-input, select, textarea {
-    padding: 12px;
-    border-radius: 8px;
-    border: none;
-    outline: none;
+/* Reviews */
+.review {
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+    color: #ccc;
 }
 
-button {
-    padding: 12px;
-    background: linear-gradient(45deg, #ff512f, #dd2476);
-    border: none;
-    border-radius: 25px;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-button:hover {
-    transform: scale(1.05);
-}
-
-/* WhatsApp Floating */
+/* WhatsApp */
 .whatsapp {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background: #25D366;
-    color: white;
+    background: green;
     padding: 15px;
     border-radius: 50%;
-    font-size: 20px;
     text-decoration: none;
-}
-
-/* Mobile */
-@media(max-width:600px){
-    .card { width: 90%; }
+    color: white;
 }
 </style>
 </head>
 
 <body>
 
-<h2>🚀 KRYA Digital Services</h2>
-<p class="subtitle">आपका भरोसेमंद डिजिटल पार्टनर</p>
+<div class="header">🚀 KryaLive.com</div>
 
+<!-- News Ticker -->
+<div class="ticker">
+    <p>🔥 आज का ऑफर: Website सिर्फ ₹2,999 | ⚡ 50+ लोगों ने आज सर्विस ली | 💬 WhatsApp पर तुरंत सपोर्ट उपलब्ध | 🎯 Limited Slots Available</p>
+</div>
+
+<!-- Services -->
 <div class="services">
 
-    <div class="card">
-        <h3>🔥 Firebase Auth</h3>
-        <p>Google & Facebook Login सेटअप</p>
-        <p class="price">₹999</p>
-        <a class="btn" href="https://wa.me/919543333333">Start Now</a>
-    </div>
+<div class="card">
+<h3>Firebase Setup</h3>
+<p>₹999</p>
+<a href="https://wa.me/919543333333" class="btn">Start</a>
+</div>
 
-    <div class="card">
-        <h3>🌐 Web Development</h3>
-        <p>Professional Website + SEO</p>
-        <p class="price">₹2,999</p>
-        <a class="btn" href="https://wa.me/919543333333">Order Now</a>
-    </div>
+<div class="card">
+<h3>Web Development</h3>
+<p>₹2,999</p>
+<a href="https://wa.me/919543333333" class="btn">Order</a>
+</div>
 
-    <div class="card">
-        <h3>⚡ Tech Support</h3>
-        <p>Bug Fix & Error Solve</p>
-        <p class="price">₹499</p>
-        <a class="btn" href="https://wa.me/919543333333">Fix Now</a>
-    </div>
+<div class="card">
+<h3>Tech Support</h3>
+<p>₹499</p>
+<a href="https://wa.me/919543333333" class="btn">Fix</a>
+</div>
 
 </div>
 
-<!-- Trust -->
-<div class="trust">
-    <h2>🔥 क्यों KRYA?</h2>
-    <span>✔ Fast Delivery</span>
-    <span>✔ 100% Genuine Work</span>
-    <span>✔ WhatsApp Support</span>
+<!-- Live Demo Users -->
+<div class="live-box">
+👥 Live Users: <span id="users">25</span> लोग अभी साइट पर हैं
 </div>
 
-<!-- Contact -->
-<h2>📩 Contact करें</h2>
+<!-- Reviews -->
+<div class="review" id="review">
+⭐ "बहुत बढ़िया सर्विस, काम 1 घंटे में पूरा हुआ!"
+</div>
 
-<form>
-    <input type="text" placeholder="आपका नाम" required>
-    <input type="email" placeholder="आपका ईमेल" required>
-
-    <select>
-        <option>Firebase Auth</option>
-        <option>Web Development</option>
-        <option>Tech Support</option>
-    </select>
-
-    <textarea placeholder="आपकी जरूरत लिखें" required></textarea>
-
-    <button type="submit">Send Message</button>
-</form>
-
-<!-- WhatsApp Button -->
+<!-- WhatsApp -->
 <a href="https://wa.me/919543333333" class="whatsapp">💬</a>
+
+<script>
+// Live Users Random
+setInterval(()=>{
+    document.getElementById("users").innerText = Math.floor(Math.random()*50)+20;
+},3000);
+
+// Reviews Rotation
+let reviews = [
+"⭐ बहुत बढ़िया सर्विस!",
+"🔥 काम बहुत जल्दी हुआ",
+"💯 Trusted service, recommend!",
+"⚡ Support instant मिला",
+"👍 पैसे वसूल काम"
+];
+
+let i=0;
+setInterval(()=>{
+    document.getElementById("review").innerText = reviews[i];
+    i=(i+1)%reviews.length;
+},3000);
+</script>
 
 </body>
 </html>
