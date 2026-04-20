@@ -3,82 +3,76 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KryaLive.com</title>
+<title>KryaLive.com - Digital Services</title>
 
 <style>
 body {
     margin:0;
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-    color:white;
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    color:#fff;
 }
 
-/* 3D Border Container */
-.wrapper {
+/* 3D Border */
+.wrapper{
     margin:10px;
     padding:15px;
     border-radius:15px;
-    border:3px solid #00ffcc;
-    box-shadow:0 0 20px #00ffcc;
+    border:3px solid #00ffd5;
+    box-shadow:0 0 25px #00ffd5;
 }
 
 /* Header */
-.header {
+.header{
     text-align:center;
-    font-size:26px;
+    font-size:28px;
+    font-weight:bold;
     padding:10px;
-    border:2px solid #00ffcc;
+    border:2px solid #00ffd5;
     border-radius:10px;
-    box-shadow:0 0 10px #00ffcc;
+    box-shadow:0 0 15px #00ffd5;
 }
 
 /* Ticker */
-.ticker {
+.ticker{
     margin-top:10px;
     border:2px solid #ffcc00;
     border-radius:10px;
     overflow:hidden;
 }
-.ticker p {
+.ticker p{
     white-space:nowrap;
-    display:inline-block;
     padding-left:100%;
-    animation:scroll 15s linear infinite;
+    animation:scroll 18s linear infinite;
 }
-@keyframes scroll {
-    from {transform:translateX(0);}
-    to {transform:translateX(-100%);}
+@keyframes scroll{
+    from{transform:translateX(0);}
+    to{transform:translateX(-100%);}
 }
 
-/* Services */
-.services {
+/* Cards */
+.services{
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
     gap:20px;
     padding:20px;
 }
-.card {
+.card{
     width:260px;
     padding:20px;
-    border-radius:12px;
-    background:rgba(255,255,255,0.1);
+    border-radius:15px;
+    background:rgba(255,255,255,0.08);
     backdrop-filter:blur(10px);
-    text-align:center;
-    transition:0.3s;
     border:1px solid rgba(255,255,255,0.2);
+    text-align:center;
+    transition:0.4s;
 }
-.card:hover {
-    transform:scale(1.05);
-}
+.card:hover{transform:translateY(-8px) scale(1.03);}
 
-.price {
-    color:#00ffcc;
-    font-weight:bold;
-}
+.price{color:#00ffd5;font-weight:bold;font-size:18px;}
 
-/* Buttons */
-.btn {
+.btn{
     display:block;
     margin-top:10px;
     padding:10px;
@@ -87,40 +81,36 @@ body {
     font-weight:bold;
 }
 
-/* WhatsApp */
-.whatsapp-btn {
-    background:#25D366;
-    color:white;
-}
+.whatsapp{background:#25D366;color:#fff;}
+.pay{background:#ff9800;color:#000;}
+.share{background:#2196f3;color:#fff;}
 
-/* Payment */
-.pay-btn {
-    background:#ff9800;
-    color:black;
-}
+/* Live + Review */
+.live,.review{text-align:center;margin-top:10px;}
+.review{font-style:italic;min-height:40px;}
 
-/* Share */
-.share-btn {
-    background:#2196f3;
-    color:white;
+/* Popup */
+.popup{
+    position:fixed;
+    bottom:80px;
+    left:20px;
+    background:#111;
+    padding:10px 15px;
+    border-radius:10px;
+    display:none;
+    font-size:14px;
 }
 
 /* Floating WhatsApp */
-.whatsapp-float {
+.float{
     position:fixed;
     bottom:20px;
     right:20px;
     background:#25D366;
     padding:15px;
     border-radius:50%;
-    color:white;
     text-decoration:none;
-}
-
-/* Live & Review */
-.live, .review {
-    text-align:center;
-    margin-top:10px;
+    color:#fff;
 }
 </style>
 </head>
@@ -131,100 +121,124 @@ body {
 
 <div class="header">🚀 KryaLive.com</div>
 
-<!-- Ticker -->
 <div class="ticker">
-<p>🔥 आज का ऑफर: Website ₹2999 | ⚡ Limited Slots | 💬 WhatsApp Support | 🎯 आज ही बुक करें</p>
+<p id="tickerText">🔥 Loading Offers...</p>
 </div>
 
-<!-- Services -->
 <div class="services">
 
 <div class="card">
 <h3>Firebase Setup</h3>
 <p class="price">₹999</p>
-
-<a class="btn whatsapp-btn" href="https://wa.me/916379403821?text=नमस्ते%20KryaLive%20मुझे%20Firebase%20Setup%20चाहिए">WhatsApp</a>
-
-<a class="btn pay-btn" href="upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh&cu=INR">Pay Now</a>
-
-<a class="btn share-btn" onclick="shareNow()">Share</a>
-
+<a class="btn whatsapp" href="#" onclick="sendWA('Firebase Setup')">WhatsApp</a>
+<a class="btn pay" href="#" onclick="payNow('Firebase Setup','999')">Pay Now</a>
+<a class="btn share" onclick="shareNow()">Share</a>
 </div>
 
 <div class="card">
 <h3>Website Development</h3>
 <p class="price">₹2,999</p>
-
-<a class="btn whatsapp-btn" href="https://wa.me/916379403821?text=नमस्ते%20KryaLive%20मुझे%20Website%20बनवानी%20है">WhatsApp</a>
-
-<a class="btn pay-btn" href="upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh&cu=INR">Pay Now</a>
-
-<a class="btn share-btn" onclick="shareNow()">Share</a>
-
+<a class="btn whatsapp" href="#" onclick="sendWA('Website Development')">WhatsApp</a>
+<a class="btn pay" href="#" onclick="payNow('Website Development','2999')">Pay Now</a>
+<a class="btn share" onclick="shareNow()">Share</a>
 </div>
 
 <div class="card">
 <h3>Tech Support</h3>
 <p class="price">₹499</p>
-
-<a class="btn whatsapp-btn" href="https://wa.me/916379403821?text=नमस्ते%20KryaLive%20मुझे%20Tech%20Support%20चाहिए">WhatsApp</a>
-
-<a class="btn pay-btn" href="upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh&cu=INR">Pay Now</a>
-
-<a class="btn share-btn" onclick="shareNow()">Share</a>
-
+<a class="btn whatsapp" href="#" onclick="sendWA('Tech Support')">WhatsApp</a>
+<a class="btn pay" href="#" onclick="payNow('Tech Support','499')">Pay Now</a>
+<a class="btn share" onclick="shareNow()">Share</a>
 </div>
 
 </div>
 
-<!-- Live Users -->
-<div class="live">
-👥 Live Users: <span id="users">30</span>
-</div>
-
-<!-- Reviews -->
-<div class="review" id="review">
-⭐ बहुत बढ़िया सर्विस!
-</div>
+<div class="live">👥 Live Users: <span id="users">28</span></div>
+<div class="review" id="review"></div>
 
 </div>
 
-<!-- Floating WhatsApp -->
-<a href="https://wa.me/916379403821?text=नमस्ते%20KryaLive%20मुझे%20आपकी%20service%20चाहिए" class="whatsapp-float">💬</a>
+<div class="popup" id="popup"></div>
+
+<a class="float" href="#" onclick="sendWA('General Inquiry')">💬</a>
 
 <script>
+// WhatsApp
+function sendWA(service){
+let msg=`नमस्ते KryaLive 👋\n\nमुझे ${service} चाहिए.\nकृपया details भेजें.\n\nधन्यवाद`;
+window.open(`https://wa.me/916379403821?text=${encodeURIComponent(msg)}`);
+}
+
+// Payment
+function payNow(service,amount){
+let msg=`Payment for ${service} - ₹${amount}`;
+window.open(`upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh&am=${amount}&cu=INR&tn=${msg}`);
+}
+
+// Share
+function shareNow(){
+let text="🚀 KryaLive.com\nBest Digital Services!\n👉 अभी देखें: "+location.href;
+if(navigator.share){
+navigator.share({title:"KryaLive",text:text,url:location.href});
+}else{
+window.open("https://wa.me/?text="+encodeURIComponent(text));
+}
+}
+
 // Live Users
 setInterval(()=>{
 document.getElementById("users").innerText=Math.floor(Math.random()*50)+20;
 },3000);
 
-// Reviews
+// Reviews Typing Effect
 let reviews=[
-"⭐ बहुत बढ़िया सर्विस!",
-"🔥 काम जल्दी हुआ",
-"💯 Trusted service",
-"⚡ Instant support",
-"👍 पैसे वसूल"
+"⭐ बहुत बढ़िया सर्विस मिली!",
+"🔥 काम बहुत जल्दी हुआ",
+"💯 Trusted platform",
+"⚡ Instant support मिला",
+"👍 Highly recommended"
 ];
-let i=0;
-setInterval(()=>{
-document.getElementById("review").innerText=reviews[i];
-i=(i+1)%reviews.length;
-},3000);
-
-// Share Function
-function shareNow(){
-let text="🚀 KryaLive.com\n\nयहाँ से Website, Firebase और Tech Services मिलती हैं!\n👉 अभी देखें और काम शुरू करें";
-if(navigator.share){
-navigator.share({
-title:"KryaLive",
-text:text,
-url:window.location.href
-});
+let r=0, char=0;
+function typeReview(){
+let text=reviews[r];
+if(char<text.length){
+document.getElementById("review").innerHTML+=text.charAt(char);
+char++;
+setTimeout(typeReview,40);
 }else{
-window.open("https://wa.me/?text="+encodeURIComponent(text+" "+window.location.href));
+setTimeout(()=>{
+document.getElementById("review").innerHTML="";
+char=0;
+r=(r+1)%reviews.length;
+typeReview();
+},2000);
 }
 }
+typeReview();
+
+// Ticker Dynamic
+let tickerData=[
+"🔥 आज का ऑफर ₹2999",
+"⚡ Limited Slots Available",
+"💬 WhatsApp Support 24x7",
+"🎯 आज ही बुक करें"
+];
+let t=0;
+setInterval(()=>{
+document.getElementById("tickerText").innerText=tickerData[t];
+t=(t+1)%tickerData.length;
+},4000);
+
+// Popup Notification
+let names=["Rahul","Amit","Suresh","Vikash","Ankit"];
+setInterval(()=>{
+let name=names[Math.floor(Math.random()*names.length)];
+let service=["Website","Firebase","Support"][Math.floor(Math.random()*3)];
+let popup=document.getElementById("popup");
+popup.innerText=`${name} ने अभी ${service} लिया`;
+popup.style.display="block";
+setTimeout(()=>popup.style.display="none",3000);
+},5000);
 </script>
 
 </body>
