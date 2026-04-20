@@ -9,202 +9,109 @@
 body {
     margin:0;
     font-family:'Poppins',sans-serif;
-    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-    color:#fff;
+    background:#0f172a;
+    color:white;
 }
 
-/* Fixed Border */
-.frame {
-    position:fixed;
-    top:10px; bottom:10px; left:10px; right:10px;
-    border:3px solid #00ffd5;
-    border-radius:15px;
-    box-shadow:0 0 25px #00ffd5;
-    pointer-events:none;
-}
-
-.wrapper {padding:20px;}
-
-.header {
-    text-align:center;
-    font-size:28px;
-    border:2px solid #00ffd5;
-    border-radius:10px;
-    padding:10px;
-}
-
-.ticker {
-    border:2px solid #ffcc00;
-    border-radius:10px;
-    margin-top:10px;
-    overflow:hidden;
-}
-.ticker p {
-    white-space:nowrap;
-    padding-left:100%;
-    animation:scroll 15s linear infinite;
-}
-@keyframes scroll {
-    to {transform:translateX(-100%);}
-}
-
-/* Services */
-.services {
+/* HERO SECTION */
+.hero {
+    height:100vh;
+    background: url('https://images.unsplash.com/photo-1522199710521-72d69614c702') center/cover no-repeat;
     display:flex;
-    flex-wrap:wrap;
+    align-items:center;
     justify-content:center;
-    gap:20px;
-    margin-top:20px;
+    position:relative;
 }
+
+.hero::before {
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+}
+
+/* CARD */
 .card {
-    width:260px;
-    padding:20px;
-    border-radius:12px;
+    position:relative;
+    z-index:1;
     background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(15px);
+    padding:30px;
+    border-radius:15px;
     text-align:center;
+    width:320px;
+    box-shadow:0 0 30px rgba(0,255,200,0.4);
+    transition:0.4s;
 }
 
-/* Button */
-.select-btn {
-    margin-top:10px;
-    padding:10px;
-    border-radius:20px;
-    background:#00ffd5;
-    color:black;
-    cursor:pointer;
+.card:hover {
+    transform:translateY(-10px) scale(1.05);
 }
 
-/* Chatbox */
-.chatbox {
-    position:fixed;
-    bottom:80px;
-    right:20px;
-    width:260px;
-    background:#111;
+/* IMAGE */
+.card img {
+    width:100%;
     border-radius:10px;
-    display:none;
-}
-.chat-header {
-    background:#00ffd5;
-    color:black;
-    padding:8px;
-}
-.chat-body {
-    height:200px;
-    overflow:auto;
-    padding:10px;
-}
-.chat-input {
-    display:flex;
-}
-.chat-input input {
-    flex:1;
-    padding:8px;
-}
-.chat-input button {
-    padding:8px;
+    margin-bottom:15px;
 }
 
-/* Floating Button (Single) */
-.float {
-    position:fixed;
-    bottom:20px;
-    right:20px;
-    background:#25D366;
-    padding:15px;
-    border-radius:50%;
-    cursor:pointer;
+/* TEXT */
+.card h2 {
+    margin:10px 0;
+}
+
+.card p {
+    color:#ccc;
+    font-size:14px;
+}
+
+/* BUTTON */
+.btn {
+    display:inline-block;
+    margin-top:15px;
+    padding:12px 20px;
+    border-radius:25px;
+    background:linear-gradient(45deg,#00ffcc,#00c3ff);
+    color:black;
+    font-weight:bold;
+    text-decoration:none;
+    transition:0.3s;
+}
+
+.btn:hover {
+    transform:scale(1.1);
+}
+
+/* MOBILE */
+@media(max-width:600px){
+    .card {width:90%;}
 }
 </style>
 </head>
 
 <body>
 
-<div class="frame"></div>
-
-<div class="wrapper">
-
-<div class="header">🚀 KryaLive.com</div>
-
-<div class="ticker">
-<p>🔥 Limited Offer | ⚡ Fast Service | 💬 Chat Now | 🎯 Book Today</p>
-</div>
-
-<div class="services">
+<section class="hero">
 
 <div class="card">
-<h3>Website</h3>
-<p>₹2999</p>
-<div class="select-btn" onclick="openChat('Website')">Select</div>
+
+<img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085" alt="Service">
+
+<h2>🚀 KryaLive.com</h2>
+
+<p>
+हम आपके लिए प्रोफेशनल वेबसाइट, Firebase Setup और Tech Support देते हैं  
+तेज़, भरोसेमंद और सस्ते दाम में 💻
+</p>
+
+<a href="https://wa.me/916379403821?text=नमस्ते%20मुझे%20आपकी%20service%20चाहिए" class="btn">
+💬 अभी संपर्क करें
+</a>
+
 </div>
 
-<div class="card">
-<h3>Firebase</h3>
-<p>₹999</p>
-<div class="select-btn" onclick="openChat('Firebase')">Select</div>
-</div>
-
-</div>
-
-</div>
-
-<!-- Chatbox -->
-<div class="chatbox" id="chatbox">
-<div class="chat-header">KryaLive Bot</div>
-<div class="chat-body" id="chatBody"></div>
-<div class="chat-input">
-<input id="input" placeholder="Type...">
-<button onclick="reply()">Send</button>
-</div>
-</div>
-
-<!-- Single Floating Button -->
-<div class="float" onclick="toggleChat()">💬</div>
-
-<script>
-
-let selectedService="";
-
-// Open chat from card
-function openChat(service){
-selectedService = service;
-toggleChat();
-addBotMsg("आपने "+service+" चुना है। YES लिखें आगे बढ़ने के लिए");
-}
-
-// Toggle chat
-function toggleChat(){
-let box=document.getElementById("chatbox");
-box.style.display = box.style.display==="block"?"none":"block";
-}
-
-// Chat functions
-function addBotMsg(msg){
-document.getElementById("chatBody").innerHTML += "<div>🤖 "+msg+"</div>";
-}
-
-function reply(){
-let input=document.getElementById("input").value.toLowerCase();
-let chat=document.getElementById("chatBody");
-
-chat.innerHTML += "<div>👤 "+input+"</div>";
-
-if(input==="yes"){
-window.open("https://wa.me/916379403821?text="+encodeURIComponent("मुझे "+selectedService+" चाहिए"));
-addBotMsg("आपको WhatsApp पर भेजा जा रहा है...");
-}
-else if(input.includes("hi")){
-addBotMsg("नमस्ते 👋 Service चुनें");
-}
-else{
-addBotMsg("YES लिखें आगे बढ़ने के लिए");
-}
-
-document.getElementById("input").value="";
-chat.scrollTop = chat.scrollHeight;
-}
-
-</script>
+</section>
 
 </body>
 </html>
