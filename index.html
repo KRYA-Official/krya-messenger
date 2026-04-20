@@ -1,144 +1,209 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA Spin & Earn</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root { --primary: #fbbf24; --bg: #0b1120; --card: #1e293b; --text: #f8fafc; --accent: #ef4444; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); text-align: center; margin: 0; padding: 20px; }
-        
-        .box { background: var(--card); padding: 25px; border-radius: 20px; max-width: 400px; margin: auto; border: 1px solid rgba(251, 191, 36, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        
-        /* Wallet UI */
-        .wallet { display: flex; justify-content: space-around; margin-bottom: 20px; background: #0f172a; padding: 15px; border-radius: 15px; }
-        .wallet div p { font-size: 12px; opacity: 0.7; margin: 0; }
-        .wallet div h3 { margin: 5px 0; color: var(--primary); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KRYA Store</title>
 
-        /* Wheel Design */
-        .wheel-container { position: relative; width: 250px; height: 250px; margin: 20px auto; border: 10px solid #334155; border-radius: 50%; overflow: hidden; transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); background: conic-gradient(from 0deg, #fbbf24 0deg 72deg, #f59e0b 72deg 144deg, #fbbf24 144deg 216deg, #f59e0b 216deg 288deg, #fbbf24 288deg 360deg); }
-        .wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 30px; height: 30px; background: var(--accent); clip-path: polygon(50% 100%, 0 0, 100% 0); z-index: 10; }
-        
-        button { padding: 15px; margin-top: 20px; border: none; border-radius: 12px; background: var(--primary); color: #000; font-weight: bold; width: 100%; font-size: 16px; cursor: pointer; box-shadow: 0 5px 15px rgba(251, 191, 36, 0.3); }
-        button:disabled { background: #475569; cursor: not-allowed; box-shadow: none; }
-        
-        .badge { font-size: 10px; background: var(--accent); color: white; padding: 3px 8px; border-radius: 5px; vertical-align: middle; }
-    </style>
+<style>
+body{
+margin:0;
+font-family:Poppins;
+background:#f5f5f5;
+}
+
+/* HEADER */
+.header{
+background:#fff;
+padding:10px;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+.top-bar{
+display:flex;
+gap:10px;
+}
+.top-bar input{
+flex:1;
+padding:10px;
+border-radius:20px;
+border:1px solid #ccc;
+}
+.icons span{
+font-size:20px;
+margin-left:10px;
+cursor:pointer;
+}
+
+/* CATEGORY */
+.categories{
+display:flex;
+overflow:auto;
+padding:10px;
+gap:10px;
+background:#fff;
+}
+.cat-item{
+min-width:80px;
+text-align:center;
+}
+
+/* GRID */
+.product-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:10px;
+padding:10px;
+}
+.product-card{
+background:#fff;
+border-radius:10px;
+padding:10px;
+position:relative;
+}
+.product-card img{
+width:100%;
+border-radius:8px;
+}
+.brand{font-size:12px;color:#555}
+.price{color:green;font-weight:bold}
+.rating{font-size:12px;color:#ff9800}
+
+/* BUTTON */
+.btn{
+margin-top:5px;
+padding:8px;
+border:none;
+border-radius:5px;
+background:#ff9800;
+color:#fff;
+width:100%;
+cursor:pointer;
+}
+
+/* CART POPUP */
+.cart{
+position:fixed;
+top:0;
+right:-100%;
+width:300px;
+height:100%;
+background:#fff;
+transition:0.3s;
+overflow:auto;
+padding:10px;
+}
+.cart.active{right:0}
+
+/* BOTTOM NAV */
+.bottom-nav{
+position:fixed;
+bottom:0;
+width:100%;
+background:#fff;
+display:flex;
+justify-content:space-around;
+padding:8px;
+}
+</style>
 </head>
 
 <body>
 
-<div class="box">
-    <h2 style="margin-bottom: 5px;">KRYA SPIN <span class="badge">GLOBAL</span></h2>
-    <p style="font-size: 12px; opacity: 0.6; margin-bottom: 20px;">किस्मत आजमाएं, इनाम जीतें</p>
+<header class="header">
+<div class="top-bar">
+<input type="text" id="search" placeholder="Search products...">
+<div class="icons">
+<span onclick="toggleCart()">🛒</span>
+</div>
+</div>
+</header>
 
-    <div class="wallet">
-        <div>
-            <p>कॉइन्स</p>
-            <h3 id="coins">0</h3>
-        </div>
-        <div>
-            <p>विनिंग</p>
-            <h3 id="winning">₹0</h3>
-        </div>
-    </div>
+<section class="categories">
+<div class="cat-item">🔥<p>Trending</p></div>
+<div class="cat-item">👕<p>Clothes</p></div>
+<div class="cat-item">⌚<p>Watch</p></div>
+</section>
 
-    <div style="position: relative;">
-        <div class="wheel-pointer"></div>
-        <div class="wheel-container" id="wheel">
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold; color: #000;">KRYA</div>
-        </div>
-    </div>
+<main class="product-grid" id="products"></main>
 
-    <button id="btnSpin"><i class="fas fa-sync-alt"></i> स्पिन करें (10 Coins)</button>
-    <p id="status" style="margin-top: 15px; font-size: 13px; color: var(--primary);"></p>
+<!-- CART -->
+<div class="cart" id="cart">
+<h3>🛒 Cart</h3>
+<div id="cartItems"></div>
+<h4 id="total">Total: ₹0</h4>
+<button class="btn" onclick="checkout()">Checkout</button>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<nav class="bottom-nav">
+<div>🏠 Home</div>
+<div>📦 Orders</div>
+</nav>
 
-const firebaseConfig = {
-    apiKey: "AIzaSyCBC5iztNy0P-4-vY6Djec5ff26mTtJk30",
-    authDomain: "sample-firebase-ai-app-37d2b.firebaseapp.com",
-    projectId: "sample-firebase-ai-app-37d2b",
-    storageBucket: "sample-firebase-ai-app-37d2b.firebasestorage.app",
-    messagingSenderId: "652996597348",
-    appId: "1:652996597348:web:6bfed4775ccb1c9572b171"
-};
+<script>
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+let products=[
+{name:"Airpods",price:217,img:"https://via.placeholder.com/150"},
+{name:"Watch",price:283,img:"https://via.placeholder.com/150"},
+{name:"T-shirt",price:199,img:"https://via.placeholder.com/150"},
+{name:"Shoes",price:499,img:"https://via.placeholder.com/150"}
+];
 
-// परमानेंट यूजर आईडी (KRYA Messenger के साथ सिंक करने के लिए)
-let userId = localStorage.getItem("krya_uid") || localStorage.getItem("spinUser");
-if(!userId){
-    userId = "user_" + Math.random().toString(36).substr(2,6);
-    localStorage.setItem("spinUser", userId);
+let cart=[];
+
+// Render products
+function render(list){
+let html="";
+list.forEach((p,i)=>{
+html+=`
+<div class="product-card">
+<img src="${p.img}">
+<p>${p.name}</p>
+<p class="price">₹${p.price}</p>
+<button class="btn" onclick="addToCart(${i})">Add to Cart</button>
+</div>`;
+});
+document.getElementById("products").innerHTML=html;
+}
+render(products);
+
+// Search
+document.getElementById("search").oninput=function(){
+let val=this.value.toLowerCase();
+let filtered=products.filter(p=>p.name.toLowerCase().includes(val));
+render(filtered);
 }
 
-const wheel = document.getElementById("wheel");
-const btnSpin = document.getElementById("btnSpin");
-const status = document.getElementById("status");
-
-async function init(){
-    const ref = doc(db, "users", userId);
-    const snap = await getDoc(ref);
-    if(!snap.exists()){
-        await setDoc(ref, { coins: 100, winning: 0, lastSpinDate: "" });
-    }
-    loadWallet();
-}
-init();
-
-async function loadWallet(){
-    const snap = await getDoc(doc(db, "users", userId));
-    const d = snap.data();
-    document.getElementById("coins").innerText = d.coins;
-    document.getElementById("winning").innerText = "₹" + d.winning;
+// Add to cart
+function addToCart(i){
+cart.push(products[i]);
+updateCart();
+alert("Added to cart");
 }
 
-const spinGame = async () => {
-    const ref = doc(db, "users", userId);
-    const snap = await getDoc(ref);
-    let data = snap.data();
+// Update cart
+function updateCart(){
+let html="";
+let total=0;
 
-    let today = new Date().toDateString();
-    if(data.lastSpinDate === today){
-        status.innerText = "❌ आज का चांस खत्म! कल फिर आएं।";
-        return;
-    }
+cart.forEach(p=>{
+html+=`<p>${p.name} - ₹${p.price}</p>`;
+total+=p.price;
+});
 
-    if(data.coins < 10){
-        status.innerText = "❌ कॉइन्स कम हैं!";
-        return;
-    }
+document.getElementById("cartItems").innerHTML=html;
+document.getElementById("total").innerText="Total: ₹"+total;
+}
 
-    // स्पिन शुरू
-    btnSpin.disabled = true;
-    status.innerText = "🎡 पहिया घूम रहा है...";
-    
-    let extraDegree = Math.floor(Math.random() * 360) + 1440; // 4 बार पूरा घूमेगा
-    wheel.style.transform = `rotate(${extraDegree}deg)`;
+// Toggle cart
+function toggleCart(){
+document.getElementById("cart").classList.toggle("active");
+}
 
-    setTimeout(async () => {
-        let rewards = [0, 5, 10, 20, 50, 100];
-        let reward = rewards[Math.floor(Math.random() * rewards.length)];
+// Checkout
+function checkout(){
+alert("Proceed to payment");
+}
 
-        await updateDoc(ref, {
-            coins: data.coins - 10,
-            winning: data.winning + reward,
-            lastSpinDate: today
-        });
-
-        status.innerText = reward > 0 ? `🎉 बधाई हो! आपने ₹${reward} जीते!` : "😥 ओह! इस बार कुछ नहीं मिला।";
-        loadWallet();
-        btnSpin.disabled = false;
-    }, 4000);
-};
-
-document.getElementById("btnSpin").onclick = spinGame;
 </script>
 
 </body>
