@@ -6,140 +6,34 @@
 <title>KryaLive.com</title>
 
 <style>
-body{
-margin:0;
-font-family:'Poppins',sans-serif;
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-color:#fff;
-}
-
-/* Glow Border */
-.frame{
-position:fixed;
-inset:10px;
-border-radius:18px;
-border:2px solid #00ffd5;
-box-shadow:0 0 30px #00ffd5;
-pointer-events:none;
-}
-
-/* Header */
-.header{
-text-align:center;
-padding:15px;
-font-size:26px;
-font-weight:bold;
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(10px);
-border-bottom:1px solid rgba(255,255,255,0.2);
-}
-
-/* Ticker */
-.ticker{
-margin:10px;
-border-radius:10px;
-overflow:hidden;
-border:1px solid #ffcc00;
-}
-.ticker p{
-white-space:nowrap;
-padding-left:100%;
-animation:scroll 18s linear infinite;
-}
-@keyframes scroll{to{transform:translateX(-100%)}}
-
-/* Grid */
-.container{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
-padding:20px;
-}
+body{margin:0;font-family:Poppins;background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:#fff}
+.frame{position:fixed;inset:10px;border:2px solid #00ffd5;border-radius:18px;box-shadow:0 0 25px #00ffd5;pointer-events:none}
+.header{text-align:center;padding:15px;font-size:24px;font-weight:bold}
+.container{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;padding:20px}
 
 /* Card */
-.card{
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(15px);
-border-radius:15px;
-padding:15px;
-text-align:center;
-transition:0.3s;
-border:1px solid rgba(255,255,255,0.2);
-position:relative;
-}
-.card:hover{
-transform:translateY(-8px) scale(1.03);
-}
-
-/* Badge */
-.badge{
-position:absolute;
-top:10px;
-left:10px;
-background:linear-gradient(45deg,#ff0000,#ff7300);
-padding:5px 10px;
-border-radius:6px;
-font-size:12px;
-}
-
-/* Image */
-.card img{
-width:100%;
-border-radius:10px;
-}
-
-/* Text */
-.card h3{
-margin:10px 0;
-}
-.price{
-color:#00ffd5;
-font-size:20px;
-font-weight:bold;
-}
+.card{background:rgba(255,255,255,0.08);padding:15px;border-radius:15px;text-align:center}
+.badge{background:red;padding:4px 8px;border-radius:6px;font-size:12px}
+.price{color:#00ffd5;font-size:20px}
 
 /* Buttons */
-.btn{
-display:block;
-margin-top:10px;
-padding:10px;
-border-radius:25px;
-text-decoration:none;
-font-weight:bold;
-transition:0.3s;
-}
-.buy{
-background:linear-gradient(45deg,#ff9800,#ff5722);
-}
-.chat{
-background:linear-gradient(45deg,#25D366,#00ff99);
-}
-.btn:hover{
-transform:scale(1.08);
-}
+.btn{display:block;margin-top:10px;padding:10px;border-radius:20px;text-decoration:none;font-weight:bold}
+.buy{background:#ff9800;color:#000}
+.chat{background:#25D366}
 
-/* Floating Button */
-.float{
-position:fixed;
-bottom:20px;
-right:20px;
-background:#25D366;
-padding:15px;
-border-radius:50%;
-font-size:18px;
-cursor:pointer;
+/* Form */
+.formBox{
+position:fixed;top:50%;left:50%;
+transform:translate(-50%,-50%);
+background:#111;padding:20px;border-radius:10px;
+display:none;width:300px
 }
+.formBox input{width:100%;margin:5px 0;padding:8px}
 
 /* Popup */
 .popup{
-position:fixed;
-bottom:80px;
-left:20px;
-background:#111;
-padding:10px 15px;
-border-radius:10px;
-display:none;
-font-size:14px;
+position:fixed;bottom:80px;left:20px;
+background:#111;padding:10px;border-radius:10px;display:none
 }
 </style>
 </head>
@@ -147,49 +41,102 @@ font-size:14px;
 <body>
 
 <div class="frame"></div>
-
 <div class="header">🚀 KryaLive.com</div>
-
-<div class="ticker">
-<p>🔥 Premium Digital Services | ⚡ Fast Delivery | 💬 Instant Support | 🎯 Limited Offer</p>
-</div>
 
 <div class="container" id="container"></div>
 
-<div class="popup" id="popup"></div>
+<!-- FORM -->
+<div class="formBox" id="formBox">
+<h3>Order Details</h3>
+<input id="name" placeholder="Name">
+<input id="phone" placeholder="Phone">
+<input id="service" placeholder="Service">
+<input id="coupon" placeholder="Coupon (optional)">
+<button onclick="submitOrder()">Submit</button>
+</div>
 
-<div class="float" onclick="alert('Chat open logic here')">💬</div>
+<div class="popup" id="popup"></div>
 
 <script>
 
+const UPI="93690mukeshkumar@axl";
+const WA="916379403821";
+
 const services=[
-"Website","Firebase","App Dev","SEO","Logo","Bug Fix","Hosting","Speed","UI Design"
+{name:"Website",price:2999},
+{name:"Firebase",price:999},
+{name:"App Dev",price:4999},
+{name:"SEO",price:999},
+{name:"Logo",price:299}
 ];
 
+// Render
 let html="";
 services.forEach((s,i)=>{
 html+=`
 <div class="card">
-<div class="badge">🔥 HOT</div>
-<img src="https://picsum.photos/300?random=${i}">
-<h3>${s}</h3>
-<div class="price">₹${(i+1)*500}</div>
-<a class="btn buy">Buy Now</a>
-<a class="btn chat">Chat</a>
+<div class="badge">🔥 OFFER</div>
+<h3>${s.name}</h3>
+<div class="price">₹${s.price}</div>
+<div>⭐⭐⭐⭐⭐ (50+ sold)</div>
+<a class="btn buy" onclick="openForm('${s.name}',${s.price})">Book</a>
+<a class="btn chat" onclick="wa('${s.name}')">Chat</a>
 </div>`;
 });
-
 document.getElementById("container").innerHTML=html;
 
-/* Fake Popup */
-let names=["Rahul","Amit","Vikas","Ankit"];
+// Open form
+let currentService="",currentPrice=0;
+function openForm(name,price){
+currentService=name;
+currentPrice=price;
+document.getElementById("formBox").style.display="block";
+document.getElementById("service").value=name;
+}
+
+// Submit order
+function submitOrder(){
+let name=document.getElementById("name").value;
+let phone=document.getElementById("phone").value;
+let service=currentService;
+let coupon=document.getElementById("coupon").value;
+
+let finalPrice=currentPrice;
+if(coupon==="SAVE50"){finalPrice-=50;}
+
+let order={name,phone,service,finalPrice,date:new Date().toLocaleString()};
+
+// Save locally
+let orders=JSON.parse(localStorage.getItem("orders")||"[]");
+orders.push(order);
+localStorage.setItem("orders",JSON.stringify(orders));
+
+// Payment
+window.open(`upi://pay?pa=${UPI}&pn=Mukesh&am=${finalPrice}&cu=INR`);
+
+// WhatsApp message
+let msg=`Order:\nName:${name}\nService:${service}\nPrice:${finalPrice}`;
+window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`);
+
+// Close form
+document.getElementById("formBox").style.display="none";
+}
+
+// WhatsApp
+function wa(service){
+let msg=`मुझे ${service} चाहिए`;
+window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`);
+}
+
+// Fake popup
+let names=["Rahul","Amit","Vikas"];
 setInterval(()=>{
 let n=names[Math.floor(Math.random()*names.length)];
 let popup=document.getElementById("popup");
-popup.innerText=n+" ने अभी service खरीदी";
+popup.innerText=n+" ने अभी order किया";
 popup.style.display="block";
 setTimeout(()=>popup.style.display="none",3000);
-},5000);
+},4000);
 
 </script>
 
