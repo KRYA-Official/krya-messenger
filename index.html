@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KryaLive.com - Digital Services</title>
+<title>KryaLive.com</title>
 
 <style>
 body {
@@ -13,232 +13,197 @@ body {
     color:#fff;
 }
 
-/* 3D Border */
-.wrapper{
-    margin:10px;
-    padding:15px;
-    border-radius:15px;
+/* Fixed Border */
+.frame {
+    position:fixed;
+    top:10px; bottom:10px; left:10px; right:10px;
     border:3px solid #00ffd5;
+    border-radius:15px;
     box-shadow:0 0 25px #00ffd5;
+    pointer-events:none;
 }
 
-/* Header */
-.header{
+.wrapper {padding:20px;}
+
+.header {
     text-align:center;
     font-size:28px;
-    font-weight:bold;
-    padding:10px;
     border:2px solid #00ffd5;
     border-radius:10px;
-    box-shadow:0 0 15px #00ffd5;
+    padding:10px;
 }
 
-/* Ticker */
-.ticker{
-    margin-top:10px;
+.ticker {
     border:2px solid #ffcc00;
     border-radius:10px;
+    margin-top:10px;
     overflow:hidden;
 }
-.ticker p{
+.ticker p {
     white-space:nowrap;
     padding-left:100%;
-    animation:scroll 18s linear infinite;
+    animation:scroll 15s linear infinite;
 }
-@keyframes scroll{
-    from{transform:translateX(0);}
-    to{transform:translateX(-100%);}
+@keyframes scroll {
+    to {transform:translateX(-100%);}
 }
 
-/* Cards */
-.services{
+/* Services */
+.services {
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
     gap:20px;
-    padding:20px;
+    margin-top:20px;
 }
-.card{
+.card {
     width:260px;
     padding:20px;
-    border-radius:15px;
-    background:rgba(255,255,255,0.08);
-    backdrop-filter:blur(10px);
-    border:1px solid rgba(255,255,255,0.2);
+    border-radius:12px;
+    background:rgba(255,255,255,0.1);
     text-align:center;
-    transition:0.4s;
 }
-.card:hover{transform:translateY(-8px) scale(1.03);}
 
-.price{color:#00ffd5;font-weight:bold;font-size:18px;}
-
-.btn{
-    display:block;
+/* Button */
+.select-btn {
     margin-top:10px;
     padding:10px;
     border-radius:20px;
-    text-decoration:none;
-    font-weight:bold;
+    background:#00ffd5;
+    color:black;
+    cursor:pointer;
 }
 
-.whatsapp{background:#25D366;color:#fff;}
-.pay{background:#ff9800;color:#000;}
-.share{background:#2196f3;color:#fff;}
-
-/* Live + Review */
-.live,.review{text-align:center;margin-top:10px;}
-.review{font-style:italic;min-height:40px;}
-
-/* Popup */
-.popup{
+/* Chatbox */
+.chatbox {
     position:fixed;
     bottom:80px;
-    left:20px;
+    right:20px;
+    width:260px;
     background:#111;
-    padding:10px 15px;
     border-radius:10px;
     display:none;
-    font-size:14px;
+}
+.chat-header {
+    background:#00ffd5;
+    color:black;
+    padding:8px;
+}
+.chat-body {
+    height:200px;
+    overflow:auto;
+    padding:10px;
+}
+.chat-input {
+    display:flex;
+}
+.chat-input input {
+    flex:1;
+    padding:8px;
+}
+.chat-input button {
+    padding:8px;
 }
 
-/* Floating WhatsApp */
-.float{
+/* Floating Button (Single) */
+.float {
     position:fixed;
     bottom:20px;
     right:20px;
     background:#25D366;
     padding:15px;
     border-radius:50%;
-    text-decoration:none;
-    color:#fff;
+    cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
+<div class="frame"></div>
+
 <div class="wrapper">
 
 <div class="header">🚀 KryaLive.com</div>
 
 <div class="ticker">
-<p id="tickerText">🔥 Loading Offers...</p>
+<p>🔥 Limited Offer | ⚡ Fast Service | 💬 Chat Now | 🎯 Book Today</p>
 </div>
 
 <div class="services">
 
 <div class="card">
-<h3>Firebase Setup</h3>
-<p class="price">₹999</p>
-<a class="btn whatsapp" href="#" onclick="sendWA('Firebase Setup')">WhatsApp</a>
-<a class="btn pay" href="#" onclick="payNow('Firebase Setup','999')">Pay Now</a>
-<a class="btn share" onclick="shareNow()">Share</a>
+<h3>Website</h3>
+<p>₹2999</p>
+<div class="select-btn" onclick="openChat('Website')">Select</div>
 </div>
 
 <div class="card">
-<h3>Website Development</h3>
-<p class="price">₹2,999</p>
-<a class="btn whatsapp" href="#" onclick="sendWA('Website Development')">WhatsApp</a>
-<a class="btn pay" href="#" onclick="payNow('Website Development','2999')">Pay Now</a>
-<a class="btn share" onclick="shareNow()">Share</a>
-</div>
-
-<div class="card">
-<h3>Tech Support</h3>
-<p class="price">₹499</p>
-<a class="btn whatsapp" href="#" onclick="sendWA('Tech Support')">WhatsApp</a>
-<a class="btn pay" href="#" onclick="payNow('Tech Support','499')">Pay Now</a>
-<a class="btn share" onclick="shareNow()">Share</a>
+<h3>Firebase</h3>
+<p>₹999</p>
+<div class="select-btn" onclick="openChat('Firebase')">Select</div>
 </div>
 
 </div>
 
-<div class="live">👥 Live Users: <span id="users">28</span></div>
-<div class="review" id="review"></div>
-
 </div>
 
-<div class="popup" id="popup"></div>
+<!-- Chatbox -->
+<div class="chatbox" id="chatbox">
+<div class="chat-header">KryaLive Bot</div>
+<div class="chat-body" id="chatBody"></div>
+<div class="chat-input">
+<input id="input" placeholder="Type...">
+<button onclick="reply()">Send</button>
+</div>
+</div>
 
-<a class="float" href="#" onclick="sendWA('General Inquiry')">💬</a>
+<!-- Single Floating Button -->
+<div class="float" onclick="toggleChat()">💬</div>
 
 <script>
-// WhatsApp
-function sendWA(service){
-let msg=`नमस्ते KryaLive 👋\n\nमुझे ${service} चाहिए.\nकृपया details भेजें.\n\nधन्यवाद`;
-window.open(`https://wa.me/916379403821?text=${encodeURIComponent(msg)}`);
+
+let selectedService="";
+
+// Open chat from card
+function openChat(service){
+selectedService = service;
+toggleChat();
+addBotMsg("आपने "+service+" चुना है। YES लिखें आगे बढ़ने के लिए");
 }
 
-// Payment
-function payNow(service,amount){
-let msg=`Payment for ${service} - ₹${amount}`;
-window.open(`upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh&am=${amount}&cu=INR&tn=${msg}`);
+// Toggle chat
+function toggleChat(){
+let box=document.getElementById("chatbox");
+box.style.display = box.style.display==="block"?"none":"block";
 }
 
-// Share
-function shareNow(){
-let text="🚀 KryaLive.com\nBest Digital Services!\n👉 अभी देखें: "+location.href;
-if(navigator.share){
-navigator.share({title:"KryaLive",text:text,url:location.href});
-}else{
-window.open("https://wa.me/?text="+encodeURIComponent(text));
-}
+// Chat functions
+function addBotMsg(msg){
+document.getElementById("chatBody").innerHTML += "<div>🤖 "+msg+"</div>";
 }
 
-// Live Users
-setInterval(()=>{
-document.getElementById("users").innerText=Math.floor(Math.random()*50)+20;
-},3000);
+function reply(){
+let input=document.getElementById("input").value.toLowerCase();
+let chat=document.getElementById("chatBody");
 
-// Reviews Typing Effect
-let reviews=[
-"⭐ बहुत बढ़िया सर्विस मिली!",
-"🔥 काम बहुत जल्दी हुआ",
-"💯 Trusted platform",
-"⚡ Instant support मिला",
-"👍 Highly recommended"
-];
-let r=0, char=0;
-function typeReview(){
-let text=reviews[r];
-if(char<text.length){
-document.getElementById("review").innerHTML+=text.charAt(char);
-char++;
-setTimeout(typeReview,40);
-}else{
-setTimeout(()=>{
-document.getElementById("review").innerHTML="";
-char=0;
-r=(r+1)%reviews.length;
-typeReview();
-},2000);
+chat.innerHTML += "<div>👤 "+input+"</div>";
+
+if(input==="yes"){
+window.open("https://wa.me/916379403821?text="+encodeURIComponent("मुझे "+selectedService+" चाहिए"));
+addBotMsg("आपको WhatsApp पर भेजा जा रहा है...");
 }
+else if(input.includes("hi")){
+addBotMsg("नमस्ते 👋 Service चुनें");
 }
-typeReview();
+else{
+addBotMsg("YES लिखें आगे बढ़ने के लिए");
+}
 
-// Ticker Dynamic
-let tickerData=[
-"🔥 आज का ऑफर ₹2999",
-"⚡ Limited Slots Available",
-"💬 WhatsApp Support 24x7",
-"🎯 आज ही बुक करें"
-];
-let t=0;
-setInterval(()=>{
-document.getElementById("tickerText").innerText=tickerData[t];
-t=(t+1)%tickerData.length;
-},4000);
+document.getElementById("input").value="";
+chat.scrollTop = chat.scrollHeight;
+}
 
-// Popup Notification
-let names=["Rahul","Amit","Suresh","Vikash","Ankit"];
-setInterval(()=>{
-let name=names[Math.floor(Math.random()*names.length)];
-let service=["Website","Firebase","Support"][Math.floor(Math.random()*3)];
-let popup=document.getElementById("popup");
-popup.innerText=`${name} ने अभी ${service} लिया`;
-popup.style.display="block";
-setTimeout(()=>popup.style.display="none",3000);
-},5000);
 </script>
 
 </body>
