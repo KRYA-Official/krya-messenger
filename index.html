@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KRYA Store</title>
+<title>KRYA Store V2</title>
 
 <style>
 body{
 margin:0;
-font-family:Poppins;
+font-family:Poppins, sans-serif;
 background:#f5f5f5;
 }
 
@@ -17,6 +17,9 @@ background:#f5f5f5;
 background:#fff;
 padding:10px;
 box-shadow:0 2px 8px rgba(0,0,0,0.1);
+position:sticky;
+top:0;
+z-index:10;
 }
 .top-bar{
 display:flex;
@@ -29,7 +32,7 @@ border-radius:20px;
 border:1px solid #ccc;
 }
 .icons span{
-font-size:20px;
+font-size:22px;
 margin-left:10px;
 cursor:pointer;
 }
@@ -45,6 +48,13 @@ background:#fff;
 .cat-item{
 min-width:80px;
 text-align:center;
+padding:5px;
+border-radius:8px;
+cursor:pointer;
+}
+.cat-item.active{
+background:#ff9800;
+color:#fff;
 }
 
 /* GRID */
@@ -58,15 +68,13 @@ padding:10px;
 background:#fff;
 border-radius:10px;
 padding:10px;
-position:relative;
+box-shadow:0 2px 5px rgba(0,0,0,0.1);
 }
 .product-card img{
 width:100%;
 border-radius:8px;
 }
-.brand{font-size:12px;color:#555}
 .price{color:green;font-weight:bold}
-.rating{font-size:12px;color:#ff9800}
 
 /* BUTTON */
 .btn{
@@ -80,7 +88,7 @@ width:100%;
 cursor:pointer;
 }
 
-/* CART POPUP */
+/* CART */
 .cart{
 position:fixed;
 top:0;
@@ -91,8 +99,14 @@ background:#fff;
 transition:0.3s;
 overflow:auto;
 padding:10px;
+z-index:20;
 }
 .cart.active{right:0}
+
+.cart-item{
+border-bottom:1px solid #ddd;
+padding:5px 0;
+}
 
 /* BOTTOM NAV */
 .bottom-nav{
@@ -103,6 +117,7 @@ background:#fff;
 display:flex;
 justify-content:space-around;
 padding:8px;
+box-shadow:0 -2px 8px rgba(0,0,0,0.1);
 }
 </style>
 </head>
@@ -113,15 +128,15 @@ padding:8px;
 <div class="top-bar">
 <input type="text" id="search" placeholder="Search products...">
 <div class="icons">
-<span onclick="toggleCart()">🛒</span>
+<span onclick="toggleCart()">🛒 (<span id="cartCount">0</span>)</span>
 </div>
 </div>
 </header>
 
 <section class="categories">
-<div class="cat-item">🔥<p>Trending</p></div>
-<div class="cat-item">👕<p>Clothes</p></div>
-<div class="cat-item">⌚<p>Watch</p></div>
+<div class="cat-item active" onclick="filterCat('all',this)">All</div>
+<div class="cat-item" onclick="filterCat('clothes',this)">👕 Clothes</div>
+<div class="cat-item" onclick="filterCat('watch',this)">⌚ Watch</div>
 </section>
 
 <main class="product-grid" id="products"></main>
@@ -142,13 +157,13 @@ padding:8px;
 <script>
 
 let products=[
-{name:"Airpods",price:217,img:"https://via.placeholder.com/150"},
-{name:"Watch",price:283,img:"https://via.placeholder.com/150"},
-{name:"T-shirt",price:199,img:"https://via.placeholder.com/150"},
-{name:"Shoes",price:499,img:"https://via.placeholder.com/150"}
+{name:"Airpods",price:217,cat:"watch",img:"https://via.placeholder.com/150"},
+{name:"Watch",price:283,cat:"watch",img:"https://via.placeholder.com/150"},
+{name:"T-shirt",price:199,cat:"clothes",img:"https://via.placeholder.com/150"},
+{name:"Shoes",price:499,cat:"clothes",img:"https://via.placeholder.com/150"}
 ];
 
-let cart=[];
+let cart=JSON.parse(localStorage.getItem("cart")) || [];
 
 // Render products
 function render(list){
@@ -159,7 +174,7 @@ html+=`
 <img src="${p.img}">
 <p>${p.name}</p>
 <p class="price">₹${p.price}</p>
-<button class="btn" onclick="addToCart(${i})">Add to Cart</button>
+<button class="btn" onclick="addToCart(${i})">Add</button>
 </div>`;
 });
 document.getElementById("products").innerHTML=html;
@@ -173,11 +188,22 @@ let filtered=products.filter(p=>p.name.toLowerCase().includes(val));
 render(filtered);
 }
 
+// Category filter
+function filterCat(cat,el){
+document.querySelectorAll(".cat-item").forEach(c=>c.classList.remove("active"));
+el.classList.add("active");
+
+if(cat==="all"){
+render(products);
+}else{
+render(products.filter(p=>p.cat===cat));
+}
+}
+
 // Add to cart
 function addToCart(i){
 cart.push(products[i]);
 updateCart();
-alert("Added to cart");
 }
 
 // Update cart
@@ -185,13 +211,27 @@ function updateCart(){
 let html="";
 let total=0;
 
-cart.forEach(p=>{
-html+=`<p>${p.name} - ₹${p.price}</p>`;
+cart.forEach((p,index)=>{
+html+=`
+<div class="cart-item">
+${p.name} - ₹${p.price}
+<button onclick="removeItem(${index})">❌</button>
+</div>`;
 total+=p.price;
 });
 
 document.getElementById("cartItems").innerHTML=html;
 document.getElementById("total").innerText="Total: ₹"+total;
+document.getElementById("cartCount").innerText=cart.length;
+
+localStorage.setItem("cart",JSON.stringify(cart));
+}
+updateCart();
+
+// Remove item
+function removeItem(i){
+cart.splice(i,1);
+updateCart();
 }
 
 // Toggle cart
@@ -201,7 +241,7 @@ document.getElementById("cart").classList.toggle("active");
 
 // Checkout
 function checkout(){
-alert("Proceed to payment");
+alert("Payment system next version में आएगा 😎");
 }
 
 </script>
