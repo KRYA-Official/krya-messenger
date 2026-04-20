@@ -1,175 +1,130 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KRYA Firebase Store</title>
+<!-- SAME HEAD + CSS रहेगा (आपका existing) -->
+<!-- मैं सिर्फ NEW FEATURES + MERGE SCRIPT दे रहा हूँ -->
 
-<style>
-body{font-family:Poppins;margin:0;background:#f5f5f5}
-.header{background:#fff;padding:10px;display:flex;gap:10px}
-input{flex:1;padding:10px;border-radius:20px;border:1px solid #ccc}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;padding:10px}
-.card{background:#fff;padding:10px;border-radius:10px}
-.price{color:green;font-weight:bold}
-.btn{background:#ff9800;color:#fff;border:none;padding:8px;width:100%;margin-top:5px}
-.cart{position:fixed;right:-100%;top:0;width:300px;height:100%;background:#fff;padding:10px;transition:0.3s}
-.cart.active{right:0}
-.admin{position:fixed;bottom:10px;right:10px;background:#fff;padding:10px;border-radius:10px}
-</style>
-
-</head>
-<body>
-
-<div class="header">
-<input id="search" placeholder="Search...">
-<button onclick="toggleCart()">🛒 (<span id="count">0</span>)</button>
-<button onclick="login()">Login</button>
+<!-- 🔥 NAV ADD करें (header के अंदर) -->
+<div style="display:flex;gap:15px">
+<button onclick="showChat()">Chat</button>
+<button onclick="showStore()">Store</button>
 </div>
 
-<div class="grid" id="products"></div>
+<!-- 🔥 STORE UI ADD करें -->
+<div id="store-section" class="hidden" style="padding:10px">
+<h2>🛍️ KRYA Store</h2>
 
-<!-- CART -->
-<div class="cart" id="cart">
+<div id="products"></div>
+
+<div id="cartBox" style="margin-top:10px">
 <h3>Cart</h3>
 <div id="cartItems"></div>
 <h4 id="total">₹0</h4>
-<button class="btn" onclick="checkout()">Pay</button>
+<button onclick="checkout()">Pay Now</button>
 </div>
 
 <!-- ADMIN -->
-<div class="admin" id="adminPanel" style="display:none">
-<h4>Admin</h4>
-<input id="name" placeholder="Name"><br>
-<input id="price" placeholder="Price"><br>
-<input id="img" placeholder="Image URL"><br>
+<div id="adminPanel" style="margin-top:10px">
+<h3>Admin</h3>
+<input id="pname" placeholder="Product Name"><br>
+<input id="pprice" placeholder="Price"><br>
+<input id="pimg" placeholder="Image URL"><br>
 <button onclick="addProduct()">Add Product</button>
 </div>
 
-<!-- Firebase -->
+</div>
+
 <script type="module">
 
+// 🔥 Firebase same रहेगा
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-// 🔥 अपना Firebase config डालें
-const firebaseConfig = {
-apiKey: "YOUR_KEY",
-authDomain: "YOUR_DOMAIN",
-projectId: "YOUR_ID"
-};
+import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth();
 
-// ADMIN EMAIL (अपना डालें)
-const ADMIN_EMAIL = "your@gmail.com";
-
+// =========================
+// 🔥 STORE SYSTEM
+// =========================
 let products=[];
 let cart=[];
 
 // LOAD PRODUCTS
 async function loadProducts(){
-const querySnapshot = await getDocs(collection(db,"products"));
+const snap = await getDocs(collection(db,"products"));
 products=[];
-querySnapshot.forEach(doc=>{
-products.push({...doc.data(),id:doc.id});
-});
-render(products);
+snap.forEach(d=>products.push({...d.data(),id:d.id}));
+renderProducts();
 }
 loadProducts();
 
 // RENDER
-function render(list){
+function renderProducts(){
 let html="";
-list.forEach((p,i)=>{
+products.forEach((p,i)=>{
 html+=`
-<div class="card">
+<div style="background:#1e293b;padding:10px;margin:5px;border-radius:10px">
 <img src="${p.img}" width="100%">
 <p>${p.name}</p>
-<p class="price">₹${p.price}</p>
-<button class="btn" onclick="addToCart(${i})">Add</button>
+<p>₹${p.price}</p>
+<button onclick="addToCart(${i})">Add</button>
 </div>`;
 });
 document.getElementById("products").innerHTML=html;
 }
 
-// SEARCH
-document.getElementById("search").oninput=function(){
-let val=this.value.toLowerCase();
-render(products.filter(p=>p.name.toLowerCase().includes(val)));
-}
-
-// CART
+// ADD CART
 window.addToCart=(i)=>{
 cart.push(products[i]);
 updateCart();
 }
 
+// UPDATE CART
 function updateCart(){
-let html="",total=0;
-cart.forEach((p,i)=>{
-html+=`<p>${p.name} ₹${p.price}</p>`;
+let total=0,html="";
+cart.forEach(p=>{
 total+=p.price;
+html+=`<p>${p.name} ₹${p.price}</p>`;
 });
 document.getElementById("cartItems").innerHTML=html;
 document.getElementById("total").innerText="₹"+total;
-document.getElementById("count").innerText=cart.length;
-}
-
-// CART TOGGLE
-window.toggleCart=()=>{
-document.getElementById("cart").classList.toggle("active");
 }
 
 // CHECKOUT
 window.checkout=async ()=>{
-let total=cart.reduce((s,p)=>s+p.price,0);
+let total = cart.reduce((s,p)=>s+p.price,0);
 
 let upi=`upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&am=${total}&cu=INR`;
 window.location.href=upi;
 
-// SAVE ORDER
 await addDoc(collection(db,"orders"),{
 items:cart,
-total:total,
-status:"pending",
+total,
 time:new Date()
 });
 
-alert("Order Saved ✅");
+alert("Order Saved");
 }
 
-// LOGIN
-window.login=async ()=>{
-const provider = new GoogleAuthProvider();
-const result = await signInWithPopup(auth, provider);
-
-if(result.user.email === ADMIN_EMAIL){
-document.getElementById("adminPanel").style.display="block";
-alert("Admin Login ✅");
-}else{
-alert("User Login");
-}
-}
-
-// ADD PRODUCT
+// ADMIN ADD PRODUCT
 window.addProduct=async ()=>{
-let name=document.getElementById("name").value;
-let price=document.getElementById("price").value;
-let img=document.getElementById("img").value;
+let name=pname.value;
+let price=Number(pprice.value);
+let img=pimg.value;
 
-await addDoc(collection(db,"products"),{
-name,price:Number(price),img
-});
-
-alert("Product Added ✅");
+await addDoc(collection(db,"products"),{name,price,img});
+alert("Added");
 loadProducts();
 }
 
-</script>
+// =========================
+// 🔥 NAVIGATION
+// =========================
+window.showChat=()=>{
+document.getElementById("chat-flow").parentElement.style.display="flex";
+document.getElementById("store-section").classList.add("hidden");
+}
 
-</body>
-</html>
+window.showStore=()=>{
+document.getElementById("chat-flow").parentElement.style.display="none";
+document.getElementById("store-section").classList.remove("hidden");
+}
+
+</script>
