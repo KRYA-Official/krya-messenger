@@ -3,15 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KRYA QUIZ PRO</title>
+<title>KRYA Referral System</title>
 
 <style>
-:root { --primary:#fbbf24; --bg:#0b1120; --card:#1e293b; --text:#fff; }
-body{font-family:sans-serif;background:var(--bg);color:var(--text);text-align:center;margin:0}
-.box{background:var(--card);padding:20px;margin:15px auto;border-radius:12px;max-width:400px}
-button{padding:12px;margin:8px;border:none;border-radius:8px;background:var(--primary);color:#000;font-weight:bold;width:90%}
-input{padding:10px;border-radius:8px;border:none;width:90%}
-.option{background:#334155;margin:8px;padding:12px;border-radius:8px;cursor:pointer}
+body{font-family:sans-serif;background:#0b1120;color:#fff;text-align:center}
+.box{background:#1e293b;padding:20px;margin:15px auto;border-radius:10px;max-width:400px}
+button{padding:10px;margin:5px;border:none;border-radius:5px;background:#fbbf24;color:#000}
+input{padding:10px;border-radius:5px;border:none;width:90%}
 .hidden{display:none}
 </style>
 </head>
@@ -19,8 +17,9 @@ input{padding:10px;border-radius:8px;border:none;width:90%}
 <body>
 
 <div class="box" id="loginBox">
-<h2>KRYA QUIZ PRO</h2>
+<h2>KRYA Referral</h2>
 <input type="email" id="email" placeholder="Email डालें"><br>
+<input type="text" id="refInput" placeholder="Referral Code (optional)">
 <button onclick="login()">Login</button>
 </div>
 
@@ -29,19 +28,13 @@ input{padding:10px;border-radius:8px;border:none;width:90%}
 <div class="box">
 <h3>💰 Wallet</h3>
 <p>Coins: <span id="coins">0</span></p>
-<p>Winning: ₹<span id="winning">0</span></p>
 </div>
 
 <div class="box">
-<h3>🎮 Quiz Game</h3>
-<p id="question"></p>
-<div id="options"></div>
-<button onclick="startQuiz()">Start Quiz (10 Coins)</button>
-</div>
-
-<div class="box">
-<h3>💸 Withdraw</h3>
-<button onclick="withdraw()">Withdraw</button>
+<h3>👥 Referral System</h3>
+<p>Your Code: <b id="myCode"></b></p>
+<button onclick="copyLink()">Copy Referral Link</button>
+<p style="font-size:12px">Share करके 20 Coins कमाओ</p>
 </div>
 
 </div>
@@ -49,9 +42,9 @@ input{padding:10px;border-radius:8px;border:none;width:90%}
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, query, where, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔥 आपका Firebase config
+// 🔥 Firebase Config
 const firebaseConfig = {
 apiKey: "YOUR_API_KEY",
 authDomain: "YOUR_DOMAIN",
@@ -62,173 +55,69 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 let userId="";
-let currentQuiz=null;
-let timer;
-let timeLeft=10;
-let streak=0;
+let myCode="";
 
-// LOGIN
+// 🔐 LOGIN
 window.login = async function(){
-let email=document.getElementById("email").value;
+
+let email = document.getElementById("email").value;
+let refCode = document.getElementById("refInput").value;
+
 if(!email.includes("@")) return alert("सही ईमेल डालें");
 
-userId=btoa(email);
-localStorage.setItem("uid",userId);
+userId = btoa(email);
 
-const ref=doc(db,"users",userId);
-const snap=await getDoc(ref);
+// 🔥 unique referral code generate
+myCode = userId.slice(0,6);
+
+const ref = doc(db,"users",userId);
+const snap = await getDoc(ref);
 
 if(!snap.exists()){
-await setDoc(ref,{email,coins:100,winning:0});
+
+await setDoc(ref,{
+email,
+coins:50,
+refCode: myCode,
+referredBy: refCode || ""
+});
+
+// 🎁 referral reward
+if(refCode){
+const q = query(collection(db,"users"), where("refCode","==",refCode));
+const qs = await getDocs(q);
+
+qs.forEach(async (d)=>{
+await updateDoc(doc(db,"users",d.id),{
+coins: d.data().coins + 20
+});
+});
+}
+
 }
 
 document.getElementById("loginBox").classList.add("hidden");
 document.getElementById("appBox").classList.remove("hidden");
 
-dailyBonus();
-loadWallet();
-}
+document.getElementById("myCode").innerText = myCode;
 
-// AUTO LOGIN
-window.onload=()=>{
-let saved=localStorage.getItem("uid");
-if(saved){
-userId=saved;
-document.getElementById("loginBox").classList.add("hidden");
-document.getElementById("appBox").classList.remove("hidden");
 loadWallet();
-}
 }
 
 // LOAD WALLET
 async function loadWallet(){
-const snap=await getDoc(doc(db,"users",userId));
-const data=snap.data();
-document.getElementById("coins").innerText=data.coins;
-document.getElementById("winning").innerText=data.winning;
+const snap = await getDoc(doc(db,"users",userId));
+document.getElementById("coins").innerText = snap.data().coins;
 }
 
-// DAILY BONUS
-async function dailyBonus(){
-let today=new Date().toDateString();
-let last=localStorage.getItem("bonus");
+// COPY LINK
+window.copyLink = function(){
 
-if(last!==today){
-const ref=doc(db,"users",userId);
-const snap=await getDoc(ref);
+let link = window.location.href + "?ref=" + myCode;
 
-await updateDoc(ref,{coins:snap.data().coins+20});
-localStorage.setItem("bonus",today);
+navigator.clipboard.writeText(link);
 
-alert("🎁 Daily Bonus +20 Coins");
-}
-}
-
-// QUIZ DATA
-const quiz=[
-{q:"भारत की राजधानी?",o:["दिल्ली","मुंबई","पटना","कोलकाता"],a:0},
-{q:"5+5=?",o:["8","9","10","11"],a:2},
-{q:"CPU क्या है?",o:["Brain","Mouse","RAM","Disk"],a:0}
-];
-
-// START QUIZ
-window.startQuiz=async function(){
-
-const ref=doc(db,"users",userId);
-const snap=await getDoc(ref);
-let coins=snap.data().coins;
-
-if(coins<10){alert("Coins कम हैं");return;}
-
-await updateDoc(ref,{coins:coins-10});
-
-currentQuiz=quiz[Math.floor(Math.random()*quiz.length)];
-
-renderQuiz();
-startTimer();
-loadWallet();
-}
-
-// SHOW QUIZ
-function renderQuiz(){
-document.getElementById("question").innerText=currentQuiz.q+" (⏳ "+timeLeft+"s)";
-let html="";
-currentQuiz.o.forEach((opt,i)=>{
-html+=`<div class="option" onclick="checkAnswer(${i})">${opt}</div>`;
-});
-document.getElementById("options").innerHTML=html;
-}
-
-// TIMER
-function startTimer(){
-timeLeft=10;
-timer=setInterval(()=>{
-timeLeft--;
-renderQuiz();
-
-if(timeLeft<=0){
-clearInterval(timer);
-alert("⏰ टाइम खत्म");
-endQuiz();
-}
-},1000);
-}
-
-// CHECK ANSWER
-window.checkAnswer=async function(i){
-
-clearInterval(timer);
-
-if(i===currentQuiz.a){
-streak++;
-let reward=20;
-
-if(streak>=3){
-reward=50;
-alert("🔥 Streak Bonus ₹50");
-}
-
-alert("सही जवाब! ₹"+reward);
-
-const ref=doc(db,"users",userId);
-const snap=await getDoc(ref);
-
-await updateDoc(ref,{
-winning:snap.data().winning+reward
-});
-
-}else{
-streak=0;
-alert("गलत जवाब ❌");
-}
-
-endQuiz();
-}
-
-// END QUIZ
-function endQuiz(){
-document.getElementById("question").innerText="";
-document.getElementById("options").innerHTML="";
-loadWallet();
-}
-
-// WITHDRAW
-window.withdraw=async function(){
-
-const ref=doc(db,"users",userId);
-const snap=await getDoc(ref);
-
-let amount=snap.data().winning;
-
-if(amount<50){
-alert("Minimum ₹50 चाहिए");
-return;
-}
-
-await updateDoc(ref,{winning:0});
-alert("Withdraw Request भेज दी गई");
-
-loadWallet();
+alert("Referral link copy हो गया!");
 }
 
 </script>
