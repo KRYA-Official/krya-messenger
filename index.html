@@ -3,86 +3,91 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KRYA Store Pro</title>
+<title>KRYA Firebase Store</title>
 
 <style>
-body{margin:0;font-family:Poppins;background:#f5f5f5}
-
-/* HEADER */
-.header{background:#fff;padding:10px;box-shadow:0 2px 8px rgba(0,0,0,0.1);position:sticky;top:0}
-.top-bar{display:flex;gap:10px}
-.top-bar input{flex:1;padding:10px;border-radius:20px;border:1px solid #ccc}
-.icons{font-size:22px;cursor:pointer}
-
-/* GRID */
-.product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;padding:10px}
-.product-card{background:#fff;padding:10px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
-.product-card img{width:100%;border-radius:8px}
+body{font-family:Poppins;margin:0;background:#f5f5f5}
+.header{background:#fff;padding:10px;display:flex;gap:10px}
+input{flex:1;padding:10px;border-radius:20px;border:1px solid #ccc}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;padding:10px}
+.card{background:#fff;padding:10px;border-radius:10px}
 .price{color:green;font-weight:bold}
-
-.btn{margin-top:5px;padding:8px;border:none;border-radius:5px;background:#ff9800;color:#fff;width:100%}
-
-/* CART */
-.cart{position:fixed;top:0;right:-100%;width:300px;height:100%;background:#fff;transition:0.3s;padding:10px}
+.btn{background:#ff9800;color:#fff;border:none;padding:8px;width:100%;margin-top:5px}
+.cart{position:fixed;right:-100%;top:0;width:300px;height:100%;background:#fff;padding:10px;transition:0.3s}
 .cart.active{right:0}
-
-/* ADMIN */
-.admin{position:fixed;bottom:70px;right:10px;background:#fff;padding:10px;border-radius:10px;box-shadow:0 0 10px #ccc}
+.admin{position:fixed;bottom:10px;right:10px;background:#fff;padding:10px;border-radius:10px}
 </style>
-</head>
 
+</head>
 <body>
 
-<header class="header">
-<div class="top-bar">
-<input type="text" id="search" placeholder="Search...">
-<div class="icons" onclick="toggleCart()">🛒 (<span id="count">0</span>)</div>
+<div class="header">
+<input id="search" placeholder="Search...">
+<button onclick="toggleCart()">🛒 (<span id="count">0</span>)</button>
+<button onclick="login()">Login</button>
 </div>
-</header>
 
-<main class="product-grid" id="products"></main>
+<div class="grid" id="products"></div>
 
 <!-- CART -->
 <div class="cart" id="cart">
 <h3>Cart</h3>
 <div id="cartItems"></div>
-<h4 id="total">Total: ₹0</h4>
-<button class="btn" onclick="checkout()">Pay Now</button>
+<h4 id="total">₹0</h4>
+<button class="btn" onclick="checkout()">Pay</button>
 </div>
 
-<!-- ADMIN PANEL -->
-<div class="admin">
+<!-- ADMIN -->
+<div class="admin" id="adminPanel" style="display:none">
 <h4>Admin</h4>
-
-<select id="productSelect"></select><br><br>
-<input type="number" id="priceInput" placeholder="New Price"><br><br>
-<button onclick="updatePrice()">Update</button>
+<input id="name" placeholder="Name"><br>
+<input id="price" placeholder="Price"><br>
+<input id="img" placeholder="Image URL"><br>
+<button onclick="addProduct()">Add Product</button>
 </div>
 
-<script>
+<!-- Firebase -->
+<script type="module">
 
-// PRODUCTS (Load or default)
-let products = JSON.parse(localStorage.getItem("products")) || [
-{name:"Airpods",price:217,img:"https://via.placeholder.com/150"},
-{name:"Watch",price:283,img:"https://via.placeholder.com/150"},
-{name:"T-shirt",price:199,img:"https://via.placeholder.com/150"},
-{name:"Shoes",price:499,img:"https://via.placeholder.com/150"}
-];
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
+// 🔥 अपना Firebase config डालें
+const firebaseConfig = {
+apiKey: "YOUR_KEY",
+authDomain: "YOUR_DOMAIN",
+projectId: "YOUR_ID"
+};
 
-// SAVE
-function saveProducts(){
-localStorage.setItem("products", JSON.stringify(products));
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth();
+
+// ADMIN EMAIL (अपना डालें)
+const ADMIN_EMAIL = "your@gmail.com";
+
+let products=[];
+let cart=[];
+
+// LOAD PRODUCTS
+async function loadProducts(){
+const querySnapshot = await getDocs(collection(db,"products"));
+products=[];
+querySnapshot.forEach(doc=>{
+products.push({...doc.data(),id:doc.id});
+});
+render(products);
 }
+loadProducts();
 
-// RENDER PRODUCTS
+// RENDER
 function render(list){
 let html="";
 list.forEach((p,i)=>{
 html+=`
-<div class="product-card">
-<img src="${p.img}">
+<div class="card">
+<img src="${p.img}" width="100%">
 <p>${p.name}</p>
 <p class="price">₹${p.price}</p>
 <button class="btn" onclick="addToCart(${i})">Add</button>
@@ -90,7 +95,6 @@ html+=`
 });
 document.getElementById("products").innerHTML=html;
 }
-render(products);
 
 // SEARCH
 document.getElementById("search").oninput=function(){
@@ -99,72 +103,70 @@ render(products.filter(p=>p.name.toLowerCase().includes(val)));
 }
 
 // CART
-function addToCart(i){
+window.addToCart=(i)=>{
 cart.push(products[i]);
 updateCart();
 }
 
 function updateCart(){
-let html="";
-let total=0;
-
+let html="",total=0;
 cart.forEach((p,i)=>{
-html+=`<p>${p.name} - ₹${p.price} <button onclick="removeItem(${i})">❌</button></p>`;
+html+=`<p>${p.name} ₹${p.price}</p>`;
 total+=p.price;
 });
-
 document.getElementById("cartItems").innerHTML=html;
-document.getElementById("total").innerText="Total: ₹"+total;
+document.getElementById("total").innerText="₹"+total;
 document.getElementById("count").innerText=cart.length;
-
-localStorage.setItem("cart", JSON.stringify(cart));
-}
-updateCart();
-
-function removeItem(i){
-cart.splice(i,1);
-updateCart();
 }
 
-// TOGGLE CART
-function toggleCart(){
+// CART TOGGLE
+window.toggleCart=()=>{
 document.getElementById("cart").classList.toggle("active");
 }
 
-// CHECKOUT (UPI AUTO AMOUNT)
-function checkout(){
-let total = cart.reduce((sum,p)=>sum+p.price,0);
+// CHECKOUT
+window.checkout=async ()=>{
+let total=cart.reduce((s,p)=>s+p.price,0);
 
-if(total===0){
-alert("Cart empty");
-return;
-}
+let upi=`upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&am=${total}&cu=INR`;
+window.location.href=upi;
 
-let upi = `upi://pay?pa=93690mukeshkumar@axl&pn=KRYA Store&am=${total}&cu=INR`;
-window.location.href = upi;
-}
-
-// ADMIN PANEL
-function loadAdmin(){
-let select=document.getElementById("productSelect");
-select.innerHTML="";
-products.forEach((p,i)=>{
-select.innerHTML += `<option value="${i}">${p.name}</option>`;
+// SAVE ORDER
+await addDoc(collection(db,"orders"),{
+items:cart,
+total:total,
+status:"pending",
+time:new Date()
 });
-}
-loadAdmin();
 
-function updatePrice(){
-let i=document.getElementById("productSelect").value;
-let newPrice=document.getElementById("priceInput").value;
-
-if(newPrice){
-products[i].price = Number(newPrice);
-saveProducts();
-render(products);
-loadAdmin();
-alert("Updated ✅");
+alert("Order Saved ✅");
 }
+
+// LOGIN
+window.login=async ()=>{
+const provider = new GoogleAuthProvider();
+const result = await signInWithPopup(auth, provider);
+
+if(result.user.email === ADMIN_EMAIL){
+document.getElementById("adminPanel").style.display="block";
+alert("Admin Login ✅");
+}else{
+alert("User Login");
+}
+}
+
+// ADD PRODUCT
+window.addProduct=async ()=>{
+let name=document.getElementById("name").value;
+let price=document.getElementById("price").value;
+let img=document.getElementById("img").value;
+
+await addDoc(collection(db,"products"),{
+name,price:Number(price),img
+});
+
+alert("Product Added ✅");
+loadProducts();
 }
 
 </script>
