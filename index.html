@@ -3,122 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KRYA Store V2</title>
+<title>KRYA Store Pro</title>
 
 <style>
-body{
-margin:0;
-font-family:Poppins, sans-serif;
-background:#f5f5f5;
-}
+body{margin:0;font-family:Poppins;background:#f5f5f5}
 
 /* HEADER */
-.header{
-background:#fff;
-padding:10px;
-box-shadow:0 2px 8px rgba(0,0,0,0.1);
-position:sticky;
-top:0;
-z-index:10;
-}
-.top-bar{
-display:flex;
-gap:10px;
-}
-.top-bar input{
-flex:1;
-padding:10px;
-border-radius:20px;
-border:1px solid #ccc;
-}
-.icons span{
-font-size:22px;
-margin-left:10px;
-cursor:pointer;
-}
-
-/* CATEGORY */
-.categories{
-display:flex;
-overflow:auto;
-padding:10px;
-gap:10px;
-background:#fff;
-}
-.cat-item{
-min-width:80px;
-text-align:center;
-padding:5px;
-border-radius:8px;
-cursor:pointer;
-}
-.cat-item.active{
-background:#ff9800;
-color:#fff;
-}
+.header{background:#fff;padding:10px;box-shadow:0 2px 8px rgba(0,0,0,0.1);position:sticky;top:0}
+.top-bar{display:flex;gap:10px}
+.top-bar input{flex:1;padding:10px;border-radius:20px;border:1px solid #ccc}
+.icons{font-size:22px;cursor:pointer}
 
 /* GRID */
-.product-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-gap:10px;
-padding:10px;
-}
-.product-card{
-background:#fff;
-border-radius:10px;
-padding:10px;
-box-shadow:0 2px 5px rgba(0,0,0,0.1);
-}
-.product-card img{
-width:100%;
-border-radius:8px;
-}
+.product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;padding:10px}
+.product-card{background:#fff;padding:10px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
+.product-card img{width:100%;border-radius:8px}
 .price{color:green;font-weight:bold}
 
-/* BUTTON */
-.btn{
-margin-top:5px;
-padding:8px;
-border:none;
-border-radius:5px;
-background:#ff9800;
-color:#fff;
-width:100%;
-cursor:pointer;
-}
+.btn{margin-top:5px;padding:8px;border:none;border-radius:5px;background:#ff9800;color:#fff;width:100%}
 
 /* CART */
-.cart{
-position:fixed;
-top:0;
-right:-100%;
-width:300px;
-height:100%;
-background:#fff;
-transition:0.3s;
-overflow:auto;
-padding:10px;
-z-index:20;
-}
+.cart{position:fixed;top:0;right:-100%;width:300px;height:100%;background:#fff;transition:0.3s;padding:10px}
 .cart.active{right:0}
 
-.cart-item{
-border-bottom:1px solid #ddd;
-padding:5px 0;
-}
-
-/* BOTTOM NAV */
-.bottom-nav{
-position:fixed;
-bottom:0;
-width:100%;
-background:#fff;
-display:flex;
-justify-content:space-around;
-padding:8px;
-box-shadow:0 -2px 8px rgba(0,0,0,0.1);
-}
+/* ADMIN */
+.admin{position:fixed;bottom:70px;right:10px;background:#fff;padding:10px;border-radius:10px;box-shadow:0 0 10px #ccc}
 </style>
 </head>
 
@@ -126,46 +35,48 @@ box-shadow:0 -2px 8px rgba(0,0,0,0.1);
 
 <header class="header">
 <div class="top-bar">
-<input type="text" id="search" placeholder="Search products...">
-<div class="icons">
-<span onclick="toggleCart()">🛒 (<span id="cartCount">0</span>)</span>
-</div>
+<input type="text" id="search" placeholder="Search...">
+<div class="icons" onclick="toggleCart()">🛒 (<span id="count">0</span>)</div>
 </div>
 </header>
-
-<section class="categories">
-<div class="cat-item active" onclick="filterCat('all',this)">All</div>
-<div class="cat-item" onclick="filterCat('clothes',this)">👕 Clothes</div>
-<div class="cat-item" onclick="filterCat('watch',this)">⌚ Watch</div>
-</section>
 
 <main class="product-grid" id="products"></main>
 
 <!-- CART -->
 <div class="cart" id="cart">
-<h3>🛒 Cart</h3>
+<h3>Cart</h3>
 <div id="cartItems"></div>
 <h4 id="total">Total: ₹0</h4>
-<button class="btn" onclick="checkout()">Checkout</button>
+<button class="btn" onclick="checkout()">Pay Now</button>
 </div>
 
-<nav class="bottom-nav">
-<div>🏠 Home</div>
-<div>📦 Orders</div>
-</nav>
+<!-- ADMIN PANEL -->
+<div class="admin">
+<h4>Admin</h4>
+
+<select id="productSelect"></select><br><br>
+<input type="number" id="priceInput" placeholder="New Price"><br><br>
+<button onclick="updatePrice()">Update</button>
+</div>
 
 <script>
 
-let products=[
-{name:"Airpods",price:217,cat:"watch",img:"https://via.placeholder.com/150"},
-{name:"Watch",price:283,cat:"watch",img:"https://via.placeholder.com/150"},
-{name:"T-shirt",price:199,cat:"clothes",img:"https://via.placeholder.com/150"},
-{name:"Shoes",price:499,cat:"clothes",img:"https://via.placeholder.com/150"}
+// PRODUCTS (Load or default)
+let products = JSON.parse(localStorage.getItem("products")) || [
+{name:"Airpods",price:217,img:"https://via.placeholder.com/150"},
+{name:"Watch",price:283,img:"https://via.placeholder.com/150"},
+{name:"T-shirt",price:199,img:"https://via.placeholder.com/150"},
+{name:"Shoes",price:499,img:"https://via.placeholder.com/150"}
 ];
 
-let cart=JSON.parse(localStorage.getItem("cart")) || [];
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-// Render products
+// SAVE
+function saveProducts(){
+localStorage.setItem("products", JSON.stringify(products));
+}
+
+// RENDER PRODUCTS
 function render(list){
 let html="";
 list.forEach((p,i)=>{
@@ -181,67 +92,79 @@ document.getElementById("products").innerHTML=html;
 }
 render(products);
 
-// Search
+// SEARCH
 document.getElementById("search").oninput=function(){
 let val=this.value.toLowerCase();
-let filtered=products.filter(p=>p.name.toLowerCase().includes(val));
-render(filtered);
+render(products.filter(p=>p.name.toLowerCase().includes(val)));
 }
 
-// Category filter
-function filterCat(cat,el){
-document.querySelectorAll(".cat-item").forEach(c=>c.classList.remove("active"));
-el.classList.add("active");
-
-if(cat==="all"){
-render(products);
-}else{
-render(products.filter(p=>p.cat===cat));
-}
-}
-
-// Add to cart
+// CART
 function addToCart(i){
 cart.push(products[i]);
 updateCart();
 }
 
-// Update cart
 function updateCart(){
 let html="";
 let total=0;
 
-cart.forEach((p,index)=>{
-html+=`
-<div class="cart-item">
-${p.name} - ₹${p.price}
-<button onclick="removeItem(${index})">❌</button>
-</div>`;
+cart.forEach((p,i)=>{
+html+=`<p>${p.name} - ₹${p.price} <button onclick="removeItem(${i})">❌</button></p>`;
 total+=p.price;
 });
 
 document.getElementById("cartItems").innerHTML=html;
 document.getElementById("total").innerText="Total: ₹"+total;
-document.getElementById("cartCount").innerText=cart.length;
+document.getElementById("count").innerText=cart.length;
 
-localStorage.setItem("cart",JSON.stringify(cart));
+localStorage.setItem("cart", JSON.stringify(cart));
 }
 updateCart();
 
-// Remove item
 function removeItem(i){
 cart.splice(i,1);
 updateCart();
 }
 
-// Toggle cart
+// TOGGLE CART
 function toggleCart(){
 document.getElementById("cart").classList.toggle("active");
 }
 
-// Checkout
+// CHECKOUT (UPI AUTO AMOUNT)
 function checkout(){
-alert("Payment system next version में आएगा 😎");
+let total = cart.reduce((sum,p)=>sum+p.price,0);
+
+if(total===0){
+alert("Cart empty");
+return;
+}
+
+let upi = `upi://pay?pa=93690mukeshkumar@axl&pn=KRYA Store&am=${total}&cu=INR`;
+window.location.href = upi;
+}
+
+// ADMIN PANEL
+function loadAdmin(){
+let select=document.getElementById("productSelect");
+select.innerHTML="";
+products.forEach((p,i)=>{
+select.innerHTML += `<option value="${i}">${p.name}</option>`;
+});
+}
+loadAdmin();
+
+function updatePrice(){
+let i=document.getElementById("productSelect").value;
+let newPrice=document.getElementById("priceInput").value;
+
+if(newPrice){
+products[i].price = Number(newPrice);
+saveProducts();
+render(products);
+loadAdmin();
+alert("Updated ✅");
+}
 }
 
 </script>
