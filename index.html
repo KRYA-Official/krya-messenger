@@ -9,33 +9,30 @@
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background: #0f172a;
+    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
     color: white;
 }
 
-/* Top Bar */
+/* Header */
 .header {
-    background: black;
-    padding: 10px;
     text-align: center;
-    font-size: 20px;
+    padding: 15px;
+    font-size: 24px;
     font-weight: bold;
     color: #00ffcc;
 }
 
 /* News Ticker */
 .ticker {
-    background: #111;
+    background: black;
     overflow: hidden;
     white-space: nowrap;
 }
-
 .ticker p {
     display: inline-block;
     padding-left: 100%;
-    animation: scroll 15s linear infinite;
+    animation: scroll 18s linear infinite;
 }
-
 @keyframes scroll {
     from { transform: translateX(0); }
     to { transform: translateX(-100%); }
@@ -46,35 +43,40 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    padding: 30px;
     gap: 20px;
+    padding: 30px;
 }
-
 .card {
-    background: #1e293b;
+    background: rgba(255,255,255,0.1);
     padding: 20px;
     border-radius: 12px;
     width: 260px;
     text-align: center;
+    backdrop-filter: blur(10px);
     transition: 0.3s;
 }
-
 .card:hover {
     transform: scale(1.05);
 }
-
+.price {
+    color: #00ffcc;
+    font-size: 18px;
+    font-weight: bold;
+}
 .btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 18px;
     background: #00ffcc;
     color: black;
-    padding: 8px 15px;
     border-radius: 20px;
     text-decoration: none;
 }
 
 /* Live Users */
-.live-box {
+.live {
     text-align: center;
-    padding: 20px;
+    padding: 10px;
     color: #00ffcc;
 }
 
@@ -83,19 +85,41 @@ body {
     text-align: center;
     padding: 20px;
     font-style: italic;
-    color: #ccc;
 }
 
-/* WhatsApp */
+/* Form */
+form {
+    max-width: 400px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+input, select, textarea {
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+}
+button {
+    padding: 12px;
+    background: #ff512f;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+/* WhatsApp Button */
 .whatsapp {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background: green;
+    background: #25D366;
     padding: 15px;
     border-radius: 50%;
-    text-decoration: none;
     color: white;
+    text-decoration: none;
+    font-size: 20px;
 }
 </style>
 </head>
@@ -104,9 +128,9 @@ body {
 
 <div class="header">🚀 KryaLive.com</div>
 
-<!-- News Ticker -->
+<!-- News -->
 <div class="ticker">
-    <p>🔥 आज का ऑफर: Website सिर्फ ₹2,999 | ⚡ 50+ लोगों ने आज सर्विस ली | 💬 WhatsApp पर तुरंत सपोर्ट उपलब्ध | 🎯 Limited Slots Available</p>
+<p>🔥 आज का ऑफर: Website ₹2999 | ⚡ Limited Slots | 💬 WhatsApp Support 24x7 | 🎯 आज ही बुक करें</p>
 </div>
 
 <!-- Services -->
@@ -114,57 +138,86 @@ body {
 
 <div class="card">
 <h3>Firebase Setup</h3>
-<p>₹999</p>
-<a href="https://wa.me/919543333333" class="btn">Start</a>
+<p class="price">₹999</p>
+<a class="btn" href="https://wa.me/916379403821?text=Firebase%20Setup%20चाहिए">Start</a>
 </div>
 
 <div class="card">
-<h3>Web Development</h3>
-<p>₹2,999</p>
-<a href="https://wa.me/919543333333" class="btn">Order</a>
+<h3>Website Development</h3>
+<p class="price">₹2,999</p>
+<a class="btn" href="https://wa.me/916379403821?text=Website%20बनवानी%20है">Order</a>
 </div>
 
 <div class="card">
 <h3>Tech Support</h3>
-<p>₹499</p>
-<a href="https://wa.me/919543333333" class="btn">Fix</a>
+<p class="price">₹499</p>
+<a class="btn" href="https://wa.me/916379403821?text=Tech%20Support%20चाहिए">Fix</a>
 </div>
 
 </div>
 
-<!-- Live Demo Users -->
-<div class="live-box">
-👥 Live Users: <span id="users">25</span> लोग अभी साइट पर हैं
+<!-- Live Users -->
+<div class="live">
+👥 Live Users: <span id="users">32</span>
 </div>
 
 <!-- Reviews -->
 <div class="review" id="review">
-⭐ "बहुत बढ़िया सर्विस, काम 1 घंटे में पूरा हुआ!"
+⭐ बहुत बढ़िया सर्विस!
 </div>
 
-<!-- WhatsApp -->
-<a href="https://wa.me/919543333333" class="whatsapp">💬</a>
+<!-- Contact Form -->
+<h2 style="text-align:center;">📩 Contact करें</h2>
+
+<form onsubmit="sendWhatsApp(event)">
+<input type="text" id="name" placeholder="आपका नाम" required>
+<select id="service">
+<option>Firebase Setup</option>
+<option>Website Development</option>
+<option>Tech Support</option>
+</select>
+<textarea id="msg" placeholder="आपकी जरूरत लिखें"></textarea>
+<button type="submit">Send on WhatsApp</button>
+</form>
+
+<!-- WhatsApp Floating -->
+<a href="https://wa.me/916379403821" class="whatsapp">💬</a>
 
 <script>
-// Live Users Random
+// Live Users
 setInterval(()=>{
-    document.getElementById("users").innerText = Math.floor(Math.random()*50)+20;
+document.getElementById("users").innerText = Math.floor(Math.random()*50)+20;
 },3000);
 
-// Reviews Rotation
+// Reviews
 let reviews = [
 "⭐ बहुत बढ़िया सर्विस!",
-"🔥 काम बहुत जल्दी हुआ",
-"💯 Trusted service, recommend!",
-"⚡ Support instant मिला",
+"🔥 काम जल्दी हुआ",
+"💯 Trusted service",
+"⚡ Instant support मिला",
 "👍 पैसे वसूल काम"
 ];
-
 let i=0;
 setInterval(()=>{
-    document.getElementById("review").innerText = reviews[i];
-    i=(i+1)%reviews.length;
+document.getElementById("review").innerText = reviews[i];
+i=(i+1)%reviews.length;
 },3000);
+
+// WhatsApp Form Send
+function sendWhatsApp(e){
+e.preventDefault();
+
+let name = document.getElementById("name").value;
+let service = document.getElementById("service").value;
+let msg = document.getElementById("msg").value;
+
+let url = "https://wa.me/916379403821?text="
++ "नाम: "+name+"%0a"
++ "Service: "+service+"%0a"
++ "Message: "+msg;
+
+window.open(url, "_blank");
+}
 </script>
 
 </body>
