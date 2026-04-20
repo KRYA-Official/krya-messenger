@@ -1,66 +1,210 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KRYA Store</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KRYA Store</title>
+
+<style>
+body{
+margin:0;
+font-family:Poppins;
+background:#f5f5f5;
+}
+
+/* HEADER */
+.header{
+background:#fff;
+padding:10px;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+.top-bar{
+display:flex;
+gap:10px;
+}
+.top-bar input{
+flex:1;
+padding:10px;
+border-radius:20px;
+border:1px solid #ccc;
+}
+.icons span{
+font-size:20px;
+margin-left:10px;
+cursor:pointer;
+}
+
+/* CATEGORY */
+.categories{
+display:flex;
+overflow:auto;
+padding:10px;
+gap:10px;
+background:#fff;
+}
+.cat-item{
+min-width:80px;
+text-align:center;
+}
+
+/* GRID */
+.product-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:10px;
+padding:10px;
+}
+.product-card{
+background:#fff;
+border-radius:10px;
+padding:10px;
+position:relative;
+}
+.product-card img{
+width:100%;
+border-radius:8px;
+}
+.brand{font-size:12px;color:#555}
+.price{color:green;font-weight:bold}
+.rating{font-size:12px;color:#ff9800}
+
+/* BUTTON */
+.btn{
+margin-top:5px;
+padding:8px;
+border:none;
+border-radius:5px;
+background:#ff9800;
+color:#fff;
+width:100%;
+cursor:pointer;
+}
+
+/* CART POPUP */
+.cart{
+position:fixed;
+top:0;
+right:-100%;
+width:300px;
+height:100%;
+background:#fff;
+transition:0.3s;
+overflow:auto;
+padding:10px;
+}
+.cart.active{right:0}
+
+/* BOTTOM NAV */
+.bottom-nav{
+position:fixed;
+bottom:0;
+width:100%;
+background:#fff;
+display:flex;
+justify-content:space-around;
+padding:8px;
+}
+</style>
 </head>
+
 <body>
 
-  <header class="header">
-    <div class="top-bar">
-      <input type="text" placeholder="प्रोडक्ट ढूंढें जैसे साड़ी, कुर्ती...">
-      <div class="icons">
-        <span>❤️</span>
-        <span>🛒</span>
-      </div>
-    </div>
-    <div class="location-bar">
-      📍 डिलीवर किया जा रहा है - 813104
-    </div>
-  </header>
+<header class="header">
+<div class="top-bar">
+<input type="text" id="search" placeholder="Search products...">
+<div class="icons">
+<span onclick="toggleCart()">🛒</span>
+</div>
+</div>
+</header>
 
-  <section class="categories">
-    <div class="cat-item">👕<p>Summer</p></div>
-    <div class="cat-item">🔥<p>Trending</p></div>
-    <div class="cat-item">👍<p>Best Finds</p></div>
-    <div class="cat-item">🛍️<p>Deals</p></div>
-  </section>
+<section class="categories">
+<div class="cat-item">🔥<p>Trending</p></div>
+<div class="cat-item">👕<p>Clothes</p></div>
+<div class="cat-item">⌚<p>Watch</p></div>
+</section>
 
-  <div class="filter-bar">
-    <button>क्रमबद्ध...</button>
-    <button>Category</button>
-    <button>Gender</button>
-  </div>
+<main class="product-grid" id="products"></main>
 
-  <main class="product-grid">
-    <div class="product-card">
-      <img src="https://via.placeholder.com/150" alt="Airpods">
-      <div class="details">
-        <p class="brand">YUVRAJ TREDING</p>
-        <p class="price">₹217 <span class="discount">17% off</span></p>
-        <p class="cod">₹263 with COD</p>
-        <span class="rating">4⭐ (58,251)</span>
-      </div>
-    </div>
-    <div class="product-card">
-      <img src="https://via.placeholder.com/150" alt="Watch">
-      <div class="details">
-        <p class="brand">TORTOBBIT</p>
-        <p class="price">₹283 <span class="discount">13% off</span></p>
-        <p class="cod">₹324 with COD</p>
-        <span class="rating">4⭐ (188)</span>
-      </div>
-    </div>
-  </main>
+<!-- CART -->
+<div class="cart" id="cart">
+<h3>🛒 Cart</h3>
+<div id="cartItems"></div>
+<h4 id="total">Total: ₹0</h4>
+<button class="btn" onclick="checkout()">Checkout</button>
+</div>
 
-  <nav class="bottom-nav">
-    <div class="nav-item">🏠<br>होम</div>
-    <div class="nav-item">👗<br>कैटेगरी</div>
-    <div class="nav-item">🏢<br>मॉल</div>
-    <div class="nav-item">📦<br>मेरे ऑर्डर</div>
-  </nav>
+<nav class="bottom-nav">
+<div>🏠 Home</div>
+<div>📦 Orders</div>
+</nav>
+
+<script>
+
+let products=[
+{name:"Airpods",price:217,img:"https://via.placeholder.com/150"},
+{name:"Watch",price:283,img:"https://via.placeholder.com/150"},
+{name:"T-shirt",price:199,img:"https://via.placeholder.com/150"},
+{name:"Shoes",price:499,img:"https://via.placeholder.com/150"}
+];
+
+let cart=[];
+
+// Render products
+function render(list){
+let html="";
+list.forEach((p,i)=>{
+html+=`
+<div class="product-card">
+<img src="${p.img}">
+<p>${p.name}</p>
+<p class="price">₹${p.price}</p>
+<button class="btn" onclick="addToCart(${i})">Add to Cart</button>
+</div>`;
+});
+document.getElementById("products").innerHTML=html;
+}
+render(products);
+
+// Search
+document.getElementById("search").oninput=function(){
+let val=this.value.toLowerCase();
+let filtered=products.filter(p=>p.name.toLowerCase().includes(val));
+render(filtered);
+}
+
+// Add to cart
+function addToCart(i){
+cart.push(products[i]);
+updateCart();
+alert("Added to cart");
+}
+
+// Update cart
+function updateCart(){
+let html="";
+let total=0;
+
+cart.forEach(p=>{
+html+=`<p>${p.name} - ₹${p.price}</p>`;
+total+=p.price;
+});
+
+document.getElementById("cartItems").innerHTML=html;
+document.getElementById("total").innerText="Total: ₹"+total;
+}
+
+// Toggle cart
+function toggleCart(){
+document.getElementById("cart").classList.toggle("active");
+}
+
+// Checkout
+function checkout(){
+alert("Proceed to payment");
+}
+
+</script>
 
 </body>
 </html>
