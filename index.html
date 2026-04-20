@@ -3,48 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KRYA Referral System</title>
+<title>KRYA Spin Game</title>
 
 <style>
 body{font-family:sans-serif;background:#0b1120;color:#fff;text-align:center}
-.box{background:#1e293b;padding:20px;margin:15px auto;border-radius:10px;max-width:400px}
-button{padding:10px;margin:5px;border:none;border-radius:5px;background:#fbbf24;color:#000}
-input{padding:10px;border-radius:5px;border:none;width:90%}
-.hidden{display:none}
+.box{background:#1e293b;padding:20px;margin:20px auto;border-radius:10px;max-width:400px}
+button{padding:12px;margin:10px;border:none;border-radius:8px;background:#fbbf24;color:#000;font-weight:bold;width:90%}
 </style>
 </head>
 
 <body>
 
-<div class="box" id="loginBox">
-<h2>KRYA Referral</h2>
-<input type="email" id="email" placeholder="Email डालें"><br>
-<input type="text" id="refInput" placeholder="Referral Code (optional)">
-<button onclick="login()">Login</button>
-</div>
-
-<div id="appBox" class="hidden">
-
 <div class="box">
-<h3>💰 Wallet</h3>
+<h2>🎡 Spin & Earn</h2>
 <p>Coins: <span id="coins">0</span></p>
-</div>
+<p>Winning: ₹<span id="winning">0</span></p>
 
-<div class="box">
-<h3>👥 Referral System</h3>
-<p>Your Code: <b id="myCode"></b></p>
-<button onclick="copyLink()">Copy Referral Link</button>
-<p style="font-size:12px">Share करके 20 Coins कमाओ</p>
-</div>
-
+<button onclick="spin()">Spin (10 Coins)</button>
 </div>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, query, where, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔥 Firebase Config
+// 🔥 Firebase config
 const firebaseConfig = {
 apiKey: "YOUR_API_KEY",
 authDomain: "YOUR_DOMAIN",
@@ -54,70 +37,76 @@ projectId: "YOUR_PROJECT_ID"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let userId="";
-let myCode="";
+// 🔹 AUTO USER
+let userId = localStorage.getItem("spinUser");
 
-// 🔐 LOGIN
-window.login = async function(){
+if(!userId){
+userId = "user_" + Math.random().toString(36).substr(2,6);
+localStorage.setItem("spinUser", userId);
+}
 
-let email = document.getElementById("email").value;
-let refCode = document.getElementById("refInput").value;
-
-if(!email.includes("@")) return alert("सही ईमेल डालें");
-
-userId = btoa(email);
-
-// 🔥 unique referral code generate
-myCode = userId.slice(0,6);
-
+// INIT USER
+async function init(){
 const ref = doc(db,"users",userId);
 const snap = await getDoc(ref);
 
 if(!snap.exists()){
-
 await setDoc(ref,{
-email,
 coins:50,
-refCode: myCode,
-referredBy: refCode || ""
-});
-
-// 🎁 referral reward
-if(refCode){
-const q = query(collection(db,"users"), where("refCode","==",refCode));
-const qs = await getDocs(q);
-
-qs.forEach(async (d)=>{
-await updateDoc(doc(db,"users",d.id),{
-coins: d.data().coins + 20
-});
+winning:0,
+lastSpin:0
 });
 }
-
-}
-
-document.getElementById("loginBox").classList.add("hidden");
-document.getElementById("appBox").classList.remove("hidden");
-
-document.getElementById("myCode").innerText = myCode;
 
 loadWallet();
 }
 
-// LOAD WALLET
+init();
+
+// LOAD
 async function loadWallet(){
 const snap = await getDoc(doc(db,"users",userId));
-document.getElementById("coins").innerText = snap.data().coins;
+const d = snap.data();
+
+document.getElementById("coins").innerText=d.coins;
+document.getElementById("winning").innerText=d.winning;
 }
 
-// COPY LINK
-window.copyLink = function(){
+// SPIN GAME
+window.spin = async function(){
 
-let link = window.location.href + "?ref=" + myCode;
+const ref = doc(db,"users",userId);
+const snap = await getDoc(ref);
+let data = snap.data();
 
-navigator.clipboard.writeText(link);
+// daily limit
+let today = new Date().toDateString();
+let last = data.lastSpinDate;
 
-alert("Referral link copy हो गया!");
+if(last === today){
+alert("आज का spin हो चुका है");
+return;
+}
+
+if(data.coins < 10){
+alert("Coins कम हैं");
+return;
+}
+
+// reward logic
+let rewards = [0,5,10,20,50];
+let reward = rewards[Math.floor(Math.random()*rewards.length)];
+
+// update
+await updateDoc(ref,{
+coins: data.coins - 10,
+winning: data.winning + reward,
+lastSpinDate: today
+});
+
+alert("🎉 आपको ₹"+reward+" मिला");
+
+loadWallet();
 }
 
 </script>
