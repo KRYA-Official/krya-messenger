@@ -6,57 +6,141 @@
 <title>KryaLive.com</title>
 
 <style>
-body{margin:0;font-family:Poppins;background:#0f172a;color:#fff}
+body{
+margin:0;
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:#fff;
+}
 
-/* Border Frame */
+/* Glow Border */
 .frame{
-position:fixed;top:10px;bottom:10px;left:10px;right:10px;
-border:3px solid #00ffd5;border-radius:15px;
-box-shadow:0 0 25px #00ffd5;pointer-events:none}
+position:fixed;
+inset:10px;
+border-radius:18px;
+border:2px solid #00ffd5;
+box-shadow:0 0 30px #00ffd5;
+pointer-events:none;
+}
 
 /* Header */
-.header{text-align:center;padding:10px;font-size:24px;border:2px solid #00ffd5}
+.header{
+text-align:center;
+padding:15px;
+font-size:26px;
+font-weight:bold;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(10px);
+border-bottom:1px solid rgba(255,255,255,0.2);
+}
 
 /* Ticker */
-.ticker{border:2px solid yellow;margin:10px;overflow:hidden}
-.ticker p{white-space:nowrap;padding-left:100%;animation:scroll 15s linear infinite}
+.ticker{
+margin:10px;
+border-radius:10px;
+overflow:hidden;
+border:1px solid #ffcc00;
+}
+.ticker p{
+white-space:nowrap;
+padding-left:100%;
+animation:scroll 18s linear infinite;
+}
 @keyframes scroll{to{transform:translateX(-100%)}}
 
 /* Grid */
-.container{display:flex;flex-wrap:wrap;justify-content:center;gap:15px;padding:15px}
+.container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+padding:20px;
+}
 
 /* Card */
 .card{
-background:#111;padding:15px;width:250px;border-radius:12px;
-box-shadow:0 0 10px #000;text-align:center;position:relative
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(15px);
+border-radius:15px;
+padding:15px;
+text-align:center;
+transition:0.3s;
+border:1px solid rgba(255,255,255,0.2);
+position:relative;
 }
-.badge{position:absolute;top:10px;left:10px;background:red;padding:4px 8px;border-radius:5px}
-.card img{width:100%;border-radius:8px}
-.price{color:#00ffd5;font-weight:bold}
+.card:hover{
+transform:translateY(-8px) scale(1.03);
+}
 
-/* Button */
-.btn{display:block;margin-top:8px;padding:10px;border-radius:8px;text-decoration:none}
-.buy{background:#ff9800;color:#000}
-.chat{background:#25D366}
+/* Badge */
+.badge{
+position:absolute;
+top:10px;
+left:10px;
+background:linear-gradient(45deg,#ff0000,#ff7300);
+padding:5px 10px;
+border-radius:6px;
+font-size:12px;
+}
 
-/* Chatbot */
-.chatbox{
-position:fixed;bottom:80px;right:20px;width:260px;
-background:#111;border-radius:10px;display:none}
-.chat-body{height:200px;overflow:auto;padding:10px}
-.chat-input{display:flex}
-.chat-input input{flex:1;padding:8px}
-.chat-input button{padding:8px}
+/* Image */
+.card img{
+width:100%;
+border-radius:10px;
+}
 
-/* Floating */
+/* Text */
+.card h3{
+margin:10px 0;
+}
+.price{
+color:#00ffd5;
+font-size:20px;
+font-weight:bold;
+}
+
+/* Buttons */
+.btn{
+display:block;
+margin-top:10px;
+padding:10px;
+border-radius:25px;
+text-decoration:none;
+font-weight:bold;
+transition:0.3s;
+}
+.buy{
+background:linear-gradient(45deg,#ff9800,#ff5722);
+}
+.chat{
+background:linear-gradient(45deg,#25D366,#00ff99);
+}
+.btn:hover{
+transform:scale(1.08);
+}
+
+/* Floating Button */
 .float{
-position:fixed;bottom:20px;right:20px;
-background:#25D366;padding:15px;border-radius:50%}
+position:fixed;
+bottom:20px;
+right:20px;
+background:#25D366;
+padding:15px;
+border-radius:50%;
+font-size:18px;
+cursor:pointer;
+}
 
 /* Popup */
 .popup{
-position:fixed;bottom:80px;left:20px;
-background:#111;padding:10px;border-radius:10px;display:none}
+position:fixed;
+bottom:80px;
+left:20px;
+background:#111;
+padding:10px 15px;
+border-radius:10px;
+display:none;
+font-size:14px;
+}
 </style>
 </head>
 
@@ -67,98 +151,42 @@ background:#111;padding:10px;border-radius:10px;display:none}
 <div class="header">🚀 KryaLive.com</div>
 
 <div class="ticker">
-<p>🔥 Limited Offer | ⚡ Fast Delivery | 💬 24x7 Support | 🎯 Book Now</p>
+<p>🔥 Premium Digital Services | ⚡ Fast Delivery | 💬 Instant Support | 🎯 Limited Offer</p>
 </div>
 
 <div class="container" id="container"></div>
 
 <div class="popup" id="popup"></div>
 
-<!-- Chatbot -->
-<div class="chatbox" id="chatbox">
-<div class="chat-body" id="chatBody"></div>
-<div class="chat-input">
-<input id="input" placeholder="Type...">
-<button onclick="reply()">Send</button>
-</div>
-</div>
-
-<div class="float" onclick="toggleChat()">💬</div>
+<div class="float" onclick="alert('Chat open logic here')">💬</div>
 
 <script>
 
 const services=[
-{name:"Website",price:2999},
-{name:"Firebase",price:999},
-{name:"App Dev",price:4999},
-{name:"SEO",price:999},
-{name:"Logo",price:299},
-{name:"Bug Fix",price:499}
+"Website","Firebase","App Dev","SEO","Logo","Bug Fix","Hosting","Speed","UI Design"
 ];
 
-// Render cards
 let html="";
 services.forEach((s,i)=>{
 html+=`
 <div class="card">
-<div class="badge">🔥 50% OFF</div>
-<img src="https://picsum.photos/200?${i}">
-<h3>${s.name}</h3>
-<div class="price">₹${s.price}</div>
-<a class="btn buy" onclick="pay('${s.name}',${s.price})">Buy</a>
-<a class="btn chat" onclick="openChat('${s.name}')">Chat</a>
+<div class="badge">🔥 HOT</div>
+<img src="https://picsum.photos/300?random=${i}">
+<h3>${s}</h3>
+<div class="price">₹${(i+1)*500}</div>
+<a class="btn buy">Buy Now</a>
+<a class="btn chat">Chat</a>
 </div>`;
 });
+
 document.getElementById("container").innerHTML=html;
 
-// Payment
-function pay(name,price){
-window.open(`upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh&am=${price}&cu=INR`);
-}
-
-// WhatsApp
-function sendWA(service){
-let msg=`नमस्ते 👋 मुझे ${service} चाहिए`;
-window.open(`https://wa.me/916379403821?text=${encodeURIComponent(msg)}`);
-}
-
-// Chatbot
-let selected="";
-function openChat(service){
-selected=service;
-toggleChat();
-add("🤖 आपने "+service+" चुना है। YES लिखें");
-}
-
-function toggleChat(){
-let box=document.getElementById("chatbox");
-box.style.display=box.style.display==="block"?"none":"block";
-}
-
-function add(msg){
-document.getElementById("chatBody").innerHTML+="<div>"+msg+"</div>";
-}
-
-function reply(){
-let input=document.getElementById("input").value.toLowerCase();
-add("👤 "+input);
-
-if(input==="yes"){
-sendWA(selected);
-add("🤖 आपको WhatsApp पर भेजा जा रहा है...");
-}else{
-add("🤖 YES लिखें आगे बढ़ने के लिए");
-}
-
-document.getElementById("input").value="";
-}
-
-// Fake Live popup
+/* Fake Popup */
 let names=["Rahul","Amit","Vikas","Ankit"];
 setInterval(()=>{
 let n=names[Math.floor(Math.random()*names.length)];
 let popup=document.getElementById("popup");
-popup.innerText=n+" ने अभी service ली";
+popup.innerText=n+" ने अभी service खरीदी";
 popup.style.display="block";
 setTimeout(()=>popup.style.display="none",3000);
 },5000);
