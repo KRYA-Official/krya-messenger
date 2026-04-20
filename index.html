@@ -1,118 +1,151 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KRYA Earn Wallet</title>
+
+<style>
+body{font-family:sans-serif;background:#0b1120;color:#fff;text-align:center}
+.box{background:#1e293b;padding:20px;margin:20px;border-radius:10px}
+button{padding:10px;margin:5px;border:none;border-radius:5px;background:#fbbf24;color:#000}
+input{padding:10px;border-radius:5px;border:none;margin:5px}
+</style>
+
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="box" id="loginBox">
+<h2>Login</h2>
+<input type="email" id="email" placeholder="Enter Email"><br>
+<button onclick="login()">Login</button>
+</div>
+
+<!-- APP -->
+<div class="box" id="appBox" style="display:none">
+<h2>💰 Wallet</h2>
+
+<p>Coins: <span id="coins">0</span></p>
+<p>Winning: ₹<span id="winning">0</span></p>
+
+<button onclick="addCoins(10)">+10 Coins</button>
+<button onclick="spendCoins(5)">-5 Coins</button>
+<button onclick="addWinning(20)">+₹20 Winning</button>
+
+</div>
+
+<script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
 getFirestore, doc, getDoc, setDoc, updateDoc, addDoc, collection, serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔥 आपका Firebase config
+// 🔥 अपना Firebase config डालो
 const firebaseConfig = {
-apiKey: "YOUR_KEY",
+apiKey: "YOUR_API_KEY",
 authDomain: "YOUR_DOMAIN",
-projectId: "YOUR_ID"
+projectId: "YOUR_PROJECT_ID"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 🔥 GLOBAL USER
-let currentUserId = null;
-let currentEmail = null;
+let userId = "";
 
-// ==========================
-// 🚀 INIT WALLET
-// ==========================
-window.initWallet = async function(userId, email){
-currentUserId = userId;
-currentEmail = email;
+// 🔐 LOGIN
+window.login = async function(){
+let email = document.getElementById("email").value;
 
-const ref = doc(db, "users", userId);
+if(!email) return alert("Email डालो");
+
+userId = btoa(email);
+
+const ref = doc(db,"users",userId);
 const snap = await getDoc(ref);
 
-// अगर user नया है
+// नया user
 if(!snap.exists()){
-await setDoc(ref, {
-email: email,
-coins: 50,
-winning: 0,
+await setDoc(ref,{
+email:email,
+coins:50,
+winning:0,
 createdAt: serverTimestamp()
 });
 }
 
+document.getElementById("loginBox").style.display="none";
+document.getElementById("appBox").style.display="block";
+
 loadWallet();
 }
 
-// ==========================
-// 📥 LOAD WALLET
-// ==========================
+// 📥 LOAD
 async function loadWallet(){
-const snap = await getDoc(doc(db,"users",currentUserId));
+const snap = await getDoc(doc(db,"users",userId));
 const data = snap.data();
 
 document.getElementById("coins").innerText = data.coins;
 document.getElementById("winning").innerText = data.winning;
 }
 
-// ==========================
 // ➕ ADD COINS
-// ==========================
-async function addCoins(amount, note="earn"){
-const ref = doc(db,"users",currentUserId);
+window.addCoins = async function(amount){
+const ref = doc(db,"users",userId);
 const snap = await getDoc(ref);
 
-let newCoins = snap.data().coins + amount;
+let coins = snap.data().coins + amount;
 
-await updateDoc(ref,{ coins:newCoins });
+await updateDoc(ref,{coins});
 
 await addDoc(collection(db,"transactions"),{
-userId: currentUserId,
+userId,
 type:"earn",
 amount,
-note,
+note:"test",
 time: serverTimestamp()
 });
 
 loadWallet();
 }
 
-// ==========================
 // ➖ SPEND COINS
-// ==========================
-async function spendCoins(amount, note="spend"){
-const ref = doc(db,"users",currentUserId);
+window.spendCoins = async function(amount){
+const ref = doc(db,"users",userId);
 const snap = await getDoc(ref);
 
 let coins = snap.data().coins;
 
 if(coins < amount){
-alert("Coins कम हैं ❌");
+alert("Coins कम हैं");
 return;
 }
 
-await updateDoc(ref,{ coins: coins - amount });
+await updateDoc(ref,{coins: coins - amount});
 
 await addDoc(collection(db,"transactions"),{
-userId: currentUserId,
+userId,
 type:"spend",
 amount,
-note,
+note:"test",
 time: serverTimestamp()
 });
 
 loadWallet();
 }
 
-// ==========================
 // 💰 ADD WINNING
-// ==========================
-async function addWinning(amount){
-const ref = doc(db,"users",currentUserId);
+window.addWinning = async function(amount){
+const ref = doc(db,"users",userId);
 const snap = await getDoc(ref);
 
-let newWin = snap.data().winning + amount;
+let winning = snap.data().winning + amount;
 
-await updateDoc(ref,{ winning:newWin });
+await updateDoc(ref,{winning});
 
 await addDoc(collection(db,"transactions"),{
-userId: currentUserId,
+userId,
 type:"earn",
 amount,
 note:"winning",
@@ -122,9 +155,7 @@ time: serverTimestamp()
 loadWallet();
 }
 
-// ==========================
-// 🧪 TEST BUTTONS
-// ==========================
-window.testAddCoins = ()=> addCoins(10,"test reward");
-window.testSpendCoins = ()=> spendCoins(5,"test spend");
-window.testWin = ()=> addWinning(20);
+</script>
+
+</body>
+</html>
