@@ -3,75 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KRYA Earn Wallet</title>
+<title>KRYA Quiz Fixed</title>
 
 <style>
 body{font-family:sans-serif;background:#0b1120;color:#fff;text-align:center}
-.box{background:#1e293b;padding:20px;margin:20px;border-radius:10px}
-button{padding:10px;margin:5px;border:none;border-radius:5px;background:#fbbf24;color:#000}
-input{padding:10px;border-radius:5px;border:none;margin:5px}
+.box{background:#1e293b;padding:20px;margin:15px;border-radius:10px}
+button{padding:10px;margin:5px;border:none;border-radius:5px;background:#fbbf24;color:#000;cursor:pointer}
+.option{display:block;margin:5px;padding:10px;background:#334155;border-radius:5px;cursor:pointer}
 </style>
-
 </head>
+
 <body>
 
-<!-- LOGIN -->
 <div class="box" id="loginBox">
 <h2>Login</h2>
 <input type="email" id="email" placeholder="Enter Email"><br>
 <button onclick="login()">Login</button>
 </div>
 
-<!-- APP -->
-<div class="box" id="appBox" style="display:none">
-<h2>💰 Wallet</h2>
+<div id="appBox" style="display:none">
 
+<div class="box">
+<h2>💰 Wallet</h2>
 <p>Coins: <span id="coins">0</span></p>
 <p>Winning: ₹<span id="winning">0</span></p>
+</div>
 
-<button onclick="addCoins(10)">+10 Coins</button>
-<button onclick="spendCoins(5)">-5 Coins</button>
-<button onclick="addWinning(20)">+₹20 Winning</button>
+<div class="box">
+<h2>🎮 Quiz</h2>
+<p id="question"></p>
+<div id="options"></div>
+<button onclick="startQuiz()">Start Quiz (10 Coins)</button>
+</div>
 
 </div>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { 
-getFirestore, doc, getDoc, setDoc, updateDoc, addDoc, collection, serverTimestamp 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔥 अपना Firebase config डालो
+// 🔥 CONFIG सही डालो
 const firebaseConfig = {
-apiKey: "YOUR_API_KEY",
-authDomain: "YOUR_DOMAIN",
-projectId: "YOUR_PROJECT_ID"
+apiKey: "PASTE_KEY",
+authDomain: "PASTE_DOMAIN",
+projectId: "PASTE_ID"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let userId = "";
+let userId="";
+let currentQuiz=null;
 
-// 🔐 LOGIN
+// LOGIN
 window.login = async function(){
 let email = document.getElementById("email").value;
 
-if(!email) return alert("Email डालो");
+if(!email){
+alert("Email डालो");
+return;
+}
 
 userId = btoa(email);
 
 const ref = doc(db,"users",userId);
 const snap = await getDoc(ref);
 
-// नया user
 if(!snap.exists()){
 await setDoc(ref,{
-email:email,
+email,
 coins:50,
-winning:0,
-createdAt: serverTimestamp()
+winning:0
 });
 }
 
@@ -81,7 +84,7 @@ document.getElementById("appBox").style.display="block";
 loadWallet();
 }
 
-// 📥 LOAD
+// LOAD WALLET
 async function loadWallet(){
 const snap = await getDoc(doc(db,"users",userId));
 const data = snap.data();
@@ -90,67 +93,59 @@ document.getElementById("coins").innerText = data.coins;
 document.getElementById("winning").innerText = data.winning;
 }
 
-// ➕ ADD COINS
-window.addCoins = async function(amount){
+// QUIZ DATA
+const quiz = [
+{q:"भारत की राजधानी?",o:["दिल्ली","मुंबई","पटना","कोलकाता"],a:0},
+{q:"5+5=?",o:["8","9","10","11"],a:2}
+];
+
+// START QUIZ
+window.startQuiz = async function(){
+
 const ref = doc(db,"users",userId);
 const snap = await getDoc(ref);
-
-let coins = snap.data().coins + amount;
-
-await updateDoc(ref,{coins});
-
-await addDoc(collection(db,"transactions"),{
-userId,
-type:"earn",
-amount,
-note:"test",
-time: serverTimestamp()
-});
-
-loadWallet();
-}
-
-// ➖ SPEND COINS
-window.spendCoins = async function(amount){
-const ref = doc(db,"users",userId);
-const snap = await getDoc(ref);
-
 let coins = snap.data().coins;
 
-if(coins < amount){
+if(coins < 10){
 alert("Coins कम हैं");
 return;
 }
 
-await updateDoc(ref,{coins: coins - amount});
+// coins कटे
+await updateDoc(ref,{coins: coins-10});
 
-await addDoc(collection(db,"transactions"),{
-userId,
-type:"spend",
-amount,
-note:"test",
-time: serverTimestamp()
+currentQuiz = quiz[Math.floor(Math.random()*quiz.length)];
+
+document.getElementById("question").innerText = currentQuiz.q;
+
+let html="";
+currentQuiz.o.forEach((opt,i)=>{
+html += `<div class="option" onclick="checkAnswer(${i})">${opt}</div>`;
 });
+
+document.getElementById("options").innerHTML = html;
 
 loadWallet();
 }
 
-// 💰 ADD WINNING
-window.addWinning = async function(amount){
+// CHECK ANSWER
+window.checkAnswer = async function(i){
+
+if(i === currentQuiz.a){
+alert("सही जवाब 🎉");
+
 const ref = doc(db,"users",userId);
 const snap = await getDoc(ref);
+let win = snap.data().winning;
 
-let winning = snap.data().winning + amount;
+await updateDoc(ref,{winning: win + 20});
 
-await updateDoc(ref,{winning});
+}else{
+alert("गलत जवाब ❌");
+}
 
-await addDoc(collection(db,"transactions"),{
-userId,
-type:"earn",
-amount,
-note:"winning",
-time: serverTimestamp()
-});
+document.getElementById("question").innerText="";
+document.getElementById("options").innerHTML="";
 
 loadWallet();
 }
