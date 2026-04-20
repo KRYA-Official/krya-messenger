@@ -3,154 +3,235 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KryaLive Offers</title>
+<title>KryaLive.com - Services</title>
 
 <style>
+:root{
+  --accent:#00ffd5;
+  --bg:#0f172a;
+  --card:#ffffff;
+  --muted:#6b7280;
+}
+*{box-sizing:border-box}
 body{
-margin:0;
-font-family:'Poppins',sans-serif;
-background:#f1f3f6;
+  margin:0;
+  font-family:'Poppins',system-ui,Arial;
+  background:#f1f3f6;
 }
 
-/* Container */
+/* Fixed 3D border */
+.frame{
+  position:fixed; inset:10px;
+  border:3px solid var(--accent);
+  border-radius:16px;
+  box-shadow:0 0 25px var(--accent);
+  pointer-events:none;
+  z-index:1;
+}
+
+/* Header */
+.header{
+  background:var(--bg);
+  color:#fff;
+  padding:14px 16px;
+  text-align:center;
+  border-bottom:2px solid var(--accent);
+}
+.brand{font-size:22px; font-weight:700}
+
+/* Ticker */
+.ticker{
+  background:#111; color:#fff;
+  overflow:hidden; white-space:nowrap;
+  border-bottom:2px solid #ffcc00;
+}
+.ticker p{
+  display:inline-block;
+  padding-left:100%;
+  animation:scroll 18s linear infinite;
+}
+@keyframes scroll{to{transform:translateX(-100%)}}
+
+/* Controls */
+.controls{
+  display:flex; gap:10px; padding:10px; flex-wrap:wrap;
+  justify-content:center; background:#fff;
+}
+.controls input, .controls select{
+  padding:10px; border:1px solid #ddd; border-radius:8px; min-width:200px;
+}
+
+/* Grid */
 .container{
-padding:20px;
-display:flex;
-flex-wrap:wrap;
-gap:20px;
-justify-content:center;
+  padding:15px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:15px;
 }
 
 /* Card */
 .card{
-background:#fff;
-width:260px;
-border-radius:12px;
-padding:15px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
-position:relative;
-transition:0.3s;
+  background:#fff;
+  border-radius:12px;
+  padding:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+  position:relative;
+  display:flex; flex-direction:column; gap:8px;
+  transition:.25s;
 }
-.card:hover{
-transform:translateY(-8px);
-}
-
-/* Offer Badge */
+.card:hover{transform:translateY(-6px)}
 .badge{
-position:absolute;
-top:10px;
-left:10px;
-background:red;
-color:#fff;
-padding:5px 10px;
-border-radius:5px;
-font-size:12px;
+  position:absolute; top:10px; left:10px;
+  background:#ff3b30; color:#fff; font-size:12px;
+  padding:4px 8px; border-radius:6px;
 }
+.card img{width:100%; border-radius:8px}
+.title{font-weight:600}
+.meta{font-size:12px; color:var(--muted)}
+.price{font-size:18px; color:#16a34a; font-weight:700}
+.old{font-size:13px; color:#999; text-decoration:line-through; margin-left:6px}
+.rating{color:#f59e0b; font-size:14px}
+.timer{color:#dc2626; font-size:12px}
 
-/* Image */
-.card img{
-width:100%;
-border-radius:8px;
-}
-
-/* Title */
-.card h3{
-margin:10px 0;
-}
-
-/* Price */
-.price{
-color:green;
-font-weight:bold;
-font-size:18px;
-}
-.old{
-text-decoration:line-through;
-color:#999;
-font-size:14px;
-}
-
-/* Timer */
-.timer{
-color:#ff0000;
-font-size:14px;
-margin-top:5px;
-}
-
-/* Button */
+/* Buttons */
+.actions{display:flex; gap:8px}
 .btn{
-display:block;
-margin-top:10px;
-padding:10px;
-text-align:center;
-background:#ff9900;
-color:white;
-border-radius:6px;
-text-decoration:none;
-font-weight:bold;
+  flex:1; text-align:center; padding:10px;
+  border-radius:8px; text-decoration:none; font-weight:600;
+}
+.btn-buy{background:#ff9900; color:#fff}
+.btn-wa{background:#25D366; color:#fff}
+
+/* Floating WhatsApp (single) */
+.float{
+  position:fixed; bottom:20px; right:20px; z-index:5;
+  background:#25D366; color:#fff; padding:14px;
+  border-radius:50%; text-decoration:none; font-size:18px;
 }
 
+/* Footer */
+.footer{
+  text-align:center; padding:20px; color:#555; font-size:13px;
+}
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="frame"></div>
 
-<!-- CARD 1 -->
-<div class="card">
-<div class="badge">🔥 50% OFF</div>
-
-<img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085">
-
-<h3>Website Development</h3>
-
-<div class="price">₹2999 <span class="old">₹5999</span></div>
-
-<div class="timer" id="timer1">Offer ends in: 00:00:00</div>
-
-<a class="btn" href="https://wa.me/916379403821?text=मुझे%20Website%20service%20चाहिए">Buy Now</a>
+<div class="header">
+  <div class="brand">🚀 KryaLive.com</div>
 </div>
 
-<!-- CARD 2 -->
-<div class="card">
-<div class="badge">⚡ 40% OFF</div>
-
-<img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c">
-
-<h3>Firebase Setup</h3>
-
-<div class="price">₹999 <span class="old">₹1999</span></div>
-
-<div class="timer" id="timer2">Offer ends in: 00:00:00</div>
-
-<a class="btn" href="https://wa.me/916379403821?text=मुझे%20Firebase%20चाहिए">Buy Now</a>
+<div class="ticker">
+  <p>🔥 आज के ऑफर | ⚡ Limited Slots | 💬 WhatsApp Support | 🎯 जल्दी बुक करें</p>
 </div>
 
+<div class="controls">
+  <input id="search" placeholder="Service खोजें...">
+  <select id="filter">
+    <option value="all">All Categories</option>
+    <option value="web">Web</option>
+    <option value="app">App</option>
+    <option value="design">Design</option>
+    <option value="marketing">Marketing</option>
+  </select>
+</div>
+
+<div class="container" id="container"></div>
+
+<a class="float" href="https://wa.me/916379403821?text=नमस्ते%20KryaLive%20मुझे%20service%20चाहिए">💬</a>
+
+<div class="footer">
+  © KryaLive.com — Fast, Affordable Digital Services
 </div>
 
 <script>
-// Timer function
-function startTimer(id, duration){
-let timer = duration, hours, minutes, seconds;
+const WA="916379403821";
+const UPI="93690mukeshkumar@axl";
 
-setInterval(function(){
-hours = parseInt(timer / 3600);
-minutes = parseInt((timer % 3600) / 60);
-seconds = parseInt(timer % 60);
+/* 15+ services */
+const services=[
+{name:"Website Development",cat:"web",price:2999,old:5999,off:"50% OFF"},
+{name:"Landing Page Design",cat:"web",price:1499,old:2999,off:"50% OFF"},
+{name:"E-commerce Setup",cat:"web",price:3999,old:7999,off:"50% OFF"},
+{name:"Firebase Auth Setup",cat:"app",price:999,old:1999,off:"50% OFF"},
+{name:"Android App Basic",cat:"app",price:4999,old:9999,off:"50% OFF"},
+{name:"Bug Fix & Debugging",cat:"app",price:499,old:999,off:"50% OFF"},
+{name:"Logo Design",cat:"design",price:299,old:799,off:"60% OFF"},
+{name:"Banner Design",cat:"design",price:199,old:499,off:"60% OFF"},
+{name:"UI/UX Design",cat:"design",price:1999,old:3999,off:"50% OFF"},
+{name:"SEO Setup",cat:"marketing",price:999,old:1999,off:"50% OFF"},
+{name:"Google Ranking Help",cat:"marketing",price:1499,old:2999,off:"50% OFF"},
+{name:"Social Media Setup",cat:"marketing",price:799,old:1599,off:"50% OFF"},
+{name:"WhatsApp Automation Setup",cat:"marketing",price:999,old:1999,off:"50% OFF"},
+{name:"Speed Optimization",cat:"web",price:799,old:1599,off:"50% OFF"},
+{name:"Hosting Setup",cat:"web",price:699,old:1499,off:"50% OFF"}
+];
 
-document.getElementById(id).innerHTML =
-"Offer ends in: " +
-hours + ":" + minutes + ":" + seconds;
-
-if(--timer < 0) timer = duration;
-},1000);
+/* render cards */
+function render(list){
+  const el=document.getElementById('container');
+  el.innerHTML='';
+  list.forEach((s,i)=>{
+    const id="t"+i;
+    el.innerHTML+=`
+    <div class="card">
+      <div class="badge">🔥 ${s.off}</div>
+      <img src="https://picsum.photos/300/180?random=${i}">
+      <div class="title">${s.name}</div>
+      <div class="rating">⭐⭐⭐⭐☆ (4.${(i%5)+3}) • 50+ users</div>
+      <div class="price">₹${s.price}<span class="old">₹${s.old}</span></div>
+      <div class="timer" id="${id}">Offer ends: --:--:--</div>
+      <div class="meta">Category: ${s.cat}</div>
+      <div class="actions">
+        <a class="btn btn-buy" onclick="buyNow('${s.name}',${s.price})">Book</a>
+        <a class="btn btn-wa" onclick="wa('${s.name}')">Chat</a>
+      </div>
+    </div>`;
+    startTimer(id,7200);
+  });
 }
 
-// 2 hours timer
-startTimer("timer1",7200);
-startTimer("timer2",7200);
+/* search + filter */
+document.getElementById('search').oninput=apply;
+document.getElementById('filter').onchange=apply;
+function apply(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const f=document.getElementById('filter').value;
+  const list=services.filter(s=>
+    (f==='all'||s.cat===f) &&
+    s.name.toLowerCase().includes(q)
+  );
+  render(list);
+}
 
+/* WhatsApp */
+function wa(service){
+  const msg=`नमस्ते 👋\nमुझे ${service} चाहिए.\nकृपया details भेजें.\nKryaLive.com`;
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+/* Payment (optional) */
+function buyNow(service,amount){
+  const note=`Payment for ${service}`;
+  window.open(`upi://pay?pa=${UPI}&pn=Mukesh&am=${amount}&cu=INR&tn=${encodeURIComponent(note)}`);
+}
+
+/* Timer */
+function startTimer(id,dur){
+  let t=dur;
+  setInterval(()=>{
+    let h=Math.floor(t/3600),m=Math.floor((t%3600)/60),s=t%60;
+    document.getElementById(id).innerText=
+      `Offer ends: ${h}:${m}:${s}`;
+    if(--t<0) t=dur;
+  },1000);
+}
+
+/* init */
+render(services);
 </script>
 
 </body>
