@@ -1,244 +1,66 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KryaLive.com - Auto System</title>
-
-<style>
-:root{--accent:#00ffd5}
-*{box-sizing:border-box}
-body{margin:0;font-family:Poppins;background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:#fff}
-
-/* Frame */
-.frame{position:fixed;inset:10px;border:2px solid var(--accent);border-radius:16px;box-shadow:0 0 25px var(--accent);pointer-events:none}
-
-/* Header */
-.header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px}
-.brand{font-weight:700;font-size:22px}
-.top-btn{padding:8px 12px;border-radius:10px;background:#111;color:#fff;border:1px solid #333;cursor:pointer}
-
-/* Grid */
-.container{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;padding:16px}
-
-/* Card */
-.card{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:14px;padding:14px;text-align:center}
-.badge{display:inline-block;background:#ff3b30;padding:4px 8px;border-radius:6px;font-size:12px}
-.price{color:var(--accent);font-weight:700;margin-top:6px}
-.btn{display:block;margin-top:8px;padding:10px;border-radius:20px;text-decoration:none;font-weight:700;cursor:pointer}
-.buy{background:#ff9800;color:#000}
-.chat{background:#25D366}
-
-/* Modal */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:5}
-.modal-box{background:#111;padding:18px;border-radius:12px;width:320px}
-.modal-box input, .modal-box select{width:100%;margin:6px 0;padding:8px;border-radius:6px;border:none}
-.modal-box button{margin-top:8px;padding:10px;width:100%;border:none;border-radius:8px;background:var(--accent);color:#000;font-weight:700;cursor:pointer}
-
-/* Admin Panel */
-.admin{position:fixed;inset:0;background:#0b0f14;display:none;z-index:6;color:#fff}
-.admin-header{display:flex;justify-content:space-between;padding:12px;border-bottom:1px solid #333}
-.table{width:100%;border-collapse:collapse}
-.table th,.table td{border-bottom:1px solid #333;padding:8px;font-size:12px}
-.bad{color:#ef4444} .ok{color:#22c55e} .pen{color:#f59e0b}
-.row-actions button{margin-right:6px}
-
-/* Popup */
-.popup{position:fixed;bottom:80px;left:20px;background:#111;padding:10px 12px;border-radius:10px;display:none}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRYA Store</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="frame"></div>
-
-<div class="header">
-  <div class="brand">🚀 KryaLive.com</div>
-  <div>
-    <button class="top-btn" onclick="openAdmin()">Admin</button>
-  </div>
-</div>
-
-<div class="container" id="container"></div>
-
-<!-- Order Modal -->
-<div class="modal" id="orderModal">
-  <div class="modal-box">
-    <h3>Order Details</h3>
-    <input id="name" placeholder="Name">
-    <input id="phone" placeholder="Phone">
-    <input id="service" placeholder="Service" disabled>
-    <input id="coupon" placeholder="Coupon (SAVE50)">
-    <button onclick="submitOrder()">Submit & Pay</button>
-  </div>
-</div>
-
-<!-- Admin Panel -->
-<div class="admin" id="adminPanel">
-  <div class="admin-header">
-    <div><b>Admin Panel</b></div>
-    <div>
-      <button class="top-btn" onclick="exportData()">Export</button>
-      <button class="top-btn" onclick="importData()">Import</button>
-      <button class="top-btn" onclick="closeAdmin()">Close</button>
+  <header class="header">
+    <div class="top-bar">
+      <input type="text" placeholder="प्रोडक्ट ढूंढें जैसे साड़ी, कुर्ती...">
+      <div class="icons">
+        <span>❤️</span>
+        <span>🛒</span>
+      </div>
     </div>
+    <div class="location-bar">
+      📍 डिलीवर किया जा रहा है - 813104
+    </div>
+  </header>
+
+  <section class="categories">
+    <div class="cat-item">👕<p>Summer</p></div>
+    <div class="cat-item">🔥<p>Trending</p></div>
+    <div class="cat-item">👍<p>Best Finds</p></div>
+    <div class="cat-item">🛍️<p>Deals</p></div>
+  </section>
+
+  <div class="filter-bar">
+    <button>क्रमबद्ध...</button>
+    <button>Category</button>
+    <button>Gender</button>
   </div>
-  <div style="padding:10px;overflow:auto;height:85vh">
-    <table class="table" id="table">
-      <thead>
-        <tr>
-          <th>#</th><th>Name</th><th>Phone</th><th>Service</th><th>Amount</th><th>Status</th><th>Time</th><th>Action</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-</div>
 
-<div class="popup" id="popup"></div>
+  <main class="product-grid">
+    <div class="product-card">
+      <img src="https://via.placeholder.com/150" alt="Airpods">
+      <div class="details">
+        <p class="brand">YUVRAJ TREDING</p>
+        <p class="price">₹217 <span class="discount">17% off</span></p>
+        <p class="cod">₹263 with COD</p>
+        <span class="rating">4⭐ (58,251)</span>
+      </div>
+    </div>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/150" alt="Watch">
+      <div class="details">
+        <p class="brand">TORTOBBIT</p>
+        <p class="price">₹283 <span class="discount">13% off</span></p>
+        <p class="cod">₹324 with COD</p>
+        <span class="rating">4⭐ (188)</span>
+      </div>
+    </div>
+  </main>
 
-<script>
-const WA="916379403821";
-const UPI="93690mukeshkumar@axl";
-
-/* Services */
-const services=[
-{name:"Website Development",price:2999},
-{name:"Firebase Setup",price:999},
-{name:"App Development",price:4999},
-{name:"SEO Setup",price:999},
-{name:"Logo Design",price:299},
-{name:"Bug Fix",price:499},
-{name:"Hosting Setup",price:699},
-{name:"Speed Optimization",price:799}
-];
-
-/* Render Cards */
-function render(){
-  let html="";
-  services.forEach(s=>{
-    html+=`
-    <div class="card">
-      <div class="badge">🔥 OFFER</div>
-      <h3>${s.name}</h3>
-      <div class="price">₹${s.price}</div>
-      <a class="btn buy" onclick="openForm('${s.name}',${s.price})">Book</a>
-      <a class="btn chat" onclick="wa('${s.name}')">Chat</a>
-    </div>`;
-  });
-  document.getElementById("container").innerHTML=html;
-}
-render();
-
-/* Open Form */
-let curName="",curPrice=0;
-function openForm(n,p){
-  curName=n; curPrice=p;
-  document.getElementById("service").value=n;
-  document.getElementById("orderModal").style.display="flex";
-}
-
-/* Submit Order */
-function submitOrder(){
-  const name=document.getElementById("name").value||"Guest";
-  const phone=document.getElementById("phone").value||"-";
-  let amt=curPrice;
-  if(document.getElementById("coupon").value==="SAVE50") amt-=50;
-
-  const order={
-    id:Date.now(),
-    name,phone,service:curName,amount:amt,
-    status:"Pending",time:new Date().toLocaleString()
-  };
-
-  let data=JSON.parse(localStorage.getItem("orders")||"[]");
-  data.push(order);
-  localStorage.setItem("orders",JSON.stringify(data));
-
-  // Payment + WA
-  window.open(`upi://pay?pa=${UPI}&pn=Mukesh&am=${amt}&cu=INR`);
-  const msg=`Order\nName:${name}\nService:${curName}\nAmount:${amt}`;
-  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`);
-
-  document.getElementById("orderModal").style.display="none";
-  toast(`${name} placed order`);
-}
-
-/* WhatsApp */
-function wa(service){
-  const msg=`नमस्ते 👋 मुझे ${service} चाहिए`;
-  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`);
-}
-
-/* Admin Panel */
-function openAdmin(){document.getElementById("adminPanel").style.display="block";loadTable();}
-function closeAdmin(){document.getElementById("adminPanel").style.display="none";}
-
-/* Load Table */
-function loadTable(){
-  const data=JSON.parse(localStorage.getItem("orders")||"[]");
-  const tbody=document.querySelector("#table tbody");
-  tbody.innerHTML="";
-  data.forEach((o,i)=>{
-    const cls=o.status==="Paid"?"ok":(o.status==="Cancelled"?"bad":"pen");
-    tbody.innerHTML+=`
-    <tr>
-      <td>${i+1}</td>
-      <td>${o.name}</td>
-      <td>${o.phone}</td>
-      <td>${o.service}</td>
-      <td>₹${o.amount}</td>
-      <td class="${cls}">${o.status}</td>
-      <td>${o.time}</td>
-      <td class="row-actions">
-        <button onclick="setStatus(${o.id},'Paid')">Paid</button>
-        <button onclick="setStatus(${o.id},'Cancelled')">Cancel</button>
-        <button onclick="wa('${o.service}')">WA</button>
-      </td>
-    </tr>`;
-  });
-}
-
-/* Update Status */
-function setStatus(id,st){
-  let data=JSON.parse(localStorage.getItem("orders")||"[]");
-  data=data.map(o=>o.id===id?{...o,status:st}:o);
-  localStorage.setItem("orders",JSON.stringify(data));
-  loadTable();
-}
-
-/* Export/Import */
-function exportData(){
-  const data=localStorage.getItem("orders")||"[]";
-  const blob=new Blob([data],{type:"application/json"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download="orders.json";
-  a.click();
-}
-function importData(){
-  const inp=document.createElement("input");
-  inp.type="file";
-  inp.onchange=e=>{
-    const file=e.target.files[0];
-    const reader=new FileReader();
-    reader.onload=ev=>{
-      localStorage.setItem("orders",ev.target.result);
-      loadTable();
-    };
-    reader.readAsText(file);
-  };
-  inp.click();
-}
-
-/* Toast */
-function toast(msg){
-  const p=document.getElementById("popup");
-  p.innerText=msg;
-  p.style.display="block";
-  setTimeout(()=>p.style.display="none",3000);
-}
-</script>
+  <nav class="bottom-nav">
+    <div class="nav-item">🏠<br>होम</div>
+    <div class="nav-item">👗<br>कैटेगरी</div>
+    <div class="nav-item">🏢<br>मॉल</div>
+    <div class="nav-item">📦<br>मेरे ऑर्डर</div>
+  </nav>
 
 </body>
 </html>
