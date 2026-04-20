@@ -8,168 +8,193 @@
 <style>
 body {
     margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #f4f6f9;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: white;
 }
 
-/* Section Styling */
-section {
-    padding: 60px 20px;
-}
-
+/* Heading */
 h2 {
     text-align: center;
-    color: #222;
+    font-size: 32px;
+    margin-bottom: 10px;
 }
 
 .subtitle {
     text-align: center;
-    color: #777;
+    color: #ccc;
 }
 
 /* Services */
-.services-container {
+.services {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 25px;
-    margin-top: 40px;
+    padding: 40px 20px;
 }
 
-.service-card {
-    background: #fff;
+.card {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
     padding: 25px;
-    border-radius: 12px;
+    border-radius: 15px;
     width: 280px;
     text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    transition: 0.3s;
+    transition: 0.4s;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
 
-.service-card:hover {
-    transform: translateY(-8px);
+.card:hover {
+    transform: scale(1.05);
 }
 
 .price {
-    color: #28a745;
+    font-size: 20px;
+    color: #00ffcc;
     font-weight: bold;
-    font-size: 18px;
 }
 
 /* Button */
 .btn {
-    margin-top: 10px;
     display: inline-block;
+    margin-top: 10px;
     padding: 10px 18px;
-    background: #007bff;
-    color: #fff;
-    border-radius: 6px;
+    background: linear-gradient(45deg, #00ffcc, #00c3ff);
+    color: black;
+    border-radius: 25px;
     text-decoration: none;
+    font-weight: bold;
     transition: 0.3s;
 }
 
 .btn:hover {
-    background: #0056b3;
+    transform: scale(1.1);
 }
 
-/* Form */
+/* Trust Section */
+.trust {
+    text-align: center;
+    padding: 30px;
+}
+
+.trust span {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px 15px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+}
+
+/* Contact */
 form {
     max-width: 500px;
     margin: auto;
     display: flex;
     flex-direction: column;
     gap: 15px;
+    padding: 20px;
 }
 
 input, select, textarea {
     padding: 12px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 14px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
 }
 
 button {
     padding: 12px;
-    background: #28a745;
-    color: #fff;
+    background: linear-gradient(45deg, #ff512f, #dd2476);
     border: none;
-    border-radius: 6px;
-    cursor: pointer;
+    border-radius: 25px;
+    color: white;
     font-size: 16px;
+    cursor: pointer;
 }
 
 button:hover {
-    background: #218838;
+    transform: scale(1.05);
+}
+
+/* WhatsApp Floating */
+.whatsapp {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #25D366;
+    color: white;
+    padding: 15px;
+    border-radius: 50%;
+    font-size: 20px;
+    text-decoration: none;
 }
 
 /* Mobile */
-@media(max-width: 600px){
-    .service-card {
-        width: 100%;
-    }
+@media(max-width:600px){
+    .card { width: 90%; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- Services -->
-<section>
-    <h2>KRYA Digital Services</h2>
-    <p class="subtitle">ईमानदारी और तकनीकी शुद्धता के साथ आपका डिजिटल पार्टनर</p>
+<h2>🚀 KRYA Digital Services</h2>
+<p class="subtitle">आपका भरोसेमंद डिजिटल पार्टनर</p>
 
-    <div class="services-container">
+<div class="services">
 
-        <div class="service-card">
-            <h3>Firebase Auth Setup</h3>
-            <p>Google और Facebook Login सेटअप मात्र 1 घंटे में।</p>
-            <p class="price">₹999</p>
-            <a class="btn" href="https://wa.me/919543333333?text=Firebase Setup चाहिए">WhatsApp करें</a>
-        </div>
-
-        <div class="service-card">
-            <h3>Web Development</h3>
-            <p>प्रोफेशनल 1-पेज बिजनेस वेबसाइट + SEO सेटअप।</p>
-            <p class="price">₹2,999</p>
-            <a class="btn" href="https://wa.me/919543333333?text=Website बनवानी है">WhatsApp करें</a>
-        </div>
-
-        <div class="service-card">
-            <h3>Tech Support</h3>
-            <p>वेबसाइट के बग्स और कोडिंग एरर्स का तुरंत समाधान।</p>
-            <p class="price">₹499 से शुरू</p>
-            <a class="btn" href="https://wa.me/919543333333?text=Tech Support चाहिए">WhatsApp करें</a>
-        </div>
-
+    <div class="card">
+        <h3>🔥 Firebase Auth</h3>
+        <p>Google & Facebook Login सेटअप</p>
+        <p class="price">₹999</p>
+        <a class="btn" href="https://wa.me/919543333333">Start Now</a>
     </div>
-</section>
 
-<!-- Contact Form -->
-<section>
-    <h2>काम शुरू करने के लिए संपर्क करें</h2>
+    <div class="card">
+        <h3>🌐 Web Development</h3>
+        <p>Professional Website + SEO</p>
+        <p class="price">₹2,999</p>
+        <a class="btn" href="https://wa.me/919543333333">Order Now</a>
+    </div>
 
-    <form id="contactForm">
-        <input type="text" placeholder="आपका नाम" required>
-        <input type="email" placeholder="आपका ईमेल" required>
+    <div class="card">
+        <h3>⚡ Tech Support</h3>
+        <p>Bug Fix & Error Solve</p>
+        <p class="price">₹499</p>
+        <a class="btn" href="https://wa.me/919543333333">Fix Now</a>
+    </div>
 
-        <select>
-            <option>Firebase Auth Setup</option>
-            <option>Web Development</option>
-            <option>Tech Support</option>
-        </select>
+</div>
 
-        <textarea placeholder="आपकी जरूरत के बारे में लिखें" rows="5" required></textarea>
+<!-- Trust -->
+<div class="trust">
+    <h2>🔥 क्यों KRYA?</h2>
+    <span>✔ Fast Delivery</span>
+    <span>✔ 100% Genuine Work</span>
+    <span>✔ WhatsApp Support</span>
+</div>
 
-        <button type="submit">अभी मैसेज भेजें</button>
-    </form>
-</section>
+<!-- Contact -->
+<h2>📩 Contact करें</h2>
 
-<script>
-document.getElementById("contactForm").addEventListener("submit", function(e){
-    e.preventDefault();
-    alert("धन्यवाद! आपका मैसेज भेज दिया गया है। (Backend जोड़ना बाकी है)");
-});
-</script>
+<form>
+    <input type="text" placeholder="आपका नाम" required>
+    <input type="email" placeholder="आपका ईमेल" required>
+
+    <select>
+        <option>Firebase Auth</option>
+        <option>Web Development</option>
+        <option>Tech Support</option>
+    </select>
+
+    <textarea placeholder="आपकी जरूरत लिखें" required></textarea>
+
+    <button type="submit">Send Message</button>
+</form>
+
+<!-- WhatsApp Button -->
+<a href="https://wa.me/919543333333" class="whatsapp">💬</a>
 
 </body>
 </html>
