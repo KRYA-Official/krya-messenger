@@ -3,202 +3,136 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mukesh Digital Services</title>
+<title>KRYAlife.com</title>
+
 <style>
-body {font-family: Arial; margin:0; padding:0; background:#f5f5f5;}
-header {background:#0a7f5a; color:white; padding:15px; text-align:center;}
-.container {padding:20px;}
-.card {background:white; padding:15px; margin:10px 0; border-radius:10px; box-shadow:0 0 10px #ccc;}
-button {background:#0a7f5a; color:white; padding:10px; border:none; border-radius:5px;}
+body {margin:0; font-family:Arial; background:#f5f5f5;}
+
+header {
+  background:#0a7f5a;
+  color:white;
+  text-align:center;
+  padding:15px;
+}
+
+/* 🔥 Slider */
+.slider {
+  width:100%;
+  height:120px;
+  overflow:hidden;
+  position:relative;
+}
+
+.slide {
+  position:absolute;
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-size:18px;
+  font-weight:bold;
+  transition:1s;
+}
+
+.slide1 {background:#ff5733;}
+.slide2 {background:#007bff;}
+.slide3 {background:#28a745;}
+
+.container {padding:15px;}
+
+.card {
+  background:white;
+  margin:10px 0;
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+button {
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:5px;
+  background:#0a7f5a;
+  color:white;
+}
+
+.whatsapp {
+  background:#25D366;
+}
 </style>
 </head>
 
 <body>
 
 <header>
-<h2>Jio Mukesh Services</h2>
-<p>Online Service Provider</p>
+<h2>KRYAlife.com</h2>
+<p>Online Digital Services</p>
 </header>
+
+<!-- 🔥 Slider -->
+<div class="slider">
+  <div class="slide slide1">🔥 ₹49 में Logo Design Offer</div>
+  <div class="slide slide2">📢 WhatsApp Promotion शुरू</div>
+  <div class="slide slide3">🌐 Website सिर्फ ₹299</div>
+</div>
 
 <div class="container">
 
 <div class="card">
 <h3>🎨 Logo Design</h3>
-<p>Price: ₹99</p>
+<p>₹49 - Limited Offer</p>
 <button onclick="order()">Order Now</button>
 </div>
 
 <div class="card">
 <h3>📢 WhatsApp Promotion</h3>
-<p>Price: ₹49</p>
+<p>₹49</p>
 <button onclick="order()">Order Now</button>
 </div>
 
 <div class="card">
 <h3>🌐 Website Design</h3>
-<p>Price: ₹299</p>
+<p>₹299</p>
 <button onclick="order()">Order Now</button>
 </div>
 
 <div class="card">
 <h3>💰 Payment</h3>
 <p>UPI: yourupi@bank</p>
-<p>Payment करने के बाद Screenshot भेजें</p>
+<p>Payment के बाद WhatsApp पर Screenshot भेजें</p>
+</div>
+
+<div class="card">
+<button class="whatsapp" onclick="contact()">📲 Contact on WhatsApp</button>
 </div>
 
 </div>
 
 <script>
+let index = 0;
+const slides = document.querySelectorAll(".slide");
+
+function showSlide() {
+  slides.forEach((slide, i) => {
+    slide.style.left = (i - index) * 100 + "%";
+  });
+  index = (index + 1) % slides.length;
+}
+
+setInterval(showSlide, 2000);
+showSlide();
+
 function order(){
-  window.location.href = "https://wa.me/91XXXXXXXXXX";
+  window.location.href="https://wa.me/916379403821";
+}
+
+function contact(){
+  window.location.href="https://wa.me/916379403821";
 }
 </script>
 
-</body>
-</html><!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA Store | Premium Shopping</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        :root { --primary: #ff9800; --dark: #333; --light: #f5f5f5; --white: #ffffff; --shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--light); color: var(--dark); padding-bottom: 70px; }
-        .header { background: var(--white); padding: 10px 20px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-between; }
-        .brand-name { font-weight: 600; font-size: 22px; color: var(--primary); margin: 0; }
-        .user-auth { display: flex; align-items: center; gap: 10px; }
-        #userPic { width: 35px; border-radius: 50%; display: none; border: 2px solid var(--primary); }
-        .search-container { flex: 1; margin: 0 15px; }
-        .search-container input { width: 100%; padding: 8px 15px; border-radius: 25px; border: 1px solid #ddd; outline: none; }
-        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; }
-        .product-card { background: var(--white); border-radius: 15px; padding: 12px; box-shadow: var(--shadow); display: flex; flex-direction: column; }
-        .product-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; }
-        .price { color: #2e7d32; font-weight: bold; }
-        .btn { margin-top: 10px; padding: 10px; border: none; border-radius: 8px; background: var(--primary); color: var(--white); font-weight: 600; cursor: pointer; }
-        .cart-panel { position: fixed; top: 0; right: -100%; width: 85%; max-width: 350px; height: 100%; background: var(--white); z-index: 200; transition: 0.4s; box-shadow: -5px 0 15px rgba(0,0,0,0.1); padding: 20px; }
-        .cart-panel.active { right: 0; }
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--white); display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
-    </style>
-</head>
-<body>
-
-<header class="header">
-    <h1 class="brand-name">KRYA</h1>
-    <div class="search-container"><input type="text" id="search" placeholder="Search items..."></div>
-    <div class="user-auth">
-        <img id="userPic" src="" alt="Profile">
-        <button id="loginBtn" class="btn" style="margin-top:0; font-size:12px;" onclick="login()">Login</button>
-        <div onclick="toggleCart()" style="cursor:pointer; font-size:20px;">🛒<span id="cartCount" style="color:red; font-size:12px;">0</span></div>
-    </div>
-</header>
-
-<main class="product-grid" id="products">
-    <p style="text-align: center; grid-column: span 2;">लोड हो रहा है...</p>
-</main>
-
-<div class="cart-panel" id="cart">
-    <h3>Your Basket</h3>
-    <hr>
-    <div id="cartItems" style="height: 70%; overflow-y: auto;"></div>
-    <h4 id="total">Total: ₹0</h4>
-    <button class="btn" style="width:100%" onclick="checkout()">WhatsApp पर ऑर्डर दें</button>
-    <button class="btn" style="width:100%; background:#777; margin-top:5px;" onclick="toggleCart()">बंद करें</button>
-</div>
-
-<nav class="bottom-nav">
-    <div onclick="location.reload()">🏠<br>Home</div>
-    <div>📦<br>Orders</div>
-    <div onclick="login()">👤<br>Profile</div>
-</nav>
-
-<script type="module">
-    // Firebase SDKs
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
-
-    // 1. अपनी Firebase Config यहाँ डालें
-    const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_PROJECT_ID.appspot.com",
-        messagingSenderId: "YOUR_SENDER_ID",
-        appId: "YOUR_APP_ID"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
-
-    let cart = [];
-    let allProducts = [];
-
-    // 2. लॉगिन फंक्शन
-    window.login = () => {
-        signInWithPopup(auth, provider).catch(err => console.log(err));
-    };
-
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            document.getElementById('loginBtn').style.display = 'none';
-            document.getElementById('userPic').src = user.photoURL;
-            document.getElementById('userPic').style.display = 'block';
-        }
-    });
-
-    // 3. डेटाबेस से प्रोडक्ट्स खींचना
-    const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
-    onSnapshot(q, (snapshot) => {
-        allProducts = [];
-        snapshot.forEach(doc => allProducts.push({id: doc.id, ...doc.data()}));
-        render(allProducts);
-    });
-
-    function render(list) {
-        let html = "";
-        list.forEach((p) => {
-            html += `
-            <div class="product-card">
-                <img src="${p.img}">
-                <p><b>${p.name}</b></p>
-                <p class="price">₹${p.price}</p>
-                <button class="btn" onclick="addToCart('${p.name}', ${p.price})">Add to Cart</button>
-            </div>`;
-        });
-        document.getElementById("products").innerHTML = html || "<p>कोई सामान नहीं मिला।</p>";
-    }
-
-    // 4. कार्ट सिस्टम
-    window.addToCart = (name, price) => {
-        cart.push({name, price});
-        updateUI();
-    };
-
-    function updateUI() {
-        document.getElementById("cartCount").innerText = cart.length;
-        let html = ""; let total = 0;
-        cart.forEach(item => {
-            html += `<div style="display:flex; justify-content:space-between;"><span>${item.name}</span><span>₹${item.price}</span></div>`;
-            total += item.price;
-        });
-        document.getElementById("cartItems").innerHTML = html;
-        document.getElementById("total").innerText = "Total: ₹" + total;
-    }
-
-    window.toggleCart = () => document.getElementById("cart").classList.toggle("active");
-
-    // 5. WhatsApp Checkout
-    window.checkout = () => {
-        if(cart.length === 0) return alert("कार्ट खाली है!");
-        let msg = "नमस्ते KRYA! नया ऑर्डर:%0A";
-        let total = 0;
-        cart.forEach((item, i) => { msg += `${i+1}. ${item.name} - ₹${item.price}%0A`; total += item.price; });
-        msg += `%0A*कुल: ₹${total}*`;
-        window.open(`https://wa.me/91YOUR_NUMBER?text=${msg}`, '_blank');
-    };
-</script>
 </body>
 </html>
