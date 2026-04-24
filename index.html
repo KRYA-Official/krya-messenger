@@ -6,186 +6,199 @@
 <title>KRYAlife.com</title>
 
 <style>
-body {
-  margin:0;
-  font-family:Arial;
-  background:#eef2f3;
-}
+  /* 1. Basic Reset & Layout */
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f7f6;
+    color: #333;
+    line-height: 1.6;
+  }
 
-/* Header */
-header {
-  background:#0a7f5a;
-  color:white;
-  text-align:center;
-  padding:15px;
-}
+  /* 2. Header Style */
+  header {
+    background: #0a7f5a;
+    color: white;
+    text-align: center;
+    padding: 20px 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
 
-/* 🔥 Slider FIXED */
-.slider {
-  width:100%;
-  height:160px;
-  overflow:hidden;
-  border-radius:10px;
-  margin:10px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.2);
-}
+  header h2 { margin: 0; font-size: 24px; }
+  header p { margin: 5px 0 0; opacity: 0.9; }
 
-.slides {
-  display:flex;
-  width:300%;
-  animation:slide 9s infinite;
-}
+  /* 3. Responsive Slider Fix */
+  .slider-container {
+    padding: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
 
-.slides img {
-  width:100%;
-  height:160px;
-  object-fit:cover;
-}
-
-/* Animation */
-@keyframes slide {
-  0% {transform:translateX(0);}
-  30% {transform:translateX(0);}
-  33% {transform:translateX(-100%);}
-  63% {transform:translateX(-100%);}
-  66% {transform:translateX(-200%);}
-  96% {transform:translateX(-200%);}
-  100% {transform:translateX(0);}
-}
-
-/* Container */
-.container {
-  padding:15px;
-}
-
-/* Cards */
-.card {
-  background:white;
-  margin:10px 0;
-  padding:15px;
-  border-radius:12px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.1);
-}
-
-/* Buttons */
-button {
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:6px;
-  background:#0a7f5a;
-  color:white;
-  font-size:16px;
-  margin-top:8px;
-  cursor:pointer;
-}
-
-button:hover {
-  opacity:0.9;
-}
-
-.whatsapp {
-  background:#25D366;
-}
-
-.formbtn {
-  background:#007bff;
-}
-
-/* Reviews */
-.review {
-  background:#fff;
-  padding:10px;
-  margin:5px 0;
-  border-left:4px solid #0a7f5a;
-}
-
-/* Responsive */
-@media(max-width:600px){
   .slider {
-    height:140px;
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: relative;
   }
+
+  .slides {
+    display: flex;
+    width: 300%; /* Number of images * 100 */
+    height: 100%;
+    animation: slide 12s infinite ease-in-out;
+  }
+
   .slides img {
-    height:140px;
+    width: 33.33%; /* 100 / Number of images */
+    height: 100%;
+    object-fit: cover;
   }
-}
+
+  /* Animation for 3 Images */
+  @keyframes slide {
+    0%, 28% { transform: translateX(0); }
+    33%, 61% { transform: translateX(-33.33%); }
+    66%, 94% { transform: translateX(-66.66%); }
+    100% { transform: translateX(0); }
+  }
+
+  /* 4. Container & Cards */
+  .container {
+    padding: 15px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: white;
+    margin-bottom: 20px;
+    padding: 18px;
+    border-radius: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.2s;
+  }
+
+  .card h3 { margin-top: 0; color: #0a7f5a; }
+
+  /* 5. Buttons */
+  button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    background: #0a7f5a;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  button:active { transform: scale(0.98); }
+
+  .whatsapp { background: #25D366; }
+  .formbtn { background: #007bff; }
+
+  /* 6. Review Style */
+  .review {
+    background: #f9f9f9;
+    padding: 12px;
+    margin: 8px 0;
+    border-left: 5px solid #0a7f5a;
+    font-style: italic;
+    font-size: 14px;
+  }
+
+  /* Payment Section */
+  .upi-box {
+    background: #fff3cd;
+    border: 1px dashed #856404;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 8px;
+  }
 </style>
 </head>
 
 <body>
 
 <header>
-<h2>🔥 KRYAlife.com</h2>
-<p>Digital Services & Online Help</p>
+  <h2>🔥 KRYAlife.com</h2>
+  <p>Digital Services & Online Help</p>
 </header>
 
-<!-- 🔥 Slider -->
-<div class="slider">
-  <div class="slides">
-    <img src="https://via.placeholder.com/800x150/ff5733/ffffff?text=Logo+Offer">
-    <img src="https://via.placeholder.com/800x150/007bff/ffffff?text=Promotion+Offer">
-    <img src="https://via.placeholder.com/800x150/28a745/ffffff?text=Website+Offer">
+<div class="slider-container">
+  <div class="slider">
+    <div class="slides">
+      <img src="https://via.placeholder.com/800x200/ff5733/ffffff?text=Professional+Logo+Offer">
+      <img src="https://via.placeholder.com/800x200/007bff/ffffff?text=WhatsApp+Marketing">
+      <img src="https://via.placeholder.com/800x200/28a745/ffffff?text=Affordable+Websites">
+    </div>
   </div>
 </div>
 
 <div class="container">
 
-<!-- Services -->
-<div class="card">
-<h3>🎨 Logo Design</h3>
-<p>₹49 - Limited Offer</p>
-<button onclick="order()">Order on WhatsApp</button>
-<button class="formbtn" onclick="form()">Fill Order Form</button>
-</div>
+  <div class="card">
+    <h3>🎨 Logo Design</h3>
+    <p>Price: <strong>₹49</strong> <small>(Limited Time)</small></p>
+    <button onclick="order('Logo Design')">Order on WhatsApp</button>
+    <button class="formbtn" onclick="openForm()">Fill Order Form</button>
+  </div>
 
-<div class="card">
-<h3>📢 WhatsApp Promotion</h3>
-<p>₹49</p>
-<button onclick="order()">Order on WhatsApp</button>
-<button class="formbtn" onclick="form()">Fill Order Form</button>
-</div>
+  <div class="card">
+    <h3>📢 WhatsApp Promotion</h3>
+    <p>Price: <strong>₹49</strong></p>
+    <button onclick="order('WhatsApp Promotion')">Order on WhatsApp</button>
+    <button class="formbtn" onclick="openForm()">Fill Order Form</button>
+  </div>
 
-<div class="card">
-<h3>🌐 Website Design</h3>
-<p>₹299</p>
-<button onclick="order()">Order on WhatsApp</button>
-<button class="formbtn" onclick="form()">Fill Order Form</button>
-</div>
+  <div class="card">
+    <h3>🌐 Website Design</h3>
+    <p>Price: <strong>₹299</strong></p>
+    <button onclick="order('Website Design')">Order on WhatsApp</button>
+    <button class="formbtn" onclick="openForm()">Fill Order Form</button>
+  </div>
 
-<!-- Payment -->
-<div class="card">
-<h3>💰 Payment</h3>
-<p>UPI: yourupi@bank</p>
-<p>Payment के बाद Screenshot WhatsApp पर भेजें</p>
-</div>
+  <div class="card">
+    <h3>💰 Payment Details</h3>
+    <div class="upi-box">UPI ID: yourname@upi</div>
+    <p style="font-size:13px; color:#666; margin-top:10px;">नोट: पेमेंट करने के बाद स्क्रीनशॉट व्हाट्सएप पर जरूर भेजें।</p>
+  </div>
 
-<!-- Reviews -->
-<div class="card">
-<h3>⭐ Customer Reviews</h3>
-<div class="review">"बहुत बढ़िया Logo मिला!"</div>
-<div class="review">"Fast service 👍"</div>
-<div class="review">"Low price best work"</div>
-</div>
+  <div class="card">
+    <h3>⭐ Customer Reviews</h3>
+    <div class="review">"बहुत बढ़िया Logo मिला! Fast service 👍"</div>
+    <div class="review">"Low price best work, highly recommended."</div>
+  </div>
 
-<!-- Contact -->
-<div class="card">
-<button class="whatsapp" onclick="contact()">📲 WhatsApp Support</button>
-</div>
+  <div class="card" style="background:transparent; box-shadow:none; padding:0;">
+    <button class="whatsapp" onclick="contact()">📲 WhatsApp Support</button>
+  </div>
 
 </div>
 
 <script>
-function order(){
-  window.location.href="https://wa.me/916379403821";
-}
+  const PHONE_NUMBER = "916379403821";
+  const GOOGLE_FORM_URL = "https://forms.gle/your-link-here"; // अपना लिंक यहाँ डालें
 
-function contact(){
-  window.location.href="https://wa.me/916379403821";
-}
+  function order(serviceName) {
+    const message = encodeURIComponent(`Hello KRYA! I want to order: ${serviceName}`);
+    window.location.href = `https://wa.me/${PHONE_NUMBER}?text=${message}`;
+  }
 
-function form(){
-  window.location.href="YOUR_GOOGLE_FORM_LINK";
-}
+  function contact() {
+    const message = encodeURIComponent("Hello KRYA! I need some help/support.");
+    window.location.href = `https://wa.me/${PHONE_NUMBER}?text=${message}`;
+  }
+
+  function openForm() {
+    window.open(GOOGLE_FORM_URL, '_blank');
+  }
 </script>
 
 </body>
