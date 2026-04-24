@@ -5,237 +5,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KRYAlife.com</title>
     <style>
-        /* वैश्विक सेटिंग्स */
+        /* बॉडी को पूरा फैलाना */
         body {
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f7f9fc;
-            color: #333;
-        }
-
-        /* 1. मोबाइल स्टेटस बार (सिर्फ विज़ुअल के लिए) */
-        .status-bar {
-            background-color: #1a1a1a;
-            color: white;
+            font-family: sans-serif;
+            background-color: #f0f2f5;
             display: flex;
-            justify-content: space-between;
-            padding: 4px 15px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        .status-bar-icons span {
-            margin-left: 5px;
+            flex-direction: column; /* सब कुछ एक के नीचे एक लाने के लिए */
+            min-height: 100vh;
         }
 
-        /* 2. ब्राउज़र यूआरएल बार (सिर्फ विज़ुअल के लिए) */
-        .url-bar {
-            background-color: #202124;
-            color: #e8eaed;
-            padding: 10px 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .url-text {
-            background-color: #2a2b2e;
-            padding: 6px 15px;
-            border-radius: 20px;
-            flex-grow: 1;
-            margin: 0 10px;
-            font-size: 14px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .url-icon {
-            font-size: 18px;
-        }
-
-        /* 3. मुख्य वेबसाइट हेडर */
-        .site-header {
-            background-color: #0c845c; /* गहरा हरा */
-            color: white;
-            text-align: center;
-            padding: 25px 15px;
-        }
-        .brand-name {
-            font-size: 24px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 5px;
-        }
-        .brand-logo {
-            width: 28px;
-            height: 28px;
-            margin-right: 8px;
-        }
-        .site-tagline {
-            font-size: 14px;
-            opacity: 0.9;
-            margin: 0;
-        }
-
-        /* 4. मुख्य सामग्री कंटेनर */
-        .main-container {
-            padding: 20px;
-            max-width: 600px; /* मोबाइल व्यू के लिए */
-            margin: 0 auto;
-        }
-
-        /* 5. प्रमोशनल बैनर सेक्शन */
-        .promo-banner-container {
-            background-color: white;
-            border-radius: 15px;
-            padding: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-        .promo-banner {
-            width: 100%;
-            border-radius: 10px;
-            display: block;
-        }
-
-        /* 6. सर्विस कार्ड्स */
-        .service-card {
-            background-color: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        .card-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .card-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: #0c845c;
-            margin: 0;
-            display: flex;
-            align-items: center;
-        }
-        .card-icon {
-            font-size: 24px;
-            margin-right: 10px;
-        }
-        .card-price {
-            font-size: 16px;
-            margin-bottom: 20px;
-            color: #555;
-        }
-        .price-bold {
-            font-weight: bold;
-            color: #333;
-        }
-        .price-sub {
-            color: #777;
-            font-size: 14px;
-        }
-
-        /* 7. बटन */
-        .btn {
-            width: 100%;
-            border: none;
-            border-radius: 10px;
-            padding: 15px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            display: block;
-            margin-bottom: 10px;
-            text-align: center;
-            text-decoration: none;
-            box-sizing: border-box;
-        }
-        .btn:last-child {
-            margin-bottom: 0;
-        }
-
-        /* व्हाट्सएप बटन (हरा) */
-        .btn-whatsapp {
+        /* हेडर (हरा वाला हिस्सा) */
+        header {
             background-color: #0c845c;
             color: white;
-        }
-        .btn-whatsapp:hover {
-            background-color: #0a6f4e;
+            text-align: center;
+            padding: 20px 10px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
-        /* फॉर्म बटन (नीला) */
-        .btn-form {
-            background-color: #007bff;
-            color: white;
+        /* मुख्य कंटेनर */
+        .container {
+            width: 100%;
+            max-width: 500px; /* मोबाइल के लिए सही चौड़ाई */
+            margin: 0 auto;
+            padding: 15px;
+            box-sizing: border-box;
         }
-        .btn-form:hover {
-            background-color: #0069d9;
+
+        /* बैनर इमेज (स्लाइडर एरिया) */
+        .banner-box {
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+        .banner-box img {
+            width: 100%;
+            border-radius: 8px;
+            display: block;
+        }
+
+        /* सर्विस कार्ड */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+
+        .card h3 {
+            margin: 0 0 10px 0;
+            color: #0c845c;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .price {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        /* बटन स्टाइल */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .btn-wa { background: #0c845c; color: white; }
+        .btn-form { background: #007bff; color: white; }
+
     </style>
 </head>
 <body>
 
-    <div class="status-bar">
-        <span>7:57</span>
-        <div class="status-bar-icons">
-            <span>&#128222;</span> <span>VoLTE</span>
-            <span>4G</span>
-            <span>&#128246;</span> <span>&#128267;</span> <span>98%</span>
-        }
-    </div>
-
-    <div class="url-bar">
-        <span class="url-icon">&#8962;</span> <div class="url-text">
-            <span>&#128274;</span> kryalive.com
-        </div>
-        <div class="url-icon" style="border: 1.5px solid #e8eaed; border-radius: 4px; padding: 1px 4px; font-size: 12px; font-weight: bold;">21</div>
-        <span class="url-icon">&#8942;</span> </div>
-
-    <header class="site-header">
-        <div class="brand-name">
-            <span>&#128293;</span> KRYAlife.com
-        </div>
-        <p class="site-tagline">Digital Services & Online Help</p>
+    <header>
+        <div style="font-size: 22px; font-weight: bold;">🔥 KRYAlife.com</div>
+        <div style="font-size: 14px; opacity: 0.9;">Digital Services & Online Help</div>
     </header>
 
-    <main class="main-container">
-
-        <div class="promo-banner-container">
-            <img src="YOUR_BANNER_IMAGE_LINK_HERE.jpg" alt="Services Banner" class="promo-banner">
+    <div class="container">
+        <div class="banner-box">
+            <img src="https://via.placeholder.com/400x150?text=Special+Offers+Live" alt="Banner">
         </div>
 
-        <div class="service-card">
-            <div class="card-header">
-                <h2 class="card-title">
-                    <span class="card-icon">&#127912;</span> Logo Design
-                </h2>
-            </div>
-            <p class="card-price">
-                Price: <span class="price-bold">&#8377;49</span> 
-                <span class="price-sub">(Limited Time)</span>
-            </p>
-            <a href="#" class="btn btn-whatsapp">Order on WhatsApp</a>
+        <div class="card">
+            <h3>🎨 Logo Design</h3>
+            <div class="price">Price: <b>₹49</b> <small>(Limited Time)</small></div>
+            <a href="https://wa.me/916379403821" class="btn btn-wa">Order on WhatsApp</a>
             <a href="#" class="btn btn-form">Fill Order Form</a>
         </div>
 
-        <div class="service-card">
-            <div class="card-header">
-                <h2 class="card-title">
-                    <span class="card-icon">&#128227;</span> WhatsApp Promotion
-                </h2>
-            </div>
-            <p class="card-price">
-                Price: <span class="price-bold">&#8377;49</span>
-            </p>
-            <a href="#" class="btn btn-whatsapp">Order on WhatsApp</a>
-            </div>
-
-    </main>
+        <div class="card">
+            <h3>📢 WhatsApp Promotion</h3>
+            <div class="price">Price: <b>₹49</b></div>
+            <a href="https://wa.me/916379403821" class="btn btn-wa">Order on WhatsApp</a>
+        </div>
+    </div>
 
 </body>
 </html>
