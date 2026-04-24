@@ -5,125 +5,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>kryalife.com - Digital Services</title>
     <style>
-        /* Modern & Clean Styling */
-        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; }
+        /* Modern Design for kryalife.com */
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; }
         
         /* Header Section */
         header {
             background: linear-gradient(135deg, #0c845c 0%, #0a6f4e 100%);
-            color: white;
-            text-align: center;
-            padding: 40px 20px;
+            color: white; text-align: center; padding: 35px 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        .brand { font-size: 32px; font-weight: 800; letter-spacing: -1px; margin: 0; }
-        .brand span { color: #fdfdfd; font-weight: 300; }
-        .tagline { font-size: 14px; margin-top: 8px; opacity: 0.9; font-weight: 400; }
+        .brand { font-size: 30px; font-weight: 800; letter-spacing: -1px; margin: 0; }
+        .tagline { font-size: 14px; margin-top: 5px; opacity: 0.9; }
 
-        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+        .container { padding: 15px; max-width: 500px; margin: 0 auto; }
+
+        /* Payment Info Box */
+        .payment-box {
+            background: #fff3cd; border: 1px solid #ffeeba;
+            padding: 15px; border-radius: 12px; margin-bottom: 25px;
+            text-align: center; font-size: 14px;
+        }
+        .upi-id { color: #856404; font-weight: bold; font-size: 18px; display: block; margin: 5px 0; }
 
         /* Service Card Design */
         .service-card {
-            background: white;
-            border-radius: 18px;
-            margin-bottom: 25px;
-            overflow: hidden;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-            transition: transform 0.3s ease;
+            background: white; border-radius: 18px; margin-bottom: 25px;
+            overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,0.06);
         }
-        .service-card:hover { transform: translateY(-5px); }
-        
-        .card-img { width: 100%; height: 180px; object-fit: cover; background-color: #eee; display: block; }
-        
+        .card-img { width: 100%; height: 180px; object-fit: cover; display: block; background: #eee; }
         .card-body { padding: 20px; }
-        .card-body h3 { margin: 0 0 10px; color: #0c845c; font-size: 20px; display: flex; align-items: center; gap: 8px; }
-        
-        .price-badge { 
-            background: #e8f5e9; color: #2e7d32; display: inline-block; 
-            padding: 6px 12px; border-radius: 8px; font-weight: 700; 
-            font-size: 14px; margin-bottom: 15px; 
-        }
+        .card-body h3 { margin: 0 0 10px; color: #0c845c; font-size: 19px; }
+        .price-badge { background: #e8f5e9; color: #2e7d32; display: inline-block; padding: 5px 12px; border-radius: 8px; font-weight: 700; margin-bottom: 15px; }
 
-        /* Buttons Styling */
+        /* Buttons */
         .btn {
             display: block; width: 100%; padding: 15px; text-align: center;
             text-decoration: none; font-weight: bold; border-radius: 12px;
-            font-size: 16px; transition: 0.3s; box-sizing: border-box; margin-bottom: 10px;
+            font-size: 16px; margin-bottom: 10px; box-sizing: border-box;
         }
-        .btn-wa { background-color: #0c845c; color: white; border: none; }
-        .btn-wa:hover { background-color: #086345; }
-
-        /* Global Fixed Bottom Button */
+        .btn-wa { background-color: #0c845c; color: white; }
+        
+        /* Sticky Footer Form Button */
         .footer-sticky {
             position: sticky; bottom: 15px; background: white; 
-            padding: 20px; border-radius: 25px; margin: 20px 10px;
-            box-shadow: 0 -8px 25px rgba(0,0,0,0.12); text-align: center;
+            padding: 20px; border-radius: 20px; margin: 20px 5px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1); text-align: center;
             border: 2px solid #007bff;
         }
-        .btn-form { 
-            background-color: #007bff; color: white; 
-            animation: pulse 2s infinite; font-size: 18px;
-            box-shadow: 0 4px 15px rgba(0,123,255,0.3);
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.03); }
-            100% { transform: scale(1); }
-        }
+        .btn-form { background-color: #007bff; color: white; font-size: 18px; box-shadow: 0 4px 15px rgba(0,123,255,0.3); }
     </style>
 </head>
 <body>
 
 <header>
     <h1 class="brand">kryalife<span>.com</span></h1>
-    <p class="tagline">आपकी सफलता, हमारी डिजिटल पहचान</p>
+    <p class="tagline">Digital Services & Online Help</p>
 </header>
 
 <div class="container">
 
+    <div class="payment-box">
+        <strong>💰 भुगतान के लिए UPI ID:</strong>
+        <span class="upi-id">93690mukeshkumar@axl</span>
+        पेमेंट के बाद UTR नंबर फॉर्म में जरूर भरें।
+    </div>
+
     <div class="service-card">
-        <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500" alt="Logo Design" class="card-img">
+        <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500" class="card-img">
         <div class="card-body">
             <h3>🎨 3D Logo Design</h3>
-            <div class="price-badge">मात्र ₹199 से शुरू</div>
-            <a href="https://wa.me/916379403821" class="btn btn-wa">WhatsApp पर ऑर्डर दें</a>
+            <div class="price-badge">Price: ₹199</div>
+            <a href="https://wa.me/916379403821?text=नमस्ते, मुझे 3D Logo बनवाना है।" class="btn btn-wa">WhatsApp पर ऑर्डर दें</a>
         </div>
     </div>
 
     <div class="service-card">
-        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500" alt="Website Design" class="card-img">
+        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500" class="card-img">
         <div class="card-body">
             <h3>🌐 वेबसाइट डिजाइन</h3>
-            <div class="price-badge">बेहतरीन ऑफर्स उपलब्ध</div>
-            <a href="https://wa.me/916379403821" class="btn btn-wa">WhatsApp पर बात करें</a>
+            <div class="price-badge">Offers Available</div>
+            <a href="https://wa.me/916379403821?text=नमस्ते, मुझे नयी वेबसाइट बनवानी है।" class="btn btn-wa">WhatsApp पर बात करें</a>
         </div>
     </div>
 
     <div class="service-card">
-        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500" alt="YouTube Services" class="card-img">
+        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500" class="card-img">
         <div class="card-body">
             <h3>📈 YouTube Subs & Views</h3>
-            <div class="price-badge">100% सुरक्षित और तेज़</div>
-            <a href="https://wa.me/916379403821" class="btn btn-wa">ग्रोथ शुरू करें</a>
+            <div class="price-badge">Fast & Secure</div>
+            <a href="https://wa.me/916379403821?text=नमस्ते, मुझे YouTube Subscribers/Views चाहिए।" class="btn btn-wa">ग्रोथ शुरू करें</a>
         </div>
     </div>
 
     <div class="service-card">
-        <img src="https://images.unsplash.com/photo-1569336415962-a4bd4f79c3f2?w=500" alt="Promotions" class="card-img">
+        <img src="https://images.unsplash.com/photo-1569336415962-a4bd4f79c3f2?w=500" class="card-img">
         <div class="card-body">
             <h3>📍 Google Maps & WhatsApp Promo</h3>
-            <div class="price-badge">लोकल बिजनेस को बढ़ाएं</div>
-            <a href="https://wa.me/916379403821" class="btn btn-wa">जानकारी लें</a>
+            <div class="price-badge">लोकल बिजनेस ग्रोथ</div>
+            <a href="https://wa.me/916379403821?text=नमस्ते, मुझे Google Maps या व्हाट्सएप प्रमोशन चाहिए।" class="btn btn-wa">जानकारी लें</a>
         </div>
     </div>
 
     <div class="footer-sticky">
-        <h4 style="margin: 0 0 12px; color: #007bff;">📋 एक ही फॉर्म से सब आर्डर करें</h4>
+        <h4 style="margin: 0 0 10px; color: #007bff;">📋 एक ही फॉर्म से सब आर्डर करें</h4>
         <a href="https://forms.gle/DoeEaC47RPX99zPe6" class="btn btn-form">
             ओपन आर्डर फॉर्म (All Services)
         </a>
-        <p style="font-size: 11px; color: #777; margin-top: 8px;">भुगतान के बाद UTR नंबर तैयार रखें</p>
+        <p style="font-size: 11px; color: #777; margin-top: 8px;">पेमेंट के बाद ही फॉर्म भरें</p>
     </div>
 
 </div>
