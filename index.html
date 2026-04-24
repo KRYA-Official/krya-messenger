@@ -5,30 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>kryalife.com - Digital Services</title>
     <style>
+        /* Modern Design for kryalife.com */
         body { margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; }
-        header { background: linear-gradient(135deg, #0c845c 0%, #0a6f4e 100%); color: white; text-align: center; padding: 30px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        
+        header {
+            background: linear-gradient(135deg, #0c845c 0%, #0a6f4e 100%);
+            color: white; text-align: center; padding: 35px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
         .brand { font-size: 30px; font-weight: 800; letter-spacing: -1px; margin: 0; }
         .tagline { font-size: 14px; margin-top: 5px; opacity: 0.9; }
+
         .container { padding: 15px; max-width: 500px; margin: 0 auto; }
-        
+
         /* Payment Info Box */
-        .payment-box { background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 12px; margin-bottom: 25px; text-align: center; font-size: 14px; }
+        .payment-box {
+            background: #fff3cd; border: 1px solid #ffeeba;
+            padding: 15px; border-radius: 12px; margin-bottom: 25px;
+            text-align: center; font-size: 14px;
+        }
         .upi-id { color: #856404; font-weight: bold; font-size: 18px; display: block; margin: 5px 0; }
 
         /* Service Card Design */
-        .service-card { background: white; border-radius: 18px; margin-bottom: 25px; overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
-        .card-img { width: 100%; height: 180px; object-fit: cover; display: block; background: #eee; }
+        .service-card {
+            background: white; border-radius: 18px; margin-bottom: 25px;
+            overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+        }
+        .card-img { width: 100%; height: 200px; object-fit: cover; display: block; background: #eee; }
         .card-body { padding: 20px; }
         .card-body h3 { margin: 0 0 10px; color: #0c845c; font-size: 19px; }
         .price-badge { background: #e8f5e9; color: #2e7d32; display: inline-block; padding: 5px 12px; border-radius: 8px; font-weight: 700; margin-bottom: 15px; }
 
-        /* Buttons */
-        .btn { display: block; width: 100%; padding: 15px; text-align: center; text-decoration: none; font-weight: bold; border-radius: 12px; font-size: 16px; margin-bottom: 10px; box-sizing: border-box; }
-        .btn-pay { background-color: #0c845c; color: white; border: none; cursor: pointer; }
+        /* UPI Buttons */
+        .btn {
+            display: block; width: 100%; padding: 15px; text-align: center;
+            text-decoration: none; font-weight: bold; border-radius: 12px;
+            font-size: 16px; margin-bottom: 10px; box-sizing: border-box;
+        }
+        .btn-pay { background-color: #0c845c; color: white; border: none; }
         
         /* Sticky Footer Form Button */
-        .footer-sticky { position: sticky; bottom: 15px; background: white; padding: 20px; border-radius: 20px; margin: 20px 5px; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); text-align: center; border: 2px solid #007bff; }
-        .btn-form { background-color: #007bff; color: white; font-size: 18px; }
+        .footer-sticky {
+            position: sticky; bottom: 15px; background: white; 
+            padding: 20px; border-radius: 20px; margin: 20px 5px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1); text-align: center;
+            border: 2px solid #007bff;
+        }
+        .btn-form { background-color: #007bff; color: white; font-size: 18px; box-shadow: 0 4px 15px rgba(0,123,255,0.3); }
     </style>
 </head>
 <body>
@@ -43,7 +66,7 @@
     <div class="payment-box">
         <strong>💰 भुगतान के लिए UPI ID:</strong>
         <span class="upi-id">93690mukeshkumar@axl</span>
-        पेमेंट के बाद <b>UTR नंबर</b> नीचे दिए गए फॉर्म में भरें।
+        पेमेंट के बाद UTR नंबर फॉर्म में जरूर भरें।
     </div>
 
     <div class="service-card">
@@ -51,7 +74,7 @@
         <div class="card-body">
             <h3>🎨 3D Logo Design</h3>
             <div class="price-badge">Price: ₹199</div>
-            <a href="upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&am=199&cu=INR" class="btn btn-pay">अभी पेमेंट करें (₹199)</a>
+            <a href="upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&am=199&cu=INR" class="btn btn-pay">पेमेंट करें (₹199)</a>
         </div>
     </div>
 
@@ -59,8 +82,8 @@
         <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500" class="card-img">
         <div class="card-body">
             <h3>🌐 वेबसाइट डिजाइन</h3>
-            <div class="price-badge">Booking Amount: ₹299</div>
-            <a href="upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&am=299&cu=INR" class="btn btn-pay">बुकिंग पेमेंट करें (₹299)</a>
+            <div class="price-badge">Booking: ₹299</div>
+            <a href="upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&am=299&cu=INR" class="btn btn-pay">पेमेंट करें (₹299)</a>
         </div>
     </div>
 
@@ -68,13 +91,13 @@
         <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500" class="card-img">
         <div class="card-body">
             <h3>📈 YouTube Subs & Views</h3>
-            <div class="price-badge">Starting Price: ₹100</div>
+            <div class="price-badge">Price: ₹100</div>
             <a href="upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&am=100&cu=INR" class="btn btn-pay">पेमेंट करें (₹100)</a>
         </div>
     </div>
 
     <div class="service-card">
-        <img src="https://images.unsplash.com/photo-1569336415962-a4bd4f79c3f2?w=500" class="card-img">
+        <img src="https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?w=500" class="card-img">
         <div class="card-body">
             <h3>📍 Google Maps & WhatsApp Promo</h3>
             <div class="price-badge">Service Fee: ₹150</div>
@@ -84,7 +107,9 @@
 
     <div class="footer-sticky">
         <h4 style="margin: 0 0 10px; color: #007bff;">📋 पेमेंट के बाद यहाँ जानकारी भरें</h4>
-        <a href="https://forms.gle/DoeEaC47RPX99zPe6" class="btn btn-form">ओपन आर्डर फॉर्म (सबमिट UTR)</a>
+        <a href="https://forms.gle/DoeEaC47RPX99zPe6" class="btn btn-form">
+            ओपन आर्डर फॉर्म (सबमिट UTR)
+        </a>
         <p style="font-size: 11px; color: #777; margin-top: 8px;">बिना UTR के आर्डर मान्य नहीं होगा</p>
     </div>
 
