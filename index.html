@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYAlife.com</title>
+    <title>KRYAlife.com - Digital Services</title>
     <style>
         body {
             margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
         }
 
-        /* हेडर */
+        /* Header */
         header {
             background-color: #0c845c;
             color: white;
             text-align: center;
             padding: 20px 10px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .container {
@@ -26,102 +29,135 @@
             margin: 0 auto;
         }
 
-        /* बैनर फिक्स: अगर इमेज नहीं भी है, तो यह खाली नहीं दिखेगा */
-        .banner-container {
-            width: 100%;
-            min-height: 150px;
-            background: #ddd; /* इमेज लोड न होने पर ग्रे रंग दिखेगा */
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .banner-container img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        /* कार्ड स्टाइल */
+        /* Service Card */
         .card {
             background: white;
             border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Service Image Above Buttons */
+        .service-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+            background: #e0e0e0;
+        }
+
+        .card-content {
+            padding: 15px;
         }
 
         .card h3 {
-            margin: 0 0 10px;
+            margin: 0 0 8px;
             color: #0c845c;
+            font-size: 20px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .price {
-            margin-bottom: 20px;
-            font-size: 16px;
-            color: #444;
+        .price-tag {
+            background: #fff3cd;
+            color: #856404;
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 14px;
         }
 
-        /* बटन्स */
+        /* Buttons */
         .btn {
             display: block;
             width: 100%;
-            padding: 15px;
+            padding: 14px;
             text-align: center;
             text-decoration: none;
             font-weight: bold;
-            border-radius: 10px;
-            margin-bottom: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
             font-size: 16px;
             transition: 0.3s;
+            box-sizing: border-box;
         }
 
-        .btn-wa {
-            background-color: #0c845c;
-            color: white;
-        }
+        .btn-wa { background-color: #0c845c; color: white; }
+        .btn-form { background-color: #007bff; color: white; }
+        .btn:active { transform: scale(0.97); }
 
-        .btn-form {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
     </style>
 </head>
 <body>
 
-    <header>
-        <h2 style="margin:0;">🔥 KRYAlife.com</h2>
-        <p style="margin:5px 0 0; font-size:14px; opacity:0.9;">Digital Services & Online Help</p>
-    </header>
+<header>
+    <h2 style="margin:0;">🔥 KRYAlife.com</h2>
+    <p style="margin:5px 0 0; font-size:13px; opacity:0.9;">Professional Digital Services</p>
+</header>
 
-    <div class="container">
-        
-        <div class="banner-container">
-            <img src="https://img.freepik.com/free-vector/digital-marketing-agency-banner_23-2149036983.jpg" alt="Services Banner">
+<div class="container">
+
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=500" class="service-img" alt="3D Logo">
+        <div class="card-content">
+            <h3>🎨 3D Logo Design</h3>
+            <div class="price-tag">Best Quality @ ₹199</div>
+            <a href="https://wa.me/916379403821?text=Hi, I want a 3D Logo" class="btn btn-wa">Order on WhatsApp</a>
+            <a href="#" class="btn btn-form">Fill Order Form</a>
         </div>
-
-        <div class="card">
-            <h3>🎨 Logo Design</h3>
-            <div class="price">Price: <b>₹49</b> <span style="font-size:12px; color:gray;">(Limited Time)</span></div>
-            <a href="https://wa.me/916379403821?text=Hi, I want a Logo" class="btn btn-wa">Order on WhatsApp</a>
-            <a href="YOUR_FORM_LINK" class="btn btn-form">Fill Order Form</a>
-        </div>
-
-        <div class="card">
-            <h3>📢 WhatsApp Promotion</h3>
-            <div class="price">Price: <b>₹49</b></div>
-            <a href="https://wa.me/916379403821?text=Hi, I want WhatsApp Promotion" class="btn btn-wa">Order on WhatsApp</a>
-        </div>
-
     </div>
+
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=500" class="service-img" alt="Website Design">
+        <div class="card-content">
+            <h3>🌐 न्यू वेबसाइट बनवाएं</h3>
+            <div class="price-tag">Start your Business @ ₹299</div>
+            <a href="https://wa.me/916379403821?text=Hi, I want a New Website" class="btn btn-wa">Order on WhatsApp</a>
+            <a href="#" class="btn btn-form">Get a Quote</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=500" class="service-img" alt="YouTube Subscribers">
+        <div class="card-content">
+            <h3>📈 YouTube Subscribers</h3>
+            <div class="price-tag">Real & Permanent Service</div>
+            <a href="https://wa.me/916379403821?text=Hi, I want YT Subscribers" class="btn btn-wa">Order on WhatsApp</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=500" class="service-img" alt="YouTube Views">
+        <div class="card-content">
+            <h3>🎥 YouTube Views</h3>
+            <div class="price-tag">Boost your Content Today</div>
+            <a href="https://wa.me/916379403821?text=Hi, I want YT Views" class="btn btn-wa">Order on WhatsApp</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?q=80&w=500" class="service-img" alt="WhatsApp Promotion">
+        <div class="card-content">
+            <h3>📢 WhatsApp Channel Promotion</h3>
+            <div class="price-tag">Grow your Channel Fast</div>
+            <a href="https://wa.me/916379403821?text=Hi, I want WhatsApp Channel Promo" class="btn btn-wa">Order on WhatsApp</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1569336415962-a4bd4f79c3f2?q=80&w=500" class="service-img" alt="Google Maps">
+        <div class="card-content">
+            <h3>📍 Google Maps Service</h3>
+            <div class="price-tag">Add Business & Get Reviews</div>
+            <a href="https://wa.me/916379403821?text=Hi, I want Google Maps Service" class="btn btn-wa">Order on WhatsApp</a>
+        </div>
+    </div>
+
+</div>
 
 </body>
 </html>
