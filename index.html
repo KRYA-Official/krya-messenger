@@ -3,215 +3,378 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA Digital - Certificate of Achievement</title>
+    <title>KRYA Digital - Scale Your Brand</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
     <style>
         :root {
-            --primary-red: #D32F2F;
-            --golden: #FFD700;
-            --golden-dark: #D4AF37;
-            --dark-green: #2E7D32;
-            --text-dark: #333333;
+            --primary: #0c845c; /* Green */
+            --secondary: #d32f2f; /* Red */
+            --accent: #FFD700; /* Gold */
+            --bg-light: #f4f7f6;
+            --text-dark: #2d3436;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.3);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+        .dark-theme {
+            --bg-light: #121212;
+            --text-dark: #f5f6fa;
+            --glass-bg: rgba(30, 30, 30, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
-        /* Certificate Container */
-        .certificate-wrapper {
-            background: linear-gradient(135deg, #ffffff 0%, #fffdf5 100%);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-            max-width: 900px;
-            width: 100%;
-            margin-bottom: 30px;
-            animation: fadeIn 1s ease-in-out;
-            position: relative;
-            overflow: hidden;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { background-color: var(--bg-light); color: var(--text-dark); overflow-x: hidden; transition: background 0.3s; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
 
-        /* Inner Golden Border with Glow */
-        .certificate-inner {
-            border: 2px solid var(--golden-dark);
-            padding: 40px;
-            position: relative;
-            box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.2), 0 0 15px rgba(255, 215, 0, 0.3);
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            text-align: center;
-        }
+        /* Loader */
+        #loader { position: fixed; width: 100%; height: 100%; background: var(--bg-light); z-index: 9999; display: flex; justify-content: center; align-items: center; transition: 0.5s; }
+        .spinner { width: 50px; height: 50px; border: 5px solid var(--accent); border-top: 5px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* Animated Shine on Border */
-        .certificate-inner::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
-            animation: shine 4s infinite; pointer-events: none;
-        }
-
-        /* Watermark */
-        .watermark {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 120px; font-weight: 800; color: rgba(212, 175, 55, 0.04);
-            pointer-events: none; z-index: 1; white-space: nowrap;
-        }
-
-        /* Content Z-index */
-        .cert-content { position: relative; z-index: 2; }
+        /* Glassmorphism Utility */
+        .glass { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1); border-radius: 16px; }
 
         /* Header */
-        .cert-header h2 { font-size: 32px; color: var(--primary-red); font-weight: 800; letter-spacing: 2px; }
-        .cert-header p { font-size: 14px; color: var(--golden-dark); font-weight: 600; letter-spacing: 1px; margin-bottom: 30px; text-transform: uppercase; }
+        header { position: fixed; top: 0; width: 100%; z-index: 1000; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+        .logo { font-size: 24px; font-weight: 700; color: var(--primary); text-decoration: none; }
+        .logo span { color: var(--secondary); }
+        .nav-actions button { background: none; border: none; font-size: 20px; color: var(--text-dark); cursor: pointer; }
 
-        /* Title */
-        .cert-title { font-family: 'Playfair Display', serif; font-size: 46px; color: var(--golden-dark); margin-bottom: 10px; font-weight: 800; }
-        .cert-subtitle { font-size: 16px; color: #666; margin-bottom: 30px; font-style: italic; }
+        /* Hero Section */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 100px 5% 50px; background: linear-gradient(135deg, rgba(12,132,92,0.1), rgba(211,47,47,0.1)); }
+        .hero h1 { font-size: 3rem; margin-bottom: 20px; color: var(--primary); }
+        .hero p { font-size: 1.2rem; margin-bottom: 30px; max-width: 600px; }
+        .timer { font-size: 1.5rem; font-weight: bold; color: var(--secondary); margin-bottom: 30px; background: var(--accent); padding: 10px 20px; border-radius: 50px; color: #000; display: inline-block;}
+        .stats { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
+        .stat-box { padding: 15px 30px; border-radius: 10px; font-weight: 600; }
 
-        /* Dynamic Name */
-        .cert-name { font-family: 'Playfair Display', serif; font-size: 40px; color: var(--text-dark); border-bottom: 2px solid var(--golden); display: inline-block; padding: 0 40px 5px; margin-bottom: 25px; font-style: italic; }
+        /* Buttons */
+        .btn { padding: 12px 30px; border-radius: 8px; font-weight: 600; text-decoration: none; display: inline-block; cursor: pointer; transition: 0.3s; border: none; outline: none; }
+        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 15px rgba(12, 132, 92, 0.4); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(12, 132, 92, 0.6); }
+        .btn-secondary { background: var(--secondary); color: #fff; }
 
-        /* Description */
-        .cert-desc { font-size: 16px; color: #444; max-width: 600px; margin: 0 auto 15px; line-height: 1.6; }
-        .service-name { font-size: 20px; color: var(--primary-red); font-weight: 700; margin-bottom: 40px; }
+        /* Section Titles */
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 40px; color: var(--primary); }
+        section { padding: 80px 5%; }
 
-        /* Footer Details */
-        .cert-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 30px; }
-        .footer-block { text-align: center; }
-        .footer-line { border-top: 1px solid #333; padding-top: 5px; margin-top: 10px; font-size: 14px; font-weight: 600; color: #333; width: 180px; }
-        .footer-val { font-size: 15px; color: #555; font-weight: 500; }
+        /* Services Grid */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .service-card { padding: 30px; text-align: center; transition: 0.3s; }
+        .service-card:hover { transform: translateY(-10px); border-color: var(--accent); }
+        .service-icon { font-size: 40px; color: var(--primary); margin-bottom: 20px; }
+        .price { font-size: 24px; font-weight: bold; color: var(--secondary); margin: 15px 0; }
 
-        /* Badge/Seal */
-        .cert-seal { width: 100px; height: 100px; background: radial-gradient(circle, var(--golden), var(--golden-dark)); border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2); position: relative; border: 2px dashed #fff; color: #fff; font-size: 40px; }
-        .cert-seal::after { content: 'Verified'; position: absolute; bottom: 15px; font-size: 12px; font-weight: bold; font-family: 'Poppins', sans-serif; letter-spacing: 1px; }
+        /* Forms */
+        .form-container { max-width: 600px; margin: 0 auto; padding: 40px; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
+        .form-control { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); color: var(--text-dark); font-size: 16px; }
+        .dark-theme .form-control { background: rgba(0,0,0,0.5); color: #fff; }
+        .upi-box { background: rgba(255, 215, 0, 0.1); border: 1px dashed var(--accent); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
 
-        /* Buttons Section (Will not print) */
-        .action-buttons { display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap; justify-content: center; }
-        .btn { padding: 12px 25px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; border: none; display: flex; align-items: center; gap: 10px; transition: 0.3s; color: #fff; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .btn-pdf { background: linear-gradient(135deg, var(--dark-green), #4CAF50); }
-        .btn-pdf:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(46, 125, 50, 0.5); }
-        .btn-wa { background: linear-gradient(135deg, #25D366, #128C7E); }
-        .btn-wa:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(37, 211, 102, 0.5); }
+        /* Certificate (Hidden by default) */
+        #certificate-section { display: none; }
+        .cert-wrapper { background: #fff; padding: 40px; max-width: 800px; margin: 0 auto; border: 10px solid var(--bg-light); outline: 2px solid var(--accent); position: relative; color: #000; text-align: center; }
+        .cert-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 100px; opacity: 0.05; font-weight: 900; pointer-events: none; }
+        .cert-title { font-size: 40px; color: var(--primary); margin-bottom: 10px; }
+        .cert-name { font-size: 35px; border-bottom: 2px solid var(--accent); display: inline-block; margin: 20px 0; padding: 0 20px; }
+        .cert-footer { display: flex; justify-content: space-between; margin-top: 40px; font-weight: bold; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+        /* Toast */
+        #toast { position: fixed; bottom: 20px; left: 20px; background: var(--primary); color: #fff; padding: 15px 25px; border-radius: 8px; transform: translateY(100px); opacity: 0; transition: 0.5s; z-index: 1000; }
 
-        /* Mobile Responsive */
-        @media (max-width: 600px) {
-            .cert-title { font-size: 32px; }
-            .cert-name { font-size: 28px; }
-            .cert-footer { flex-direction: column; gap: 30px; align-items: center; }
-            .certificate-inner { padding: 20px; }
-        }
-
-        /* Hide buttons when printing */
-        @media print {
-            body { background: white; padding: 0; }
-            .action-buttons { display: none; }
-            .certificate-wrapper { box-shadow: none; margin: 0; }
-        }
+        /* Floating WA */
+        .float-wa { position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); z-index: 1000; text-decoration: none; transition: 0.3s; }
+        .float-wa:hover { transform: scale(1.1); }
     </style>
 </head>
 <body>
 
-    <div class="certificate-wrapper" id="printable-cert">
-        <div class="certificate-inner">
-            <div class="watermark">KRYA</div>
-            
-            <div class="cert-content">
-                <div class="cert-header">
-                    <h2>KRYA DIGITAL</h2>
-                    <p>100% Trusted Digital Services</p>
+    <div id="loader"><div class="spinner"></div></div>
+
+    <header class="glass" id="header">
+        <a href="#" class="logo">KRYA<span>.com</span></a>
+        <div class="nav-actions">
+            <button onclick="toggleTheme()"><i class="fas fa-moon" id="theme-icon"></i></button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1 data-aos="fade-up">Scale Your Brand Digitally</h1>
+        <p data-aos="fade-up" data-aos-delay="100">100% Secure & Trusted Digital Agency. We help you grow online with premium services.</p>
+        <div class="timer" data-aos="zoom-in" data-aos-delay="200">
+            ⏳ Special Offer Ends In: <span id="countdown">05:00:00</span>
+        </div>
+        <a href="#services" class="btn btn-primary" data-aos="fade-up" data-aos-delay="300">Explore Services</a>
+        
+        <div class="stats" data-aos="fade-up" data-aos-delay="400">
+            <div class="stat-box glass"><i class="fas fa-users text-primary"></i> 1000+ Happy Clients</div>
+            <div class="stat-box glass"><i class="fas fa-shield-alt text-secondary"></i> 100% Secure Payments</div>
+        </div>
+    </section>
+
+    <section id="services">
+        <h2 class="section-title" data-aos="fade-up">Our Premium Services</h2>
+        <div class="services-grid">
+            <div class="service-card glass" data-aos="fade-up">
+                <i class="fas fa-cube service-icon"></i>
+                <h3>3D Logo Design</h3>
+                <p>Professional high-quality 3D logo for your brand.</p>
+                <div class="price">₹199</div>
+                <button class="btn btn-primary" onclick="selectService('3D Logo Design', 199)">Order Now</button>
+            </div>
+            <div class="service-card glass" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-laptop-code service-icon"></i>
+                <h3>Website Setup</h3>
+                <p>Complete website setup with SEO & mobile optimization.</p>
+                <div class="price">₹299</div>
+                <button class="btn btn-primary" onclick="selectService('Website Setup', 299)">Order Now</button>
+            </div>
+            <div class="service-card glass" data-aos="fade-up" data-aos-delay="200">
+                <i class="fab fa-youtube service-icon"></i>
+                <h3>YouTube SEO</h3>
+                <p>Advanced keyword research and video optimization.</p>
+                <div class="price">₹150</div>
+                <button class="btn btn-primary" onclick="selectService('YouTube SEO', 150)">Order Now</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="order-section">
+        <h2 class="section-title" data-aos="fade-up">Place Your Order</h2>
+        <div class="form-container glass" data-aos="fade-up">
+            <form id="orderForm">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="custName" class="form-control" required placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp Number</label>
+                    <input type="tel" id="custWa" class="form-control" required placeholder="10-digit number">
+                </div>
+                <div class="form-group">
+                    <label>Selected Service</label>
+                    <select id="custService" class="form-control" required>
+                        <option value="">Select a service</option>
+                        <option value="3D Logo Design">3D Logo Design (₹199)</option>
+                        <option value="Website Setup">Website Setup (₹299)</option>
+                        <option value="YouTube SEO">YouTube SEO (₹150)</option>
+                    </select>
+                </div>
+                
+                <div class="upi-box">
+                    <p><strong>Pay via UPI:</strong> kryadigital@ybl</p>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=kryadigital@ybl&pn=KRYA%20Digital" alt="UPI QR" style="margin: 10px 0; border-radius: 8px; width: 100px;">
+                    <p style="font-size: 12px;">Scan and pay the exact amount of selected service.</p>
                 </div>
 
-                <h1 class="cert-title">Certificate of Achievement</h1>
-                <p class="cert-subtitle">This certificate is proudly awarded to</p>
+                <div class="form-group">
+                    <label>Payment UTR / Ref Number</label>
+                    <input type="text" id="custUtr" class="form-control" required placeholder="12-digit UTR number">
+                </div>
 
-                <div class="cert-name" id="clientName">Mukesh Kumar</div>
+                <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY" style="margin-bottom: 20px;"></div>
 
-                <p class="cert-desc">For successfully completing a digital service setup with KRYA Digital and becoming a verified, valued customer of our ecosystem.</p>
-                
-                <div class="service-name">Service: Complete Website & SEO Setup</div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Order & Verify</button>
+            </form>
+        </div>
+    </section>
 
-                <div class="cert-footer">
-                    <div class="footer-block">
-                        <div class="footer-val" id="certDate">Loading...</div>
-                        <div class="footer-line">Date of Issue</div>
-                    </div>
+    <section id="track-section">
+        <h2 class="section-title" data-aos="fade-up">Track Your Order</h2>
+        <div class="form-container glass" data-aos="fade-up" style="text-align: center;">
+            <input type="text" id="trackId" class="form-control" placeholder="Enter Order ID (e.g. KRYA-1234)" style="margin-bottom: 15px;">
+            <button class="btn btn-secondary" onclick="trackOrder()">Track Status</button>
+            <p id="trackResult" style="margin-top: 20px; font-weight: bold;"></p>
+        </div>
+    </section>
 
-                    <div class="cert-seal">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-
-                    <div class="footer-block">
-                        <div class="footer-val" id="certId" style="font-family: monospace; font-size: 13px;">Loading...</div>
-                        <div class="footer-line">Certificate ID</div>
-                        <div style="font-size: 12px; color: var(--primary-red); margin-top: 5px; font-style: italic;">Digitally Signed by KRYA Team</div>
-                    </div>
+    <section id="certificate-section">
+        <h2 class="section-title">Your Certificate</h2>
+        <div class="cert-wrapper" id="printable-cert">
+            <div class="cert-watermark">KRYA</div>
+            <h1 class="cert-title">Certificate of Achievement</h1>
+            <p>This certificate is proudly awarded to</p>
+            <h2 class="cert-name" id="certDynName">Customer Name</h2>
+            <p>For successfully completing the digital service: <br><strong id="certDynService" style="color: var(--primary); font-size: 20px;">Service Name</strong></p>
+            <div class="cert-footer">
+                <div>
+                    <p id="certDynDate">Date</p>
+                    <p style="font-size: 12px; border-top: 1px solid #000;">Date of Issue</p>
+                </div>
+                <div><i class="fas fa-medal" style="font-size: 40px; color: var(--accent);"></i></div>
+                <div>
+                    <p id="certDynId">ID</p>
+                    <p style="font-size: 12px; border-top: 1px solid #000;">Certificate ID</p>
                 </div>
             </div>
         </div>
-    </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="btn btn-primary" onclick="downloadCert()"><i class="fas fa-download"></i> Download PDF</button>
+            <button class="btn" style="background: #25D366; color: white;" onclick="shareCertWA()"><i class="fab fa-whatsapp"></i> Share</button>
+        </div>
+    </section>
 
-    <div class="action-buttons">
-        <button onclick="downloadPDF()" class="btn btn-pdf">
-            <i class="fas fa-file-pdf"></i> Download as PDF
-        </button>
-        <button onclick="shareWhatsApp()" class="btn btn-wa">
-            <i class="fab fa-whatsapp"></i> Share on WhatsApp
-        </button>
-    </div>
+    <footer style="text-align: center; padding: 30px; background: rgba(0,0,0,0.9); color: #fff;">
+        <p>© 2026 KRYA Digital. 100% Legal & Secure Platform.</p>
+    </footer>
+
+    <a href="https://wa.me/916379403821?text=Hello%20KRYA%20Digital!" class="float-wa" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    
+    <div id="toast">New Order Received from Delhi! 🎉</div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <script>
-        // Auto-generate Date
-        const today = new Date();
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('certDate').innerText = today.toLocaleDateString('en-US', options);
+        // 1. Initialize Animations
+        AOS.init({ duration: 800, once: true });
 
-        // Auto-generate unique ID (KRYA-CERT-2026-XXXX)
-        const randomNum = Math.floor(1000 + Math.random() * 9000);
-        const certId = "KRYA-CERT-2026-" + randomNum;
-        document.getElementById('certId').innerText = certId;
+        // 2. Remove Loader
+        window.onload = () => {
+            document.getElementById('loader').style.opacity = '0';
+            setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
+            showToast();
+        }
 
-        // Download as PDF Function
-        function downloadPDF() {
-            const element = document.getElementById('printable-cert');
-            const opt = {
-                margin:       0.5,
-                filename:     'KRYA-Digital-Certificate.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+        // 3. Dark Mode Toggle
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const icon = document.getElementById('theme-icon');
+            if(document.body.classList.contains('dark-theme')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        }
+
+        // 4. Countdown Timer
+        let time = 18000; // 5 hours in seconds
+        setInterval(() => {
+            let h = Math.floor(time / 3600);
+            let m = Math.floor((time % 3600) / 60);
+            let s = time % 60;
+            document.getElementById('countdown').innerText = 
+                `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            if(time > 0) time--;
+        }, 1000);
+
+        // 5. Service Auto-Select
+        function selectService(serviceName, price) {
+            document.getElementById('custService').value = serviceName;
+            document.getElementById('orderForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 6. Live Toast Simulator
+        function showToast() {
+            setInterval(() => {
+                const toast = document.getElementById('toast');
+                toast.style.transform = 'translateY(0)';
+                toast.style.opacity = '1';
+                setTimeout(() => {
+                    toast.style.transform = 'translateY(100px)';
+                    toast.style.opacity = '0';
+                }, 4000);
+            }, 15000);
+        }
+
+        // ==========================================
+        // FIREBASE SETUP (REPLACE WITH YOUR CONFIG)
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        // ==========================================
+        // ORDER SUBMISSION
+        // ==========================================
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect Data
+            const name = document.getElementById('custName').value;
+            const wa = document.getElementById('custWa').value;
+            const service = document.getElementById('custService').value;
+            const utr = document.getElementById('custUtr').value;
+            
+            // Generate Order ID
+            const randomNum = Math.floor(1000 + Math.random() * 9000);
+            const orderId = "KRYA-" + randomNum;
+
+            const orderData = {
+                orderId: orderId,
+                name: name,
+                whatsapp: wa,
+                service: service,
+                utr: utr,
+                status: "Pending",
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
             };
-            
-            // Disable button text temporarily
-            const btn = document.querySelector('.btn-pdf');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
-            
-            html2pdf().set(opt).from(element).save().then(() => {
-                btn.innerHTML = '<i class="fas fa-file-pdf"></i> Download as PDF';
-            });
+
+            // Save to Firestore
+            // Note: If config is dummy, this will fail. Showing alert for demo.
+            try {
+                db.collection("orders").doc(orderId).set(orderData)
+                .then(() => {
+                    successRedirect(orderId, service);
+                })
+                .catch((error) => {
+                    console.warn("Firebase not configured. Simulating success.");
+                    successRedirect(orderId, service); // Remove this in real production
+                });
+            } catch(e) {
+                successRedirect(orderId, service);
+            }
+        });
+
+        function successRedirect(orderId, service) {
+            alert(`Order Placed Successfully! Your Order ID is: ${orderId}`);
+            document.getElementById('orderForm').reset();
+            // Redirect to official KRYA WA Number
+            let msg = `Hello KRYA Team! I just placed an order.\nOrder ID: ${orderId}\nService: ${service}`;
+            window.location.href = `https://wa.me/916379403821?text=${encodeURIComponent(msg)}`;
         }
 
-        // Share on WhatsApp Function
-        function shareWhatsApp() {
-            const clientName = document.getElementById('clientName').innerText;
-            const message = encodeURIComponent(`Hello! I just received my premium "Certificate of Achievement" from *KRYA Digital* for completing my digital service setup! 🚀🏆\n\nCertificate ID: ${certId}\nVerify here: (Your Website Link)`);
-            window.open(`https://api.whatsapp.com/send?text=${message}`, '_blank');
-        }
-    </script>
+        // ==========================================
+        // ORDER TRACKING & CERTIFICATE
+        // ==========================================
+        let currentCertId = "";
 
-</body>
-</html>
+        function trackOrder() {
+            const trackId = document.getElementById('trackId').value.trim();
+            const resultBox = document.getElementById('trackResult');
+            
+            if(!trackId) {
+                resultBox.innerText = "Please enter an Order ID.";
+                resultBox.style.color = "red";
+                return;
+            }
+
+            resultBox.innerText = "Fetching data...";
+            resultBox.style.color = "var(--text-dark)";
+
+            // Simulating DB fetch for demonstration if Firebase is dummy
+            // In real code: db.collection("orders").doc(trackId).get().then(...)
+            
+            db.collection("orders").doc(trackId).get().the
