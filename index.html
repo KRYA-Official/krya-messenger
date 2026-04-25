@@ -3,155 +3,293 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kryalive Digital Services</title>
+    <title>Kryalive.com | Trusted Digital Services & Online Help</title>
+    <meta name="description" content="Kryalive.com provides professional Website Design, 3D Logo Design, YouTube SEO, and Digital Marketing services. 100% secure and fast delivery.">
+    <meta name="keywords" content="Kryalive, Website Design, Logo Design, YouTube SEO, Thumbnail Design, Digital Services India">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        /* Modern & Clean Styling */
-        body { 
-            margin: 0; 
-            font-family: 'Segoe UI', Tahoma, sans-serif; 
-            background-color: #f4f7f6; 
-            color: #333; 
-            line-height: 1.6; 
-        }
-        
-        /* Header Wrapper */
-        .header-wrapper {
-            text-align: center;
-            padding-top: 20px;
-            margin-bottom: 10px;
+        /* CSS Variables for Brand Colors */
+        :root {
+            --primary: #0c845c; /* Green */
+            --secondary: #d32f2f; /* Red */
+            --accent: #FFD700; /* Gold */
+            --bg-color: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
         }
 
-        /* Fixed Slim Banner Section */
+        /* Global Styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 15px; }
+
+        /* Header */
         header {
-            display: inline-block; 
-            background-color: #0c845c;
-            background-image: linear-gradient(135deg, rgba(12, 132, 92, 0.95) 0%, rgba(10, 111, 78, 0.98) 100%);
-            color: white; 
-            text-align: center; 
-            padding: 12px 30px; 
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            border: 2px solid #FFD700; /* गोल्डन बॉर्डर */
+            background: linear-gradient(135deg, rgba(12,132,92,0.98), rgba(10,111,78,1));
+            color: white; padding: 15px 0; text-align: center;
+            border-bottom: 3px solid var(--accent);
+            position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
+        .logo { font-size: 28px; font-weight: 800; letter-spacing: -1px; }
+        .logo span { color: var(--accent); font-weight: 300; }
+        .tagline { font-size: 13px; opacity: 0.9; }
+
+        /* Hero Section */
+        .hero { text-align: center; padding: 30px 15px; background: white; border-bottom: 1px solid #eee; }
+        .brand-banner { max-width: 600px; margin: 0 auto 20px; border-radius: 15px; overflow: hidden; border: 3px solid var(--accent); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .brand-banner img { width: 100%; display: block; }
+        .hero h2 { color: var(--text-dark); font-size: 22px; margin-bottom: 10px; }
+        .trust-badges { display: flex; justify-content: center; gap: 15px; margin-top: 15px; flex-wrap: wrap; }
+        .badge { background: #e8f5e9; color: var(--primary); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid var(--primary); }
+
+        /* Section Titles */
+        .section-title { text-align: center; margin: 40px 0 20px; font-size: 24px; color: var(--primary); position: relative; }
+        .section-title::after { content: ''; display: block; width: 50px; height: 3px; background: var(--secondary); margin: 8px auto 0; border-radius: 2px; }
+
+        /* Services Grid */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .service-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: transform 0.3s; border-bottom: 4px solid var(--primary); }
+        .service-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .card-img { width: 100%; height: 180px; object-fit: cover; border-bottom: 1px solid #eee; }
+        .card-body { padding: 20px; text-align: center; }
+        .card-body h3 { color: var(--secondary); font-size: 18px; margin-bottom: 10px; }
+        .price { font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 15px; }
         
-        .brand { font-size: 26px; font-weight: 800; letter-spacing: -1px; margin: 0; }
-        .brand span { font-weight: 300; color: #FFD700; }
-        .tagline { font-size: 13px; margin-top: 2px; opacity: 0.95; font-weight: 500; }
+        /* Buttons */
+        .btn { display: inline-block; width: 100%; padding: 12px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; transition: 0.3s; font-size: 15px; margin-bottom: 10px; }
+        .btn-order { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(12,132,92,0.3); }
+        .btn-order:hover { background: #086345; transform: translateY(-2px); }
+        .btn-whatsapp { background: #25D366; color: white; box-shadow: 0 4px 10px rgba(37,211,102,0.3); }
+        .btn-whatsapp:hover { background: #1ebe57; transform: translateY(-2px); }
 
-        .container { padding: 0 15px 15px; max-width: 500px; margin: 0 auto; }
-
-        /* Brand Image Banner Section */
-        .brand-banner {
-            width: 100%;
-            margin-bottom: 25px;
-            border-radius: 15px;
-            overflow: hidden;
-            border: 3px solid #FFD700; /* गोल्डन फ्रेम */
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
-        .brand-banner img {
-            width: 100%;
-            display: block;
-            object-fit: cover;
-        }
-
-        /* Service Card Design */
-        .service-card {
-            background: white; border-radius: 18px; margin-bottom: 25px;
-            overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-            border-bottom: 4px solid #0c845c;
-        }
-        .card-img { width: 100%; height: 200px; object-fit: cover; display: block; background: #eee; }
+        /* Order & Payment Section */
+        .payment-section { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); margin-bottom: 40px; border: 2px solid var(--accent); }
+        .payment-info { text-align: center; margin-bottom: 25px; padding: 15px; background: #f8f9fa; border-radius: 10px; border: 1px dashed var(--primary); }
+        .upi-id { font-size: 18px; font-weight: bold; color: var(--secondary); background: #fff; padding: 5px 10px; border-radius: 5px; display: inline-block; margin: 10px 0; border: 1px solid #ddd; }
         
-        .card-body { padding: 20px; }
-        .card-body h3 { margin: 0 0 10px; color: #d32f2f; font-size: 19px; display: flex; align-items: center; gap: 8px; font-weight: bold; }
-        .price-badge { background: #e8f5e9; color: #0c845c; display: inline-block; padding: 5px 12px; border-radius: 8px; font-weight: 700; margin-bottom: 15px; font-size: 14px; border: 1px solid #0c845c; }
+        /* Form */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; transition: 0.3s; }
+        .form-control:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(12,132,92,0.1); }
+        .btn-submit { background: var(--secondary); color: white; font-size: 16px; margin-top: 10px; }
+        .btn-submit:hover { background: #b71c1c; }
 
-        /* UPI Payment Buttons */
-        .btn {
-            display: block; width: 100%; padding: 15px; text-align: center;
-            text-decoration: none; font-weight: bold; border-radius: 12px;
-            font-size: 16px; box-sizing: border-box; margin-bottom: 10px;
-            transition: all 0.3s ease;
-        }
-        .btn-pay { 
-            background-color: #0c845c; color: white; border: none; 
-            box-shadow: 0 4px 10px rgba(12, 132, 92, 0.3);
-        }
-        .btn-pay:hover { background-color: #086345; transform: translateY(-2px); }
+        /* Testimonials & Features */
+        .features-box { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; margin-bottom: 40px; }
+        .feature { text-align: center; background: white; padding: 15px; border-radius: 10px; flex: 1; min-width: 150px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); }
+        .feature i { font-size: 24px; color: var(--accent); margin-bottom: 10px; }
 
-        /* Sticky Order Form Button */
-        .footer-sticky {
-            position: sticky; bottom: 15px; background: white; 
-            padding: 15px; border-radius: 20px; margin: 20px 10px;
-            box-shadow: 0 -8px 25px rgba(0,0,0,0.15); text-align: center;
-            border: 2px solid #d32f2f;
-        }
-        .btn-form { 
-            background-color: #d32f2f; color: white; font-size: 18px;
-            box-shadow: 0 4px 10px rgba(211, 47, 47, 0.3);
-        }
-        .btn-form:hover { background-color: #b71c1c; transform: translateY(-2px); }
+        /* Footer */
+        footer { background: #2c3e50; color: white; padding: 40px 15px 20px; text-align: center; margin-top: 40px; }
+        .footer-links { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin: 20px 0; }
+        .footer-links a { color: #aaa; font-size: 14px; }
+        .footer-links a:hover { color: var(--accent); }
+        .contact-info p { margin-bottom: 5px; font-size: 14px; color: #ccc; }
+
+        /* Floating WhatsApp */
+        .float-wa { position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50px; text-align: center; font-size: 30px; box-shadow: 2px 2px 15px rgba(0,0,0,0.2); z-index: 1000; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .float-wa:hover { transform: scale(1.1); }
+
+        /* Success Message */
+        #successMessage { display: none; background: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center; border: 1px solid #c3e6cb; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="header-wrapper">
     <header>
-        <h1 class="brand">Kryalive<span>.com</span></h1>
-        <p class="tagline">Digital Services & Online Help</p>
+        <div class="container">
+            <h1 class="logo">Kryalive<span>.com</span></h1>
+            <p class="tagline">Trusted Digital Services & Online Help</p>
+        </div>
     </header>
-</div>
 
-<div class="container">
-
-    <div class="brand-banner">
-        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s600/1000537308.jpg" alt="Kryalive Brand Identity">
-    </div>
-
-    <div class="service-card">
-        <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500" class="card-img" alt="3D Logo">
-        <div class="card-body">
-            <h3>🎨 3D Logo Design</h3>
-            <div class="price-badge">Price: ₹199</div>
-            <a href="upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&am=199&cu=INR" class="btn btn-pay">अभी पेमेंट करें (₹199)</a>
+    <section class="hero">
+        <div class="container">
+            <div class="brand-banner">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s600/1000537308.jpg" alt="Kryalive Brand" loading="lazy">
+            </div>
+            <h2>Grow Your Business Digitally</h2>
+            <p style="color: var(--text-light); font-size: 14px;">100% Secure, Legal & Professional Services</p>
+            <div class="trust-badges">
+                <span class="badge"><i class="fas fa-shield-alt"></i> 100% Secure</span>
+                <span class="badge"><i class="fas fa-bolt"></i> Fast Delivery</span>
+                <span class="badge"><i class="fas fa-headset"></i> 24/7 Support</span>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <div class="service-card">
-        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500" class="card-img" alt="Website Design">
-        <div class="card-body">
-            <h3>🌐 वेबसाइट डिजाइन</h3>
-            <div class="price-badge">Booking: ₹299</div>
-            <a href="upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&am=299&cu=INR" class="btn btn-pay">बुकिंग पेमेंट करें (₹299)</a>
+    <div class="container">
+        
+        <h2 class="section-title">Why Choose Us?</h2>
+        <div class="features-box">
+            <div class="feature">
+                <i class="fas fa-check-circle"></i>
+                <h4>Premium Quality</h4>
+                <p style="font-size: 12px; color: #666;">Professional & modern designs.</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-lock"></i>
+                <h4>Safe & Legal</h4>
+                <p style="font-size: 12px; color: #666;">No risk, organic strategies.</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-rupee-sign"></i>
+                <h4>Affordable</h4>
+                <p style="font-size: 12px; color: #666;">Best prices in the market.</p>
+            </div>
         </div>
-    </div>
 
-    <div class="service-card">
-        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500" class="card-img" alt="YouTube Views">
-        <div class="card-body">
-            <h3>📈 YouTube Subs & Views</h3>
-            <div class="price-badge">Starting: ₹100</div>
-            <a href="upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&am=100&cu=INR" class="btn btn-pay">अभी पेमेंट करें (₹100)</a>
+        <h2 class="section-title">Our Premium Services</h2>
+        <div class="services-grid">
+            
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500" class="card-img" alt="3D Logo" loading="lazy">
+                <div class="card-body">
+                    <h3>🎨 3D Logo Design</h3>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 10px;">High-quality custom brand identity.</p>
+                    <div class="price">₹199</div>
+                    <a href="#orderSection" class="btn btn-order"><i class="fas fa-shopping-cart"></i> Order Now</a>
+                    <a href="https://wa.me/916379403821?text=Hi,%20I%20need%20a%203D%20Logo" target="_blank" class="btn btn-whatsapp"><i class="fab fa-whatsapp"></i> Chat Details</a>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500" class="card-img" alt="Website Setup" loading="lazy">
+                <div class="card-body">
+                    <h3>🌐 Website Setup</h3>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 10px;">Professional landing pages & blogs.</p>
+                    <div class="price">₹299 <span style="font-size:12px; color:#888;">(Booking)</span></div>
+                    <a href="#orderSection" class="btn btn-order"><i class="fas fa-shopping-cart"></i> Book Now</a>
+                    <a href="https://wa.me/916379403821?text=Hi,%20I%20want%20to%20setup%20a%20website" target="_blank" class="btn btn-whatsapp"><i class="fab fa-whatsapp"></i> Chat Details</a>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500" class="card-img" alt="YouTube SEO" loading="lazy">
+                <div class="card-body">
+                    <h3>📈 YouTube SEO & Growth</h3>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 10px;">Safe tag & description optimization.</p>
+                    <div class="price">₹150</div>
+                    <a href="#orderSection" class="btn btn-order"><i class="fas fa-shopping-cart"></i> Order Now</a>
+                    <a href="https://wa.me/916379403821?text=Hi,%20I%20need%20YouTube%20SEO" target="_blank" class="btn btn-whatsapp"><i class="fab fa-whatsapp"></i> Chat Details</a>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=500" class="card-img" alt="Thumbnail Design" loading="lazy">
+                <div class="card-body">
+                    <h3>🖼️ HD YouTube Thumbnail</h3>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 10px;">Clickable and attractive thumbnails.</p>
+                    <div class="price">₹100</div>
+                    <a href="#orderSection" class="btn btn-order"><i class="fas fa-shopping-cart"></i> Order Now</a>
+                    <a href="https://wa.me/916379403821?text=Hi,%20I%20need%20a%20Thumbnail" target="_blank" class="btn btn-whatsapp"><i class="fab fa-whatsapp"></i> Chat Details</a>
+                </div>
+            </div>
+
         </div>
-    </div>
 
-    <div class="service-card">
-        <img src="https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?w=500" class="card-img" alt="Google Maps Promo">
-        <div class="card-body">
-            <h3>📍 Google Maps & WhatsApp</h3>
-            <div class="price-badge">Service Fee: ₹150</div>
-            <a href="upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&am=150&cu=INR" class="btn btn-pay">अभी पेमेंट करें (₹150)</a>
+        <h2 class="section-title" id="orderSection">Secure Order Checkout</h2>
+        <div class="payment-section">
+            <div class="payment-info">
+                <h3 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-mobile-alt"></i> Step 1: Make Payment</h3>
+                <p>Send payment to our official UPI ID:</p>
+                <div class="upi-id">93690mukeshkumar@axl</div>
+                <p style="font-size: 13px; color: #555;">Name: <strong>KRYA</strong></p>
+                <div style="margin-top: 15px;">
+                    <a href="upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&cu=INR" class="btn btn-order" style="width: auto; padding: 10px 20px;"><i class="fas fa-qrcode"></i> Click Here to Pay via App</a>
+                </div>
+            </div>
+
+            <h3 style="text-align: center; margin-bottom: 20px; color: var(--secondary);"><i class="fas fa-file-alt"></i> Step 2: Submit Details</h3>
+            
+            <form id="orderForm" onsubmit="submitForm(event)">
+                <div class="form-group">
+                    <label>Your Full Name *</label>
+                    <input type="text" class="form-control" required placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp Number *</label>
+                    <input type="tel" class="form-control" required placeholder="10-digit mobile number" pattern="[0-9]{10}">
+                </div>
+                <div class="form-group">
+                    <label>Select Service *</label>
+                    <select class="form-control" required>
+                        <option value="">-- Choose a Service --</option>
+                        <option value="Logo">🎨 3D Logo Design (₹199)</option>
+                        <option value="Website">🌐 Website Setup Booking (₹299)</option>
+                        <option value="YT_SEO">📈 YouTube SEO (₹150)</option>
+                        <option value="Thumbnail">🖼️ Thumbnail Design (₹100)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Payment UTR / Ref Number *</label>
+                    <input type="text" class="form-control" required placeholder="Enter 12-digit UTR number">
+                </div>
+                <button type="submit" class="btn btn-submit"><i class="fas fa-paper-plane"></i> Confirm Order</button>
+                <p style="font-size: 11px; color: #888; text-align: center; margin-top: 10px;"><i class="fas fa-info-circle"></i> Orders without valid UTR will be rejected automatically.</p>
+                
+                <div id="successMessage">
+                    ✅ Your order has been submitted successfully! We will contact you on WhatsApp shortly.
+                </div>
+            </form>
         </div>
+
     </div>
 
-    <div class="footer-sticky">
-        <h4 style="margin: 0 0 10px; color: #d32f2f; font-weight: bold;">📋 पेमेंट के बाद यहाँ जानकारी भरें</h4>
-        <a href="https://forms.gle/DoeEaC47RPX99zPe6" class="btn btn-form">ओपन आर्डर फॉर्म (सबमिट UTR)</a>
-        <p style="font-size: 12px; color: #555; margin-top: 10px; font-weight: bold;">बिना UTR के आर्डर मान्य नहीं होगा</p>
-    </div>
+    <footer>
+        <div class="container">
+            <h2 class="logo" style="color:white;">Kryalive<span>.com</span></h2>
+            <p style="font-size: 13px; color: #aaa; margin-top: 10px;">Your Trusted Digital Partner in India.</p>
+            
+            <div class="contact-info" style="margin-top: 20px;">
+                <p><i class="fas fa-map-marker-alt"></i> Location: Delhi, India</p>
+                <p><i class="fas fa-phone-alt"></i> Contact: +91-6379403821</p>
+            </div>
 
-</div>
+            <div class="footer-links">
+                <a href="#">About Us</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
+                <a href="#">Refund Policy</a>
+            </div>
+            
+            <p style="font-size: 12px; color: #777; border-top: 1px solid #444; padding-top: 20px; margin-top: 20px;">
+                &copy; 2026 Kryalive Digital Services. All Rights Reserved.
+            </p>
+        </div>
+    </footer>
 
+    <a href="https://wa.me/916379403821?text=Hello%20Kryalive,%20I%20need%20help!" target="_blank" class="float-wa">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        function submitForm(event) {
+            event.preventDefault(); // Prevent page reload
+            
+            // Generate a random UI Order ID
+            const orderId = 'KRYA' + Math.floor(1000 + Math.random() * 9000);
+            
+            // Show Success Message
+            const successDiv = document.getElementById('successMessage');
+            successDiv.innerHTML = `✅ Order Verified! Your Order ID is <strong>${orderId}</strong>. We will message you on WhatsApp shortly.`;
+            successDiv.style.display = 'block';
+            
+            // Reset form fields
+            document.getElementById('orderForm').reset();
+            
+            // Hide message after 8 seconds
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 8000);
+        }
+    </script>
 </body>
-</html>
+    </html>
+    
