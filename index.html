@@ -2,169 +2,214 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>KRYA Digital | Premium Digital Services</title>
-    <meta name="description" content="100% Secure Digital Services by KRYA. Web Design, Logos, YouTube SEO.">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>KRYA Admin | Secure Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <style>
-        :root { --primary: #0c845c; --secondary: #d32f2f; --accent: #FFD700; --bg: #f4f7f6; --text: #2c3e50; --card: #fff; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
-        body { background: var(--bg); color: var(--text); }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 15px; }
+        body { font-family: 'Poppins', sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
         
-        header { background: linear-gradient(135deg, var(--primary), #086345); color: white; padding: 15px 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .logo { font-size: 26px; font-weight: 800; } .logo span { color: var(--accent); }
+        /* Secure Login Screen */
+        .login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: linear-gradient(135deg, #0c845c, #086345); display: flex; justify-content: center; align-items: center; z-index: 9999; flex-direction: column; color: white; }
+        .login-box { background: white; padding: 40px; border-radius: 15px; text-align: center; color: #333; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 400px; width: 90%; }
+        .login-box h2 { color: #0c845c; margin-top: 0; }
+        .login-box input { width: 100%; padding: 12px; font-size: 15px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 15px; box-sizing: border-box; font-family: 'Poppins'; }
+        .login-box button { width: 100%; padding: 12px; font-size: 16px; background: #FFD700; color: #333; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .login-box button:hover { background: #e6c200; }
+        .error-msg { color: #d32f2f; font-size: 13px; margin-top: 10px; display: none; font-weight: bold; }
+        
+        /* Dashboard Container */
+        #dashboardContainer { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 5px solid #0c845c; }
+        .header h1 { color: #0c845c; margin: 0; font-size: 22px; }
+        .logout-btn { background: #d32f2f; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        
+        .filters { margin-bottom: 20px; display: flex; gap: 15px; }
+        .filters select { padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-family: 'Poppins'; outline: none; }
 
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; margin: 40px 0; }
-        .service-card { background: var(--card); border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.08); text-align: center; padding-bottom: 20px; border-bottom: 4px solid var(--primary); transition: 0.3s; }
-        .service-card:hover { transform: translateY(-5px); }
-        .service-card img { width: 100%; height: 180px; object-fit: cover; }
-        .price { font-size: 22px; font-weight: 800; color: var(--primary); margin: 10px 0; }
-        .btn { padding: 12px 20px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; color: white; background: var(--primary); width: 90%; display: inline-block; transition: 0.3s; }
-        .btn:hover { background: #086345; }
-
-        .form-section { background: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); border: 2px solid var(--accent); margin-bottom: 40px; }
-        .form-control { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; }
+        table { width: 100%; background: white; border-collapse: collapse; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); font-size: 14px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #0c845c; color: white; }
         
-        .phonepe-box { background: #5f259f; color: white; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(95, 37, 159, 0.3); }
-        .upi-text { font-size: 20px; font-weight: bold; margin: 10px 0; background: white; color: #5f259f; padding: 5px 10px; border-radius: 5px; display: inline-block; }
+        .btn-sm { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; font-size: 12px; margin-right: 5px; text-decoration: none; display: inline-block; }
+        .btn-verify { background: #28a745; }
+        .btn-complete { background: #007bff; }
+        .btn-wa { background: #25D366; }
+        .btn-img { background: #6c757d; }
         
-        /* Modals & Popups */
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-box { background: var(--card); padding: 30px; border-radius: 15px; text-align: center; max-width: 400px; width: 90%; }
+        .badge { padding: 5px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+        .badge-pending { background: #fff3cd; color: #856404; }
+        .badge-success { background: #d4edda; color: #155724; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="container"><h1 class="logo">KRYA<span>.com</span></h1></div>
-    </header>
-
-    <div class="container">
-        <h2 style="text-align:center; margin-top:40px; color:var(--primary);">Choose Your Service</h2>
-        <div class="services-grid">
-            <div class="service-card">
-                <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500" alt="Logo">
-                <h3>🎨 3D Logo Design</h3>
-                <div class="price">₹199</div>
-                <button class="btn" onclick="selectService('3D Logo Design', 199)">Select & Pay</button>
-            </div>
-            <div class="service-card">
-                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500" alt="Website">
-                <h3>🌐 Website Setup</h3>
-                <div class="price">₹299</div>
-                <button class="btn" onclick="selectService('Website Setup', 299)">Select & Pay</button>
-            </div>
-            <div class="service-card">
-                <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500" alt="SEO">
-                <h3>📈 YouTube SEO</h3>
-                <div class="price">₹150</div>
-                <button class="btn" onclick="selectService('YouTube SEO', 150)">Select & Pay</button>
-            </div>
-        </div>
-
-        <div class="form-section" id="checkoutSection">
-            <h2 style="color:var(--secondary); text-align:center; margin-bottom:20px;">Step 1: Pay securely via PhonePe / UPI</h2>
-            
-            <div class="phonepe-box">
-                <p>Send payment to our official Business UPI ID:</p>
-                <div class="upi-text">93690mukeshkumar@axl</div>
-                <p style="font-size: 14px; opacity: 0.9;">Verified Name: KRYA</p>
-                <a href="upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&cu=INR" style="display:inline-block; margin-top:15px; padding:10px 20px; background:white; color:#5f259f; font-weight:bold; border-radius:30px; text-decoration:none;"><i class="fas fa-mobile-alt"></i> Open UPI App to Pay</a>
-            </div>
-
-            <h2 style="color:var(--primary); text-align:center; margin:30px 0 20px;">Step 2: Submit 12-Digit UTR</h2>
-            
-            <form id="orderForm">
-                <input type="text" id="custName" class="form-control" placeholder="Full Name" required>
-                <input type="text" id="custWa" class="form-control" placeholder="WhatsApp Number (10 Digits)" pattern="[0-9]{10}" required>
-                <input type="text" id="custService" class="form-control" placeholder="Selected Service" readonly required style="background:#eee; font-weight:bold; color:var(--primary);">
-                <input type="text" id="custUtr" class="form-control" placeholder="Enter 12-Digit UTR / Ref Number" pattern="[a-zA-Z0-9]{12}" required>
-                
-                <button type="submit" class="btn" style="width:100%; background:var(--secondary); font-size:18px;" id="submitBtn">Verify UTR & Confirm Order</button>
-            </form>
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <h2><i class="fas fa-shield-alt"></i> KRYA Admin</h2>
+            <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Authorized Personnel Only</p>
+            <input type="email" id="adminEmail" placeholder="Enter Admin Email" required>
+            <input type="password" id="adminPassword" placeholder="Enter Password" required>
+            <button onclick="loginAdmin()" id="loginBtn">Secure Login</button>
+            <p class="error-msg" id="errorMsg">Invalid Email or Password!</p>
         </div>
     </div>
 
-    <div class="overlay" id="successModal">
-        <div class="modal-box">
-            <i class="fas fa-check-circle" style="font-size:50px; color:var(--primary);"></i>
-            <h2 style="margin:10px 0;">Order Submitted!</h2>
-            <p>Your Order ID: <strong id="displayOrderId" style="color:var(--secondary);"></strong></p>
-            <p style="font-size:13px; color:#666; margin-top:10px;">Redirecting to WhatsApp for final confirmation...</p>
+    <div id="dashboardContainer">
+        <div class="header">
+            <h1><i class="fas fa-chart-line"></i> KRYA Control Panel</h1>
+            <div>
+                <span style="margin-right: 20px; font-weight: 600;">Total Orders: <span id="orderCount" style="color:#0c845c;">0</span></span>
+                <button class="logout-btn" onclick="logoutAdmin()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
         </div>
+
+        <div class="filters">
+            <select id="filterStatus" onchange="loadOrders()">
+                <option value="All">All Orders</option>
+                <option value="Pending">Pending Verification</option>
+                <option value="Completed">Completed Work</option>
+            </select>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Client Details</th>
+                    <th>Service & Amount</th>
+                    <th>UTR No.</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                </tbody>
+        </table>
     </div>
 
     <script>
-        // Firebase Initialization (अपना असली Firebase Config यहाँ डालें)
+        // 👉 अपना Firebase Config यहाँ डालें
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID"
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
+        
         // Initialize Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
+        const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Auto-Select Service & Smooth Scroll
-        function selectService(serviceName, amount) {
-            document.getElementById('custService').value = `${serviceName} (₹${amount})`;
-            document.getElementById('checkoutSection').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // Handle Direct UTR Form Submission
-        document.getElementById('orderForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.innerText = "Verifying Details..."; btn.disabled = true;
-
-            const name = document.getElementById('custName').value;
-            const wa = document.getElementById('custWa').value;
-            const service = document.getElementById('custService').value;
-            const utr = document.getElementById('custUtr').value;
-            
-            // Generate Strong Unique Order ID
-            const orderId = 'KRYA-' + Date.now().toString().slice(-5) + '-' + utr.slice(-4);
-
-            try {
-                // Save directly to Firebase Database
-                await db.collection("orders").doc(orderId).set({
-                    orderId: orderId,
-                    name: name,
-                    whatsapp: wa,
-                    service: service,
-                    utr: utr,
-                    paymentStatus: "UTR Submitted",
-                    orderStatus: "Pending",
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                // Show Success Modal
-                document.getElementById('displayOrderId').innerText = orderId;
-                document.getElementById('successModal').style.display = 'flex';
-
-                // Automated WhatsApp Redirect
-                const waMsg = `*New PhonePe Order!*\nID: ${orderId}\nName: ${name}\nService: ${service}\nUTR: ${utr}\n\nPlease check my UTR and start the work.`;
-                setTimeout(() => {
-                    window.open(`https://wa.me/916379403821?text=${encodeURIComponent(waMsg)}`, '_blank');
-                    window.location.reload();
-                }, 3000);
-
-            } catch (error) {
-                alert("Database Error! Please check your connection.");
-                btn.innerText = "Verify UTR & Confirm Order";
-                btn.disabled = false;
+        // Check if user is already logged in
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // User is logged in, show dashboard
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboardContainer').style.display = 'block';
+                loadOrders();
+            } else {
+                // User is not logged in, show login screen
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('dashboardContainer').style.display = 'none';
             }
         });
+
+        // Login Logic
+        function loginAdmin() {
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+            const btn = document.getElementById('loginBtn');
+            const errorMsg = document.getElementById('errorMsg');
+            
+            if(!email || !password) return;
+
+            btn.innerText = "Verifying...";
+            btn.disabled = true;
+            errorMsg.style.display = 'none';
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    btn.innerText = "Secure Login";
+                    btn.disabled = false;
+                })
+                .catch((error) => {
+                    errorMsg.style.display = 'block';
+                    errorMsg.innerText = error.message;
+                    btn.innerText = "Secure Login";
+                    btn.disabled = false;
+                });
+        }
+
+        // Logout Logic
+        function logoutAdmin() {
+            auth.signOut().then(() => {
+                document.getElementById('adminEmail').value = '';
+                document.getElementById('adminPassword').value = '';
+            }).catch((error) => {
+                alert("Error logging out!");
+            });
+        }
+
+        // Load Orders from Firestore
+        function loadOrders() {
+            const filter = document.getElementById('filterStatus').value;
+            
+            db.collection("orders").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+                const tbody = document.getElementById('tableBody');
+                tbody.innerHTML = '';
+                let count = 0;
+
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    
+                    if(filter !== "All" && data.orderStatus !== filter && data.paymentStatus !== filter) return;
+                    count++;
+
+                    const payBadge = data.paymentStatus === "Verified" ? "badge-success" : "badge-pending";
+                    const ordBadge = data.orderStatus === "Completed" ? "badge-success" : "badge-pending";
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><strong>${data.orderId}</strong></td>
+                            <td>${data.name}<br><small><i class="fab fa-whatsapp"></i> ${data.whatsapp}</small></td>
+                            <td>${data.service}<br><strong style="color:#0c845c;">₹${data.amount}</strong></td>
+                            <td>${data.utr}</td>
+                            <td>
+                                Pay: <span class="badge ${payBadge}">${data.paymentStatus}</span><br>
+                                Work: <span class="badge ${ordBadge}">${data.orderStatus}</span>
+                            </td>
+                            <td>
+                                <a href="${data.screenshotUrl}" target="_blank" class="btn-sm btn-img"><i class="fas fa-image"></i> Proof</a>
+                                ${data.paymentStatus !== "Verified" ? `<button class="btn-sm btn-verify" onclick="updateStatus('${data.orderId}', 'paymentStatus', 'Verified')"><i class="fas fa-check"></i> Verify</button>` : ''}
+                                ${data.orderStatus !== "Completed" ? `<button class="btn-sm btn-complete" onclick="updateStatus('${data.orderId}', 'orderStatus', 'Completed')"><i class="fas fa-flag-checkered"></i> Done</button>` : ''}
+                                <a href="https://wa.me/91${data.whatsapp}" target="_blank" class="btn-sm btn-wa"><i class="fab fa-whatsapp"></i> Chat</a>
+                            </td>
+                        </tr>
+                    `;
+                });
+                document.getElementById('orderCount').innerText = count;
+            });
+        }
+
+        // Update Order Status
+        async function updateStatus(id, field, value) {
+            if(confirm(`Mark ${field} as ${value}?`)) {
+                await db.collection("orders").doc(id).update({
+                    [field]: value
+                });
+            }
+        }
     </script>
 </body>
 </html>
