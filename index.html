@@ -10,9 +10,7 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
-        /* ==========================================
-           1. CSS VARIABLES & THEME SETUP
-           ========================================== */
+        /* CSS VARIABLES & THEME SETUP */
         :root {
             --primary: #0c845c; /* KRYA Green */
             --secondary: #d32f2f; /* KRYA Red */
@@ -37,9 +35,7 @@
         body { background-color: var(--bg-light); color: var(--text-dark); overflow-x: hidden; transition: background 0.3s ease, color 0.3s ease; }
         h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
 
-        /* ==========================================
-           2. UTILITIES & GLASSMORPHISM
-           ========================================== */
+        /* GLASSMORPHISM */
         .glass {
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
@@ -71,10 +67,7 @@
         .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 40px; color: var(--primary); }
         section { padding: 80px 5%; }
 
-        /* ==========================================
-           3. UI COMPONENTS (Header, Hero, Services)
-           ========================================== */
-        /* Loader */
+        /* LOADER CSS */
         #loader { position: fixed; inset: 0; background: var(--bg-light); z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.4s; }
         .spinner { width: 50px; height: 50px; border: 4px solid var(--accent); border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -102,22 +95,17 @@
         .service-icon { font-size: 45px; color: var(--primary); margin-bottom: 20px; }
         .price { font-size: 28px; font-weight: 700; color: var(--secondary); margin: 15px 0 25px; }
 
-        /* ==========================================
-           4. FORMS & TRACKING
-           ========================================== */
+        /* FORMS */
         .form-container { max-width: 550px; margin: 0 auto; padding: 40px; }
         .form-group { margin-bottom: 20px; text-align: left; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 15px; }
         .form-control { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid rgba(12, 132, 92, 0.2); background: rgba(255,255,255,0.7); color: var(--text-dark); font-size: 16px; outline: none; transition: 0.3s; }
         .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(12, 132, 92, 0.1); }
         .dark-theme .form-control { background: rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.1); color: #fff; }
-
         .secure-note { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; color: #666; margin-top: 15px; }
         .dark-theme .secure-note { color: #aaa; }
 
-        /* ==========================================
-           5. CERTIFICATE DESIGN
-           ========================================== */
+        /* CERTIFICATE DESIGN */
         #certificate-section { display: none; }
         .cert-wrapper { 
             background: #fff; padding: 40px; max-width: 800px; margin: 0 auto; 
@@ -131,15 +119,12 @@
         .cert-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 50px; font-weight: 600; text-align: center; }
         .cert-line { border-top: 1px solid #333; padding-top: 5px; font-size: 13px; margin-top: 5px; }
 
-        /* ==========================================
-           6. FLOATING UI ELEMENTS
-           ========================================== */
+        /* FLOATING UI ELEMENTS */
         .float-wa { position: fixed; bottom: 25px; right: 25px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 32px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); z-index: 1000; text-decoration: none; transition: transform 0.3s; }
         .float-wa:hover { transform: scale(1.1) rotate(-10deg); }
         
         #toast { position: fixed; bottom: 25px; left: 25px; background: var(--text-dark); color: var(--bg-light); padding: 15px 25px; border-radius: 8px; transform: translateY(100px); opacity: 0; transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 1000; display: flex; align-items: center; gap: 10px; font-weight: 500; box-shadow: var(--shadow); }
 
-        /* Responsive Adjustments */
         @media (max-width: 768px) {
             section { padding: 60px 5%; }
             .cert-footer { flex-direction: column; gap: 30px; align-items: center; }
@@ -149,6 +134,20 @@
 <body>
 
     <div id="loader"><div class="spinner"></div></div>
+    <script>
+        // यह स्मार्ट कोड 100% गारंटी देता है कि वेबसाइट अटकेगी नहीं
+        window.addEventListener('load', function() {
+            var l = document.getElementById('loader');
+            if(l) { l.style.opacity = '0'; setTimeout(function(){ l.style.display = 'none'; }, 400); }
+        });
+        // अगर इंटरनेट स्लो है, तो 2 सेकंड में खुद ही हट जाएगा
+        setTimeout(function() {
+            var l = document.getElementById('loader');
+            if(l && l.style.display !== 'none') {
+                l.style.opacity = '0'; setTimeout(function(){ l.style.display = 'none'; }, 400);
+            }
+        }, 2000);
+    </script>
 
     <header class="glass">
         <a href="#" class="logo">KRYA<span>.Digital</span></a>
@@ -296,7 +295,6 @@
     
     <div id="toast"><i class="fas fa-bell" style="color: var(--accent);"></i> <span id="toastMsg">Notification</span></div>
 
-
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -304,18 +302,15 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
-
     <script>
         // --- 1. UI Initialization ---
         document.addEventListener("DOMContentLoaded", () => {
-            AOS.init({ duration: 800, once: true, offset: 50 });
-            
-            // Remove Loader smoothly
-            setTimeout(() => {
-                const loader = document.getElementById('loader');
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 400);
-            }, 800);
+            // सुरक्षित AOS Initialization
+            try {
+                AOS.init({ duration: 800, once: true, offset: 50 });
+            } catch(e) {
+                console.log("AOS Network Delay - Safe Mode Active");
+            }
         });
 
         // --- 2. Theme Toggle ---
@@ -336,7 +331,7 @@
             document.getElementById('orderForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        // --- 4. Firebase Configuration (Needs real credentials) ---
+        // --- 4. Firebase Configuration ---
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "your-project.firebaseapp.com",
@@ -346,24 +341,26 @@
             appId: "YOUR_APP_ID"
         };
         
-        // Initialize Firebase Safely
         let db;
         try {
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
+            if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
             db = firebase.firestore();
-        } catch (error) {
-            console.error("Firebase Initialization Error:", error);
-        }
+        } catch (error) { console.error("Firebase Err:", error); }
 
         // --- 5. Form Submission & Razorpay Integration ---
         document.getElementById('orderForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Validate Input
             const name = document.getElementById('custName').value.trim();
             const wa = document.getElementById('custWa').value.trim();
             const serviceSelect = document.getElementById('custService');
             const service = serviceSelect.value;
-            
+            const price = parseInt(serviceSelect.options[serviceSelect.selectedIndex].getAttribute('data-price'));
+
+            if(!/^[6-9]\d{9}$/.test(wa)) {
+                showToast("Please enter a valid 10-digit WhatsApp number.", true);
+                return;
+            }
+            if(!service || isNaN(price)) {
+                showToast("Please select a valid service.", true);
+                retu
