@@ -3,251 +3,322 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA Digital - Scale Your Brand</title>
+    <title>KRYA Digital - Premium Services</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
+    
     <style>
+        /* ==========================================
+           1. CSS VARIABLES & THEME SETUP
+           ========================================== */
         :root {
-            --primary: #0c845c; /* Green */
-            --secondary: #d32f2f; /* Red */
-            --accent: #FFD700; /* Gold */
+            --primary: #0c845c; /* KRYA Green */
+            --secondary: #d32f2f; /* KRYA Red */
+            --accent: #FFD700; /* KRYA Gold */
             --bg-light: #f4f7f6;
             --text-dark: #2d3436;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.3);
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
         }
 
         .dark-theme {
             --bg-light: #121212;
             --text-dark: #f5f6fa;
-            --glass-bg: rgba(30, 30, 30, 0.7);
+            --glass-bg: rgba(30, 30, 30, 0.85);
             --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        
-        body { background-color: var(--bg-light); color: var(--text-dark); overflow-x: hidden; transition: background 0.3s; }
-        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--bg-light); color: var(--text-dark); overflow-x: hidden; transition: background 0.3s ease, color 0.3s ease; }
+        h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
 
-        /* Loader */
-        #loader { position: fixed; width: 100%; height: 100%; background: var(--bg-light); z-index: 9999; display: flex; justify-content: center; align-items: center; transition: 0.5s; }
-        .spinner { width: 50px; height: 50px; border: 5px solid var(--accent); border-top: 5px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+        /* ==========================================
+           2. UTILITIES & GLASSMORPHISM
+           ========================================== */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            border-radius: 16px;
+        }
 
-        /* Glassmorphism Utility */
-        .glass { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1); border-radius: 16px; }
+        .btn {
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 16px;
+        }
+        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 15px rgba(12, 132, 92, 0.3); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(12, 132, 92, 0.5); }
+        .btn-secondary { background: var(--secondary); color: #fff; box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3); }
+        .btn-secondary:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(211, 47, 47, 0.5); }
 
-        /* Header */
-        header { position: fixed; top: 0; width: 100%; z-index: 1000; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
-        .logo { font-size: 24px; font-weight: 700; color: var(--primary); text-decoration: none; }
-        .logo span { color: var(--secondary); }
-        .nav-actions button { background: none; border: none; font-size: 20px; color: var(--text-dark); cursor: pointer; }
-
-        /* Hero Section */
-        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 100px 5% 50px; background: linear-gradient(135deg, rgba(12,132,92,0.1), rgba(211,47,47,0.1)); }
-        .hero h1 { font-size: 3rem; margin-bottom: 20px; color: var(--primary); }
-        .hero p { font-size: 1.2rem; margin-bottom: 30px; max-width: 600px; }
-        .timer { font-size: 1.5rem; font-weight: bold; color: var(--secondary); margin-bottom: 30px; background: var(--accent); padding: 10px 20px; border-radius: 50px; color: #000; display: inline-block;}
-        .stats { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
-        .stat-box { padding: 15px 30px; border-radius: 10px; font-weight: 600; }
-
-        /* Buttons */
-        .btn { padding: 12px 30px; border-radius: 8px; font-weight: 600; text-decoration: none; display: inline-block; cursor: pointer; transition: 0.3s; border: none; outline: none; }
-        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 15px rgba(12, 132, 92, 0.4); }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(12, 132, 92, 0.6); }
-        .btn-secondary { background: var(--secondary); color: #fff; }
-
-        /* Section Titles */
         .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 40px; color: var(--primary); }
         section { padding: 80px 5%; }
 
+        /* ==========================================
+           3. UI COMPONENTS (Header, Hero, Services)
+           ========================================== */
+        /* Loader */
+        #loader { position: fixed; inset: 0; background: var(--bg-light); z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.4s; }
+        .spinner { width: 50px; height: 50px; border: 4px solid var(--accent); border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Header */
+        header { position: fixed; top: 0; width: 100%; z-index: 1000; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 26px; font-weight: 800; color: var(--primary); text-decoration: none; letter-spacing: 1px; }
+        .logo span { color: var(--secondary); }
+        .theme-toggle { background: none; border: none; font-size: 22px; color: var(--text-dark); cursor: pointer; transition: 0.3s; }
+        .theme-toggle:hover { color: var(--accent); }
+
+        /* Hero */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 100px 5% 50px; background: radial-gradient(circle at center, rgba(12,132,92,0.05) 0%, transparent 70%); }
+        .hero h1 { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 20px; color: var(--primary); line-height: 1.2; }
+        .hero p { font-size: 1.1rem; margin-bottom: 30px; max-width: 650px; color: #555; }
+        .dark-theme .hero p { color: #ccc; }
+        
+        .trust-badges { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
+        .badge { padding: 12px 25px; border-radius: 50px; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; border: 1px solid var(--accent); }
+
         /* Services Grid */
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
-        .service-card { padding: 30px; text-align: center; transition: 0.3s; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+        .service-card { padding: 40px 20px; text-align: center; transition: all 0.4s ease; border: 2px solid transparent; }
         .service-card:hover { transform: translateY(-10px); border-color: var(--accent); }
-        .service-icon { font-size: 40px; color: var(--primary); margin-bottom: 20px; }
-        .price { font-size: 24px; font-weight: bold; color: var(--secondary); margin: 15px 0; }
+        .service-icon { font-size: 45px; color: var(--primary); margin-bottom: 20px; }
+        .price { font-size: 28px; font-weight: 700; color: var(--secondary); margin: 15px 0 25px; }
 
-        /* Forms */
-        .form-container { max-width: 600px; margin: 0 auto; padding: 40px; }
+        /* ==========================================
+           4. FORMS & TRACKING
+           ========================================== */
+        .form-container { max-width: 550px; margin: 0 auto; padding: 40px; }
         .form-group { margin-bottom: 20px; text-align: left; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
-        .form-control { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); color: var(--text-dark); font-size: 16px; }
-        .dark-theme .form-control { background: rgba(0,0,0,0.5); color: #fff; }
-        .upi-box { background: rgba(255, 215, 0, 0.1); border: 1px dashed var(--accent); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 15px; }
+        .form-control { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid rgba(12, 132, 92, 0.2); background: rgba(255,255,255,0.7); color: var(--text-dark); font-size: 16px; outline: none; transition: 0.3s; }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(12, 132, 92, 0.1); }
+        .dark-theme .form-control { background: rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.1); color: #fff; }
 
-        /* Certificate (Hidden by default) */
+        .secure-note { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; color: #666; margin-top: 15px; }
+        .dark-theme .secure-note { color: #aaa; }
+
+        /* ==========================================
+           5. CERTIFICATE DESIGN
+           ========================================== */
         #certificate-section { display: none; }
-        .cert-wrapper { background: #fff; padding: 40px; max-width: 800px; margin: 0 auto; border: 10px solid var(--bg-light); outline: 2px solid var(--accent); position: relative; color: #000; text-align: center; }
-        .cert-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 100px; opacity: 0.05; font-weight: 900; pointer-events: none; }
-        .cert-title { font-size: 40px; color: var(--primary); margin-bottom: 10px; }
-        .cert-name { font-size: 35px; border-bottom: 2px solid var(--accent); display: inline-block; margin: 20px 0; padding: 0 20px; }
-        .cert-footer { display: flex; justify-content: space-between; margin-top: 40px; font-weight: bold; }
+        .cert-wrapper { 
+            background: #fff; padding: 40px; max-width: 800px; margin: 0 auto; 
+            border: 12px solid var(--bg-light); outline: 2px solid var(--accent); 
+            position: relative; color: #333; text-align: center; overflow: hidden;
+        }
+        .cert-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 120px; opacity: 0.04; font-weight: 900; pointer-events: none; }
+        .cert-header { color: var(--secondary); font-weight: bold; letter-spacing: 2px; margin-bottom: 20px; }
+        .cert-title { font-size: clamp(30px, 4vw, 45px); color: var(--primary); margin-bottom: 15px; }
+        .cert-name { font-size: clamp(25px, 3vw, 35px); border-bottom: 2px solid var(--accent); display: inline-block; margin: 20px 0; padding: 0 30px 5px; font-style: italic; }
+        .cert-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 50px; font-weight: 600; text-align: center; }
+        .cert-line { border-top: 1px solid #333; padding-top: 5px; font-size: 13px; margin-top: 5px; }
 
-        /* Toast */
-        #toast { position: fixed; bottom: 20px; left: 20px; background: var(--primary); color: #fff; padding: 15px 25px; border-radius: 8px; transform: translateY(100px); opacity: 0; transition: 0.5s; z-index: 1000; }
+        /* ==========================================
+           6. FLOATING UI ELEMENTS
+           ========================================== */
+        .float-wa { position: fixed; bottom: 25px; right: 25px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 32px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); z-index: 1000; text-decoration: none; transition: transform 0.3s; }
+        .float-wa:hover { transform: scale(1.1) rotate(-10deg); }
+        
+        #toast { position: fixed; bottom: 25px; left: 25px; background: var(--text-dark); color: var(--bg-light); padding: 15px 25px; border-radius: 8px; transform: translateY(100px); opacity: 0; transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 1000; display: flex; align-items: center; gap: 10px; font-weight: 500; box-shadow: var(--shadow); }
 
-        /* Floating WA */
-        .float-wa { position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); z-index: 1000; text-decoration: none; transition: 0.3s; }
-        .float-wa:hover { transform: scale(1.1); }
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            section { padding: 60px 5%; }
+            .cert-footer { flex-direction: column; gap: 30px; align-items: center; }
+        }
     </style>
 </head>
 <body>
 
     <div id="loader"><div class="spinner"></div></div>
 
-    <header class="glass" id="header">
-        <a href="#" class="logo">KRYA<span>.com</span></a>
-        <div class="nav-actions">
-            <button onclick="toggleTheme()"><i class="fas fa-moon" id="theme-icon"></i></button>
-        </div>
+    <header class="glass">
+        <a href="#" class="logo">KRYA<span>.Digital</span></a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
+            <i class="fas fa-moon" id="theme-icon"></i>
+        </button>
     </header>
 
     <section class="hero">
         <h1 data-aos="fade-up">Scale Your Brand Digitally</h1>
-        <p data-aos="fade-up" data-aos-delay="100">100% Secure & Trusted Digital Agency. We help you grow online with premium services.</p>
-        <div class="timer" data-aos="zoom-in" data-aos-delay="200">
-            ⏳ Special Offer Ends In: <span id="countdown">05:00:00</span>
-        </div>
-        <a href="#services" class="btn btn-primary" data-aos="fade-up" data-aos-delay="300">Explore Services</a>
+        <p data-aos="fade-up" data-aos-delay="100">Partner with a 100% Secure & Trusted Digital Agency. We deliver premium quality services to elevate your online presence.</p>
         
-        <div class="stats" data-aos="fade-up" data-aos-delay="400">
-            <div class="stat-box glass"><i class="fas fa-users text-primary"></i> 1000+ Happy Clients</div>
-            <div class="stat-box glass"><i class="fas fa-shield-alt text-secondary"></i> 100% Secure Payments</div>
+        <a href="#services" class="btn btn-primary" data-aos="fade-up" data-aos-delay="200">
+            Explore Services <i class="fas fa-arrow-right"></i>
+        </a>
+        
+        <div class="trust-badges" data-aos="fade-up" data-aos-delay="300">
+            <div class="badge glass"><i class="fas fa-check-circle" style="color: var(--primary);"></i> ISO Certified Process</div>
+            <div class="badge glass"><i class="fas fa-lock" style="color: var(--secondary);"></i> 256-bit Secure Payments</div>
         </div>
     </section>
 
     <section id="services">
-        <h2 class="section-title" data-aos="fade-up">Our Premium Services</h2>
+        <h2 class="section-title" data-aos="fade-down">Our Premium Services</h2>
         <div class="services-grid">
+            
             <div class="service-card glass" data-aos="fade-up">
                 <i class="fas fa-cube service-icon"></i>
                 <h3>3D Logo Design</h3>
-                <p>Professional high-quality 3D logo for your brand.</p>
+                <p>High-resolution, custom 3D branding for your business identity.</p>
                 <div class="price">₹199</div>
                 <button class="btn btn-primary" onclick="selectService('3D Logo Design', 199)">Order Now</button>
             </div>
+            
             <div class="service-card glass" data-aos="fade-up" data-aos-delay="100">
                 <i class="fas fa-laptop-code service-icon"></i>
                 <h3>Website Setup</h3>
-                <p>Complete website setup with SEO & mobile optimization.</p>
+                <p>Responsive, SEO-friendly website structure and deployment.</p>
                 <div class="price">₹299</div>
                 <button class="btn btn-primary" onclick="selectService('Website Setup', 299)">Order Now</button>
             </div>
+            
             <div class="service-card glass" data-aos="fade-up" data-aos-delay="200">
                 <i class="fab fa-youtube service-icon"></i>
                 <h3>YouTube SEO</h3>
-                <p>Advanced keyword research and video optimization.</p>
+                <p>Advanced keyword targeting and channel optimization strategy.</p>
                 <div class="price">₹150</div>
                 <button class="btn btn-primary" onclick="selectService('YouTube SEO', 150)">Order Now</button>
             </div>
+
         </div>
     </section>
 
     <section id="order-section">
-        <h2 class="section-title" data-aos="fade-up">Place Your Order</h2>
+        <h2 class="section-title" data-aos="fade-down">Place Your Order</h2>
         <div class="form-container glass" data-aos="fade-up">
             <form id="orderForm">
+                
                 <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="custName" class="form-control" required placeholder="Enter your name">
-                </div>
-                <div class="form-group">
-                    <label>WhatsApp Number</label>
-                    <input type="tel" id="custWa" class="form-control" required placeholder="10-digit number">
-                </div>
-                <div class="form-group">
-                    <label>Selected Service</label>
-                    <select id="custService" class="form-control" required>
-                        <option value="">Select a service</option>
-                        <option value="3D Logo Design">3D Logo Design (₹199)</option>
-                        <option value="Website Setup">Website Setup (₹299)</option>
-                        <option value="YouTube SEO">YouTube SEO (₹150)</option>
-                    </select>
+                    <label for="custName">Full Name</label>
+                    <input type="text" id="custName" class="form-control" required placeholder="Enter your full name">
                 </div>
                 
-                <div class="upi-box">
-                    <p><strong>Pay via UPI:</strong> kryadigital@ybl</p>
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=kryadigital@ybl&pn=KRYA%20Digital" alt="UPI QR" style="margin: 10px 0; border-radius: 8px; width: 100px;">
-                    <p style="font-size: 12px;">Scan and pay the exact amount of selected service.</p>
-                </div>
-
                 <div class="form-group">
-                    <label>Payment UTR / Ref Number</label>
-                    <input type="text" id="custUtr" class="form-control" required placeholder="12-digit UTR number">
+                    <label for="custWa">WhatsApp Number</label>
+                    <input type="tel" id="custWa" class="form-control" required placeholder="10-digit number" pattern="[6-9][0-9]{9}" title="Valid 10 digit Indian mobile number">
+                </div>
+                
+                <div class="form-group">
+                    <label for="custService">Select Service</label>
+                    <select id="custService" class="form-control" required>
+                        <option value="" disabled selected>-- Select a Service --</option>
+                        <option value="3D Logo Design" data-price="199">3D Logo Design (₹199)</option>
+                        <option value="Website Setup" data-price="299">Website Setup (₹299)</option>
+                        <option value="YouTube SEO" data-price="150">YouTube SEO (₹150)</option>
+                    </select>
                 </div>
 
-                <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY" style="margin-bottom: 20px;"></div>
+                <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY" style="margin-bottom: 20px; transform: scale(0.95); transform-origin: 0 0;"></div>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Order & Verify</button>
+                <button type="submit" class="btn btn-primary" id="payBtn" style="width: 100%; font-size: 18px;">
+                    <i class="fas fa-lock"></i> Pay Securely via Razorpay
+                </button>
+                
+                <div class="secure-note">
+                    <i class="fas fa-shield-alt"></i> Payments are processed securely. We do not store card details.
+                </div>
             </form>
         </div>
     </section>
 
     <section id="track-section">
-        <h2 class="section-title" data-aos="fade-up">Track Your Order</h2>
+        <h2 class="section-title" data-aos="fade-down">Track Your Order</h2>
         <div class="form-container glass" data-aos="fade-up" style="text-align: center;">
-            <input type="text" id="trackId" class="form-control" placeholder="Enter Order ID (e.g. KRYA-1234)" style="margin-bottom: 15px;">
-            <button class="btn btn-secondary" onclick="trackOrder()">Track Status</button>
-            <p id="trackResult" style="margin-top: 20px; font-weight: bold;"></p>
+            <input type="text" id="trackId" class="form-control" placeholder="Enter Order ID (e.g. KRYA-1234)" style="margin-bottom: 20px; text-align: center;">
+            <button class="btn btn-secondary" onclick="trackOrder()" id="trackBtn">
+                <i class="fas fa-search"></i> Check Status
+            </button>
+            <p id="trackResult" style="margin-top: 25px; font-size: 18px; font-weight: 600;"></p>
         </div>
     </section>
 
     <section id="certificate-section">
-        <h2 class="section-title">Your Certificate</h2>
+        <h2 class="section-title">Your Achievement</h2>
         <div class="cert-wrapper" id="printable-cert">
             <div class="cert-watermark">KRYA</div>
+            <div class="cert-header">KRYA DIGITAL SERVICES</div>
             <h1 class="cert-title">Certificate of Achievement</h1>
             <p>This certificate is proudly awarded to</p>
             <h2 class="cert-name" id="certDynName">Customer Name</h2>
-            <p>For successfully completing the digital service: <br><strong id="certDynService" style="color: var(--primary); font-size: 20px;">Service Name</strong></p>
+            <p>For successfully completing and deploying the digital service: <br><strong id="certDynService" style="color: var(--primary); font-size: 22px; display: inline-block; margin-top: 10px;">Service Name</strong></p>
+            
             <div class="cert-footer">
                 <div>
-                    <p id="certDynDate">Date</p>
-                    <p style="font-size: 12px; border-top: 1px solid #000;">Date of Issue</p>
+                    <p id="certDynDate" style="color: var(--secondary);">Date</p>
+                    <p class="cert-line">Date of Issue</p>
                 </div>
-                <div><i class="fas fa-medal" style="font-size: 40px; color: var(--accent);"></i></div>
                 <div>
-                    <p id="certDynId">ID</p>
-                    <p style="font-size: 12px; border-top: 1px solid #000;">Certificate ID</p>
+                    <i class="fas fa-check-circle" style="font-size: 45px; color: var(--accent); background: #fff; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.1);"></i>
+                </div>
+                <div>
+                    <p id="certDynId" style="font-family: monospace; color: var(--secondary);">ID</p>
+                    <p class="cert-line">Certificate ID</p>
                 </div>
             </div>
         </div>
-        <div style="text-align: center; margin-top: 20px;">
-            <button class="btn btn-primary" onclick="downloadCert()"><i class="fas fa-download"></i> Download PDF</button>
-            <button class="btn" style="background: #25D366; color: white;" onclick="shareCertWA()"><i class="fab fa-whatsapp"></i> Share</button>
+        
+        <div style="text-align: center; margin-top: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="downloadCert()" id="downloadBtn">
+                <i class="fas fa-file-pdf"></i> Download HD PDF
+            </button>
+            <button class="btn" style="background: #25D366; color: white;" onclick="shareCertWA()">
+                <i class="fab fa-whatsapp"></i> Share Achievement
+            </button>
         </div>
     </section>
 
-    <footer style="text-align: center; padding: 30px; background: rgba(0,0,0,0.9); color: #fff;">
+    <footer style="text-align: center; padding: 25px; background: #111; color: #aaa; border-top: 3px solid var(--primary);">
         <p>© 2026 KRYA Digital. 100% Legal & Secure Platform.</p>
     </footer>
 
-    <a href="https://wa.me/916379403821?text=Hello%20KRYA%20Digital!" class="float-wa" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://wa.me/916379403821?text=Hello%20KRYA%20Digital%20Support," class="float-wa" target="_blank" aria-label="Chat on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
     
-    <div id="toast">New Order Received from Delhi! 🎉</div>
+    <div id="toast"><i class="fas fa-bell" style="color: var(--accent);"></i> <span id="toastMsg">Notification</span></div>
 
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 
     <script>
-        // 1. Initialize Animations
-        AOS.init({ duration: 800, once: true });
+        // --- 1. UI Initialization ---
+        document.addEventListener("DOMContentLoaded", () => {
+            AOS.init({ duration: 800, once: true, offset: 50 });
+            
+            // Remove Loader smoothly
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 400);
+            }, 800);
+        });
 
-        // 2. Remove Loader
-        window.onload = () => {
-            document.getElementById('loader').style.opacity = '0';
-            setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
-            showToast();
-        }
-
-        // 3. Dark Mode Toggle
+        // --- 2. Theme Toggle ---
         function toggleTheme() {
             document.body.classList.toggle('dark-theme');
             const icon = document.getElementById('theme-icon');
@@ -258,39 +329,14 @@
             }
         }
 
-        // 4. Countdown Timer
-        let time = 18000; // 5 hours in seconds
-        setInterval(() => {
-            let h = Math.floor(time / 3600);
-            let m = Math.floor((time % 3600) / 60);
-            let s = time % 60;
-            document.getElementById('countdown').innerText = 
-                `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-            if(time > 0) time--;
-        }, 1000);
-
-        // 5. Service Auto-Select
+        // --- 3. Auto Scroll & Select Service ---
         function selectService(serviceName, price) {
-            document.getElementById('custService').value = serviceName;
-            document.getElementById('orderForm').scrollIntoView({ behavior: 'smooth' });
+            const selectElement = document.getElementById('custService');
+            selectElement.value = serviceName;
+            document.getElementById('orderForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        // 6. Live Toast Simulator
-        function showToast() {
-            setInterval(() => {
-                const toast = document.getElementById('toast');
-                toast.style.transform = 'translateY(0)';
-                toast.style.opacity = '1';
-                setTimeout(() => {
-                    toast.style.transform = 'translateY(100px)';
-                    toast.style.opacity = '0';
-                }, 4000);
-            }, 15000);
-        }
-
-        // ==========================================
-        // FIREBASE SETUP (REPLACE WITH YOUR CONFIG)
-        // ==========================================
+        // --- 4. Firebase Configuration (Needs real credentials) ---
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "your-project.firebaseapp.com",
@@ -300,81 +346,24 @@
             appId: "YOUR_APP_ID"
         };
         
-        // Initialize Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+        // Initialize Firebase Safely
+        let db;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+        } catch (error) {
+            console.error("Firebase Initialization Error:", error);
         }
-        const db = firebase.firestore();
 
-        // ==========================================
-        // ORDER SUBMISSION
-        // ==========================================
+        // --- 5. Form Submission & Razorpay Integration ---
         document.getElementById('orderForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Collect Data
-            const name = document.getElementById('custName').value;
-            const wa = document.getElementById('custWa').value;
-            const service = document.getElementById('custService').value;
-            const utr = document.getElementById('custUtr').value;
+            // Validate Input
+            const name = document.getElementById('custName').value.trim();
+            const wa = document.getElementById('custWa').value.trim();
+            const serviceSelect = document.getElementById('custService');
+            const service = serviceSelect.value;
             
-            // Generate Order ID
-            const randomNum = Math.floor(1000 + Math.random() * 9000);
-            const orderId = "KRYA-" + randomNum;
-
-            const orderData = {
-                orderId: orderId,
-                name: name,
-                whatsapp: wa,
-                service: service,
-                utr: utr,
-                status: "Pending",
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            // Save to Firestore
-            // Note: If config is dummy, this will fail. Showing alert for demo.
-            try {
-                db.collection("orders").doc(orderId).set(orderData)
-                .then(() => {
-                    successRedirect(orderId, service);
-                })
-                .catch((error) => {
-                    console.warn("Firebase not configured. Simulating success.");
-                    successRedirect(orderId, service); // Remove this in real production
-                });
-            } catch(e) {
-                successRedirect(orderId, service);
-            }
-        });
-
-        function successRedirect(orderId, service) {
-            alert(`Order Placed Successfully! Your Order ID is: ${orderId}`);
-            document.getElementById('orderForm').reset();
-            // Redirect to official KRYA WA Number
-            let msg = `Hello KRYA Team! I just placed an order.\nOrder ID: ${orderId}\nService: ${service}`;
-            window.location.href = `https://wa.me/916379403821?text=${encodeURIComponent(msg)}`;
-        }
-
-        // ==========================================
-        // ORDER TRACKING & CERTIFICATE
-        // ==========================================
-        let currentCertId = "";
-
-        function trackOrder() {
-            const trackId = document.getElementById('trackId').value.trim();
-            const resultBox = document.getElementById('trackResult');
-            
-            if(!trackId) {
-                resultBox.innerText = "Please enter an Order ID.";
-                resultBox.style.color = "red";
-                return;
-            }
-
-            resultBox.innerText = "Fetching data...";
-            resultBox.style.color = "var(--text-dark)";
-
-            // Simulating DB fetch for demonstration if Firebase is dummy
-            // In real code: db.collection("orders").doc(trackId).get().then(...)
-            
-            db.collection("orders").doc(trackId).get().the
