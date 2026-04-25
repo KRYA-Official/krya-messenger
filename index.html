@@ -14,14 +14,14 @@
             line-height: 1.6; 
         }
         
-        /* Header Wrapper - बैनर को बीच में रखने के लिए */
+        /* Header Wrapper */
         .header-wrapper {
             text-align: center;
             padding-top: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
-        /* Fixed Slim Banner Section - जितना टेक्स्ट, उतना चौड़ा */
+        /* Fixed Slim Banner Section */
         header {
             display: inline-block; 
             background-color: #0c845c;
@@ -35,21 +35,36 @@
         }
         
         .brand { font-size: 26px; font-weight: 800; letter-spacing: -1px; margin: 0; }
-        .brand span { font-weight: 300; color: #FFD700; /* गोल्डन टेक्स्ट */ }
+        .brand span { font-weight: 300; color: #FFD700; }
         .tagline { font-size: 13px; margin-top: 2px; opacity: 0.95; font-weight: 500; }
 
         .container { padding: 0 15px 15px; max-width: 500px; margin: 0 auto; }
+
+        /* Brand Image Banner Section */
+        .brand-banner {
+            width: 100%;
+            margin-bottom: 25px;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 3px solid #FFD700; /* गोल्डन फ्रेम */
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .brand-banner img {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+        }
 
         /* Service Card Design */
         .service-card {
             background: white; border-radius: 18px; margin-bottom: 25px;
             overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-            border-bottom: 4px solid #0c845c; /* हरा बेस */
+            border-bottom: 4px solid #0c845c;
         }
         .card-img { width: 100%; height: 200px; object-fit: cover; display: block; background: #eee; }
         
         .card-body { padding: 20px; }
-        .card-body h3 { margin: 0 0 10px; color: #d32f2f; /* लाल रंग का टाइटल */ font-size: 19px; display: flex; align-items: center; gap: 8px; font-weight: bold; }
+        .card-body h3 { margin: 0 0 10px; color: #d32f2f; font-size: 19px; display: flex; align-items: center; gap: 8px; font-weight: bold; }
         .price-badge { background: #e8f5e9; color: #0c845c; display: inline-block; padding: 5px 12px; border-radius: 8px; font-weight: 700; margin-bottom: 15px; font-size: 14px; border: 1px solid #0c845c; }
 
         /* UPI Payment Buttons */
@@ -70,7 +85,7 @@
             position: sticky; bottom: 15px; background: white; 
             padding: 15px; border-radius: 20px; margin: 20px 10px;
             box-shadow: 0 -8px 25px rgba(0,0,0,0.15); text-align: center;
-            border: 2px solid #d32f2f; /* लाल बॉर्डर */
+            border: 2px solid #d32f2f;
         }
         .btn-form { 
             background-color: #d32f2f; color: white; font-size: 18px;
@@ -89,6 +104,10 @@
 </div>
 
 <div class="container">
+
+    <div class="brand-banner">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s600/1000537308.jpg" alt="Kryalive Brand Identity">
+    </div>
 
     <div class="service-card">
         <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500" class="card-img" alt="3D Logo">
