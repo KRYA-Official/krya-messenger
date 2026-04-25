@@ -1,366 +1,265 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA Digital - Premium Services</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>KRYA Digital | Automated & Secure Digital Services</title>
+    <meta name="description" content="100% Secure Digital Services by KRYA. Web Design, Logos, YouTube SEO.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <style>
-        /* CSS VARIABLES & THEME SETUP */
-        :root {
-            --primary: #0c845c; /* KRYA Green */
-            --secondary: #d32f2f; /* KRYA Red */
-            --accent: #FFD700; /* KRYA Gold */
-            --bg-light: #f4f7f6;
-            --text-dark: #2d3436;
-            --glass-bg: rgba(255, 255, 255, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.4);
-            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-        }
-
-        .dark-theme {
-            --bg-light: #121212;
-            --text-dark: #f5f6fa;
-            --glass-bg: rgba(30, 30, 30, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        html { scroll-behavior: smooth; }
-        body { background-color: var(--bg-light); color: var(--text-dark); overflow-x: hidden; transition: background 0.3s ease, color 0.3s ease; }
-        h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
-
-        /* GLASSMORPHISM */
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow);
-            border-radius: 16px;
-        }
-
-        .btn {
-            padding: 12px 28px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            outline: none;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 16px;
-        }
-        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 15px rgba(12, 132, 92, 0.3); }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(12, 132, 92, 0.5); }
-        .btn-secondary { background: var(--secondary); color: #fff; box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3); }
-        .btn-secondary:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(211, 47, 47, 0.5); }
-
-        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 40px; color: var(--primary); }
-        section { padding: 80px 5%; }
-
-        /* LOADER CSS */
-        #loader { position: fixed; inset: 0; background: var(--bg-light); z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.4s; }
-        .spinner { width: 50px; height: 50px; border: 4px solid var(--accent); border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* Header */
-        header { position: fixed; top: 0; width: 100%; z-index: 1000; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 26px; font-weight: 800; color: var(--primary); text-decoration: none; letter-spacing: 1px; }
-        .logo span { color: var(--secondary); }
-        .theme-toggle { background: none; border: none; font-size: 22px; color: var(--text-dark); cursor: pointer; transition: 0.3s; }
-        .theme-toggle:hover { color: var(--accent); }
-
-        /* Hero */
-        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 100px 5% 50px; background: radial-gradient(circle at center, rgba(12,132,92,0.05) 0%, transparent 70%); }
-        .hero h1 { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 20px; color: var(--primary); line-height: 1.2; }
-        .hero p { font-size: 1.1rem; margin-bottom: 30px; max-width: 650px; color: #555; }
-        .dark-theme .hero p { color: #ccc; }
+        :root { --primary: #0c845c; --secondary: #d32f2f; --accent: #FFD700; --bg: #f4f7f6; --text: #2c3e50; --card: #fff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
+        body { background: var(--bg); color: var(--text); }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 15px; }
         
-        .trust-badges { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
-        .badge { padding: 12px 25px; border-radius: 50px; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; border: 1px solid var(--accent); }
-
-        /* Services Grid */
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
-        .service-card { padding: 40px 20px; text-align: center; transition: all 0.4s ease; border: 2px solid transparent; }
-        .service-card:hover { transform: translateY(-10px); border-color: var(--accent); }
-        .service-icon { font-size: 45px; color: var(--primary); margin-bottom: 20px; }
-        .price { font-size: 28px; font-weight: 700; color: var(--secondary); margin: 15px 0 25px; }
-
-        /* FORMS */
-        .form-container { max-width: 550px; margin: 0 auto; padding: 40px; }
-        .form-group { margin-bottom: 20px; text-align: left; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 15px; }
-        .form-control { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid rgba(12, 132, 92, 0.2); background: rgba(255,255,255,0.7); color: var(--text-dark); font-size: 16px; outline: none; transition: 0.3s; }
-        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(12, 132, 92, 0.1); }
-        .dark-theme .form-control { background: rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.1); color: #fff; }
-        .secure-note { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; color: #666; margin-top: 15px; }
-        .dark-theme .secure-note { color: #aaa; }
-
-        /* CERTIFICATE DESIGN */
-        #certificate-section { display: none; }
-        .cert-wrapper { 
-            background: #fff; padding: 40px; max-width: 800px; margin: 0 auto; 
-            border: 12px solid var(--bg-light); outline: 2px solid var(--accent); 
-            position: relative; color: #333; text-align: center; overflow: hidden;
-        }
-        .cert-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 120px; opacity: 0.04; font-weight: 900; pointer-events: none; }
-        .cert-header { color: var(--secondary); font-weight: bold; letter-spacing: 2px; margin-bottom: 20px; }
-        .cert-title { font-size: clamp(30px, 4vw, 45px); color: var(--primary); margin-bottom: 15px; }
-        .cert-name { font-size: clamp(25px, 3vw, 35px); border-bottom: 2px solid var(--accent); display: inline-block; margin: 20px 0; padding: 0 30px 5px; font-style: italic; }
-        .cert-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 50px; font-weight: 600; text-align: center; }
-        .cert-line { border-top: 1px solid #333; padding-top: 5px; font-size: 13px; margin-top: 5px; }
-
-        /* FLOATING UI ELEMENTS */
-        .float-wa { position: fixed; bottom: 25px; right: 25px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 32px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); z-index: 1000; text-decoration: none; transition: transform 0.3s; }
-        .float-wa:hover { transform: scale(1.1) rotate(-10deg); }
+        header { background: linear-gradient(135deg, var(--primary), #086345); color: white; padding: 15px 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .logo { font-size: 26px; font-weight: 800; } .logo span { color: var(--accent); }
         
-        #toast { position: fixed; bottom: 25px; left: 25px; background: var(--text-dark); color: var(--bg-light); padding: 15px 25px; border-radius: 8px; transform: translateY(100px); opacity: 0; transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 1000; display: flex; align-items: center; gap: 10px; font-weight: 500; box-shadow: var(--shadow); }
+        .live-stats { background: var(--text); color: white; text-align: center; padding: 10px; font-size: 14px; font-weight: bold; }
+        .live-stats span { color: var(--accent); }
 
-        @media (max-width: 768px) {
-            section { padding: 60px 5%; }
-            .cert-footer { flex-direction: column; gap: 30px; align-items: center; }
-        }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; margin: 40px 0; }
+        .service-card { background: var(--card); border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.08); text-align: center; padding-bottom: 20px; border-bottom: 4px solid var(--primary); transition: 0.3s; }
+        .service-card:hover { transform: translateY(-5px); }
+        .service-card img { width: 100%; height: 180px; object-fit: cover; }
+        .price { font-size: 22px; font-weight: 800; color: var(--primary); margin: 10px 0; }
+        .btn { padding: 12px 20px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; color: white; background: var(--primary); width: 90%; display: inline-block; transition: 0.3s; }
+        .btn:hover { background: #086345; }
+
+        .form-section { background: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); border: 2px solid var(--accent); margin-bottom: 40px; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; }
+        
+        /* Modals & Popups */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-box { background: var(--card); padding: 30px; border-radius: 15px; text-align: center; max-width: 400px; width: 90%; }
+        
+        /* Exit Intent */
+        #exitPopup { display: none; }
+        
+        /* Live Toast */
+        #liveToast { position: fixed; bottom: 80px; left: -300px; background: var(--card); padding: 15px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); border-left: 4px solid var(--primary); transition: 0.5s; z-index: 1001; }
+        #liveToast.show { left: 20px; }
+
+        /* Bottom Sticky CTA */
+        .sticky-cta { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--secondary); padding: 15px; text-align: center; z-index: 999; box-shadow: 0 -5px 15px rgba(0,0,0,0.2); }
+        .sticky-cta a { color: white; font-weight: bold; font-size: 18px; }
     </style>
 </head>
 <body>
 
-    <div id="loader"><div class="spinner"></div></div>
-    <script>
-        // यह स्मार्ट कोड 100% गारंटी देता है कि वेबसाइट अटकेगी नहीं
-        window.addEventListener('load', function() {
-            var l = document.getElementById('loader');
-            if(l) { l.style.opacity = '0'; setTimeout(function(){ l.style.display = 'none'; }, 400); }
-        });
-        // अगर इंटरनेट स्लो है, तो 2 सेकंड में खुद ही हट जाएगा
-        setTimeout(function() {
-            var l = document.getElementById('loader');
-            if(l && l.style.display !== 'none') {
-                l.style.opacity = '0'; setTimeout(function(){ l.style.display = 'none'; }, 400);
-            }
-        }, 2000);
-    </script>
-
-    <header class="glass">
-        <a href="#" class="logo">KRYA<span>.Digital</span></a>
-        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
-            <i class="fas fa-moon" id="theme-icon"></i>
-        </button>
+    <header>
+        <div class="container"><h1 class="logo">KRYA<span>.com</span></h1></div>
     </header>
 
-    <section class="hero">
-        <h1 data-aos="fade-up">Scale Your Brand Digitally</h1>
-        <p data-aos="fade-up" data-aos-delay="100">Partner with a 100% Secure & Trusted Digital Agency. We deliver premium quality services to elevate your online presence.</p>
-        
-        <a href="#services" class="btn btn-primary" data-aos="fade-up" data-aos-delay="200">
-            Explore Services <i class="fas fa-arrow-right"></i>
-        </a>
-        
-        <div class="trust-badges" data-aos="fade-up" data-aos-delay="300">
-            <div class="badge glass"><i class="fas fa-check-circle" style="color: var(--primary);"></i> ISO Certified Process</div>
-            <div class="badge glass"><i class="fas fa-lock" style="color: var(--secondary);"></i> 256-bit Secure Payments</div>
-        </div>
-    </section>
+    <div class="live-stats">🔥 Join <span id="totalOrdersCounter">...</span> Happy Clients! Real-time Database Active.</div>
 
-    <section id="services">
-        <h2 class="section-title" data-aos="fade-down">Our Premium Services</h2>
+    <div class="container">
+        <h2 style="text-align:center; margin-top:40px; color:var(--primary);">Premium Digital Services</h2>
         <div class="services-grid">
-            
-            <div class="service-card glass" data-aos="fade-up">
-                <i class="fas fa-cube service-icon"></i>
-                <h3>3D Logo Design</h3>
-                <p>High-resolution, custom 3D branding for your business identity.</p>
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500" alt="Logo" loading="lazy">
+                <h3>🎨 3D Logo Design</h3>
                 <div class="price">₹199</div>
-                <button class="btn btn-primary" onclick="selectService('3D Logo Design', 199)">Order Now</button>
+                <button class="btn" onclick="selectService('3D Logo Design - ₹199', 199)">Order Now</button>
             </div>
-            
-            <div class="service-card glass" data-aos="fade-up" data-aos-delay="100">
-                <i class="fas fa-laptop-code service-icon"></i>
-                <h3>Website Setup</h3>
-                <p>Responsive, SEO-friendly website structure and deployment.</p>
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500" alt="Website" loading="lazy">
+                <h3>🌐 Website Setup</h3>
                 <div class="price">₹299</div>
-                <button class="btn btn-primary" onclick="selectService('Website Setup', 299)">Order Now</button>
+                <button class="btn" onclick="selectService('Website Setup - ₹299', 299)">Order Now</button>
             </div>
-            
-            <div class="service-card glass" data-aos="fade-up" data-aos-delay="200">
-                <i class="fab fa-youtube service-icon"></i>
-                <h3>YouTube SEO</h3>
-                <p>Advanced keyword targeting and channel optimization strategy.</p>
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500" alt="SEO" loading="lazy">
+                <h3>📈 YouTube SEO</h3>
                 <div class="price">₹150</div>
-                <button class="btn btn-primary" onclick="selectService('YouTube SEO', 150)">Order Now</button>
+                <button class="btn" onclick="selectService('YouTube SEO - ₹150', 150)">Order Now</button>
             </div>
-
         </div>
-    </section>
 
-    <section id="order-section">
-        <h2 class="section-title" data-aos="fade-down">Place Your Order</h2>
-        <div class="form-container glass" data-aos="fade-up">
+        <div class="form-section" id="checkoutSection">
+            <h2 style="color:var(--secondary); text-align:center; margin-bottom:20px;">Secure Checkout</h2>
             <form id="orderForm">
+                <input type="text" id="custName" class="form-control" placeholder="Full Name" required>
+                <input type="email" id="custEmail" class="form-control" placeholder="Email Address (For Invoice)" required>
+                <input type="text" id="custWa" class="form-control" placeholder="WhatsApp Number (10 Digits)" pattern="[0-9]{10}" required>
                 
-                <div class="form-group">
-                    <label for="custName">Full Name</label>
-                    <input type="text" id="custName" class="form-control" required placeholder="Enter your full name">
+                <input type="text" id="custService" class="form-control" placeholder="Selected Service" readonly required style="background:#eee; font-weight:bold;">
+                <input type="hidden" id="custAmount">
+                
+                <div style="background:#e8f5e9; padding:15px; border-radius:8px; margin-bottom:15px; text-align:center; border:1px dashed var(--primary);">
+                    <p style="font-weight:bold;">UPI ID: 93690mukeshkumar@axl (KRYA)</p>
+                    <a href="upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&cu=INR" style="color:var(--secondary); font-weight:bold; font-size:14px;">Click here to Pay via App</a>
                 </div>
                 
-                <div class="form-group">
-                    <label for="custWa">WhatsApp Number</label>
-                    <input type="tel" id="custWa" class="form-control" required placeholder="10-digit number" pattern="[6-9][0-9]{9}" title="Valid 10 digit Indian mobile number">
-                </div>
+                <input type="text" id="custUtr" class="form-control" placeholder="Enter 12-Digit UTR Number" pattern="[a-zA-Z0-9]{12}" required>
                 
-                <div class="form-group">
-                    <label for="custService">Select Service</label>
-                    <select id="custService" class="form-control" required>
-                        <option value="" disabled selected>-- Select a Service --</option>
-                        <option value="3D Logo Design" data-price="199">3D Logo Design (₹199)</option>
-                        <option value="Website Setup" data-price="299">Website Setup (₹299)</option>
-                        <option value="YouTube SEO" data-price="150">YouTube SEO (₹150)</option>
-                    </select>
-                </div>
-
-                <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY" style="margin-bottom: 20px; transform: scale(0.95); transform-origin: 0 0;"></div>
-
-                <button type="submit" class="btn btn-primary" id="payBtn" style="width: 100%; font-size: 18px;">
-                    <i class="fas fa-lock"></i> Pay Securely via Razorpay
-                </button>
-                
-                <div class="secure-note">
-                    <i class="fas fa-shield-alt"></i> Payments are processed securely. We do not store card details.
-                </div>
+                <button type="submit" class="btn" style="width:100%; background:var(--secondary); font-size:18px;" id="submitBtn">Pay & Confirm Order</button>
             </form>
         </div>
-    </section>
+    </div>
 
-    <section id="track-section">
-        <h2 class="section-title" data-aos="fade-down">Track Your Order</h2>
-        <div class="form-container glass" data-aos="fade-up" style="text-align: center;">
-            <input type="text" id="trackId" class="form-control" placeholder="Enter Order ID (e.g. KRYA-1234)" style="margin-bottom: 20px; text-align: center;">
-            <button class="btn btn-secondary" onclick="trackOrder()" id="trackBtn">
-                <i class="fas fa-search"></i> Check Status
-            </button>
-            <p id="trackResult" style="margin-top: 25px; font-size: 18px; font-weight: 600;"></p>
+    <div id="liveToast"><i class="fas fa-bell" style="color:var(--accent);"></i> <span id="toastMsg"></span></div>
+
+    <div class="overlay" id="successModal">
+        <div class="modal-box">
+            <i class="fas fa-check-circle" style="font-size:50px; color:var(--primary);"></i>
+            <h2 style="margin:10px 0;">Order Confirmed!</h2>
+            <p>Your Order ID: <strong id="displayOrderId" style="color:var(--secondary);"></strong></p>
+            <p style="font-size:12px; color:#666; margin-top:10px;">Check WhatsApp & Email for details.</p>
+            <button class="btn" style="margin-top:15px;" onclick="document.getElementById('successModal').style.display='none'">Close</button>
         </div>
-    </section>
+    </div>
 
-    <section id="certificate-section">
-        <h2 class="section-title">Your Achievement</h2>
-        <div class="cert-wrapper" id="printable-cert">
-            <div class="cert-watermark">KRYA</div>
-            <div class="cert-header">KRYA DIGITAL SERVICES</div>
-            <h1 class="cert-title">Certificate of Achievement</h1>
-            <p>This certificate is proudly awarded to</p>
-            <h2 class="cert-name" id="certDynName">Customer Name</h2>
-            <p>For successfully completing and deploying the digital service: <br><strong id="certDynService" style="color: var(--primary); font-size: 22px; display: inline-block; margin-top: 10px;">Service Name</strong></p>
-            
-            <div class="cert-footer">
-                <div>
-                    <p id="certDynDate" style="color: var(--secondary);">Date</p>
-                    <p class="cert-line">Date of Issue</p>
-                </div>
-                <div>
-                    <i class="fas fa-check-circle" style="font-size: 45px; color: var(--accent); background: #fff; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.1);"></i>
-                </div>
-                <div>
-                    <p id="certDynId" style="font-family: monospace; color: var(--secondary);">ID</p>
-                    <p class="cert-line">Certificate ID</p>
-                </div>
-            </div>
+    <div class="overlay" id="exitPopup">
+        <div class="modal-box" style="border:4px solid var(--secondary);">
+            <h2>Wait! Don't Go.</h2>
+            <p style="margin:15px 0; font-weight:bold;">Get 10% Extra Views/Service on your first order!</p>
+            <button class="btn" onclick="document.getElementById('exitPopup').style.display='none'; document.getElementById('checkoutSection').scrollIntoView();">Claim Offer Now</button>
         </div>
-        
-        <div style="text-align: center; margin-top: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-            <button class="btn btn-primary" onclick="downloadCert()" id="downloadBtn">
-                <i class="fas fa-file-pdf"></i> Download HD PDF
-            </button>
-            <button class="btn" style="background: #25D366; color: white;" onclick="shareCertWA()">
-                <i class="fab fa-whatsapp"></i> Share Achievement
-            </button>
-        </div>
-    </section>
+    </div>
 
-    <footer style="text-align: center; padding: 25px; background: #111; color: #aaa; border-top: 3px solid var(--primary);">
-        <p>© 2026 KRYA Digital. 100% Legal & Secure Platform.</p>
-    </footer>
-
-    <a href="https://wa.me/916379403821?text=Hello%20KRYA%20Digital%20Support," class="float-wa" target="_blank" aria-label="Chat on WhatsApp">
-        <i class="fab fa-whatsapp"></i>
-    </a>
-    
-    <div id="toast"><i class="fas fa-bell" style="color: var(--accent);"></i> <span id="toastMsg">Notification</span></div>
-
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <div class="sticky-cta"><a href="#checkoutSection">Quick Order via Secure Portal</a></div>
 
     <script>
-        // --- 1. UI Initialization ---
-        document.addEventListener("DOMContentLoaded", () => {
-            // सुरक्षित AOS Initialization
-            try {
-                AOS.init({ duration: 800, once: true, offset: 50 });
-            } catch(e) {
-                console.log("AOS Network Delay - Safe Mode Active");
-            }
-        });
-
-        // --- 2. Theme Toggle ---
-        function toggleTheme() {
-            document.body.classList.toggle('dark-theme');
-            const icon = document.getElementById('theme-icon');
-            if(document.body.classList.contains('dark-theme')) {
-                icon.classList.replace('fa-moon', 'fa-sun');
-            } else {
-                icon.classList.replace('fa-sun', 'fa-moon');
-            }
-        }
-
-        // --- 3. Auto Scroll & Select Service ---
-        function selectService(serviceName, price) {
-            const selectElement = document.getElementById('custService');
-            selectElement.value = serviceName;
-            document.getElementById('orderForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-
-        // --- 4. Firebase Configuration ---
+        // 1. Firebase Initialization (Paste your config here)
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
-            authDomain: "your-project.firebaseapp.com",
-            projectId: "your-project-id",
-            storageBucket: "your-project.appspot.com",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
             messagingSenderId: "YOUR_SENDER_ID",
             appId: "YOUR_APP_ID"
         };
-        
-        let db;
-        try {
-            if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-            db = firebase.firestore();
-        } catch (error) { console.error("Firebase Err:", error); }
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        // --- 5. Form Submission & Razorpay Integration ---
+        // 2. EmailJS Initialization (Register at emailjs.com)
+        emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
+
+        // 3. Auto-Select Service & Smooth Scroll
+        function selectService(serviceName, amount) {
+            document.getElementById('custService').value = serviceName;
+            document.getElementById('custAmount').value = amount;
+            document.getElementById('checkoutSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 4. Real-time Database Listeners (Live Counter & Toast)
+        db.collection("orders").orderBy("timestamp", "desc").limit(1).onSnapshot((snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === "added") {
+                    const data = change.doc.data();
+                    document.getElementById('toastMsg').innerText = `${data.name} just ordered ${data.service}!`;
+                    const toast = document.getElementById('liveToast');
+                    toast.classList.add('show');
+                    setTimeout(() => toast.classList.remove('show'), 4000);
+                }
+            });
+        });
+
+        // Get total orders count (Approximation for performance)
+        db.collection("orders").onSnapshot((snapshot) => {
+            let baseCount = 1200; // Fake base to build trust
+            document.getElementById('totalOrdersCounter').innerText = baseCount + snapshot.size;
+        });
+
+        // 5. Form Submit & Razorpay Logic
         document.getElementById('orderForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            const name = document.getElementById('custName').value.trim();
-            const wa = document.getElementById('custWa').value.trim();
-            const serviceSelect = document.getElementById('custService');
-            const service = serviceSelect.value;
-            const price = parseInt(serviceSelect.options[serviceSelect.selectedIndex].getAttribute('data-price'));
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = "Processing..."; btn.disabled = true;
 
-            if(!/^[6-9]\d{9}$/.test(wa)) {
-                showToast("Please enter a valid 10-digit WhatsApp number.", true);
-                return;
+            const name = document.getElementById('custName').value;
+            const email = document.getElementById('custEmail').value;
+            const wa = document.getElementById('custWa').value;
+            const service = document.getElementById('custService').value;
+            const amount = document.getElementById('custAmount').value;
+            const utr = document.getElementById('custUtr').value;
+            
+            // Strong Unique Order ID
+            const orderId = 'KRYA-' + Date.now().toString().slice(-6) + '-' + Math.floor(Math.random() * 1000);
+
+            // Fake Razorpay Integration (Frontend Only)
+            var options = {
+                "key": "YOUR_RAZORPAY_TEST_KEY", // Enter Razorpay Key ID
+                "amount": amount * 100, // Amount in paise
+                "currency": "INR",
+                "name": "KRYA Digital",
+                "description": service,
+                "handler": async function (response) {
+                    // Payment Success -> Save to Firebase
+                    await saveOrderToFirebase(orderId, name, email, wa, service, utr, "Paid Online");
+                },
+                "modal": {
+                    "ondismiss": async function() {
+                        // User closed payment, fallback to UTR check
+                        await saveOrderToFirebase(orderId, name, email, wa, service, utr, "Manual UTR Verification");
+                    }
+                }
+            };
+            
+            // Uncomment next line to trigger Razorpay UI
+            // var rzp1 = new Razorpay(options); rzp1.open();
+            
+            // Since Razorpay is commented out for safety, directly save data based on UTR
+            saveOrderToFirebase(orderId, name, email, wa, service, utr, "Manual UTR Pending");
+        });
+
+        async function saveOrderToFirebase(orderId, name, email, wa, service, utr, paymentStatus) {
+            try {
+                await db.collection("orders").doc(orderId).set({
+                    orderId: orderId,
+                    name: name,
+                    email: email,
+                    whatsapp: wa,
+                    service: service,
+                    utr: utr,
+                    paymentStatus: paymentStatus,
+                    orderStatus: "Pending", // Pending, In Progress, Completed
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // Send Automated Email via EmailJS
+                emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+                    order_id: orderId, to_name: name, to_email: email, service: service
+                });
+
+                // Show Success Modal
+                document.getElementById('displayOrderId').innerText = orderId;
+                document.getElementById('successModal').style.display = 'flex';
+
+                // Automated WhatsApp Redirect
+                const waMsg = `*Order Confirmed!*\nID: ${orderId}\nService: ${service}\nStatus: ${paymentStatus}`;
+                setTimeout(() => {
+                    window.open(`https://wa.me/916379403821?text=${encodeURIComponent(waMsg)}`, '_blank');
+                    window.location.reload();
+                }, 3000);
+
+            } catch (error) {
+                alert("Database Error! " + error.message);
+                document.getElementById('submitBtn').innerText = "Try Again";
+                document.getElementById('submitBtn').disabled = false;
             }
-            if(!service || isNaN(price)) {
-                showToast("Please select a valid service.", true);
-                retu
+        }
+
+        // 6. Exit Intent Popup Logic
+        let exitTriggered = false;
+        document.addEventListener("mouseleave", (e) => {
+            if(e.clientY < 0 && !exitTriggered) {
+                document.getElementById('exitPopup').style.display = 'flex';
+                exitTriggered = true;
+            }
+        });
+    </script>
+</body>
+</html>
