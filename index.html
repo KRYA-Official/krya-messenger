@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>KRYA Digital | Automated & Secure Digital Services</title>
+    <title>KRYA Digital | Premium Digital Services</title>
     <meta name="description" content="100% Secure Digital Services by KRYA. Web Design, Logos, YouTube SEO.">
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -12,10 +12,6 @@
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <style>
         :root { --primary: #0c845c; --secondary: #d32f2f; --accent: #FFD700; --bg: #f4f7f6; --text: #2c3e50; --card: #fff; }
@@ -25,9 +21,6 @@
         
         header { background: linear-gradient(135deg, var(--primary), #086345); color: white; padding: 15px 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .logo { font-size: 26px; font-weight: 800; } .logo span { color: var(--accent); }
-        
-        .live-stats { background: var(--text); color: white; text-align: center; padding: 10px; font-size: 14px; font-weight: bold; }
-        .live-stats span { color: var(--accent); }
 
         .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; margin: 40px 0; }
         .service-card { background: var(--card); border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.08); text-align: center; padding-bottom: 20px; border-bottom: 4px solid var(--primary); transition: 0.3s; }
@@ -40,20 +33,12 @@
         .form-section { background: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); border: 2px solid var(--accent); margin-bottom: 40px; }
         .form-control { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; }
         
+        .phonepe-box { background: #5f259f; color: white; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(95, 37, 159, 0.3); }
+        .upi-text { font-size: 20px; font-weight: bold; margin: 10px 0; background: white; color: #5f259f; padding: 5px 10px; border-radius: 5px; display: inline-block; }
+        
         /* Modals & Popups */
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
         .modal-box { background: var(--card); padding: 30px; border-radius: 15px; text-align: center; max-width: 400px; width: 90%; }
-        
-        /* Exit Intent */
-        #exitPopup { display: none; }
-        
-        /* Live Toast */
-        #liveToast { position: fixed; bottom: 80px; left: -300px; background: var(--card); padding: 15px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); border-left: 4px solid var(--primary); transition: 0.5s; z-index: 1001; }
-        #liveToast.show { left: 20px; }
-
-        /* Bottom Sticky CTA */
-        .sticky-cta { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--secondary); padding: 15px; text-align: center; z-index: 999; box-shadow: 0 -5px 15px rgba(0,0,0,0.2); }
-        .sticky-cta a { color: white; font-weight: bold; font-size: 18px; }
     </style>
 </head>
 <body>
@@ -62,176 +47,105 @@
         <div class="container"><h1 class="logo">KRYA<span>.com</span></h1></div>
     </header>
 
-    <div class="live-stats">🔥 Join <span id="totalOrdersCounter">...</span> Happy Clients! Real-time Database Active.</div>
-
     <div class="container">
-        <h2 style="text-align:center; margin-top:40px; color:var(--primary);">Premium Digital Services</h2>
+        <h2 style="text-align:center; margin-top:40px; color:var(--primary);">Choose Your Service</h2>
         <div class="services-grid">
             <div class="service-card">
-                <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500" alt="Logo" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500" alt="Logo">
                 <h3>🎨 3D Logo Design</h3>
                 <div class="price">₹199</div>
-                <button class="btn" onclick="selectService('3D Logo Design - ₹199', 199)">Order Now</button>
+                <button class="btn" onclick="selectService('3D Logo Design', 199)">Select & Pay</button>
             </div>
             <div class="service-card">
-                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500" alt="Website" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500" alt="Website">
                 <h3>🌐 Website Setup</h3>
                 <div class="price">₹299</div>
-                <button class="btn" onclick="selectService('Website Setup - ₹299', 299)">Order Now</button>
+                <button class="btn" onclick="selectService('Website Setup', 299)">Select & Pay</button>
             </div>
             <div class="service-card">
-                <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500" alt="SEO" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500" alt="SEO">
                 <h3>📈 YouTube SEO</h3>
                 <div class="price">₹150</div>
-                <button class="btn" onclick="selectService('YouTube SEO - ₹150', 150)">Order Now</button>
+                <button class="btn" onclick="selectService('YouTube SEO', 150)">Select & Pay</button>
             </div>
         </div>
 
         <div class="form-section" id="checkoutSection">
-            <h2 style="color:var(--secondary); text-align:center; margin-bottom:20px;">Secure Checkout</h2>
+            <h2 style="color:var(--secondary); text-align:center; margin-bottom:20px;">Step 1: Pay securely via PhonePe / UPI</h2>
+            
+            <div class="phonepe-box">
+                <p>Send payment to our official Business UPI ID:</p>
+                <div class="upi-text">93690mukeshkumar@axl</div>
+                <p style="font-size: 14px; opacity: 0.9;">Verified Name: KRYA</p>
+                <a href="upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&cu=INR" style="display:inline-block; margin-top:15px; padding:10px 20px; background:white; color:#5f259f; font-weight:bold; border-radius:30px; text-decoration:none;"><i class="fas fa-mobile-alt"></i> Open UPI App to Pay</a>
+            </div>
+
+            <h2 style="color:var(--primary); text-align:center; margin:30px 0 20px;">Step 2: Submit 12-Digit UTR</h2>
+            
             <form id="orderForm">
                 <input type="text" id="custName" class="form-control" placeholder="Full Name" required>
-                <input type="email" id="custEmail" class="form-control" placeholder="Email Address (For Invoice)" required>
                 <input type="text" id="custWa" class="form-control" placeholder="WhatsApp Number (10 Digits)" pattern="[0-9]{10}" required>
+                <input type="text" id="custService" class="form-control" placeholder="Selected Service" readonly required style="background:#eee; font-weight:bold; color:var(--primary);">
+                <input type="text" id="custUtr" class="form-control" placeholder="Enter 12-Digit UTR / Ref Number" pattern="[a-zA-Z0-9]{12}" required>
                 
-                <input type="text" id="custService" class="form-control" placeholder="Selected Service" readonly required style="background:#eee; font-weight:bold;">
-                <input type="hidden" id="custAmount">
-                
-                <div style="background:#e8f5e9; padding:15px; border-radius:8px; margin-bottom:15px; text-align:center; border:1px dashed var(--primary);">
-                    <p style="font-weight:bold;">UPI ID: 93690mukeshkumar@axl (KRYA)</p>
-                    <a href="upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&cu=INR" style="color:var(--secondary); font-weight:bold; font-size:14px;">Click here to Pay via App</a>
-                </div>
-                
-                <input type="text" id="custUtr" class="form-control" placeholder="Enter 12-Digit UTR Number" pattern="[a-zA-Z0-9]{12}" required>
-                
-                <button type="submit" class="btn" style="width:100%; background:var(--secondary); font-size:18px;" id="submitBtn">Pay & Confirm Order</button>
+                <button type="submit" class="btn" style="width:100%; background:var(--secondary); font-size:18px;" id="submitBtn">Verify UTR & Confirm Order</button>
             </form>
         </div>
     </div>
 
-    <div id="liveToast"><i class="fas fa-bell" style="color:var(--accent);"></i> <span id="toastMsg"></span></div>
-
     <div class="overlay" id="successModal">
         <div class="modal-box">
             <i class="fas fa-check-circle" style="font-size:50px; color:var(--primary);"></i>
-            <h2 style="margin:10px 0;">Order Confirmed!</h2>
+            <h2 style="margin:10px 0;">Order Submitted!</h2>
             <p>Your Order ID: <strong id="displayOrderId" style="color:var(--secondary);"></strong></p>
-            <p style="font-size:12px; color:#666; margin-top:10px;">Check WhatsApp & Email for details.</p>
-            <button class="btn" style="margin-top:15px;" onclick="document.getElementById('successModal').style.display='none'">Close</button>
+            <p style="font-size:13px; color:#666; margin-top:10px;">Redirecting to WhatsApp for final confirmation...</p>
         </div>
     </div>
-
-    <div class="overlay" id="exitPopup">
-        <div class="modal-box" style="border:4px solid var(--secondary);">
-            <h2>Wait! Don't Go.</h2>
-            <p style="margin:15px 0; font-weight:bold;">Get 10% Extra Views/Service on your first order!</p>
-            <button class="btn" onclick="document.getElementById('exitPopup').style.display='none'; document.getElementById('checkoutSection').scrollIntoView();">Claim Offer Now</button>
-        </div>
-    </div>
-
-    <div class="sticky-cta"><a href="#checkoutSection">Quick Order via Secure Portal</a></div>
 
     <script>
-        // 1. Firebase Initialization (Paste your config here)
+        // Firebase Initialization (अपना असली Firebase Config यहाँ डालें)
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            projectId: "YOUR_PROJECT_ID"
         };
-        firebase.initializeApp(firebaseConfig);
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.firestore();
 
-        // 2. EmailJS Initialization (Register at emailjs.com)
-        emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
-
-        // 3. Auto-Select Service & Smooth Scroll
+        // Auto-Select Service & Smooth Scroll
         function selectService(serviceName, amount) {
-            document.getElementById('custService').value = serviceName;
-            document.getElementById('custAmount').value = amount;
+            document.getElementById('custService').value = `${serviceName} (₹${amount})`;
             document.getElementById('checkoutSection').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 4. Real-time Database Listeners (Live Counter & Toast)
-        db.collection("orders").orderBy("timestamp", "desc").limit(1).onSnapshot((snapshot) => {
-            snapshot.docChanges().forEach((change) => {
-                if (change.type === "added") {
-                    const data = change.doc.data();
-                    document.getElementById('toastMsg').innerText = `${data.name} just ordered ${data.service}!`;
-                    const toast = document.getElementById('liveToast');
-                    toast.classList.add('show');
-                    setTimeout(() => toast.classList.remove('show'), 4000);
-                }
-            });
-        });
-
-        // Get total orders count (Approximation for performance)
-        db.collection("orders").onSnapshot((snapshot) => {
-            let baseCount = 1200; // Fake base to build trust
-            document.getElementById('totalOrdersCounter').innerText = baseCount + snapshot.size;
-        });
-
-        // 5. Form Submit & Razorpay Logic
-        document.getElementById('orderForm').addEventListener('submit', function(e) {
+        // Handle Direct UTR Form Submission
+        document.getElementById('orderForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            btn.innerText = "Processing..."; btn.disabled = true;
+            btn.innerText = "Verifying Details..."; btn.disabled = true;
 
             const name = document.getElementById('custName').value;
-            const email = document.getElementById('custEmail').value;
             const wa = document.getElementById('custWa').value;
             const service = document.getElementById('custService').value;
-            const amount = document.getElementById('custAmount').value;
             const utr = document.getElementById('custUtr').value;
             
-            // Strong Unique Order ID
-            const orderId = 'KRYA-' + Date.now().toString().slice(-6) + '-' + Math.floor(Math.random() * 1000);
+            // Generate Strong Unique Order ID
+            const orderId = 'KRYA-' + Date.now().toString().slice(-5) + '-' + utr.slice(-4);
 
-            // Fake Razorpay Integration (Frontend Only)
-            var options = {
-                "key": "YOUR_RAZORPAY_TEST_KEY", // Enter Razorpay Key ID
-                "amount": amount * 100, // Amount in paise
-                "currency": "INR",
-                "name": "KRYA Digital",
-                "description": service,
-                "handler": async function (response) {
-                    // Payment Success -> Save to Firebase
-                    await saveOrderToFirebase(orderId, name, email, wa, service, utr, "Paid Online");
-                },
-                "modal": {
-                    "ondismiss": async function() {
-                        // User closed payment, fallback to UTR check
-                        await saveOrderToFirebase(orderId, name, email, wa, service, utr, "Manual UTR Verification");
-                    }
-                }
-            };
-            
-            // Uncomment next line to trigger Razorpay UI
-            // var rzp1 = new Razorpay(options); rzp1.open();
-            
-            // Since Razorpay is commented out for safety, directly save data based on UTR
-            saveOrderToFirebase(orderId, name, email, wa, service, utr, "Manual UTR Pending");
-        });
-
-        async function saveOrderToFirebase(orderId, name, email, wa, service, utr, paymentStatus) {
             try {
+                // Save directly to Firebase Database
                 await db.collection("orders").doc(orderId).set({
                     orderId: orderId,
                     name: name,
-                    email: email,
                     whatsapp: wa,
                     service: service,
                     utr: utr,
-                    paymentStatus: paymentStatus,
-                    orderStatus: "Pending", // Pending, In Progress, Completed
+                    paymentStatus: "UTR Submitted",
+                    orderStatus: "Pending",
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                // Send Automated Email via EmailJS
-                emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-                    order_id: orderId, to_name: name, to_email: email, service: service
                 });
 
                 // Show Success Modal
@@ -239,25 +153,16 @@
                 document.getElementById('successModal').style.display = 'flex';
 
                 // Automated WhatsApp Redirect
-                const waMsg = `*Order Confirmed!*\nID: ${orderId}\nService: ${service}\nStatus: ${paymentStatus}`;
+                const waMsg = `*New PhonePe Order!*\nID: ${orderId}\nName: ${name}\nService: ${service}\nUTR: ${utr}\n\nPlease check my UTR and start the work.`;
                 setTimeout(() => {
                     window.open(`https://wa.me/916379403821?text=${encodeURIComponent(waMsg)}`, '_blank');
                     window.location.reload();
                 }, 3000);
 
             } catch (error) {
-                alert("Database Error! " + error.message);
-                document.getElementById('submitBtn').innerText = "Try Again";
-                document.getElementById('submitBtn').disabled = false;
-            }
-        }
-
-        // 6. Exit Intent Popup Logic
-        let exitTriggered = false;
-        document.addEventListener("mouseleave", (e) => {
-            if(e.clientY < 0 && !exitTriggered) {
-                document.getElementById('exitPopup').style.display = 'flex';
-                exitTriggered = true;
+                alert("Database Error! Please check your connection.");
+                btn.innerText = "Verify UTR & Confirm Order";
+                btn.disabled = false;
             }
         });
     </script>
