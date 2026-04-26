@@ -1,350 +1,56 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA Portal | Digital Services & Messenger</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        /* =========================================
-           1. GLOBAL VARIABLES & STYLES
-           ========================================= */
-        :root { 
-            --primary: #0c845c; 
-            --secondary: #FFD700; 
-            --dark: #0f172a; 
-            --bg: #f4f7f6; 
-            --card: #ffffff; 
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
-        body { background: var(--bg); color: #333; overflow-x: hidden; }
-        .hidden { display: none !important; }
+# 🎓 KRYA - मुकेश भाई की पाठशाला
+### *ज्ञान, ईमानदारी और AI का संगम (Since 2016)*
 
-        /* =========================================
-           2. HEADER & NAVIGATION TABS
-           ========================================= */
-        header { 
-            background: var(--dark); color: white; padding: 15px 20px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            position: sticky; top: 0; z-index: 1000; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-bottom: 3px solid var(--primary); 
-        }
-        .logo { font-size: 24px; font-weight: 800; letter-spacing: 1px; color: white; }
-        .logo span { color: var(--secondary); }
-        .nav-tabs { display: flex; gap: 10px; }
-        .tab-btn { 
-            background: transparent; color: white; border: 1px solid var(--primary); 
-            padding: 8px 15px; border-radius: 20px; cursor: pointer; 
-            font-weight: bold; transition: 0.3s; font-size: 14px;
-        }
-        .tab-btn.active { background: var(--primary); color: white; }
-        
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px 15px; }
+---
 
-        /* =========================================
-           3. TAB 1: DIGITAL SERVICES STYLES
-           ========================================= */
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .service-card { 
-            background: var(--card); border-radius: 15px; overflow: hidden; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08); text-align: center; 
-            padding-bottom: 20px; border-bottom: 4px solid var(--primary); transition: 0.3s; 
-        }
-        .service-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
-        .service-card img { width: 100%; height: 180px; object-fit: cover; }
-        .price { font-size: 22px; font-weight: 800; color: var(--primary); margin: 10px 0; }
-        .btn { 
-            padding: 12px 20px; border-radius: 8px; font-weight: bold; border: none; 
-            cursor: pointer; background: var(--primary); color: white; 
-            width: 90%; transition: 0.3s; font-size: 16px;
-        }
-        .btn:hover { background: #086345; }
+## 🚀 परिचय (Introduction)
+'मुकेश भाई की पाठशाला' एक आधुनिक **AI-आधारित डिजिटल एकेडमी** है, जिसका मिशन छात्रों को ईमानदारी और तकनीक (AI) के संगम से डिजिटल अर्निंग और कोडिंग सिखाना है। यह प्रोजेक्ट मुकेश के 8 साल के संघर्ष और अनुभव (Masonry helper से डिजिटल उद्यमी तक) की नींव पर खड़ा है।
 
-        /* Checkout Form */
-        .checkout-box { 
-            background: var(--card); padding: 25px; border-radius: 15px; 
-            box-shadow: 0 8px 30px rgba(0,0,0,0.1); border: 2px solid var(--secondary); margin-bottom: 30px; 
-        }
-        .form-control { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; outline: none; font-size: 14px; }
-        .form-control:focus { border-color: var(--primary); }
-        .upi-container { background: #e8f5e9; padding: 15px; border-radius: 10px; text-align: center; border: 2px dashed var(--primary); margin-bottom: 20px; }
+---
 
-        /* =========================================
-           4. TAB 2: MESSENGER STYLES
-           ========================================= */
-        .messenger-wrapper { 
-            background: var(--dark); height: calc(100vh - 120px); /* Mobile Screen Fix */
-            border-radius: 15px; overflow: hidden; display: flex; 
-            flex-direction: column; color: white; border: 2px solid var(--primary); 
-        }
-        
-        /* Auth Screen inside Messenger */
-        .auth-box { padding: 40px 20px; text-align: center; margin: auto; max-width: 400px; width: 100%; }
-        .auth-box input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; margin-bottom: 15px; }
-        
-        /* Chat Area */
-        #chat-flow { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: #0f172a; }
-        .msg { max-width: 80%; padding: 10px 14px; border-radius: 15px; font-size: 14px; line-height: 1.4; word-wrap: break-word; }
-        .msg-me { align-self: flex-end; background: var(--primary); color: #000; border-bottom-right-radius: 2px; }
-        .msg-them { align-self: flex-start; background: #1e293b; color: #fff; border-bottom-left-radius: 2px; border: 1px solid #334155; }
-        .msg-sender { font-size: 11px; font-weight: bold; margin-bottom: 4px; opacity: 0.8; }
-        
-        .chat-footer { padding: 15px; background: #1e293b; display: flex; gap: 10px; border-top: 1px solid #334155; align-items: center; }
-        .chat-footer input { flex: 1; border-radius: 20px; padding: 12px 15px; border: none; outline: none; background: #0f172a; color: white; }
-        .btn-send { background: var(--primary); border: none; min-width: 45px; height: 45px; border-radius: 50%; color: #000; cursor: pointer; font-size: 16px; display: flex; justify-content: center; align-items: center; }
+## 🎯 मुख्य विशेषताएँ (Core Features)
 
-        /* =========================================
-           5. SCRATCH CARD MODAL
-           ========================================= */
-        #scratch-box { 
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            background: white; padding: 25px; border-radius: 15px; z-index: 2000; 
-            text-align: center; border: 4px solid var(--primary); box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-        }
-        .scratch-wrapper { position: relative; width: 200px; height: 100px; margin: 0 auto; border-radius: 10px; overflow: hidden; }
-        .scratch-prize { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #fde047; color: #b45309; font-weight: 800; font-size: 18px; }
-        #scratch-canvas { position: absolute; top: 0; left: 0; cursor: crosshair; }
-    </style>
-</head>
-<body>
+1. **AI Teacher Mukesh (मुकेश भाई अवतार):**
+   - मुकेश की असली फोटो वाला **Talking AI Avatar**।
+   - वॉइस क्लोनिंग (Voice Cloning) के ज़रिए **मुकेश की असली आवाज़** में मार्गदर्शन।
+   - 24/7 स्वागत और मोटिवेशनल संदेश।
 
-    <header>
-        <div class="logo">KRYA<span>live</span></div>
-        <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('services')"><i class="fas fa-briefcase"></i> Services</button>
-            <button class="tab-btn" onclick="switchTab('messenger')"><i class="fas fa-comment-dots"></i> Messenger</button>
-        </div>
-    </header>
+2. **स्मार्ट कॉलिंग सिस्टम (Interactive Calling):**
+   - छात्र **AI Assistant** को कॉल करके तुरंत समाधान पा सकते हैं।
+   - छात्रों की मांग पर कॉल सीधे मुकेश भाई के मोबाइल पर **Smart Transfer** करने का विकल्प।
+   - **On/Off कंट्रोल:** मुकेश भाई जब चाहें कॉल रिसीव कर सकते हैं या व्यस्त रहने पर AI को ज़िम्मेदारी दे सकते हैं।
+   - वेटिंग म्यूजिक में मोटिवेशनल गाने (लक्ष्य, आरंभ है प्रचंड) और मुकेश भाई के संदेश।
 
-    <div class="container">
+3. **डिजिटल लाइब्रेरी (Archive & Community):**
+   - पुराने सभी लेसन (AI, कोडिंग, अमेज़न एफिलिएट) हमेशा के लिए सेव रहेंगे।
+   - **ग्लोबल चैट रूम:** दुनिया भर के छात्र पाठशाला में एक परिवार की तरह साथ बढ़ेंगे।
 
-        <div id="tab-services">
-            <h2 style="text-align:center; color:var(--primary); margin-bottom: 20px;">Grow Your Digital Brand</h2>
-            
-            <div class="services-grid">
-                <div class="service-card">
-                    <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500" alt="3D Logo Design">
-                    <h3 style="margin-top:10px;">🎨 3D Logo Design</h3>
-                    <div class="price">₹199</div>
-                    <button class="btn" onclick="openCheckout('3D Logo Design', 199)">Select & Pay</button>
-                </div>
-                <div class="service-card">
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500" alt="Website Setup">
-                    <h3 style="margin-top:10px;">🌐 Website Setup</h3>
-                    <div class="price">₹299</div>
-                    <button class="btn" onclick="openCheckout('Website Setup', 299)">Select & Pay</button>
-                </div>
-            </div>
+4. **100% ईमानदारी (Integrity First):**
+   - केवल वही तरीके सिखाए जाएँगे जो 100% लीगल (Legal) और रिस्क-फ्री हों।
+   - डेटा की गोपनीयता का पूरा सम्मान।
 
-            <div class="checkout-box hidden" id="checkoutBox">
-                <h2 style="text-align:center; color:var(--primary); margin-bottom:15px;">Secure Checkout</h2>
-                
-                <div class="upi-container">
-                    <h3>Step 1: Pay securely via PhonePe</h3>
-                    <p style="font-weight:bold; font-size:18px; color:var(--primary);">Amount: ₹<span id="displayAmount">0</span></p>
-                    <p>UPI ID: <strong>93690mukeshkumar@axl</strong></p>
-                    <a href="#" id="dynamicUpiLink" style="background:#5f259f; color:white; padding:10px 20px; border-radius:20px; display:inline-block; margin-top:10px; text-decoration:none;"><i class="fas fa-mobile-alt"></i> Pay via App</a>
-                </div>
+---
 
-                <form id="orderForm">
-                    <h3 style="margin-bottom:15px; border-bottom:2px solid #eee; padding-bottom:10px;">Step 2: Submit Details</h3>
-                    <input type="hidden" id="custService">
-                    <input type="hidden" id="custAmount">
+## 🛠️ तकनीकी ढांचा (Tech Stack)
 
-                    <input type="text" id="custName" class="form-control" required placeholder="Full Name">
-                    <input type="text" id="custWa" class="form-control" required pattern="[0-9]{10}" placeholder="WhatsApp No (10 Digits)">
-                    <input type="text" id="custUtr" class="form-control" required pattern="[a-zA-Z0-9]{12}" placeholder="12-Digit UTR Number">
-                    
-                    <label style="font-size:13px; font-weight:bold; color:var(--primary); display:block; margin-bottom:5px;">Upload Payment Screenshot *</label>
-                    <input type="file" id="custScreenshot" class="form-control" required accept="image/*" style="padding: 9px;">
+* **Backend & Security:** Firebase (Database, Auth) / GitHub (Version Control).
+* **AI:** Talking Face API / Voice Cloning (for personalized teacher)।
+* **Development:** Mobile-first, responsive design with clean code.
 
-                    <button type="submit" class="btn" id="submitOrderBtn" style="width:100%;">Confirm Order</button>
-                    <p id="orderStatusMsg" style="text-align:center; margin-top:10px; color:red; font-weight:bold;"></p>
-                </form>
-            </div>
-        </div>
+---
 
-        <div id="tab-messenger" class="hidden">
-            <div class="messenger-wrapper">
-                
-                <div id="screen-auth" class="auth-box">
-                    <h2 style="color:var(--primary); margin-bottom: 10px;">KRYA Chat Login</h2>
-                    <p style="font-size:13px; margin-bottom:20px; color:#94a3b8;">100% Secure Passwordless Login</p>
-                    <input type="email" id="chat-email" placeholder="Enter your email address">
-                    <button class="btn" id="btn-login" style="background:var(--secondary); color:#000;" onclick="sendMagicLink()">Send Login Link</button>
-                    <p id="auth-msg" style="font-size: 12px; margin-top: 15px; color: var(--primary);"></p>
-                </div>
+## 🗺️ प्रोजेक्ट रोडमैप (Project Roadmap)
 
-                <div id="screen-profile" class="auth-box hidden">
-                    <h2 style="color:var(--primary); margin-bottom: 15px;">Setup Profile</h2>
-                    <input type="text" id="chat-handle" placeholder="Enter Username (e.g. @Mukesh)">
-                    <button class="btn" onclick="saveProfile()">Start Chatting</button>
-                </div>
+- [x] **चरण 1:** ब्रांड लोगो, विजन और पाठशाला के नियमों की प्लानिंग।
+- [x] **चरण 2:** वेबसाइट लेआउट (बटन्स, मेनू) और कॉलिंग सिस्टम की प्लानिंग।
+- [x] **चरण 3:** व्हाट्सएप चैनल लॉन्च और पहला मैसेज तैयार।
+- [ ] **चरण 4 (Current):** GitHub पर प्लानिंग को लाइव करना और AI अवतार को परखना।
+- [ ] **चरण 5:** Replit पर वेबसाइट की कोडिंग शुरू करना।
 
-                <div id="app-chat" class="hidden" style="display: flex; flex-direction: column; height: 100%;">
-                    <div style="padding: 15px; background: #1e293b; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155;">
-                        <strong style="color:var(--primary); font-size: 18px;">Global Chat</strong>
-                        <div>
-                            <i class="fas fa-gift" onclick="openReward()" style="color:var(--secondary); margin-right:20px; cursor:pointer; font-size: 20px;" title="Rewards"></i>
-                            <i class="fas fa-sign-out-alt" onclick="logoutChat()" style="color:#ef4444; cursor:pointer; font-size: 20px;" title="Logout"></i>
-                        </div>
-                    </div>
-                    
-                    <div id="chat-flow"></div>
-                    
-                    <div class="chat-footer">
-                        <input type="text" id="msg-input" placeholder="Type a message..." maxlength="500">
-                        <button class="btn-send" id="btn-send"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                </div>
+---
 
-            </div>
-        </div>
+## 🌟 हमारा मिशन
+हर उस इंसान को डिजिटल दुनिया में खड़ा करना जो मेहनत और ईमानदारी से आगे बढ़ना चाहता है। यहाँ **मुकेश भाई** खुद सामने आकर नहीं, बल्कि तकनीक के ज़रिए हर छात्र के साथ खड़े हैं।
 
-    </div>
-
-    <div id="scratch-box" class="hidden">
-        <h3 style="color:#0f172a; margin-bottom:15px;">Your Lucky Card!</h3>
-        <div class="scratch-wrapper">
-            <div class="scratch-prize">₹50 Cashback!</div>
-            <canvas id="scratch-canvas" width="200" height="100"></canvas>
-        </div>
-        <button onclick="document.getElementById('scratch-box').classList.add('hidden')" style="margin-top:15px; background:#0f172a; color:white; border:none; padding:8px 20px; border-radius:8px; cursor: pointer; font-weight: bold;">Close</button>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-
-        // 👉 INSERT YOUR FIREBASE CONFIG HERE
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_DOMAIN.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
-
-        // --- TAB SWITCHING LOGIC ---
-        window.switchTab = function(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('tab-services').classList.add('hidden');
-            document.getElementById('tab-messenger').classList.add('hidden');
-            
-            if(tabName === 'services') {
-                document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
-                document.getElementById('tab-services').classList.remove('hidden');
-            } else {
-                document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
-                document.getElementById('tab-messenger').classList.remove('hidden');
-            }
-        };
-
-        // ==========================================
-        // 1. DIGITAL SERVICES LOGIC (Order & Upload)
-        // ==========================================
-        window.openCheckout = function(service, amount) {
-            document.getElementById('checkoutBox').classList.remove('hidden');
-            document.getElementById('displayAmount').innerText = amount;
-            document.getElementById('custService').value = service;
-            document.getElementById('custAmount').value = amount;
-            
-            const upiLink = `upi://pay?pa=93690mukeshkumar@axl&pn=KRYA&am=${amount}&cu=INR&tn=${encodeURIComponent(service)}`;
-            document.getElementById('dynamicUpiLink').href = upiLink;
-            document.getElementById('checkoutBox').scrollIntoView({ behavior: 'smooth' });
-        };
-
-        document.getElementById('orderForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('submitOrderBtn');
-            const msgBox = document.getElementById('orderStatusMsg');
-            btn.innerText = "Uploading & Verifying..."; btn.disabled = true;
-
-            const name = document.getElementById('custName').value.trim();
-            const wa = document.getElementById('custWa').value.trim();
-            const service = document.getElementById('custService').value;
-            const utr = document.getElementById('custUtr').value.trim();
-            const file = document.getElementById('custScreenshot').files[0];
-
-            try {
-                // Check Duplicate UTR
-                const q = query(collection(db, "orders"), where("utr", "==", utr));
-                const querySnapshot = await getDocs(q);
-                if (!querySnapshot.empty) {
-                    msgBox.innerText = "⚠️ Fraud Alert: UTR already used!";
-                    btn.innerText = "Confirm Order"; btn.disabled = false;
-                    return;
-                }
-
-                const orderId = `KRYA-${Date.now().toString().slice(-5)}-${utr.slice(-4)}`;
-
-                // Upload Image
-                const storageRef = ref(storage, `screenshots/${orderId}_${file.name}`);
-                await uploadBytes(storageRef, file);
-                const photoUrl = await getDownloadURL(storageRef);
-
-                // Save to Firestore
-                await setDoc(doc(db, "orders", orderId), {
-                    orderId: orderId, name: name, whatsapp: wa, service: service, utr: utr,
-                    screenshotUrl: photoUrl, status: "Pending", timestamp: serverTimestamp()
-                });
-
-                alert(`Order Successful!\nYour Order ID is: ${orderId}`);
-                window.location.reload();
-            } catch (error) {
-                msgBox.innerText = "Error: " + error.message;
-                btn.innerText = "Confirm Order"; btn.disabled = false;
-            }
-        });
-
-        // ==========================================
-        // 2. KRYA MESSENGER LOGIC
-        // ==========================================
-        let currentUser = null;
-        let userHandle = "User";
-
-        // Auth: Send Magic Link
-        window.sendMagicLink = async () => {
-            const email = document.getElementById('chat-email').value.trim();
-            const msg = document.getElementById('auth-msg');
-            if(!email) return msg.innerText = "Please enter email.";
-
-            const actionCodeSettings = { url: window.location.href, handleCodeInApp: true };
-            try {
-                document.getElementById('btn-login').innerText = "Sending...";
-                await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-                window.localStorage.setItem('emailForSignIn', email);
-                msg.innerText = "Link sent! Check your email to login.";
-                document.getElementById('btn-login').style.display = 'none';
-            } catch (error) { msg.innerText = "Error: " + error.message; }
-        };
-
-        // Auth: Verify Magic Link
-        if (isSignInWithEmailLink(auth, window.location.href)) {
-            let email = window.localStorage.getItem('emailForSignIn');
-            if (!email) email = window.prompt('Please provide your email for confirmation');
-            signInWithEmailLink(auth, email, window.location.href)
-                .then(() => {
-                    window.localStorage.removeItem('emailForSignIn');
-                    window.history.replaceState(null, null, window.location.pathname);
-                    switchTab('messenger');
-                }).catch((error) => alert("Login failed: " + error.message));
-        }
-
-        // Auth State Observer
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                document.getElementById('screen-auth').classList.add('hidden');
-               
+---
+**© KRYA GLOBAL | मुकेश भाई की पाठशाला**
