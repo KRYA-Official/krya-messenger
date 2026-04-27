@@ -10,235 +10,462 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
     <style>
+        /* =========================================
+           1. CSS VARIABLES & THEME
+           ========================================= */
         :root { 
             --primary: #10b981; 
+            --primary-dark: #059669;
             --secondary: #fbbf24; 
             --org-blue: #2563eb; 
             --org-red: #ef4444;
             --dark: #0f172a; 
+            --light-bg: #f8fafc;
             --glass: rgba(255, 255, 255, 0.95);
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
-        /* 1. Global Fixes */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { 
-            background: #f8fafc;
-            color: #1e293b; 
-            height: 100vh;
+        /* =========================================
+           2. GLOBAL RESET & APP STRUCTURE
+           ========================================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body, html { 
+            height: 100%; 
+            width: 100%; 
+            overflow: hidden; /* Body scroll disabled for App feel */
+            background-color: var(--light-bg);
+        }
+
+        .app-wrapper {
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* बॉडी स्क्रॉल नहीं होगी, केवल सेक्शन होंगे */
+            height: 100vh;
+            width: 100%;
         }
-        .container { flex: 1; overflow-y: auto; padding: 15px; position: relative; }
+
         .hidden { display: none !important; }
 
-        /* 2. Header Improvements */
+        /* =========================================
+           3. HEADER (STAY ON TOP)
+           ========================================= */
         header { 
-            background: var(--dark); padding: 15px 20px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            background: var(--dark); 
+            padding: 15px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            z-index: 1000; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        .logo { font-size: 22px; font-weight: 800; color: #fff; text-transform: uppercase; }
+        .logo { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: 1px; }
         .logo span { color: var(--secondary); }
-        .verified-badge { font-size: 9px; background: var(--primary); color: white; padding: 2px 8px; border-radius: 10px; margin-left: 5px; vertical-align: middle; }
+        .verified-badge { 
+            font-size: 10px; 
+            background: var(--primary); 
+            color: white; 
+            padding: 2px 8px; 
+            border-radius: 12px; 
+            margin-left: 6px; 
+            font-weight: 600;
+        }
 
-        /* 3. Section Container Fixes (Full Height) */
-        #tab-sangh, #tab-services, #tab-messenger {
-            height: 100%;
+        /* =========================================
+           4. MAIN CONTENT AREA (SCROLLABLE)
+           ========================================= */
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
             display: flex;
             flex-direction: column;
         }
 
-        /* 4. Messenger FULL SCREEN FIX */
-        .chat-container {
-            flex: 1; /* पूरी बची हुई जगह घेरेगा */
+        /* =========================================
+           5. SECTION: RASHTRIYA EKTA SANGH (ORG)
+           ========================================= */
+        .org-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px 20px;
+            box-shadow: var(--card-shadow);
+            border-top: 5px solid var(--org-blue);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .org-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--org-blue);
+            margin-bottom: 15px;
+            object-fit: cover;
+        }
+        .org-title { color: var(--org-blue); font-size: 24px; font-weight: 800; margin-bottom: 5px; }
+        .org-subtitle { font-size: 14px; color: #64748b; font-weight: 500; margin-bottom: 15px; }
+
+        .support-row { display: flex; gap: 10px; margin-bottom: 25px; }
+        .btn-action {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .btn-call { background: #2563eb; }
+        .btn-wa { background: #22c55e; }
+
+        /* Form Styling */
+        .reg-form h3 { font-size: 18px; color: var(--dark); margin-bottom: 15px; text-align: left; border-left: 4px solid var(--org-blue); padding-left: 10px; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 5px; }
+        .input-box {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1.5px solid #e2e8f0;
+            font-size: 14px;
+            transition: 0.3s;
+            outline: none;
+        }
+        .input-box:focus { border-color: var(--org-blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--org-blue);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* =========================================
+           6. SECTION: SERVICES
+           ========================================= */
+        .services-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        .service-item {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            position: relative;
+        }
+        .service-img { width: 100%; height: 180px; object-fit: cover; }
+        .service-content { padding: 20px; }
+        .service-price { font-size: 24px; font-weight: 800; color: var(--primary); margin: 8px 0; }
+        .badge-hot { position: absolute; top: 15px; right: 15px; background: var(--org-red); color: white; font-size: 10px; padding: 4px 10px; border-radius: 20px; font-weight: bold; }
+
+        /* =========================================
+           7. SECTION: MESSENGER (FULL SCREEN)
+           ========================================= */
+        .messenger-box {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            background: #111827;
-            border-radius: 15px;
+            background: #0f172a;
+            border-radius: 20px;
             overflow: hidden;
             border: 1px solid #1e293b;
             margin-bottom: 5px;
         }
-        .chat-messages {
+        .chat-header { background: #1e293b; padding: 15px; border-bottom: 1px solid #334155; }
+        .chat-header strong { color: var(--primary); font-size: 14px; }
+        
+        .chat-area {
             flex: 1;
             overflow-y: auto;
             padding: 15px;
             display: flex;
             flex-direction: column;
             gap: 12px;
+            background: #0f172a;
         }
-        .message { max-width: 85%; padding: 10px 14px; border-radius: 15px; font-size: 14px; line-height: 1.4; }
-        .msg-them { background: #1f2937; color: white; align-self: flex-start; border-bottom-left-radius: 2px; }
-        .chat-input-area { padding: 12px; background: #1f2937; display: flex; gap: 8px; }
-        .chat-input { flex: 1; background: #111827; border: none; border-radius: 25px; padding: 10px 15px; color: white; outline: none; font-size: 14px; }
-        .btn-send { background: var(--primary); border: none; width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; }
+        .bubble {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .bubble-them { background: #1e293b; color: white; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .bubble-me { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
 
-        /* 5. Mobile Navigation */
-        .mobile-nav { 
-            background: white;
-            display: flex; justify-content: space-around; padding: 10px 0;
-            border-top: 1px solid #e2e8f0; z-index: 1001;
-            box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+        .input-bar {
+            padding: 12px;
+            background: #1e293b;
+            display: flex;
+            gap: 10px;
         }
-        .nav-item { text-align: center; color: #64748b; cursor: pointer; flex: 1; border: none; background: none; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 2px; }
-        .nav-item span { font-size: 10px; font-weight: 600; }
+        .chat-input {
+            flex: 1;
+            background: #0f172a;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 18px;
+            color: white;
+            outline: none;
+            font-size: 14px;
+        }
+        .send-btn {
+            background: var(--primary);
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* =========================================
+           8. MOBILE NAVIGATION (STAY AT BOTTOM)
+           ========================================= */
+        footer.mobile-nav {
+            background: white;
+            height: 70px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #e2e8f0;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .nav-item {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .nav-item i { font-size: 22px; margin-bottom: 4px; }
         .nav-item.active { color: var(--primary); }
 
-        /* 6. Sangh & Services Cards */
-        .card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .org-header { text-align: center; margin-bottom: 20px; }
-        .org-header img { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--org-blue); margin-bottom: 10px; }
-        
-        .form-input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 15px; font-size: 14px; outline: none; }
-        .btn-submit { width: 100%; background: var(--org-blue); color: white; padding: 14px; border-radius: 10px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; }
-
-        /* Floating WhatsApp */
-        .wa-float { 
-            position: fixed; bottom: 85px; right: 20px; 
-            background: #25d366; color: white; width: 50px; height: 50px; 
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 999;
-            text-decoration: none; 
+        /* Floating WA Icon */
+        .wa-float {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background: #22c55e;
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 12px rgba(34,197,94,0.4);
+            z-index: 999;
+            text-decoration: none;
         }
 
         /* Spinner */
-        .spinner { width: 18px; height: 18px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; margin-right: 10px; }
+        .loader { width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
+
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">KRYA<span>live</span><span class="verified-badge">VERIFIED</span></div>
-    </header>
+    <div class="app-wrapper">
+        
+        <header>
+            <div class="logo">KRYA<span>live</span><span class="verified-badge">VERIFIED</span></div>
+            <div style="color: #94a3b8; font-size: 12px;"><i class="fas fa-lock"></i> SSL Secured</div>
+        </header>
 
-    <a href="https://wa.me/916379403821" class="wa-float" target="_blank">
-        <i class="fab fa-whatsapp"></i>
-    </a>
+        <a href="https://wa.me/916379403821" class="wa-float">
+            <i class="fab fa-whatsapp"></i>
+        </a>
 
-    <div class="container">
+        <main id="app-content">
 
-        <div id="tab-sangh" class="animate__animated animate__fadeIn">
-            <div class="card">
-                <div class="org-header">
-                    <img src="https://via.placeholder.com/100" alt="MD Siraj">
-                    <h1 style="font-size: 22px; color: var(--org-blue);">राष्ट्रीय एकता संघ</h1>
-                    <p style="font-size: 12px; color: #64748b;">अखिल भारतीय मजदूर कल्याण सेवा संघ</p>
-                    <p style="font-size: 11px; margin-top: 5px; color: var(--org-red);"><b>रजिस्ट्रेशन नं: 12014</b></p>
-                </div>
+            <section id="tab-sangh" class="animate__animated animate__fadeIn">
+                <div class="org-card">
+                    <img src="https://via.placeholder.com/100" class="org-logo" alt="MD Siraj">
+                    <h1 class="org-title">राष्ट्रीय एकता संघ</h1>
+                    <p class="org-subtitle">अखिल भारतीय मजदूर कल्याण सेवा संघ</p>
+                    
+                    <div style="background: #eff6ff; padding: 10px; border-radius: 12px; margin-bottom: 20px;">
+                        <p style="font-size: 11px; color: var(--org-blue); font-weight: 700;">
+                            पंजीकरण संख्या: 12014 | आदेशानुसार: एमडी सिराज जी
+                        </p>
+                    </div>
 
-                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                    <a href="tel:+916379403821" style="flex: 1; background: #007bff; color: white; text-align: center; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 13px;"><i class="fas fa-phone"></i> कॉल करें</a>
-                    <a href="https://wa.me/916379403821" style="flex: 1; background: #25d366; color: white; text-align: center; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 13px;"><i class="fab fa-whatsapp"></i> वॉट्सऐप</a>
-                </div>
+                    <div class="support-row">
+                        <a href="tel:+916379403821" class="btn-action btn-call"><i class="fas fa-phone-alt"></i> कॉल करें</a>
+                        <a href="https://wa.me/916379403821" class="btn-action btn-wa"><i class="fab fa-whatsapp"></i> वॉट्सऐप</a>
+                    </div>
 
-                <form id="labourForm">
-                    <input type="text" id="m_name" class="form-input" placeholder="मजदूर का नाम *" required>
-                    <input type="tel" id="m_phone" class="form-input" placeholder="मोबाइल नंबर *" required>
-                    <select id="m_district" class="form-input" required>
-                        <option value="">जिला चुनें...</option>
-                        <option value="Banka">बांका</option>
-                        <option value="Munger">मुंगेर</option>
-                        <option value="Delhi">दिल्ली</option>
-                    </select>
-                    <textarea id="m_issue" class="form-input" placeholder="अपनी समस्या लिखें..." style="height: 80px;"></textarea>
-                    <button type="submit" id="submitBtn" class="btn-submit" style="display: flex; align-items: center; justify-content: center;">
-                        <div class="spinner" id="btnSpinner"></div>
-                        <span>डेटा सुरक्षित जमा करें</span>
-                    </button>
-                </form>
-                <div id="formStatus" style="margin-top: 15px; padding: 10px; border-radius: 8px; text-align: center; font-size: 12px; font-weight: bold; display: none;"></div>
-            </div>
-            <p style="text-align: center; font-size: 10px; color: #94a3b8; padding-bottom: 20px;">© 2026 KRYA Digital | Designed by मुकेश राय</p>
-        </div>
+                    <div class="reg-form">
+                        <h3>मजदूर डिजिटल पंजीकरण</h3>
+                        <form id="labourForm">
+                            <div class="form-group">
+                                <label>मजदूर का पूरा नाम *</label>
+                                <input type="text" id="m_name" class="input-box" placeholder="नाम लिखें" required>
+                            </div>
+                            <div class="form-group">
+                                <label>मोबाइल नंबर *</label>
+                                <input type="tel" id="m_phone" class="input-box" placeholder="10 अंकों का नंबर" pattern="[0-9]{10}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>जिला का चुनाव करें *</label>
+                                <select id="m_district" class="input-box" required>
+                                    <option value="">-- जिला चुनें --</option>
+                                    <option value="Banka">बांका</option>
+                                    <option value="Munger">मुंगेर</option>
+                                    <option value="Delhi">दिल्ली</option>
+                                    <option value="Other">अन्य</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>अपनी समस्या या कार्य का विवरण</label>
+                                <textarea id="m_issue" class="input-box" style="height: 100px;" placeholder="यहाँ लिखें..."></textarea>
+                            </div>
 
-        <div id="tab-services" class="hidden animate__animated animate__fadeIn">
-            <div class="card">
-                <h3 style="margin-bottom: 15px;">Digital Services</h3>
-                <div style="border: 1px solid #f1f5f9; border-radius: 12px; overflow: hidden; margin-bottom: 15px;">
-                    <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500" style="width: 100%; height: 150px; object-fit: cover;">
-                    <div style="padding: 15px;">
-                        <h4 style="font-size: 16px;">3D Logo Design</h4>
-                        <p style="font-size: 18px; font-weight: 800; color: var(--primary); margin: 5px 0;">₹199</p>
-                        <button style="width: 100%; background: var(--dark); color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold;">Buy Now</button>
+                            <button type="submit" id="submitBtn" class="submit-btn">
+                                <div class="loader" id="btnLoader"></div>
+                                <span id="btnText">डेटा सुरक्षित जमा करें</span>
+                            </button>
+                        </form>
+                        <div id="statusMsg" style="margin-top:15px; padding:12px; border-radius:10px; font-size:13px; font-weight:600; display:none;"></div>
                     </div>
                 </div>
-            </div>
-        </div>
+                <p style="text-align: center; font-size: 11px; color: #94a3b8; margin-bottom: 30px;">
+                    © 2026 KRYA Digital | Designed & Managed by मुकेश राय
+                </p>
+            </section>
 
-        <div id="tab-messenger" class="hidden animate__animated animate__fadeIn">
-            <div class="chat-container">
-                <div style="padding: 12px 15px; background: #1f2937; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #374151;">
-                    <span style="font-weight: 700; color: var(--primary); font-size: 14px;">KRYA Messenger ●</span>
+            <section id="tab-services" class="hidden animate__animated animate__fadeIn">
+                <h2 style="margin-bottom: 15px; font-weight: 800; color: var(--dark);">Our Premium Services</h2>
+                <div class="services-grid">
+                    <div class="service-item">
+                        <span class="badge-hot">POPULAR</span>
+                        <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500" class="service-img">
+                        <div class="service-content">
+                            <h3>3D Logo Design</h3>
+                            <p style="font-size: 12px; color: #64748b; margin-top: 5px;">प्रोफेशनल लोगो अपने ब्रांड के लिए बनवाएं।</p>
+                            <div class="service-price">₹199</div>
+                            <button class="submit-btn" style="background: var(--dark);">Buy Now</button>
+                        </div>
+                    </div>
+                    <div class="service-item">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500" class="service-img">
+                        <div class="service-content">
+                            <h3>Website Setup</h3>
+                            <p style="font-size: 12px; color: #64748b; margin-top: 5px;">अपनी दुकान या बिजनेस की वेबसाइट बनवाएं।</p>
+                            <div class="service-price">₹2,999</div>
+                            <button class="submit-btn" style="background: var(--dark);">Buy Now</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="chat-messages" id="chatFlow">
-                    <div class="message msg-them">नमस्ते! मैं मुकेश राय हूँ। मैं आपकी क्या मदद कर सकता हूँ?</div>
+            </section>
+
+            <section id="tab-messenger" class="hidden animate__animated animate__fadeIn" style="height: 100%; display: flex; flex-direction: column;">
+                <div class="messenger-box">
+                    <div class="chat-header">
+                        <strong>KRYA Messenger <i class="fas fa-circle" style="font-size: 8px; margin-left: 5px;"></i></strong>
+                    </div>
+                    <div class="chat-area" id="chatFlow">
+                        <div class="bubble bubble-them">नमस्ते! मैं मुकेश राय हूँ। KRYA Messenger में आपका स्वागत है। मैं आपकी क्या मदद कर सकता हूँ?</div>
+                    </div>
+                    <div class="input-bar">
+                        <input type="text" id="chatInput" class="chat-input" placeholder="Type a message...">
+                        <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+                    </div>
                 </div>
-                <div class="chat-input-area">
-                    <input type="text" class="chat-input" placeholder="Type a message...">
-                    <button class="btn-send"><i class="fas fa-paper-plane"></i></button>
-                </div>
-            </div>
-        </div>
+            </section>
+
+        </main>
+
+        <footer class="mobile-nav">
+            <button class="nav-item active" id="nav-sangh" onclick="showTab('sangh')">
+                <i class="fas fa-users"></i>
+                <span>संघ रूम</span>
+            </button>
+            <button class="nav-item" id="nav-services" onclick="showTab('services')">
+                <i class="fas fa-briefcase"></i>
+                <span>Services</span>
+            </button>
+            <button class="nav-item" id="nav-messenger" onclick="showTab('messenger')">
+                <i class="fas fa-comment-dots"></i>
+                <span>Chat</span>
+            </button>
+        </footer>
 
     </div>
 
-    <nav class="mobile-nav">
-        <button class="nav-item active" id="nav-sangh" onclick="switchTab('sangh')">
-            <i class="fas fa-users"></i>
-            <span>संघ</span>
-        </button>
-        <button class="nav-item" id="nav-services" onclick="switchTab('services')">
-            <i class="fas fa-briefcase"></i>
-            <span>Services</span>
-        </button>
-        <button class="nav-item" id="nav-messenger" onclick="switchTab('messenger')">
-            <i class="fas fa-comment-dots"></i>
-            <span>Chat</span>
-        </button>
-    </nav>
-
     <script type="module">
+        // Import Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // 🔥 अपना Firebase Config यहाँ भरें
+        // 🔥 IMPORTANT: अपनी असली Firebase Config यहाँ डालें
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSy...", 
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // 1. Tab Switcher Logic
-        window.switchTab = function(tabName) {
-            document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        // 1. Tab Switching Function
+        window.showTab = function(tabId) {
+            // Hide all sections
+            document.querySelectorAll('section').forEach(sec => sec.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
 
-            document.getElementById('tab-' + tabName).classList.remove('hidden');
-            document.getElementById('nav-' + tabName).classList.add('active');
+            // Show selected
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            document.getElementById('nav-' + tabId).classList.add('active');
+
+            // Scroll Main to top
+            document.getElementById('app-content').scrollTop = 0;
         };
 
-        // 2. Firebase Form Submission
-        const labourForm = document.getElementById('labourForm');
-        labourForm.addEventListener('submit', async (e) => {
+        // 2. Sangh Registration Form Logic
+        const form = document.getElementById('labourForm');
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
             const btn = document.getElementById('submitBtn');
-            const spinner = document.getElementById('btnSpinner');
-            const status = document.getElementById('formStatus');
+            const loader = document.getElementById('btnLoader');
+            const btnText = document.getElementById('btnText');
+            const status = document.getElementById('statusMsg');
 
+            // Start Loading
             btn.disabled = true;
-            spinner.style.display = "block";
+            loader.style.display = "inline-block";
+            btnText.innerText = "जमा हो रहा है...";
             status.style.display = "none";
 
             try {
+                // Save to Firestore
                 await addDoc(collection(db, "labour_registrations"), {
                     name: document.getElementById('m_name').value,
                     phone: document.getElementById('m_phone').value,
@@ -247,21 +474,8 @@
                     timestamp: serverTimestamp()
                 });
 
+                // Success
                 status.style.display = "block";
                 status.style.background = "#d1fae5";
                 status.style.color = "#065f46";
-                status.innerText = "✅ पंजीकरण जमा हो गया!";
-                labourForm.reset();
-            } catch (err) {
-                status.style.display = "block";
-                status.style.background = "#fee2e2";
-                status.style.color = "#991b1b";
-                status.innerText = "❌ त्रुटि! पुनः प्रयास करें।";
-            } finally {
-                btn.disabled = false;
-                spinner.style.display = "none";
-            }
-        });
-    </script>
-</body>
-</html>
+ 
