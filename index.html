@@ -5,205 +5,365 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KRYA Portal | राष्ट्रीय एकता संघ</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
     <style>
         :root { 
-            --primary: #0c845c; 
-            --secondary: #FFD700; 
-            --org-blue: #004a99; 
-            --org-red: #d32f2f;
+            --primary: #10b981; 
+            --primary-dark: #059669;
+            --secondary: #fbbf24; 
+            --org-blue: #2563eb; 
+            --org-red: #ef4444;
             --dark: #0f172a; 
-            --bg: #f4f7f6; 
-            --card: #ffffff; 
+            --glass: rgba(255, 255, 255, 0.95);
+            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
-        body { background: var(--bg); color: #333; overflow-x: hidden; }
+        /* 1. Reset & Global Styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { 
+            background: radial-gradient(circle at top right, #e2e8f0, #f8fafc);
+            color: #1e293b; 
+            line-height: 1.6;
+            padding-bottom: 80px; /* Space for mobile nav */
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
         .hidden { display: none !important; }
+        .flex-center { display: flex; align-items: center; justify-content: center; }
 
-        /* HEADER & NAVIGATION */
+        /* 2. Header & Branding */
         header { 
-            background: var(--dark); color: white; padding: 15px 20px; 
+            background: var(--dark); padding: 18px 25px; 
             display: flex; justify-content: space-between; align-items: center; 
-            position: sticky; top: 0; z-index: 1000; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-bottom: 3px solid var(--primary); 
+            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
-        .logo { font-size: 22px; font-weight: 800; color: white; }
-        .logo span { color: var(--secondary); }
-        .nav-tabs { display: flex; gap: 8px; }
-        .tab-btn { 
-            background: transparent; color: white; border: 1px solid var(--primary); 
-            padding: 8px 12px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 11px; transition: 0.3s;
+        .logo { font-size: 24px; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+        .logo span { color: var(--secondary); font-style: italic; }
+        .verified-badge { font-size: 10px; background: var(--primary); color: white; padding: 2px 8px; border-radius: 10px; margin-left: 5px; }
+
+        /* 3. Desktop Navigation (Hidden on Mobile) */
+        .desktop-nav { display: flex; gap: 15px; }
+        @media (max-width: 768px) { .desktop-nav { display: none; } }
+
+        /* 4. Bottom Mobile Navigation */
+        .mobile-nav { 
+            position: fixed; bottom: 0; left: 0; right: 0; 
+            background: var(--glass); backdrop-filter: blur(10px);
+            display: flex; justify-content: space-around; padding: 12px 0;
+            border-top: 1px solid rgba(0,0,0,0.1); z-index: 1001;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
         }
-        .tab-btn.active { background: var(--primary); color: white; }
-        .tab-btn.org-btn { border-color: var(--secondary); color: var(--secondary); }
-        .tab-btn.org-btn.active { background: var(--secondary); color: black; }
+        @media (min-width: 769px) { .mobile-nav { display: none; } }
+        .nav-item { text-align: center; color: #64748b; cursor: pointer; transition: 0.3s; flex: 1; }
+        .nav-item i { font-size: 20px; display: block; }
+        .nav-item span { font-size: 10px; font-weight: 600; }
+        .nav-item.active { color: var(--primary); transform: translateY(-5px); }
 
-        .container { max-width: 800px; margin: 0 auto; padding: 20px 15px; }
+        /* 5. Modern Cards & Sections */
+        .section-card { 
+            background: var(--glass); border-radius: 20px; padding: 25px;
+            box-shadow: var(--shadow); margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.5);
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* SECTION: SERVICES */
+        /* 6. Service Grid Styles */
         .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .service-card { background: var(--card); border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); text-align: center; padding-bottom: 20px; border-bottom: 4px solid var(--primary); }
-        .service-card img { width: 100%; height: 160px; object-fit: cover; }
-        .btn-pay { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; width: 90%; font-weight: bold; margin-top: 10px; }
+        .service-card { 
+            background: #fff; border-radius: 18px; overflow: hidden; 
+            transition: 0.3s ease; border: 1px solid #f1f5f9; position: relative;
+        }
+        .service-card:hover { transform: scale(1.02); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        .service-img { width: 100%; height: 180px; object-fit: cover; }
+        .tag-hot { position: absolute; top: 10px; right: 10px; background: var(--org-red); color: white; font-size: 10px; padding: 4px 10px; border-radius: 20px; font-weight: bold; }
+        .price-tag { font-size: 24px; font-weight: 800; color: var(--dark); margin: 10px 0; }
+        .btn-buy { 
+            width: 100%; background: var(--dark); color: #fff; border: none; 
+            padding: 12px; font-weight: bold; border-radius: 10px; cursor: pointer; transition: 0.3s;
+        }
+        .btn-buy:hover { background: var(--primary); }
 
-        /* SECTION: MESSENGER */
-        .messenger-wrapper { background: var(--dark); height: 500px; border-radius: 15px; overflow: hidden; display: flex; flex-direction: column; color: white; border: 2px solid var(--primary); }
-        #chat-flow { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: #0f172a; }
-        .msg { max-width: 80%; padding: 10px; border-radius: 12px; font-size: 14px; }
-        .msg-them { align-self: flex-start; background: #1e293b; color: white; border: 1px solid #334155; }
+        /* 7. Sangh Room (Org) Styles */
+        .org-header { text-align: center; padding-bottom: 20px; border-bottom: 2px dashed #e2e8f0; margin-bottom: 25px; }
+        .org-header img { width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--org-blue); box-shadow: var(--shadow); margin-bottom: 15px; }
+        .org-header h1 { color: var(--org-blue); font-size: 26px; font-weight: 800; }
+        .stats-row { display: flex; justify-content: space-around; margin: 20px 0; background: #f8fafc; padding: 15px; border-radius: 15px; }
+        .stat-item { text-align: center; }
+        .stat-item b { display: block; font-size: 18px; color: var(--org-blue); }
+        .stat-item span { font-size: 11px; color: #64748b; }
 
-        /* SECTION: SANGH ROOM */
-        .org-header-box { background: white; border-radius: 15px; padding: 25px 15px; text-align: center; border-top: 6px solid var(--org-blue); box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .org-header-box h1 { color: var(--org-red); font-size: 24px; margin-bottom: 5px; }
-        .org-header-box img { border-radius: 50%; border: 3px solid var(--org-blue); width: 100px; height: 100px; margin-bottom: 10px; }
-        
-        .support-btns { display: flex; gap: 10px; margin-bottom: 20px; }
-        .btn-call { flex: 1; background: #007bff; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; }
-        .btn-wa { flex: 1; background: #25d366; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; }
+        /* 8. Form Styles */
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: #475569; }
+        .form-input { 
+            width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid #e2e8f0; 
+            background: #fff; transition: 0.3s; font-size: 14px;
+        }
+        .form-input:focus { border-color: var(--org-blue); outline: none; box-shadow: 0 0 0 4px rgba(37,99,235,0.1); }
+        .btn-submit { 
+            width: 100%; background: var(--org-blue); color: #fff; padding: 16px; 
+            border-radius: 12px; border: none; font-weight: bold; font-size: 16px; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(37,99,235,0.3); transition: 0.3s;
+        }
+        .btn-submit:active { transform: scale(0.98); }
 
-        .reg-form { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .input-field { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
-        .btn-submit { background: var(--org-blue); color: white; border: none; padding: 14px; border-radius: 8px; width: 100%; font-size: 16px; font-weight: bold; cursor: pointer; }
+        /* 9. Floating WhatsApp */
+        .wa-float { 
+            position: fixed; bottom: 90px; right: 20px; 
+            background: #25d366; color: white; width: 55px; height: 55px; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 28px; box-shadow: 0 5px 20px rgba(37,211,102,0.4); z-index: 1000;
+            text-decoration: none; transition: 0.3s;
+        }
+        .wa-float:hover { transform: rotate(15deg) scale(1.1); }
+
+        /* 10. Messenger Styles */
+        .chat-container { height: 500px; display: flex; flex-direction: column; background: #111827; border-radius: 20px; overflow: hidden; border: 2px solid #1e293b; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .message { max-width: 80%; padding: 12px 16px; border-radius: 15px; font-size: 14px; position: relative; }
+        .msg-them { background: #1f2937; color: white; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .chat-input-area { padding: 15px; background: #1f2937; display: flex; gap: 10px; }
+        .chat-input { flex: 1; background: #111827; border: none; border-radius: 30px; padding: 10px 20px; color: white; outline: none; }
+
+        /* 11. Loading Spinner */
+        .spinner { 
+            width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); 
+            border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; margin-right: 10px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">KRYA<span>live</span></div>
-        <div class="nav-tabs">
-            <button id="btn-services" class="tab-btn active" onclick="switchTab('services')">Services</button>
-            <button id="btn-messenger" class="tab-btn" onclick="switchTab('messenger')">Messenger</button>
-            <button id="btn-sangh" class="tab-btn org-btn" onclick="switchTab('sangh')"><i class="fas fa-users"></i> संघ</button>
+        <div class="logo">KRYA<span>live</span><span class="verified-badge"><i class="fas fa-check"></i> Verified</span></div>
+        <div class="desktop-nav">
+            <button class="nav-item active" onclick="switchTab('sangh')">राष्ट्रीय एकता संघ</button>
+            <button class="nav-item" onclick="switchTab('services')">Services</button>
+            <button class="nav-item" onclick="switchTab('messenger')">Messenger</button>
         </div>
     </header>
 
+    <a href="https://wa.me/916379403821" class="wa-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
     <div class="container">
 
-        <div id="tab-services">
-            <h2 style="text-align:center; color:var(--primary); margin-bottom: 20px;">Digital Services</h2>
-            <div class="services-grid">
-                <div class="service-card">
-                    <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500" alt="Logo">
-                    <h3 style="margin-top:10px;">3D Logo Design</h3>
-                    <p style="font-weight: 800; color: var(--primary);">₹199</p>
-                    <button class="btn-pay">Buy Now</button>
+        <div id="tab-sangh" class="animate__animated animate__fadeIn">
+            <div class="section-card">
+                <div class="org-header">
+                    <img src="https://via.placeholder.com/150" alt="MD Siraj">
+                    <h1>राष्ट्रीय एकता संघ</h1>
+                    <p style="color: #64748b; font-size: 14px; font-weight: 500;">अखिल भारतीय मजदूर कल्याण सेवा संघ</p>
+                    <p style="background: #eff6ff; display: inline-block; padding: 4px 15px; border-radius: 20px; font-size: 12px; margin-top: 10px; color: var(--org-blue); border: 1px solid #dbeafe;">
+                        <i class="fas fa-shield-alt"></i> आदेशानुसार: <b>एमडी सिराज जी</b> (सचिव)
+                    </p>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-item"><b>12014</b><span>पंजीकरण संख्या</span></div>
+                    <div class="stat-item"><b>5000+</b><span>जुड़े हुए मजदूर</span></div>
+                    <div class="stat-item"><b>24/7</b><span>सहायता</span></div>
+                </div>
+
+                <div class="reg-form">
+                    <h3 style="margin-bottom: 20px; font-size: 18px; border-left: 4px solid var(--org-blue); padding-left: 10px;">मजदूर पंजीकरण फॉर्म</h3>
+                    <form id="labourForm">
+                        <div class="form-group">
+                            <label>पूरा नाम (Full Name) *</label>
+                            <input type="text" id="m_name" class="form-input" placeholder="अपना नाम लिखें" required>
+                        </div>
+                        <div class="form-group">
+                            <label>मोबाइल नंबर (Mobile No) *</label>
+                            <input type="tel" id="m_phone" class="form-input" placeholder="10 अंकों का नंबर" pattern="[0-9]{10}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>जिला (District) *</label>
+                            <select id="m_district" class="form-input" required>
+                                <option value="">चुनें...</option>
+                                <option value="Banka">बांका</option>
+                                <option value="Munger">मुंगेर</option>
+                                <option value="Delhi">दिल्ली</option>
+                                <option value="Other">अन्य</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>समस्या या विवरण (Issues/Details)</label>
+                            <textarea id="m_issue" class="form-input" style="height: 100px;" placeholder="अपनी बात यहाँ लिखें..."></textarea>
+                        </div>
+                        
+                        <button type="submit" id="submitBtn" class="btn-submit flex-center">
+                            <div class="spinner" id="btnSpinner"></div>
+                            <span>सुरक्षित जमा करें</span>
+                        </button>
+                    </form>
+                    <div id="formStatus" style="margin-top: 15px; padding: 12px; border-radius: 10px; text-align: center; font-size: 14px; font-weight: 600; display: none;"></div>
                 </div>
             </div>
         </div>
 
-        <div id="tab-messenger" class="hidden">
-            <div class="messenger-wrapper">
-                <div style="padding:15px; background:#1e293b; text-align:center; font-weight:bold;">KRYA Global Chat</div>
-                <div id="chat-flow">
-                    <div class="msg msg-them">नमस्ते! आपका KRYA Messenger में स्वागत है।</div>
+        <div id="tab-services" class="hidden animate__animated animate__fadeIn">
+            <div class="section-card">
+                <h2 style="margin-bottom: 20px; font-weight: 800; color: var(--dark);">Premium Digital Services</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <span class="tag-hot">BEST SELLER</span>
+                        <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500" class="service-img" alt="Logo Design">
+                        <div style="padding: 20px;">
+                            <h3 style="font-size: 18px; font-weight: 700;">3D Logo Design</h3>
+                            <p style="font-size: 12px; color: #64748b; margin-top: 5px;">High-quality vector & 3D logos for your brand.</p>
+                            <div class="price-tag">₹199 <span style="font-size: 14px; text-decoration: line-through; color: #94a3b8;">₹499</span></div>
+                            <button class="btn-buy"><i class="fas fa-shopping-cart"></i> Buy Now</button>
+                        </div>
+                    </div>
+                    <div class="service-card">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500" class="service-img" alt="Website">
+                        <div style="padding: 20px;">
+                            <h3 style="font-size: 18px; font-weight: 700;">Business Website</h3>
+                            <p style="font-size: 12px; color: #64748b; margin-top: 5px;">Modern responsive website for local shops.</p>
+                            <div class="price-tag">₹2,999</div>
+                            <button class="btn-buy"><i class="fas fa-shopping-cart"></i> Buy Now</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div id="tab-sangh" class="hidden">
-            <div class="org-header-box">
-                <img src="https://via.placeholder.com/100" alt="MD Siraj">
-                <h1>राष्ट्रीय एकता संघ</h1>
-                <p style="color:var(--org-blue); font-weight:bold;">अखिल भारतीय मजदूर कल्याण सेवा संघ</p>
-                <p style="font-size:12px; margin-top:5px;">आदेशानुसार: <strong>एमडी सिराज जी</strong></p>
+        <div id="tab-messenger" class="hidden animate__animated animate__fadeIn">
+            <div class="chat-container">
+                <div style="padding: 15px 20px; background: #1f2937; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #374151;">
+                    <span style="font-weight: 700; color: var(--primary);">KRYA Messenger <i class="fas fa-circle" style="font-size: 8px; margin-left: 5px;"></i></span>
+                    <i class="fas fa-cog" style="color: #94a3b8; cursor: pointer;"></i>
+                </div>
+                <div class="chat-messages" id="chatFlow">
+                    <div class="message msg-them">नमस्ते! मैं मुकेश राय हूँ। मैं आपकी क्या मदद कर सकता हूँ?</div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" class="chat-input" placeholder="Type a message...">
+                    <button style="background: var(--primary); border: none; width: 45px; height: 45px; border-radius: 50%; color: white;"><i class="fas fa-paper-plane"></i></button>
+                </div>
             </div>
-
-            <div class="support-btns">
-                <a href="tel:+916379403821" class="btn-call"><i class="fas fa-phone"></i> कॉल करें</a>
-                <a href="https://wa.me/916379403821" class="btn-wa"><i class="fab fa-whatsapp"></i> वॉट्सऐप</a>
-            </div>
-
-            <div class="reg-form">
-                <h3 style="text-align:center; margin-bottom:15px; color:var(--org-blue);">मजदूर पंजीकरण</h3>
-                <form id="labourForm">
-                    <input type="text" id="m_name" class="input-field" placeholder="मजदूर का नाम *" required>
-                    <input type="number" id="m_phone" class="input-field" placeholder="मोबाइल नंबर *" required>
-                    <select id="m_district" class="input-field" required>
-                        <option value="">जिला चुनें</option>
-                        <option value="Banka">बांका</option>
-                        <option value="Munger">मुंगेर</option>
-                        <option value="Delhi">दिल्ली</option>
-                    </select>
-                    <textarea id="m_issue" class="input-field" placeholder="अपनी समस्या लिखें..." style="height:80px;"></textarea>
-                    <button type="submit" id="submitBtn" class="btn-submit">डेटा सुरक्षित जमा करें</button>
-                </form>
-                <p id="formStatus" style="text-align:center; margin-top:10px; font-weight:bold; display:none;"></p>
-            </div>
-
-            <p style="text-align:center; margin-top:20px; font-size:11px; color:#888;">
-                Developed by <strong>KRYA Digital (मुकेश राय)</strong>
-            </p>
         </div>
+
+        <footer style="text-align: center; padding: 20px; color: #94a3b8; font-size: 11px;">
+            <p>&copy; 2026 KRYA Digital | Designed by मुकेश राय</p>
+            <div style="margin-top: 10px; display: flex; justify-content: center; gap: 15px;">
+                <a href="#" style="color: #64748b;">Privacy Policy</a>
+                <a href="#" style="color: #64748b;">Terms of Service</a>
+            </div>
+        </footer>
 
     </div>
+
+    <nav class="mobile-nav">
+        <div class="nav-item active" id="nav-sangh" onclick="switchTab('sangh')">
+            <i class="fas fa-users"></i>
+            <span>संघ</span>
+        </div>
+        <div class="nav-item" id="nav-services" onclick="switchTab('services')">
+            <i class="fas fa-briefcase"></i>
+            <span>Services</span>
+        </div>
+        <div class="nav-item" id="nav-messenger" onclick="switchTab('messenger')">
+            <i class="fas fa-comment-dots"></i>
+            <span>Chat</span>
+        </div>
+    </nav>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // यहाँ अपना Firebase Config पेस्ट करें
+        // 🔥 Replace this with your REAL Firebase Config from Firebase Console
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "YOUR_PROJECT.firebaseapp.com",
             projectId: "YOUR_PROJECT_ID",
             storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "YOUR_ID",
+            messagingSenderId: "YOUR_SENDER_ID",
             appId: "YOUR_APP_ID"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Tab Switcher
+        // 1. Improved Tab Switching with Active States
         window.switchTab = function(tabName) {
-            document.getElementById('tab-services').classList.add('hidden');
-            document.getElementById('tab-messenger').classList.add('hidden');
-            document.getElementById('tab-sangh').classList.add('hidden');
-            
-            document.getElementById('btn-services').classList.remove('active');
-            document.getElementById('btn-messenger').classList.remove('active');
-            document.getElementById('btn-sangh').classList.remove('active');
+            // Hide all tabs
+            document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
 
+            // Show selected
             document.getElementById('tab-' + tabName).classList.remove('hidden');
-            document.getElementById('btn-' + tabName).classList.add('active');
+            
+            // Highlight Desktop Button
+            document.querySelectorAll('.desktop-nav .nav-item').forEach(btn => {
+                if(btn.getAttribute('onclick').includes(tabName)) btn.classList.add('active');
+            });
+
+            // Highlight Mobile Button
+            const mobBtn = document.getElementById('nav-' + tabName);
+            if(mobBtn) mobBtn.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        // Form Submission to Firestore
+        // 2. Firebase Form Submission with Validation & Feedback
         const labourForm = document.getElementById('labourForm');
-        if(labourForm) {
-            labourForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const btn = document.getElementById('submitBtn');
-                const status = document.getElementById('formStatus');
-                
-                btn.disabled = true;
-                btn.innerText = "जमा हो रहा है...";
+        labourForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submitBtn');
+            const spinner = document.getElementById('btnSpinner');
+            const status = document.getElementById('formStatus');
 
-                try {
-                    await addDoc(collection(db, "labour_registrations"), {
-                        name: document.getElementById('m_name').value,
-                        phone: document.getElementById('m_phone').value,
-                        district: document.getElementById('m_district').value,
-                        issue: document.getElementById('m_issue').value,
-                        timestamp: serverTimestamp()
-                    });
-                    status.style.display = "block";
-                    status.style.color = "green";
-                    status.innerText = "✅ सफलतापूर्वक जमा हो गया!";
-                    labourForm.reset();
-                } catch (err) {
-                    status.style.display = "block";
-                    status.style.color = "red";
-                    status.innerText = "❌ त्रुटि! कृपया दोबारा कोशिश करें।";
-                } finally {
-                    btn.disabled = false;
-                    btn.innerText = "डेटा सुरक्षित जमा करें";
-                }
-            });
-        }
+            // Visual feedback - Start Loading
+            btn.disabled = true;
+            spinner.style.display = "block";
+            status.style.display = "none";
+
+            try {
+                const data = {
+                    name: document.getElementById('m_name').value,
+                    phone: document.getElementById('m_phone').value,
+                    district: document.getElementById('m_district').value,
+                    issue: document.getElementById('m_issue').value,
+                    timestamp: serverTimestamp()
+                };
+
+                // Add to Firebase
+                await addDoc(collection(db, "labour_registrations"), data);
+
+                // Success Feedback
+                status.style.display = "block";
+                status.style.background = "#d1fae5";
+                status.style.color = "#065f46";
+                status.innerHTML = "✅ आपका पंजीकरण सफलतापूर्वक जमा हो गया है! टीम जल्द संपर्क करेगी।";
+                labourForm.reset();
+
+            } catch (error) {
+                console.error("Firebase Error:", error);
+                status.style.display = "block";
+                status.style.background = "#fee2e2";
+                status.style.color = "#991b1b";
+                status.innerHTML = "❌ नेटवर्क त्रुटि! कृपया इंटरनेट चेक करें और पुनः प्रयास करें।";
+            } finally {
+                btn.disabled = false;
+                spinner.style.display = "none";
+            }
+        });
+
+        // 3. Simple Real-time Validation for Phone
+        document.getElementById('m_phone').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
+        });
     </script>
+
 </body>
 </html>
