@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA Digital | Super-Platform</title>
+    <title>KRYA Digital | Real-World Platform</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,184 +11,295 @@
 
     <style>
         :root {
-            --primary: #10b981; 
-            --accent: #2563eb; 
-            --gold: #fbbf24; 
-            --dark: #0f172a;
-            --slate: #475569;
-            --light: #f8fafc;
-            --glass: rgba(255, 255, 255, 0.95);
+            --primary: #10b981; --accent: #2563eb; --gold: #fbbf24;
+            --dark: #0f172a; --slate: #475569; --light: #f8fafc;
             --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        
-        body, html { height: 100%; width: 100%; overflow: hidden; background-color: var(--light); color: var(--dark); }
+        body, html { height: 100%; width: 100%; overflow: hidden; background: var(--light); }
+        .app-container { display: flex; flex-direction: column; height: 100vh; }
 
-        .app-container { display: flex; flex-direction: column; height: 100vh; width: 100%; }
-
-        /* 1. FIXED HEADER */
-        header {
-            background: #ffffff; padding: 12px 20px; display: flex; justify-content: space-between;
-            align-items: center; z-index: 1000; border-bottom: 1px solid #e2e8f0;
-        }
-        .brand { font-size: 22px; font-weight: 800; color: var(--dark); letter-spacing: -1px; }
+        /* Navigation & Header */
+        header { background: #fff; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; z-index: 1000; }
+        .brand { font-size: 20px; font-weight: 800; color: var(--dark); }
         .brand span { color: var(--primary); }
-        .live-status { font-size: 11px; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 5px; }
-
-        main { flex: 1; overflow-y: auto; padding: 15px 15px 100px; scrollbar-width: none; }
-        main::-webkit-scrollbar { display: none; }
-
-        /* 2. HERO SECTION IMPROVEMENT */
-        .hero {
-            text-align: center; padding: 40px 20px; border-radius: 24px;
-            background: linear-gradient(135deg, #2563eb, #10b981);
-            color: white; margin-bottom: 25px; box-shadow: var(--shadow);
-        }
-        .hero h1 { font-size: 26px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; }
-        .hero p { font-size: 13px; opacity: 0.9; margin-bottom: 25px; line-height: 1.6; }
-        .btn-cta {
-            background: var(--gold); color: #000; padding: 14px 28px;
-            border-radius: 14px; font-weight: 700; border: none; font-size: 15px;
-            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4); cursor: pointer;
-        }
-
-        /* 3. FORM CONTAINER FIX (Visibility) */
-        .form-container {
-            background: #ffffff; padding: 25px; border-radius: 24px;
-            box-shadow: var(--shadow); border: 1px solid #f1f5f9;
-        }
-        .form-title { border-left: 5px solid var(--accent); padding-left: 15px; margin-bottom: 25px; }
-        .form-title h2 { color: var(--dark); font-size: 20px; font-weight: 800; margin-bottom: 4px; }
-        .form-title p { color: var(--slate); font-size: 12px; font-weight: 500; }
-
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 8px; }
-        .form-control {
-            width: 100%; padding: 15px; border-radius: 14px; border: 1.5px solid #e2e8f0;
-            font-size: 14px; background: #fdfdfd; outline: none; transition: 0.3s;
-        }
-        .form-control:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 4px rgba(37,99,235,0.1); }
-
-        .btn-submit {
-            width: 100%; padding: 16px; background: var(--accent); color: white;
-            border: none; border-radius: 14px; font-weight: 700; font-size: 16px;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); cursor: pointer;
-        }
-
-        /* 4. NAVIGATION FIX */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: var(--glass); backdrop-filter: blur(15px);
-            display: flex; justify-content: space-around; padding: 12px 0 25px;
-            border-top: 1px solid #e2e8f0; z-index: 1001;
-        }
+        
+        main { flex: 1; overflow-y: auto; padding: 15px 15px 90px; scrollbar-width: none; }
+        
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 10px 0 25px; border-top: 1px solid #e2e8f0; z-index: 1001; }
         .nav-item { border: none; background: none; color: #94a3b8; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
         .nav-item.active { color: var(--accent); }
         .nav-item i { font-size: 20px; }
         .nav-item span { font-size: 10px; font-weight: 700; }
 
-        .hidden { display: none !important; }
+        /* Components */
+        .card { background: #fff; padding: 20px; border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 20px; border: 1px solid #f1f5f9; }
+        .btn-primary { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
+        .btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
+        
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 5px; color: var(--slate); }
+        .form-control { width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #e2e8f0; outline: none; }
 
-        /* Floating WA */
-        .wa-float {
-            position: fixed; bottom: 95px; right: 20px; background: #25d366;
-            color: white; width: 55px; height: 55px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 28px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 999;
-        }
+        /* Messenger Full Screen */
+        .chat-view { height: calc(100vh - 180px); display: flex; flex-direction: column; background: #0f172a; border-radius: 20px; overflow: hidden; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 14px; color: #fff; }
+        .msg-me { align-self: flex-end; background: var(--primary); border-bottom-right-radius: 2px; }
+        .msg-them { align-self: flex-start; background: #1e293b; border-bottom-left-radius: 2px; }
+        
+        .chat-input-box { padding: 10px; background: #1e293b; display: flex; gap: 8px; }
+        .chat-input-box input { flex: 1; padding: 10px; border-radius: 20px; border: none; outline: none; background: #0f172a; color: #fff; }
+
+        /* Admin & Status Badges */
+        .badge-status { padding: 2px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-confirmed { background: #d1fae5; color: #065f46; }
+
+        .hidden { display: none !important; }
+        .loader { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        
         <header>
             <div class="brand">KRYA<span>Digital</span></div>
-            <div class="live-status"><i class="fas fa-circle animate__animated animate__flash animate__infinite"></i> Live</div>
+            <div id="auth-status" style="font-size: 10px; font-weight: bold; color: var(--slate);">Guest</div>
         </header>
 
-        <a href="https://wa.me/916379403821" class="wa-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
-
-        <main id="main-scroller">
+        <main id="main-content">
             <section id="view-home" class="view animate__animated animate__fadeIn">
-                <div class="hero">
-                    <h1>Grow Your Business with KRYA Digital</h1>
-                    <p>India's first modular super-platform for services, community unity, and digital growth.</p>
-                    <button class="btn-cta" onclick="navigate('services')">Explore Marketplace</button>
-                </div>
-                
-                <div class="form-container">
-                    <div class="form-title">
-                        <h2>राष्ट्रीय एकता संघ</h2>
-                        <p>मजदूर कल्याण एवं डिजिटल पंजीकरण</p>
-                    </div>
-                    <form id="leadForm">
+                <div class="card">
+                    <h2 style="margin-bottom: 10px; color: var(--accent);">राष्ट्रीय एकता संघ</h2>
+                    <p style="font-size: 12px; color: var(--slate); margin-bottom: 20px;">मजदूर कल्याण एवं डिजिटल सदस्यता पंजीकरण</p>
+                    <form id="regForm">
                         <div class="input-group">
-                            <label>पूरा नाम / Full Name *</label>
-                            <input type="text" id="l_name" class="form-control" placeholder="अपना नाम लिखें" required>
+                            <label>पूरा नाम *</label>
+                            <input type="text" id="reg_name" class="form-control" placeholder="नाम लिखें" required>
                         </div>
                         <div class="input-group">
-                            <label>मोबाइल नंबर / Mobile *</label>
-                            <input type="tel" id="l_phone" class="form-control" placeholder="10 अंकों का नंबर" pattern="[0-9]{10}" required>
+                            <label>मोबाइल नंबर *</label>
+                            <input type="tel" id="reg_phone" class="form-control" placeholder="10 अंकों का नंबर" required>
                         </div>
                         <div class="input-group">
-                            <label>जिला / District *</label>
-                            <select id="l_district" class="form-control" required>
+                            <label>जिला *</label>
+                            <select id="reg_district" class="form-control" required>
                                 <option value="">चुनें...</option>
-                                <option value="Banka">बांका (Bihar)</option>
-                                <option value="Delhi">दिल्ली (NCR)</option>
-                                <option value="Other">अन्य</option>
+                                <option value="Banka">बांका</option>
+                                <option value="Delhi">दिल्ली</option>
+                                <option value="Munger">मुंगेर</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn-submit">सुरक्षित पंजीकरण करें</button>
+                        <button type="submit" class="btn-primary" id="regBtn">
+                            <div class="loader"></div> <span>सदस्य बनें</span>
+                        </button>
                     </form>
                 </div>
             </section>
 
-            <section id="view-services" class="view hidden animate__animated animate__fadeIn">
-                <h2 style="margin: 10px 0 20px; font-weight: 800;">Digital Marketplace</h2>
-                <div style="background: white; padding: 20px; border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 20px;">
-                    <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500" style="width: 100%; border-radius: 15px; margin-bottom: 15px;">
-                    <h3>3D Logo Design</h3>
-                    <p style="color: var(--slate); font-size: 13px; margin: 5px 0 15px;">High-quality branding for your business.</p>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 20px; font-weight: 800; color: var(--primary);">₹199</span>
-                        <button style="background: var(--dark); color: white; padding: 10px 20px; border: none; border-radius: 10px; font-weight: bold;">Buy Now</button>
+            <section id="view-market" class="view hidden animate__animated animate__fadeIn">
+                <h3 style="margin-bottom: 15px;">उपलब्ध सेवाएँ</h3>
+                <div id="product-list">
+                    <div class="card">
+                        <h4 id="prod_title">3D Logo Design</h4>
+                        <p style="font-size: 12px; color: var(--slate); margin: 5px 0 15px;">प्रोफेशनल ब्रांडिंग सेवा</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 800; color: var(--primary);">₹199</span>
+                            <button onclick="placeOrder('3D Logo', 199)" class="btn-primary" style="width: auto; padding: 8px 20px;">Buy Now</button>
+                        </div>
                     </div>
                 </div>
+            </section>
+
+            <section id="view-chat" class="view hidden animate__animated animate__fadeIn">
+                <div class="chat-view">
+                    <div class="chat-messages" id="chatList">
+                        <div class="msg msg-them">KRYA हेल्प डेस्क में आपका स्वागत है।</div>
+                    </div>
+                    <div class="chat-input-box">
+                        <input type="text" id="chatMsg" placeholder="मैसेज लिखें...">
+                        <button onclick="sendMessage()" style="background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 50%;"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-panel" class="view hidden animate__animated animate__fadeIn">
+                <div class="card" id="userProfile">
+                    <h4>मेरा प्रोफाइल</h4>
+                    <hr style="margin: 10px 0; opacity: 0.1;">
+                    <p id="p_name">लोड हो रहा है...</p>
+                    <p id="p_id" style="font-size: 10px; color: var(--slate);"></p>
+                </div>
+                <h4>मेरे ऑर्डर्स</h4>
+                <div id="orderList"></div>
+            </section>
+
+            <section id="view-admin" class="view hidden animate__animated animate__fadeIn">
+                <div class="card">
+                    <h3>Admin Control</h3>
+                    <div id="adminData">
+                        <p>Total Users: <span id="count_users">0</span></p>
+                        <p>Total Orders: <span id="count_orders">0</span></p>
+                    </div>
+                </div>
+                <div id="allUsersList"></div>
             </section>
         </main>
 
         <nav class="bottom-nav">
-            <button class="nav-item active" onclick="navigate('home')" id="nav-home">
-                <i class="fas fa-home"></i><span>Home</span>
-            </button>
-            <button class="nav-item" onclick="navigate('services')" id="nav-services">
-                <i class="fas fa-th-large"></i><span>Market</span>
-            </button>
-            <button class="nav-item" onclick="navigate('chat')" id="nav-chat">
-                <i class="fas fa-comment-dots"></i><span>Chat</span>
-            </button>
-            <button class="nav-item" onclick="navigate('panel')" id="nav-panel">
-                <i class="fas fa-user-circle"></i><span>Panel</span>
-            </button>
-            <button class="nav-item" onclick="navigate('info')" id="nav-info">
-                <i class="fas fa-info-circle"></i><span>Info</span>
-            </button>
+            <button class="nav-item active" onclick="nav('home')"><i class="fas fa-id-card"></i><span>संघ</span></button>
+            <button class="nav-item" onclick="nav('market')"><i class="fas fa-shopping-bag"></i><span>Market</span></button>
+            <button class="nav-item" onclick="nav('chat')"><i class="fas fa-comments"></i><span>Chat</span></button>
+            <button class="nav-item" onclick="nav('panel')"><i class="fas fa-user-circle"></i><span>Panel</span></button>
+            <button class="nav-item" onclick="nav('admin')"><i class="fas fa-user-shield"></i><span>Admin</span></button>
         </nav>
     </div>
 
-    <script>
-        function navigate(viewId) {
+    <div id="toast" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 10px 20px; border-radius: 10px; color: white; display: none; z-index: 9999;"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, setDoc, getDocs, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // 🔥 IMPORTANT: अपनी असली कॉन्फ़िगरेशन यहाँ डालें
+        const firebaseConfig = {
+            apiKey: "AIzaSy...", 
+            authDomain: "krya-digital.firebaseapp.com",
+            projectId: "krya-digital",
+            storageBucket: "krya-digital.appspot.com",
+            messagingSenderId: "12345",
+            appId: "1:123:web:abc"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Global State
+        let currentUser = JSON.parse(localStorage.getItem('krya_user')) || null;
+
+        // 1. Navigation
+        window.nav = (id) => {
             document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('view-'+id).classList.remove('hidden');
+            if (id === 'panel') loadUserData();
+            if (id === 'admin') loadAdminData();
+        };
+
+        // 2. Registration Logic
+        document.getElementById('regForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('regBtn');
+            btn.disabled = true;
+            btn.querySelector('.loader').style.display = 'block';
+
+            const userData = {
+                name: document.getElementById('reg_name').value,
+                phone: document.getElementById('reg_phone').value,
+                district: document.getElementById('reg_district').value,
+                role: 'member',
+                createdAt: serverTimestamp()
+            };
+
+            try {
+                const docRef = await addDoc(collection(db, "users"), userData);
+                userData.id = docRef.id;
+                localStorage.setItem('krya_user', JSON.stringify(userData));
+                currentUser = userData;
+                showToast("✅ पंजीकरण सफल!", "#10b981");
+                nav('panel');
+            } catch (err) {
+                showToast("❌ त्रुटि!", "#ef4444");
+            } finally {
+                btn.disabled = false;
+                btn.querySelector('.loader').style.display = 'none';
+            }
+        });
+
+        // 3. Real-time Chat Logic
+        window.sendMessage = async () => {
+            const input = document.getElementById('chatMsg');
+            if (!currentUser || !input.value.trim()) return;
+
+            await addDoc(collection(db, "chats"), {
+                uid: currentUser.id,
+                userName: currentUser.name,
+                msg: input.value,
+                time: serverTimestamp()
+            });
+            input.value = "";
+        };
+
+        onSnapshot(query(collection(db, "chats"), orderBy("time", "asc")), (snap) => {
+            const list = document.getElementById('chatList');
+            list.innerHTML = "";
+            snap.forEach(doc => {
+                const data = doc.data();
+                const side = data.uid === currentUser?.id ? 'msg-me' : 'msg-them';
+                list.innerHTML += `<div class="msg ${side}"><b>${data.userName}:</b><br>${data.msg}</div>`;
+            });
+            list.scrollTop = list.scrollHeight;
+        });
+
+        // 4. Marketplace & Orders
+        window.placeOrder = async (service, price) => {
+            if (!currentUser) return nav('home');
             
-            document.getElementById('view-' + viewId).classList.remove('hidden');
-            document.getElementById('nav-' + viewId).classList.add('active');
-            document.getElementById('main-scroller').scrollTop = 0;
+            try {
+                await addDoc(collection(db, "orders"), {
+                    uid: currentUser.id,
+                    uName: currentUser.name,
+                    service: service,
+                    price: price,
+                    status: 'pending',
+                    time: serverTimestamp()
+                });
+                showToast("📦 ऑर्डर बुक हो गया!", "#2563eb");
+                nav('panel');
+            } catch (e) { showToast("❌ त्रुटि", "#ef4444"); }
+        };
+
+        // 5. Dashboard Data
+        function loadUserData() {
+            if (!currentUser) return;
+            document.getElementById('p_name').innerText = "नाम: " + currentUser.name;
+            document.getElementById('p_id').innerText = "ID: " + currentUser.id;
+            
+            onSnapshot(query(collection(db, "orders"), where("uid", "==", currentUser.id)), (snap) => {
+                const list = document.getElementById('orderList');
+                list.innerHTML = "";
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    list.innerHTML += `<div class="card">${d.service} - <span class="badge-status status-${d.status}">${d.status}</span></div>`;
+                });
+            });
+        }
+
+        // 6. Admin Panel Logic (Simple)
+        async function loadAdminData() {
+            const userSnap = await getDocs(collection(db, "users"));
+            const orderSnap = await getDocs(collection(db, "orders"));
+            document.getElementById('count_users').innerText = userSnap.size;
+            document.getElementById('count_orders').innerText = orderSnap.size;
+            
+            const list = document.getElementById('allUsersList');
+            list.innerHTML = "<h4>User List</h4>";
+            userSnap.forEach(doc => {
+                list.innerHTML += `<div class="card" style="font-size:12px;">${doc.data().name} (${doc.data().district})</div>`;
+            });
+        }
+
+        // Helpers
+        function showToast(msg, color) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.background = color;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3000);
         }
     </script>
 </body>
-                </html>
-                
+</html>
