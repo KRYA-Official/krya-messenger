@@ -3,110 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA Portal | Digital Services & Messenger</title>
+    <title>KRYA Portal | राष्ट्रीय एकता संघ</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* =========================================
-           1. GLOBAL VARIABLES & STYLES
-           ========================================= */
         :root { 
             --primary: #0c845c; 
             --secondary: #FFD700; 
+            --org-blue: #004a99; 
+            --org-red: #d32f2f;
             --dark: #0f172a; 
             --bg: #f4f7f6; 
             --card: #ffffff; 
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
         body { background: var(--bg); color: #333; overflow-x: hidden; }
         .hidden { display: none !important; }
 
-        /* =========================================
-           2. HEADER & NAVIGATION TABS
-           ========================================= */
+        /* HEADER & NAVIGATION */
         header { 
             background: var(--dark); color: white; padding: 15px 20px; 
             display: flex; justify-content: space-between; align-items: center; 
             position: sticky; top: 0; z-index: 1000; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-bottom: 3px solid var(--primary); 
         }
-        .logo { font-size: 24px; font-weight: 800; letter-spacing: 1px; color: white; }
+        .logo { font-size: 22px; font-weight: 800; color: white; }
         .logo span { color: var(--secondary); }
-        .nav-tabs { display: flex; gap: 10px; }
+        .nav-tabs { display: flex; gap: 8px; }
         .tab-btn { 
             background: transparent; color: white; border: 1px solid var(--primary); 
-            padding: 8px 15px; border-radius: 20px; cursor: pointer; 
-            font-weight: bold; transition: 0.3s; font-size: 14px;
+            padding: 8px 12px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 11px; transition: 0.3s;
         }
         .tab-btn.active { background: var(--primary); color: white; }
-        
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px 15px; }
+        .tab-btn.org-btn { border-color: var(--secondary); color: var(--secondary); }
+        .tab-btn.org-btn.active { background: var(--secondary); color: black; }
 
-        /* =========================================
-           3. TAB 1: DIGITAL SERVICES STYLES
-           ========================================= */
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .service-card { 
-            background: var(--card); border-radius: 15px; overflow: hidden; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08); text-align: center; 
-            padding-bottom: 20px; border-bottom: 4px solid var(--primary); transition: 0.3s; 
-        }
-        .service-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
-        .service-card img { width: 100%; height: 180px; object-fit: cover; }
-        .price { font-size: 22px; font-weight: 800; color: var(--primary); margin: 10px 0; }
-        .btn { 
-            padding: 12px 20px; border-radius: 8px; font-weight: bold; border: none; 
-            cursor: pointer; background: var(--primary); color: white; 
-            width: 90%; transition: 0.3s; font-size: 16px;
-        }
-        .btn:hover { background: #086345; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px 15px; }
 
-        /* Checkout Form */
-        .checkout-box { 
-            background: var(--card); padding: 25px; border-radius: 15px; 
-            box-shadow: 0 8px 30px rgba(0,0,0,0.1); border: 2px solid var(--secondary); margin-bottom: 30px; 
-        }
-        .form-control { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; outline: none; font-size: 14px; }
-        .form-control:focus { border-color: var(--primary); }
-        .upi-container { background: #e8f5e9; padding: 15px; border-radius: 10px; text-align: center; border: 2px dashed var(--primary); margin-bottom: 20px; }
+        /* SECTION: SERVICES */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .service-card { background: var(--card); border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); text-align: center; padding-bottom: 20px; border-bottom: 4px solid var(--primary); }
+        .service-card img { width: 100%; height: 160px; object-fit: cover; }
+        .btn-pay { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; width: 90%; font-weight: bold; margin-top: 10px; }
 
-        /* =========================================
-           4. TAB 2: MESSENGER STYLES
-           ========================================= */
-        .messenger-wrapper { 
-            background: var(--dark); height: calc(100vh - 120px); /* Mobile Screen Fix */
-            border-radius: 15px; overflow: hidden; display: flex; 
-            flex-direction: column; color: white; border: 2px solid var(--primary); 
-        }
-        
-        /* Auth Screen inside Messenger */
-        .auth-box { padding: 40px 20px; text-align: center; margin: auto; max-width: 400px; width: 100%; }
-        .auth-box input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; margin-bottom: 15px; }
-        
-        /* Chat Area */
+        /* SECTION: MESSENGER */
+        .messenger-wrapper { background: var(--dark); height: 500px; border-radius: 15px; overflow: hidden; display: flex; flex-direction: column; color: white; border: 2px solid var(--primary); }
         #chat-flow { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: #0f172a; }
-        .msg { max-width: 80%; padding: 10px 14px; border-radius: 15px; font-size: 14px; line-height: 1.4; word-wrap: break-word; }
-        .msg-me { align-self: flex-end; background: var(--primary); color: #000; border-bottom-right-radius: 2px; }
-        .msg-them { align-self: flex-start; background: #1e293b; color: #fff; border-bottom-left-radius: 2px; border: 1px solid #334155; }
-        .msg-sender { font-size: 11px; font-weight: bold; margin-bottom: 4px; opacity: 0.8; }
-        
-        .chat-footer { padding: 15px; background: #1e293b; display: flex; gap: 10px; border-top: 1px solid #334155; align-items: center; }
-        .chat-footer input { flex: 1; border-radius: 20px; padding: 12px 15px; border: none; outline: none; background: #0f172a; color: white; }
-        .btn-send { background: var(--primary); border: none; min-width: 45px; height: 45px; border-radius: 50%; color: #000; cursor: pointer; font-size: 16px; display: flex; justify-content: center; align-items: center; }
+        .msg { max-width: 80%; padding: 10px; border-radius: 12px; font-size: 14px; }
+        .msg-them { align-self: flex-start; background: #1e293b; color: white; border: 1px solid #334155; }
 
-        /* =========================================
-           5. SCRATCH CARD MODAL
-           ========================================= */
-        #scratch-box { 
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            background: white; padding: 25px; border-radius: 15px; z-index: 2000; 
-            text-align: center; border: 4px solid var(--primary); box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-        }
-        .scratch-wrapper { position: relative; width: 200px; height: 100px; margin: 0 auto; border-radius: 10px; overflow: hidden; }
-        .scratch-prize { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #fde047; color: #b45309; font-weight: 800; font-size: 18px; }
-        #scratch-canvas { position: absolute; top: 0; left: 0; cursor: crosshair; }
+        /* SECTION: SANGH ROOM */
+        .org-header-box { background: white; border-radius: 15px; padding: 25px 15px; text-align: center; border-top: 6px solid var(--org-blue); box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .org-header-box h1 { color: var(--org-red); font-size: 24px; margin-bottom: 5px; }
+        .org-header-box img { border-radius: 50%; border: 3px solid var(--org-blue); width: 100px; height: 100px; margin-bottom: 10px; }
+        
+        .support-btns { display: flex; gap: 10px; margin-bottom: 20px; }
+        .btn-call { flex: 1; background: #007bff; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; }
+        .btn-wa { flex: 1; background: #25d366; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; }
+
+        .reg-form { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .input-field { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
+        .btn-submit { background: var(--org-blue); color: white; border: none; padding: 14px; border-radius: 8px; width: 100%; font-size: 16px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -114,108 +74,136 @@
     <header>
         <div class="logo">KRYA<span>live</span></div>
         <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('services')"><i class="fas fa-briefcase"></i> Services</button>
-            <button class="tab-btn" onclick="switchTab('messenger')"><i class="fas fa-comment-dots"></i> Messenger</button>
+            <button id="btn-services" class="tab-btn active" onclick="switchTab('services')">Services</button>
+            <button id="btn-messenger" class="tab-btn" onclick="switchTab('messenger')">Messenger</button>
+            <button id="btn-sangh" class="tab-btn org-btn" onclick="switchTab('sangh')"><i class="fas fa-users"></i> संघ</button>
         </div>
     </header>
 
     <div class="container">
 
         <div id="tab-services">
-            <h2 style="text-align:center; color:var(--primary); margin-bottom: 20px;">Grow Your Digital Brand</h2>
-            
+            <h2 style="text-align:center; color:var(--primary); margin-bottom: 20px;">Digital Services</h2>
             <div class="services-grid">
                 <div class="service-card">
-                    <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500" alt="3D Logo Design">
-                    <h3 style="margin-top:10px;">🎨 3D Logo Design</h3>
-                    <div class="price">₹199</div>
-                    <button class="btn" onclick="openCheckout('3D Logo Design', 199)">Select & Pay</button>
+                    <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500" alt="Logo">
+                    <h3 style="margin-top:10px;">3D Logo Design</h3>
+                    <p style="font-weight: 800; color: var(--primary);">₹199</p>
+                    <button class="btn-pay">Buy Now</button>
                 </div>
-                <div class="service-card">
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500" alt="Website Setup">
-                    <h3 style="margin-top:10px;">🌐 Website Setup</h3>
-                    <div class="price">₹299</div>
-                    <button class="btn" onclick="openCheckout('Website Setup', 299)">Select & Pay</button>
-                </div>
-            </div>
-
-            <div class="checkout-box hidden" id="checkoutBox">
-                <h2 style="text-align:center; color:var(--primary); margin-bottom:15px;">Secure Checkout</h2>
-                
-                <div class="upi-container">
-                    <h3>Step 1: Pay securely via PhonePe</h3>
-                    <p style="font-weight:bold; font-size:18px; color:var(--primary);">Amount: ₹<span id="displayAmount">0</span></p>
-                    <p>UPI ID: <strong>93690mukeshkumar@axl</strong></p>
-                    <a href="#" id="dynamicUpiLink" style="background:#5f259f; color:white; padding:10px 20px; border-radius:20px; display:inline-block; margin-top:10px; text-decoration:none;"><i class="fas fa-mobile-alt"></i> Pay via App</a>
-                </div>
-
-                <form id="orderForm">
-                    <h3 style="margin-bottom:15px; border-bottom:2px solid #eee; padding-bottom:10px;">Step 2: Submit Details</h3>
-                    <input type="hidden" id="custService">
-                    <input type="hidden" id="custAmount">
-
-                    <input type="text" id="custName" class="form-control" required placeholder="Full Name">
-                    <input type="text" id="custWa" class="form-control" required pattern="[0-9]{10}" placeholder="WhatsApp No (10 Digits)">
-                    <input type="text" id="custUtr" class="form-control" required pattern="[a-zA-Z0-9]{12}" placeholder="12-Digit UTR Number">
-                    
-                    <label style="font-size:13px; font-weight:bold; color:var(--primary); display:block; margin-bottom:5px;">Upload Payment Screenshot *</label>
-                    <input type="file" id="custScreenshot" class="form-control" required accept="image/*" style="padding: 9px;">
-
-                    <button type="submit" class="btn" id="submitOrderBtn" style="width:100%;">Confirm Order</button>
-                    <p id="orderStatusMsg" style="text-align:center; margin-top:10px; color:red; font-weight:bold;"></p>
-                </form>
             </div>
         </div>
 
         <div id="tab-messenger" class="hidden">
             <div class="messenger-wrapper">
-                
-                <div id="screen-auth" class="auth-box">
-                    <h2 style="color:var(--primary); margin-bottom: 10px;">KRYA Chat Login</h2>
-                    <p style="font-size:13px; margin-bottom:20px; color:#94a3b8;">100% Secure Passwordless Login</p>
-                    <input type="email" id="chat-email" placeholder="Enter your email address">
-                    <button class="btn" id="btn-login" style="background:var(--secondary); color:#000;" onclick="sendMagicLink()">Send Login Link</button>
-                    <p id="auth-msg" style="font-size: 12px; margin-top: 15px; color: var(--primary);"></p>
+                <div style="padding:15px; background:#1e293b; text-align:center; font-weight:bold;">KRYA Global Chat</div>
+                <div id="chat-flow">
+                    <div class="msg msg-them">नमस्ते! आपका KRYA Messenger में स्वागत है।</div>
                 </div>
-
-                <div id="screen-profile" class="auth-box hidden">
-                    <h2 style="color:var(--primary); margin-bottom: 15px;">Setup Profile</h2>
-                    <input type="text" id="chat-handle" placeholder="Enter Username (e.g. @Mukesh)">
-                    <button class="btn" onclick="saveProfile()">Start Chatting</button>
-                </div>
-
-                <div id="app-chat" class="hidden" style="display: flex; flex-direction: column; height: 100%;">
-                    <div style="padding: 15px; background: #1e293b; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155;">
-                        <strong style="color:var(--primary); font-size: 18px;">Global Chat</strong>
-                        <div>
-                            <i class="fas fa-gift" onclick="openReward()" style="color:var(--secondary); margin-right:20px; cursor:pointer; font-size: 20px;" title="Rewards"></i>
-                            <i class="fas fa-sign-out-alt" onclick="logoutChat()" style="color:#ef4444; cursor:pointer; font-size: 20px;" title="Logout"></i>
-                        </div>
-                    </div>
-                    
-                    <div id="chat-flow"></div>
-                    
-                    <div class="chat-footer">
-                        <input type="text" id="msg-input" placeholder="Type a message..." maxlength="500">
-                        <button class="btn-send" id="btn-send"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                </div>
-
             </div>
         </div>
 
-    </div>
+        <div id="tab-sangh" class="hidden">
+            <div class="org-header-box">
+                <img src="https://via.placeholder.com/100" alt="MD Siraj">
+                <h1>राष्ट्रीय एकता संघ</h1>
+                <p style="color:var(--org-blue); font-weight:bold;">अखिल भारतीय मजदूर कल्याण सेवा संघ</p>
+                <p style="font-size:12px; margin-top:5px;">आदेशानुसार: <strong>एमडी सिराज जी</strong></p>
+            </div>
 
-    <div id="scratch-box" class="hidden">
-        <h3 style="color:#0f172a; margin-bottom:15px;">Your Lucky Card!</h3>
-        <div class="scratch-wrapper">
-            <div class="scratch-prize">₹50 Cashback!</div>
-            <canvas id="scratch-canvas" width="200" height="100"></canvas>
+            <div class="support-btns">
+                <a href="tel:+916379403821" class="btn-call"><i class="fas fa-phone"></i> कॉल करें</a>
+                <a href="https://wa.me/916379403821" class="btn-wa"><i class="fab fa-whatsapp"></i> वॉट्सऐप</a>
+            </div>
+
+            <div class="reg-form">
+                <h3 style="text-align:center; margin-bottom:15px; color:var(--org-blue);">मजदूर पंजीकरण</h3>
+                <form id="labourForm">
+                    <input type="text" id="m_name" class="input-field" placeholder="मजदूर का नाम *" required>
+                    <input type="number" id="m_phone" class="input-field" placeholder="मोबाइल नंबर *" required>
+                    <select id="m_district" class="input-field" required>
+                        <option value="">जिला चुनें</option>
+                        <option value="Banka">बांका</option>
+                        <option value="Munger">मुंगेर</option>
+                        <option value="Delhi">दिल्ली</option>
+                    </select>
+                    <textarea id="m_issue" class="input-field" placeholder="अपनी समस्या लिखें..." style="height:80px;"></textarea>
+                    <button type="submit" id="submitBtn" class="btn-submit">डेटा सुरक्षित जमा करें</button>
+                </form>
+                <p id="formStatus" style="text-align:center; margin-top:10px; font-weight:bold; display:none;"></p>
+            </div>
+
+            <p style="text-align:center; margin-top:20px; font-size:11px; color:#888;">
+                Developed by <strong>KRYA Digital (मुकेश राय)</strong>
+            </p>
         </div>
-        <button onclick="document.getElementById('scratch-box').classList.add('hidden')" style="margin-top:15px; background:#0f172a; color:white; border:none; padding:8px 20px; border-radius:8px; cursor: pointer; font-weight: bold;">Close</button>
+
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, 
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // यहाँ अपना Firebase Config पेस्ट करें
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Tab Switcher
+        window.switchTab = function(tabName) {
+            document.getElementById('tab-services').classList.add('hidden');
+            document.getElementById('tab-messenger').classList.add('hidden');
+            document.getElementById('tab-sangh').classList.add('hidden');
+            
+            document.getElementById('btn-services').classList.remove('active');
+            document.getElementById('btn-messenger').classList.remove('active');
+            document.getElementById('btn-sangh').classList.remove('active');
+
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+            document.getElementById('btn-' + tabName).classList.add('active');
+        };
+
+        // Form Submission to Firestore
+        const labourForm = document.getElementById('labourForm');
+        if(labourForm) {
+            labourForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('submitBtn');
+                const status = document.getElementById('formStatus');
+                
+                btn.disabled = true;
+                btn.innerText = "जमा हो रहा है...";
+
+                try {
+                    await addDoc(collection(db, "labour_registrations"), {
+                        name: document.getElementById('m_name').value,
+                        phone: document.getElementById('m_phone').value,
+                        district: document.getElementById('m_district').value,
+                        issue: document.getElementById('m_issue').value,
+                        timestamp: serverTimestamp()
+                    });
+                    status.style.display = "block";
+                    status.style.color = "green";
+                    status.innerText = "✅ सफलतापूर्वक जमा हो गया!";
+                    labourForm.reset();
+                } catch (err) {
+                    status.style.display = "block";
+                    status.style.color = "red";
+                    status.innerText = "❌ त्रुटि! कृपया दोबारा कोशिश करें।";
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = "डेटा सुरक्षित जमा करें";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
