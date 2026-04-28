@@ -3,115 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA Digital | Super App</title>
+    <title>KRYALIVE Super App</title>
+    
+    <meta name="theme-color" content="#10b981">
+    <link rel="manifest" href="/manifest.json">
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
     <style>
-        :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --light: #f8fafc; --gold: #fbbf24; }
+        :root {
+            --primary: #10b981;
+            --accent: #2563eb;
+            --dark: #0f172a;
+            --slate: #475569;
+            --light: #f8fafc;
+            --gold: #fbbf24;
+            --glass: rgba(255, 255, 255, 0.8);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--light); color: var(--dark); overflow: hidden; position: fixed; width: 100%; height: 100%; }
+        body, html { height: 100%; width: 100%; overflow: hidden; background: var(--light); position: fixed; }
         
-        .app-shell { height: 100vh; display: flex; flex-direction: column; }
-        header { background: #fff; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
-        .brand { font-size: 20px; font-weight: 800; color: var(--dark); }
+        .app-container { display: flex; flex-direction: column; height: 100vh; position: relative; }
+
+        /* Header UI */
+        header { 
+            background: #fff; 
+            padding: 15px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #e2e8f0; 
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .brand { font-size: 22px; font-weight: 800; color: var(--dark); letter-spacing: -0.5px; }
         .brand span { color: var(--primary); }
 
-        main { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 90px; scroll-behavior: smooth; }
-        .view { display: none; }
-        .view.active { display: block; animation: fadeIn 0.3s ease; }
+        /* Wallet & Stats Bar */
+        .stats-bar {
+            background: linear-gradient(135deg, #10b981, #2563eb);
+            color: white;
+            padding: 20px;
+            margin: 15px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+        }
+        .wallet-info h2 { font-size: 24px; font-weight: 800; }
+        .wallet-info p { font-size: 11px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; }
 
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); display: flex; border-top: 1px solid #e2e8f0; padding: 10px 0 25px; z-index: 100; }
-        .nav-item { flex: 1; text-align: center; color: #94a3b8; font-size: 11px; border: none; background: none; cursor: pointer; outline: none; }
+        /* Main Content */
+        main { flex: 1; overflow-y: auto; padding-bottom: 90px; scroll-behavior: smooth; }
+        main::-webkit-scrollbar { display: none; }
+        .view { display: none; padding: 15px; }
+        .view.active { display: block; animation: fadeInUp 0.4s ease; }
+
+        /* Cards & UI Elements */
+        .card { background: #fff; padding: 20px; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 15px; border: 1px solid #f1f5f9; position: relative; overflow: hidden; }
+        .btn { width: 100%; padding: 15px; border-radius: 16px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; }
+        .btn-primary { background: var(--accent); color: white; box-shadow: 0 8px 16px rgba(37, 99, 235, 0.2); }
+        .btn-outline { background: #f1f5f9; color: var(--dark); }
+        
+        .input-group { margin-bottom: 15px; }
+        input, select { width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid #e2e8f0; outline: none; background: #fff; font-size: 16px; transition: 0.2s; }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+
+        /* Store UI */
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .product-card { background: #fff; border-radius: 20px; padding: 12px; border: 1px solid #f1f5f9; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .product-card h4 { font-size: 13px; margin: 8px 0; height: 38px; overflow: hidden; }
+        .price { color: var(--primary); font-weight: 800; font-size: 16px; display: block; margin-bottom: 8px; }
+
+        /* Navigation UI */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); display: flex; border-top: 1px solid #e2e8f0; padding: 10px 0 25px; z-index: 1000; }
+        .nav-item { flex: 1; border: none; background: none; color: #94a3b8; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; cursor: pointer; }
         .nav-item.active { color: var(--accent); }
-        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        .nav-item i { font-size: 20px; }
 
-        .card { background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #f1f5f9; }
-        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-primary { background: var(--accent); color: white; }
-        
-        input { width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #e2e8f0; outline: none; margin-bottom: 12px; font-size: 16px; }
+        /* AI Chat */
+        .chat-area { height: calc(100vh - 280px); display: flex; flex-direction: column; background: #f8fafc; border-radius: 24px; overflow: hidden; border: 1px solid #e2e8f0; }
+        #chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 14px; line-height: 1.5; }
+        .msg.user { align-self: flex-end; background: var(--accent); color: white; border-bottom-right-radius: 2px; }
+        .msg.ai { align-self: flex-start; background: #fff; color: var(--dark); border-bottom-left-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 
-        /* Chat System */
-        #chat-container { height: calc(100vh - 280px); display: flex; flex-direction: column; background: #f1f5f9; border-radius: 20px; overflow: hidden; border: 1px solid #e2e8f0; }
-        #messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
-        .msg { padding: 12px 16px; border-radius: 18px; max-width: 85%; font-size: 14px; line-height: 1.5; position: relative; }
-        .msg.user { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 2px; }
-        .msg.ai { align-self: flex-start; background: white; color: var(--dark); border-bottom-left-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .ai-badge { font-size: 9px; font-weight: 800; background: var(--gold); color: #000; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 4px; }
+        /* Modal UI */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+        .modal-content { background: white; width: 100%; max-width: 400px; padding: 30px; border-radius: 28px; text-align: center; animation: zoomIn 0.3s; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 12px 25px; border-radius: 10px; color: white; display: none; z-index: 9999; font-weight: 600; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 14px 28px; border-radius: 12px; color: white; display: none; z-index: 99999; font-weight: 600; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
 
-<div class="app-shell">
+<div class="app-container">
     <header>
-        <div class="brand">KRYA<span>Digital</span></div>
-        <div id="status-tag" style="font-size: 10px; font-weight: 800; color: var(--primary);">● AI सक्रिय है</div>
+        <div class="brand">KRYA<span>LIVE</span></div>
+        <div id="auth-status" style="font-size: 10px; font-weight: 800; color: var(--primary);">● ONLINE</div>
     </header>
 
     <main id="app-view">
         <section id="view-auth" class="view active">
-            <div class="card">
-                <h3 style="margin-bottom: 5px;">पंजीकरण / लॉगिन</h3>
-                <p style="font-size: 12px; color: #64748b; margin-bottom: 20px;">सुरक्षित OTP आधारित डिजिटल लॉगिन</p>
+            <div class="card" style="margin-top: 50px;">
+                <h3 style="font-size: 24px; margin-bottom: 10px;">Login</h3>
+                <p style="color: var(--slate); font-size: 13px; margin-bottom: 25px;">Enter your number to start earning.</p>
                 <div id="recaptcha-container"></div>
-                <input type="tel" id="phone-number" placeholder="मोबाइल नंबर (उदा: 6379403821)">
-                <button class="btn btn-primary" onclick="sendOTP()" id="send-btn">OTP भेजें</button>
-                
-                <div id="otp-section" style="display:none; margin-top: 25px; border-top: 1px solid #eee; padding-top: 20px;">
-                    <input type="number" id="otp-code" placeholder="6 अंकों का OTP कोड यहाँ डालें">
-                    <button class="btn btn-primary" onclick="verifyOTP()" style="background: var(--primary);">लॉगिन सत्यापित करें</button>
+                <div class="input-group">
+                    <input type="tel" id="phone" placeholder="Mobile Number (e.g. 9876543210)">
+                </div>
+                <button class="btn btn-primary" onclick="sendOTP()">Send OTP</button>
+                <div id="otp-box" style="display: none; margin-top: 20px;">
+                    <input type="number" id="otp" placeholder="6 Digit OTP">
+                    <button class="btn btn-primary" style="background: var(--primary); margin-top: 10px;" onclick="verifyOTP()">Verify & Login</button>
                 </div>
             </div>
         </section>
 
         <section id="view-home" class="view">
-            <div class="card" style="background: linear-gradient(135deg, var(--accent), #1e40af); color: white; border:none;">
-                <h3 style="color: white;">नमस्ते, <span id="display-name">मुकेश जी</span></h3>
-                <p style="font-size: 12px; opacity: 0.9;">KRYA डिजिटल परिवार में आपका स्वागत है।</p>
+            <div class="stats-bar">
+                <div class="wallet-info">
+                    <p>Wallet Balance</p>
+                    <h2>₹<span id="wallet-balance">0.00</span></h2>
+                </div>
+                <i class="fas fa-wallet fa-2x"></i>
             </div>
-            <h4 style="margin: 20px 0 10px;">मेरे ऑर्डर्स</h4>
-            <div id="order-history">
-                <p style="font-size: 12px; color: gray;">अभी तक कोई ऑर्डर नहीं है।</p>
+
+            <div class="card">
+                <h4 style="margin-bottom: 15px;">Refer & Earn</h4>
+                <p style="font-size: 12px; color: var(--slate); margin-bottom: 15px;">Share code and get 10% commission on every purchase.</p>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="ref-link" readonly style="margin: 0; background: #f8fafc; font-weight: 700;">
+                    <button class="btn btn-primary" style="width: auto; padding: 10px 20px;" onclick="copyReferral()"><i class="fas fa-copy"></i></button>
+                </div>
+            </div>
+
+            <h4 style="margin: 10px 0;">Recent Orders</h4>
+            <div id="order-list">
+                <p style="text-align: center; font-size: 12px; color: gray; margin-top: 20px;">No orders found.</p>
             </div>
         </section>
 
         <section id="view-store" class="view">
-            <h3 style="margin-bottom: 15px;">KRYA डिजिटल स्टोर</h3>
-            <div id="product-list">
+            <h3 style="margin-bottom: 20px;">Digital Store</h3>
+            <div class="product-grid" id="products-container">
                 </div>
         </section>
 
         <section id="view-chat" class="view">
-            <h3 style="margin-bottom: 15px;">KRYA Voice AI</h3>
-            <div id="chat-container">
-                <div id="messages">
-                    <div class="msg ai">
-                        <span class="ai-badge">KRYA AI</span><br>
-                        नमस्ते! मैं KRYA का स्मार्ट असिस्टेंट हूँ। मैं आपकी आवाज़ सुनकर काम कर सकता हूँ। कुछ पूछिए!
-                    </div>
+            <div class="chat-area">
+                <div id="chat-messages">
+                    <div class="msg ai">नमस्ते! मैं KRYA AI हूँ। मैं आपकी कमाई बढ़ाने और वेबसाइट का उपयोग करने में मदद कर सकता हूँ। कुछ पूछें!</div>
                 </div>
                 <div style="padding: 12px; background: white; display: flex; gap: 8px; border-top: 1px solid #e2e8f0;">
-                    <input type="text" id="ai-input" placeholder="AI से बात करें..." style="margin:0; border-radius: 25px;">
-                    <button onclick="askAI()" style="background: var(--accent); color: white; border: none; width: 45px; height: 45px; border-radius: 50%;"><i class="fas fa-paper-plane"></i></button>
-                    <button onclick="startVoice()" style="background: var(--primary); color: white; border: none; width: 45px; height: 45px; border-radius: 50%;"><i class="fas fa-microphone"></i></button>
+                    <input type="text" id="chat-input" placeholder="Ask AI anything..." style="margin: 0; border-radius: 25px;">
+                    <button onclick="askAI()" style="background: var(--accent); color: white; border: none; width: 48px; height: 48px; border-radius: 50%;"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
         </section>
     </main>
 
-    <nav class="nav-bar">
-        <button class="nav-item" id="nav-home" onclick="showView('home')"><i class="fas fa-home"></i><br>Home</button>
-        <button class="nav-item" id="nav-store" onclick="showView('store')"><i class="fas fa-shopping-bag"></i><br>Store</button>
-        <button class="nav-item" id="nav-chat" onclick="showView('chat')"><i class="fas fa-robot"></i><br>AI Chat</button>
-        <button class="nav-item active" id="nav-auth" onclick="showView('auth')"><i class="fas fa-user-circle"></i><br>Profile</button>
+    <nav class="bottom-nav">
+        <button class="nav-item active" id="btn-home" onclick="nav('home')"><i class="fas fa-grid-2"></i><span>Home</span></button>
+        <button class="nav-item" id="btn-store" onclick="nav('store')"><i class="fas fa-shopping-bag"></i><span>Store</span></button>
+        <button class="nav-item" id="btn-chat" onclick="nav('chat')"><i class="fas fa-robot"></i><span>AI Chat</span></button>
+        <button class="nav-item" id="btn-auth" onclick="nav('auth')"><i class="fas fa-user-circle"></i><span>Account</span></button>
     </nav>
+</div>
+
+<div id="pay-modal" class="modal">
+    <div class="modal-content">
+        <h3 id="m-prod-name">Product Name</h3>
+        <h2 id="m-prod-price" style="color: var(--primary); margin: 10px 0;">₹00</h2>
+        <p style="font-size: 12px; color: var(--slate);">Transfer exact amount to UPI ID below:</p>
+        <div style="background: #f1f5f9; padding: 15px; border-radius: 15px; margin: 15px 0; font-weight: 800; color: var(--dark); display: flex; justify-content: space-between; align-items: center;">
+            <span id="upi-id">93690mukeshkumar@axl</span>
+            <i class="fas fa-copy" onclick="copyUPI()" style="color: var(--accent); cursor: pointer;"></i>
+        </div>
+        <button class="btn btn-primary" onclick="openUPI()">PAY NOW (UPI)</button>
+        <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+            <input type="text" id="utr" placeholder="Enter 12 Digit UTR / Ref No.">
+            <button class="btn btn-primary" style="background: var(--primary); margin-top: 10px;" onclick="submitOrder()">Submit Order</button>
+        </div>
+        <button style="margin-top: 15px; background: none; border: none; color: gray; font-size: 12px;" onclick="closePay()">Cancel</button>
+    </div>
 </div>
 
 <div id="toast"></div>
@@ -119,151 +199,209 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, addDoc, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, where, orderBy, serverTimestamp, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+    // Firebase Config (Must be replaced with actual project config)
     const firebaseConfig = {
-        apiKey: "AIzaSyCJ_heMnqu6ENYS12hecty9V0IOKQlakFs",
-        authDomain: "signing-9fc01.firebaseapp.com",
-        projectId: "signing-9fc01",
-        storageBucket: "signing-9fc01.firebasestorage.app",
-        messagingSenderId: "926296137348",
-        appId: "1:926296137348:web:c42cdf48199ba877246cd5"
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT_ID.appspot.com",
+        messagingSenderId: "SENDER_ID",
+        appId: "APP_ID"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    let confirmationResult;
-    let currentUserData = null;
+    let currentUser = null;
+    let confirmationResult = null;
+    let selectedProduct = null;
 
-    // --- स्मार्ट OTP सिस्टम (+91 फिक्स) ---
+    // --- Authentication ---
     window.sendOTP = function() {
-        let phone = document.getElementById('phone-number').value.trim();
-        if(!phone) return showToast("कृपया नंबर डालें", "#ef4444");
+        let phone = document.getElementById('phone').value.trim();
+        if(phone.length < 10) return toast("Invalid Phone Number", "#ef4444");
+        if(!phone.startsWith("+91")) phone = "+91" + phone;
 
-        // ऑटो फिक्स नंबर (+91 जोड़ना)
-        if (!phone.startsWith("+")) {
-            if (phone.startsWith("91") && phone.length > 10) phone = "+" + phone;
-            else phone = "+91" + phone;
-        }
-
-        if(!window.recaptchaVerifier) {
-            window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'invisible' });
-        }
-
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
         signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
             .then(result => {
                 confirmationResult = result;
-                document.getElementById('otp-section').style.display = 'block';
-                showToast("OTP भेज दिया गया है!", "#10b981");
-            }).catch(error => {
-                showToast("Error: " + error.message, "#ef4444");
-                location.reload();
-            });
-    }
+                document.getElementById('otp-box').style.display = 'block';
+                toast("OTP Sent Successfully", "#10b981");
+            }).catch(err => toast(err.message, "#ef4444"));
+    };
 
     window.verifyOTP = function() {
-        const code = document.getElementById('otp-code').value;
-        confirmationResult.confirm(code).then(async (result) => {
-            const user = result.user;
-            await setDoc(doc(db, "users", user.uid), { phone: user.phoneNumber, lastLogin: serverTimestamp() }, { merge: true });
+        const otp = document.getElementById('otp').value;
+        confirmationResult.confirm(otp).then(async (res) => {
+            const user = res.user;
+            await syncUser(user);
             location.reload();
-        }).catch(() => showToast("गलत OTP!", "#ef4444"));
+        }).catch(() => toast("Invalid OTP", "#ef4444"));
+    };
+
+    async function syncUser(user) {
+        const ref = doc(db, "users", user.uid);
+        const snap = await getDoc(ref);
+        if(!snap.exists()) {
+            const refCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+            const urlParams = new URLSearchParams(window.location.search);
+            const referredBy = urlParams.get('ref') || null;
+
+            await setDoc(ref, {
+                uid: user.uid,
+                phone: user.phoneNumber,
+                referralCode: refCode,
+                referredBy: referredBy,
+                walletBalance: referredBy ? 5 : 0, // ₹5 joining bonus if referred
+                createdAt: serverTimestamp()
+            });
+
+            if(referredBy) {
+                // Bonus logic can be added here
+            }
+        }
     }
 
     onAuthStateChanged(auth, user => {
         if(user) {
-            currentUserData = user;
-            document.getElementById('display-name').innerText = user.phoneNumber;
-            showView('home');
-            loadStore();
-            loadOrders();
+            currentUser = user;
+            loadDashboard(user.uid);
+            loadProducts();
+            nav('home');
+        } else {
+            nav('auth');
         }
     });
 
-    // --- नेविगेशन ---
-    window.showView = function(viewId) {
+    // --- Core Navigation ---
+    window.nav = function(id) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById('view-' + viewId).classList.add('active');
-        document.getElementById('nav-' + viewId).classList.add('active');
-    }
+        document.getElementById('view-' + id).classList.add('active');
+        document.getElementById('btn-' + id).classList.add('active');
+    };
 
-    // --- स्टोर ---
-    function loadStore() {
+    // --- Store & Order Logic ---
+    function loadProducts() {
+        const container = document.getElementById('products-container');
         onSnapshot(collection(db, "products"), snap => {
-            const list = document.getElementById('product-list');
-            list.innerHTML = "";
+            container.innerHTML = "";
             snap.forEach(doc => {
                 const p = doc.data();
-                list.innerHTML += `
-                    <div class="card">
-                        <h4 style="color:var(--accent)">${p.name}</h4>
-                        <p style="font-size:12px; color:gray; margin:5px 0;">${p.desc}</p>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-                            <b style="color:var(--primary)">₹${p.price}</b>
-                            <button onclick="alert('Payment Coming Soon')" class="btn" style="width:auto; padding:5px 15px; font-size:12px; background:var(--accent); color:white;">खरीदें</button>
-                        </div>
-                    </div>`;
+                container.innerHTML += `
+                    <div class="product-card animate__animated animate__fadeIn">
+                        <h4>${p.name}</h4>
+                        <span class="price">₹${p.price}</span>
+                        <button class="btn btn-primary" style="padding: 8px; font-size: 12px;" onclick="openPay('${doc.id}', '${p.name}', ${p.price})">BUY NOW</button>
+                    </div>
+                `;
             });
-            if(snap.empty) list.innerHTML = "<p style='text-align:center; font-size:12px; color:gray;'>स्टोर में नई सर्विस आ रही हैं...</p>";
+            if(snap.empty) container.innerHTML = "<p style='grid-column: 1/3; color:gray;'>No products live.</p>";
         });
     }
 
-    function loadOrders() {
-        const q = query(collection(db, "orders"), where("uid", "==", currentUserData.uid));
+    window.openPay = (id, name, price) => {
+        selectedProduct = { id, name, price };
+        document.getElementById('m-prod-name').innerText = name;
+        document.getElementById('m-prod-price').innerText = "₹" + price;
+        document.getElementById('pay-modal').style.display = 'flex';
+    };
+
+    window.closePay = () => document.getElementById('pay-modal').style.display = 'none';
+
+    window.copyUPI = () => {
+        navigator.clipboard.writeText("93690mukeshkumar@axl");
+        toast("UPI ID Copied", "#10b981");
+    };
+
+    window.openUPI = () => {
+        const url = `upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh&am=${selectedProduct.price}&cu=INR`;
+        window.location.href = url;
+    };
+
+    window.submitOrder = async () => {
+        const utr = document.getElementById('utr').value.trim();
+        if(utr.length < 12) return toast("Enter valid 12 digit UTR", "#ef4444");
+
+        await addDoc(collection(db, "orders"), {
+            uid: currentUser.uid,
+            productId: selectedProduct.id,
+            productName: selectedProduct.name,
+            amount: selectedProduct.price,
+            utr: utr,
+            status: "pending",
+            timestamp: serverTimestamp()
+        });
+
+        toast("Order Submitted Successfully", "#10b981");
+        closePay();
+    };
+
+    // --- Dashboard & Referral ---
+    function loadDashboard(uid) {
+        onSnapshot(doc(db, "users", uid), snap => {
+            const data = snap.data();
+            document.getElementById('wallet-balance').innerText = data.walletBalance.toFixed(2);
+            document.getElementById('ref-link').value = `https://kryalive.com?ref=${data.referralCode}`;
+        });
+
+        const q = query(collection(db, "orders"), where("uid", "==", uid), orderBy("timestamp", "desc"));
         onSnapshot(q, snap => {
-            const list = document.getElementById('order-history');
-            list.innerHTML = snap.empty ? "<p style='font-size:12px; color:gray;'>कोई ऑर्डर नहीं मिला।</p>" : "";
+            const list = document.getElementById('order-list');
+            list.innerHTML = "";
             snap.forEach(doc => {
-                const d = doc.data();
-                list.innerHTML += `<div class="card" style="padding:10px; font-size:12px;"><b>${d.service}</b> | ₹${d.price} <br>Status: ${d.status}</div>`;
+                const o = doc.data();
+                const color = o.status === 'approved' ? '#10b981' : (o.status === 'rejected' ? '#ef4444' : '#f59e0b');
+                list.innerHTML += `
+                    <div class="card" style="padding: 12px; font-size: 12px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <b>${o.productName}</b><br>
+                            <span style="color:gray">UTR: ${o.utr}</span>
+                        </div>
+                        <span style="color:${color}; font-weight:800; text-transform:uppercase;">${o.status}</span>
+                    </div>
+                `;
             });
         });
     }
 
-    // --- AI & Voice ---
-    window.askAI = async function() {
-        const input = document.getElementById('ai-input');
+    window.copyReferral = () => {
+        const link = document.getElementById('ref-link');
+        link.select();
+        document.execCommand("copy");
+        toast("Referral Link Copied", "#10b981");
+    };
+
+    // --- AI Integration ---
+    window.askAI = async () => {
+        const input = document.getElementById('chat-input');
         const text = input.value.trim();
         if(!text) return;
+
         addMsg('user', text);
         input.value = "";
-        
+
+        // Simplified AI logic for frontend
         setTimeout(() => {
-            const reply = "नमस्ते मुकेश जी, KRYA AI आपकी सेवा में है। आप स्टोर से सर्विस बुक कर सकते हैं।";
-            addMsg('ai', reply);
-            speak(reply);
-        }, 1000);
+            let res = "नमस्ते! मैं KRYA हूँ। आप स्टोर से प्रोडक्ट्स खरीद सकते हैं और अपने दोस्तों को रेफर करके पैसे कमा सकते हैं।";
+            if(text.includes("earning")) res = "पैसे कमाने के लिए आप अपना रेफरल लिंक दोस्तों को भेजें। हर खरीद पर आपको 10% कमीशन मिलेगा।";
+            addMsg('ai', res);
+        }, 800);
+    };
+
+    function addMsg(role, text) {
+        const box = document.getElementById('chat-messages');
+        box.innerHTML += `<div class="msg ${role}">${text}</div>`;
+        box.scrollTop = box.scrollHeight;
     }
 
-    function addMsg(s, t) {
-        const m = document.getElementById('messages');
-        const badge = s === 'ai' ? '<span class="ai-badge">KRYA AI</span><br>' : '';
-        m.innerHTML += `<div class="msg ${s}">${badge}${t}</div>`;
-        m.scrollTop = m.scrollHeight;
-    }
-
-    function speak(t) {
-        const s = new SpeechSynthesisUtterance(t);
-        s.lang = 'hi-IN';
-        window.speechSynthesis.speak(s);
-    }
-
-    window.startVoice = function() {
-        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = 'hi-IN';
-        recognition.start();
-        recognition.onresult = (e) => {
-            document.getElementById('ai-input').value = e.results[0][0].transcript;
-            askAI();
-        };
-    }
-
-    function showToast(msg, color) {
+    function toast(msg, bg) {
         const t = document.getElementById('toast');
-        t.innerText = msg; t.style.background = color; t.style.display = 'block';
+        t.innerText = msg; t.style.background = bg; t.style.display = 'block';
         setTimeout(() => t.style.display = 'none', 3000);
     }
 </script>
