@@ -5,78 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KRYA Digital | Super App</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <style>
-        :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --light: #f8fafc; }
+        :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --light: #f8fafc; --gold: #fbbf24; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--light); color: var(--dark); overflow: hidden; position: fixed; width: 100%; }
+        body { background: var(--light); color: var(--dark); overflow: hidden; position: fixed; width: 100%; height: 100%; }
         
         .app-shell { height: 100vh; display: flex; flex-direction: column; }
-        header { background: #fff; padding: 15px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
-        
-        main { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 90px; }
-        .view { display: none; }
-        .view.active { display: block; animation: fadeIn 0.3s; }
+        header { background: #fff; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+        .brand { font-size: 20px; font-weight: 800; color: var(--dark); }
+        .brand span { color: var(--primary); }
 
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; border-top: 1px solid #ddd; padding: 10px 0 25px; z-index: 100; }
-        .nav-item { flex: 1; text-align: center; color: #64748b; font-size: 11px; border: none; background: none; outline: none; cursor: pointer; }
+        main { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 90px; scroll-behavior: smooth; }
+        .view { display: none; }
+        .view.active { display: block; animation: fadeIn 0.3s ease; }
+
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); display: flex; border-top: 1px solid #e2e8f0; padding: 10px 0 25px; z-index: 100; }
+        .nav-item { flex: 1; text-align: center; color: #94a3b8; font-size: 11px; border: none; background: none; cursor: pointer; outline: none; }
         .nav-item.active { color: var(--accent); }
         .nav-item i { font-size: 20px; margin-bottom: 4px; }
 
         .card { background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #f1f5f9; }
-        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-primary { background: var(--accent); color: white; }
         
-        input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #e2e8f0; outline: none; margin-bottom: 10px; }
+        input { width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #e2e8f0; outline: none; margin-bottom: 12px; font-size: 16px; }
 
         /* Chat System */
-        #chat-container { height: calc(100vh - 250px); display: flex; flex-direction: column; background: #f1f5f9; border-radius: 20px; overflow: hidden; }
-        #messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 12px; border-radius: 15px; max-width: 80%; font-size: 13px; line-height: 1.4; }
+        #chat-container { height: calc(100vh - 280px); display: flex; flex-direction: column; background: #f1f5f9; border-radius: 20px; overflow: hidden; border: 1px solid #e2e8f0; }
+        #messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
+        .msg { padding: 12px 16px; border-radius: 18px; max-width: 85%; font-size: 14px; line-height: 1.5; position: relative; }
         .msg.user { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 2px; }
-        .msg.ai { align-self: flex-start; background: white; color: var(--dark); border-bottom-left-radius: 2px; border: 1px solid #e2e8f0; }
+        .msg.ai { align-self: flex-start; background: white; color: var(--dark); border-bottom-left-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .ai-badge { font-size: 9px; font-weight: 800; background: var(--gold); color: #000; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 4px; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 12px 25px; border-radius: 10px; color: white; display: none; z-index: 9999; font-weight: 600; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
 
 <div class="app-shell">
     <header>
-        <h2 style="color: var(--dark); font-weight: 800;">KRYA<span style="color:var(--primary)">Digital</span></h2>
-        <div id="user-info" style="font-size: 10px; font-weight: 700; color: var(--primary);">● Live</div>
+        <div class="brand">KRYA<span>Digital</span></div>
+        <div id="status-tag" style="font-size: 10px; font-weight: 800; color: var(--primary);">● AI सक्रिय है</div>
     </header>
 
     <main id="app-view">
         <section id="view-auth" class="view active">
             <div class="card">
                 <h3 style="margin-bottom: 5px;">पंजीकरण / लॉगिन</h3>
-                <p style="font-size: 12px; color: gray; margin-bottom: 20px;">सुरक्षित OTP आधारित लॉगिन</p>
+                <p style="font-size: 12px; color: #64748b; margin-bottom: 20px;">सुरक्षित OTP आधारित डिजिटल लॉगिन</p>
                 <div id="recaptcha-container"></div>
-                <input type="tel" id="phone-number" placeholder="+91 0000000000">
-                <button class="btn btn-primary" onclick="sendOTP()" id="otp-btn">OTP भेजें</button>
+                <input type="tel" id="phone-number" placeholder="मोबाइल नंबर (उदा: 6379403821)">
+                <button class="btn btn-primary" onclick="sendOTP()" id="send-btn">OTP भेजें</button>
                 
-                <div id="otp-section" style="display:none; margin-top: 20px;">
-                    <input type="number" id="otp-code" placeholder="6 अंकों का OTP कोड">
-                    <button class="btn btn-primary" onclick="verifyOTP()" style="background: var(--primary);">सत्यापित करें</button>
+                <div id="otp-section" style="display:none; margin-top: 25px; border-top: 1px solid #eee; padding-top: 20px;">
+                    <input type="number" id="otp-code" placeholder="6 अंकों का OTP कोड यहाँ डालें">
+                    <button class="btn btn-primary" onclick="verifyOTP()" style="background: var(--primary);">लॉगिन सत्यापित करें</button>
                 </div>
             </div>
         </section>
 
         <section id="view-home" class="view">
             <div class="card" style="background: linear-gradient(135deg, var(--accent), #1e40af); color: white; border:none;">
-                <h3>नमस्ते, <span id="display-name">यूजर</span></h3>
-                <p style="font-size: 12px; opacity: 0.8;">KRYA डिजिटल परिवार में आपका स्वागत है।</p>
+                <h3 style="color: white;">नमस्ते, <span id="display-name">मुकेश जी</span></h3>
+                <p style="font-size: 12px; opacity: 0.9;">KRYA डिजिटल परिवार में आपका स्वागत है।</p>
             </div>
-            <h4 style="margin: 15px 0 10px;">मेरे डिजिटल ऑर्डर्स</h4>
-            <div id="order-history"></div>
+            <h4 style="margin: 20px 0 10px;">मेरे ऑर्डर्स</h4>
+            <div id="order-history">
+                <p style="font-size: 12px; color: gray;">अभी तक कोई ऑर्डर नहीं है।</p>
+            </div>
         </section>
 
         <section id="view-store" class="view">
-            <h3 style="margin-bottom: 15px;">डिजिटल स्टोर</h3>
+            <h3 style="margin-bottom: 15px;">KRYA डिजिटल स्टोर</h3>
             <div id="product-list">
                 </div>
         </section>
@@ -85,10 +92,13 @@
             <h3 style="margin-bottom: 15px;">KRYA Voice AI</h3>
             <div id="chat-container">
                 <div id="messages">
-                    <div class="msg ai">नमस्ते! मैं KRYA AI हूँ। मैं आपकी आवाज़ सुनकर भी जवाब दे सकता हूँ।</div>
+                    <div class="msg ai">
+                        <span class="ai-badge">KRYA AI</span><br>
+                        नमस्ते! मैं KRYA का स्मार्ट असिस्टेंट हूँ। मैं आपकी आवाज़ सुनकर काम कर सकता हूँ। कुछ पूछिए!
+                    </div>
                 </div>
-                <div style="padding: 10px; background: white; display: flex; gap: 8px; border-top: 1px solid #eee;">
-                    <input type="text" id="ai-input" placeholder="AI से कुछ पूछें..." style="margin:0; border-radius: 25px;">
+                <div style="padding: 12px; background: white; display: flex; gap: 8px; border-top: 1px solid #e2e8f0;">
+                    <input type="text" id="ai-input" placeholder="AI से बात करें..." style="margin:0; border-radius: 25px;">
                     <button onclick="askAI()" style="background: var(--accent); color: white; border: none; width: 45px; height: 45px; border-radius: 50%;"><i class="fas fa-paper-plane"></i></button>
                     <button onclick="startVoice()" style="background: var(--primary); color: white; border: none; width: 45px; height: 45px; border-radius: 50%;"><i class="fas fa-microphone"></i></button>
                 </div>
@@ -104,12 +114,13 @@
     </nav>
 </div>
 
+<div id="toast"></div>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, addDoc, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // ✅ मुकेश जी, आपकी नई चाबी यहाँ अपडेट कर दी गई है
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_heMnqu6ENYS12hecty9V0IOKQlakFs",
         authDomain: "signing-9fc01.firebaseapp.com",
@@ -126,45 +137,48 @@
     let confirmationResult;
     let currentUserData = null;
 
-    // --- OTP सिस्टम ---
+    // --- स्मार्ट OTP सिस्टम (+91 फिक्स) ---
     window.sendOTP = function() {
-        const phone = document.getElementById('phone-number').value;
-        if(!phone.includes("+91")) { alert("कृपया नंबर से पहले +91 लगायें"); return; }
-        
-        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'invisible' });
+        let phone = document.getElementById('phone-number').value.trim();
+        if(!phone) return showToast("कृपया नंबर डालें", "#ef4444");
+
+        // ऑटो फिक्स नंबर (+91 जोड़ना)
+        if (!phone.startsWith("+")) {
+            if (phone.startsWith("91") && phone.length > 10) phone = "+" + phone;
+            else phone = "+91" + phone;
+        }
+
+        if(!window.recaptchaVerifier) {
+            window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'invisible' });
+        }
+
         signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
             .then(result => {
                 confirmationResult = result;
                 document.getElementById('otp-section').style.display = 'block';
-                document.getElementById('otp-btn').innerText = "OTP दोबारा भेजें";
-                alert("OTP भेज दिया गया है!");
-            }).catch(error => { alert("Error: " + error.message); location.reload(); });
+                showToast("OTP भेज दिया गया है!", "#10b981");
+            }).catch(error => {
+                showToast("Error: " + error.message, "#ef4444");
+                location.reload();
+            });
     }
 
     window.verifyOTP = function() {
         const code = document.getElementById('otp-code').value;
         confirmationResult.confirm(code).then(async (result) => {
             const user = result.user;
-            await saveUserToDb(user);
+            await setDoc(doc(db, "users", user.uid), { phone: user.phoneNumber, lastLogin: serverTimestamp() }, { merge: true });
             location.reload();
-        }).catch(() => alert("गलत OTP!"));
+        }).catch(() => showToast("गलत OTP!", "#ef4444"));
     }
 
-    async function saveUserToDb(user) {
-        const userRef = doc(db, "users", user.uid);
-        const snap = await getDoc(userRef);
-        if(!snap.exists()) {
-            await setDoc(userRef, { uid: user.uid, phone: user.phoneNumber, createdAt: serverTimestamp() });
-        }
-    }
-
-    onAuthStateChanged(auth, async (user) => {
+    onAuthStateChanged(auth, user => {
         if(user) {
             currentUserData = user;
             document.getElementById('display-name').innerText = user.phoneNumber;
             showView('home');
             loadStore();
-            loadUserOrders();
+            loadOrders();
         }
     });
 
@@ -176,7 +190,7 @@
         document.getElementById('nav-' + viewId).classList.add('active');
     }
 
-    // --- स्टोर और ऑर्डर्स ---
+    // --- स्टोर ---
     function loadStore() {
         onSnapshot(collection(db, "products"), snap => {
             const list = document.getElementById('product-list');
@@ -186,31 +200,30 @@
                 list.innerHTML += `
                     <div class="card">
                         <h4 style="color:var(--accent)">${p.name}</h4>
-                        <p style="font-size:11px; color:gray; margin:5px 0;">${p.desc}</p>
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <p style="font-size:12px; color:gray; margin:5px 0;">${p.desc}</p>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
                             <b style="color:var(--primary)">₹${p.price}</b>
-                            <button onclick="initPay('${doc.id}', ${p.price})" class="btn" style="width:auto; padding:5px 15px; font-size:11px; background:var(--accent); color:white;">अभी खरीदें</button>
+                            <button onclick="alert('Payment Coming Soon')" class="btn" style="width:auto; padding:5px 15px; font-size:12px; background:var(--accent); color:white;">खरीदें</button>
                         </div>
                     </div>`;
             });
-            if(snap.empty) list.innerHTML = "<p style='text-align:center; font-size:12px; color:gray;'>स्टोर अपडेट हो रहा है...</p>";
+            if(snap.empty) list.innerHTML = "<p style='text-align:center; font-size:12px; color:gray;'>स्टोर में नई सर्विस आ रही हैं...</p>";
         });
     }
 
-    function loadUserOrders() {
-        const q = query(collection(db, "orders"), where("uid", "==", currentUserData.uid), orderBy("timestamp", "desc"));
+    function loadOrders() {
+        const q = query(collection(db, "orders"), where("uid", "==", currentUserData.uid));
         onSnapshot(q, snap => {
             const list = document.getElementById('order-history');
-            list.innerHTML = "";
+            list.innerHTML = snap.empty ? "<p style='font-size:12px; color:gray;'>कोई ऑर्डर नहीं मिला।</p>" : "";
             snap.forEach(doc => {
                 const d = doc.data();
-                list.innerHTML += `<div class="card" style="padding:12px; font-size:11px;"><b>ID: ${doc.id.substring(0,8)}</b> | Status: <span style="color:var(--primary)">${d.status}</span></div>`;
+                list.innerHTML += `<div class="card" style="padding:10px; font-size:12px;"><b>${d.service}</b> | ₹${d.price} <br>Status: ${d.status}</div>`;
             });
-            if(snap.empty) list.innerHTML = "<p style='font-size:12px; color:gray;'>कोई ऑर्डर नहीं मिला।</p>";
         });
     }
 
-    // --- AI चैट और आवाज़ ---
+    // --- AI & Voice ---
     window.askAI = async function() {
         const input = document.getElementById('ai-input');
         const text = input.value.trim();
@@ -218,20 +231,24 @@
         addMsg('user', text);
         input.value = "";
         
-        // AI रिस्पांस सिम्युलेशन (इसे अपने Gemini API से जोड़ सकते हैं)
         setTimeout(() => {
-            const reply = "नमस्ते मुकेश जी, KRYA AI आपकी सेवा में हाजिर है। हम आपके डिजिटल सपनों को सच करेंगे।";
+            const reply = "नमस्ते मुकेश जी, KRYA AI आपकी सेवा में है। आप स्टोर से सर्विस बुक कर सकते हैं।";
             addMsg('ai', reply);
-            const s = new SpeechSynthesisUtterance(reply);
-            s.lang = 'hi-IN';
-            window.speechSynthesis.speak(s);
+            speak(reply);
         }, 1000);
     }
 
     function addMsg(s, t) {
         const m = document.getElementById('messages');
-        m.innerHTML += `<div class="msg ${s}">${t}</div>`;
+        const badge = s === 'ai' ? '<span class="ai-badge">KRYA AI</span><br>' : '';
+        m.innerHTML += `<div class="msg ${s}">${badge}${t}</div>`;
         m.scrollTop = m.scrollHeight;
+    }
+
+    function speak(t) {
+        const s = new SpeechSynthesisUtterance(t);
+        s.lang = 'hi-IN';
+        window.speechSynthesis.speak(s);
     }
 
     window.startVoice = function() {
@@ -242,6 +259,12 @@
             document.getElementById('ai-input').value = e.results[0][0].transcript;
             askAI();
         };
+    }
+
+    function showToast(msg, color) {
+        const t = document.getElementById('toast');
+        t.innerText = msg; t.style.background = color; t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 3000);
     }
 </script>
 
