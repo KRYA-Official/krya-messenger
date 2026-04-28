@@ -158,7 +158,7 @@
     const provider = new GoogleAuthProvider();
 
     const OWNER_EMAIL = "krya.global@gmail.com";
-    const WHATSAPP_NUMBER = "919122501657";
+    const WHATSAPP_NUMBER = "916379403821"; // नया व्हाट्सएप नंबर
     let user = null, isOwner = false;
 
     const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, style: {background: c, borderRadius: "15px"}}).showToast();
@@ -259,16 +259,36 @@
         });
     }
 
+    // नया स्मार्ट व्हाट्सएप ऑर्डर सिस्टम
     window.buyNow = async (n, p, c) => {
         if(!user) return showToast("कृपया पहले लॉगिन करें", "var(--red)");
         const oID = "KRYA-ORD-" + Math.floor(1000 + Math.random() * 9000);
+        
         await addDoc(collection(db, "orders"), {
             orderID: oID, serviceCode: c, userName: user.displayName, userEmail: user.email,
             serviceName: n, amount: p, status: "Waiting for Payment", createdAt: serverTimestamp()
         });
-        const waMsg = `नमस्ते KRYALIVE!%0Aमैंने ऑर्डर किया है: *${n}*%0Aकीमत: *₹${p}*%0Aकोड: *${c}*%0AID: *${oID}*%0A%0Aकृपया अपना PhonePe नंबर भेजें।`;
+
+        // प्रोफेशनल व्हाट्सएप मैसेज ड्राफ्ट
+        const rawMessage = `नमस्ते Kryalive.com टीम!
+मैंने आपकी वेबसाइट से एक सर्विस के लिए रिक्वेस्ट की है। कृपया इसे चेक करें:
+
+👤 नाम: ${user.displayName}
+📧 ईमेल आईडी: ${user.email}
+📦 सर्विस का नाम: ${n}
+🔖 सर्विस कोड: ${c}
+💳 अमाउंट: ₹${p}
+
+मैंने पेमेंट कर दी है।
+✅ मेरा UTR / Reference नंबर है: ____________
+(कृपया अपना UTR नंबर ऊपर लिखें और साथ में पेमेंट का स्क्रीनशॉट भेजें)
+
+----------------------------------
+🌟 Kryalive.com पर भरोसा जताने के लिए आपका दिल से धन्यवाद। हमारी ईमानदारी और मेहनत ही हमारी असली पहचान है। आपके सपनों और डिजिटल तरक्की के इस सफर में Kryalive.com हमेशा आपके साथ है! 🚀`;
+
+        const waMsg = encodeURIComponent(rawMessage);
         window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${waMsg}`, '_blank');
-        showToast("ऑर्डर दर्ज! व्हाट्सएप चेक करें।");
+        showToast("ऑर्डर दर्ज! व्हाट्सएप पर जानकारी भेजें।");
     };
 
     function loadUserOrders() {
@@ -313,4 +333,5 @@
     };
 </script>
 </body>
-</html>
+    </html>
+    
