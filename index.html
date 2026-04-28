@@ -3,51 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYALIVE | Smart Service Hub</title>
+    <title>KRYALIVE | Owner Control</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --light: #f8fafc; --red: #ef4444; }
+        :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --light: #f8fafc; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--light); color: var(--dark); overflow-x: hidden; width: 100%; height: 100vh; }
         
-        /* Navigation & Header */
         header { background: #fff; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .brand { font-size: 22px; font-weight: 800; color: var(--dark); }
+        .brand { font-size: 22px; font-weight: 800; }
         .brand span { color: var(--primary); }
         
         main { height: calc(100vh - 140px); overflow-y: auto; padding: 15px; }
         .view { display: none; }
         .view.active { display: block; animation: fadeIn 0.4s ease; }
 
-        /* Auth Screen */
-        #auth-screen { height: 80vh; display: flex; align-items: center; justify-content: center; text-align: center; }
-        .auth-card { background: #fff; padding: 40px 30px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); width: 100%; max-width: 400px; }
+        /* Dashboard Stats */
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .stat-card { background: white; padding: 25px 15px; border-radius: 24px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-bottom: 4px solid var(--accent); }
+        .stat-card h2 { font-size: 22px; font-weight: 800; }
+        .stat-card p { font-size: 11px; color: gray; font-weight: 600; text-transform: uppercase; margin-top: 5px; }
 
-        /* Store UI (User Mode) */
-        .card { background: #fff; border-radius: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); margin-bottom: 20px; overflow: hidden; border: 1px solid #f1f5f9; position: relative; }
+        /* Owner Form */
+        .card { background: #fff; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 20px; }
+        input { width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid #e2e8f0; font-size: 15px; outline: none; margin-bottom: 12px; background: #f8fafc; }
+        input:focus { border-color: var(--primary); background: #fff; }
+
+        .btn { width: 100%; padding: 16px; border-radius: 15px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
+        .btn-live { background: var(--primary); color: white; box-shadow: 0 6px 15px rgba(16, 185, 129, 0.2); }
+        .btn-google { background: white; border: 1.5px solid #eee; margin-top: 50px; }
+
+        /* Store UI */
+        .service-item { background: white; border-radius: 20px; overflow: hidden; margin-bottom: 20px; border: 1px solid #eee; }
         .service-img { width: 100%; height: 160px; object-fit: cover; }
-        .pricing { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
-        .selling-price { font-size: 20px; font-weight: 800; color: var(--primary); }
-        .mrp { text-decoration: line-through; color: #94a3b8; font-size: 14px; }
-
-        /* Admin UI (Owner Mode) */
-        .admin-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .stat-box { background: white; padding: 20px; border-radius: 20px; text-align: center; border-bottom: 4px solid var(--accent); }
-        .admin-form input, .admin-form textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; outline: none; }
-
-        /* Buttons */
-        .btn { width: 100%; padding: 15px; border-radius: 15px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
-        .btn-google { background: white; color: #444; border: 1.5px solid #e2e8f0; }
-        .btn-primary { background: var(--accent); color: white; }
-        .btn-success { background: var(--primary); color: white; }
 
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; border-top: 1px solid #eee; padding: 12px 0 25px; z-index: 1000; }
-        .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 10px; font-weight: 700; }
+        .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 11px; font-weight: 700; }
         .nav-item.active { color: var(--accent); }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -56,73 +52,63 @@
 
 <header id="app-header" style="display: none;">
     <div class="brand">KRYA<span>LIVE</span></div>
-    <div id="role-badge" style="font-size: 10px; font-weight: 800; color: white; background: var(--primary); padding: 3px 10px; border-radius: 20px;">USER</div>
+    <div id="role-badge" style="font-size: 10px; font-weight: 800; color: white; background: var(--accent); padding: 4px 12px; border-radius: 20px;">OWNER</div>
 </header>
 
 <main>
     <section id="view-auth" class="view active">
-        <div id="auth-screen">
-            <div class="auth-card">
-                <div style="background: var(--light); width: 60px; height: 60px; border-radius: 20px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
-                    <i class="fas fa-fingerprint fa-2x" style="color: var(--accent);"></i>
-                </div>
-                <h2 style="font-weight: 800;">प्रवेश करें</h2>
-                <p style="font-size: 13px; color: gray; margin: 10px 0 30px;">KRYALIVE डिजिटल स्टोर में आपका स्वागत है।</p>
-                <button class="btn btn-google" id="login-btn">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Google से लॉगिन
-                </button>
-            </div>
+        <div style="text-align: center; padding-top: 80px;">
+            <h2 style="font-weight: 800;">नमस्ते!</h2>
+            <p style="color: gray; font-size: 14px; margin-bottom: 40px;">KRYALIVE में प्रवेश करें।</p>
+            <button class="btn btn-google" id="login-btn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google से लॉगिन
+            </button>
         </div>
     </section>
 
     <section id="view-owner" class="view">
-        <div class="admin-stat-grid">
-            <div class="stat-box"><h2 id="adm-orders">0</h2><p>कुल ऑर्डर</p></div>
-            <div class="stat-box"><h2 id="adm-rev">₹0</h2><p>कुल कमाई</p></div>
+        <div class="stat-grid">
+            <div class="stat-card"><h2 id="total-ord">0</h2><p>कुल ऑर्डर</p></div>
+            <div class="stat-card"><h2 id="total-rev">₹0</h2><p>कुल कमाई</p></div>
         </div>
-        <div class="card" style="padding: 20px;">
-            <h3>नई सर्विस जोड़ें</h3>
-            <div class="admin-form" style="margin-top: 15px;">
-                <input type="text" id="svc-name" placeholder="सर्विस का नाम">
-                <input type="number" id="svc-price" placeholder="बेचने वाली कीमत">
-                <input type="text" id="svc-img" placeholder="फोटो लिंक (URL)">
-                <button class="btn btn-success" onclick="addNewService()">स्टोर में लाइव करें</button>
-            </div>
+        <div class="card">
+            <h3 style="margin-bottom: 15px;">नई सर्विस जोड़ें</h3>
+            <input type="text" id="s-name" placeholder="सर्विस का नाम">
+            <input type="number" id="s-price" placeholder="अमाउंट (जैसे 199)">
+            <input type="text" id="s-img" placeholder="फोटो लिंक (URL)">
+            <button class="btn btn-live" id="btn-publish">स्टोर में लाइव करें</button>
         </div>
-        <h3>हाल के ऑर्डर</h3>
-        <div id="admin-orders-list" style="margin-top: 15px;"></div>
+        <h3 style="margin-top: 10px;">हाल के ऑर्डर</h3>
+        <div id="orders-list" style="margin-top: 15px; color: gray; font-size: 12px; text-align: center;">अभी कोई ऑर्डर नहीं है।</div>
     </section>
 
     <section id="view-store" class="view">
-        <div style="margin-bottom: 20px;">
-            <h3 id="user-greet">नमस्ते!</h3>
-            <p style="font-size: 12px; color: gray;">आज के खास डिजिटल ऑफर्स यहाँ हैं।</p>
-        </div>
-        <div id="store-services">
-            </div>
+        <h3 id="user-greet" style="margin-bottom: 5px;">नमस्ते!</h3>
+        <p style="font-size: 12px; color: gray; margin-bottom: 20px;">आज के ऑफर्स यहाँ हैं।</p>
+        <div id="store-list"></div>
     </section>
 
     <section id="view-profile" class="view">
-        <div class="auth-card" style="margin: 0 auto;">
-            <img id="u-img" src="" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 10px;">
-            <h4 id="u-name">User Name</h4>
-            <p id="u-email" style="font-size: 12px; color: gray; margin-bottom: 30px;">email@example.com</p>
-            <button class="btn" style="background: #fee2e2; color: #ef4444;" onclick="logout()">लॉगआउट</button>
+        <div class="card" style="text-align: center;">
+            <img id="u-photo" src="" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 10px;">
+            <h4 id="u-name">Name</h4>
+            <p id="u-email" style="font-size: 12px; color: gray; margin-bottom: 30px;">email</p>
+            <button class="btn" style="background: #fee2e2; color: #ef4444;" id="logout-btn">लॉगआउट</button>
         </div>
     </section>
 </main>
 
 <nav class="bottom-nav" id="app-nav" style="display: none;">
-    <button class="nav-item active" id="n-main" onclick="openMain()"><i class="fas fa-shopping-bag"></i><span id="n-txt">Store</span></button>
+    <button class="nav-item active" id="n-main" onclick="openMain()"><i class="fas fa-th-large"></i><span id="n-txt">Menu</span></button>
     <button class="nav-item" id="n-profile" onclick="nav('profile')"><i class="fas fa-user-circle"></i><span>Profile</span></button>
 </nav>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, setDoc, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    const config = {
+    const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
         authDomain: "signing-9fc01.firebaseapp.com",
         projectId: "signing-9fc01",
@@ -131,87 +117,98 @@
         appId: "1:926296137348:web:c42cdf88199ba877246cd1"
     };
 
-    const app = initializeApp(config);
+    const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
     const OWNER_EMAIL = "krya.global@gmail.com";
-    let currentUser = null;
     let isOwner = false;
 
     window.nav = (id) => {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById('view-' + id).classList.add('active');
-        document.getElementById('n-' + (id === 'owner' || id === 'store' ? 'main' : id)).classList.add('active');
+        const navId = (id === 'owner' || id === 'store') ? 'n-main' : 'n-' + id;
+        document.getElementById(navId).classList.add('active');
     };
 
     window.openMain = () => isOwner ? nav('owner') : nav('store');
 
     document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
-    window.logout = () => signOut(auth).then(() => location.reload());
+    document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
 
     onAuthStateChanged(auth, user => {
         if(user) {
-            currentUser = user;
             isOwner = user.email === OWNER_EMAIL;
-            
             document.getElementById('app-header').style.display = 'flex';
             document.getElementById('app-nav').style.display = 'flex';
-            document.getElementById('role-badge').innerText = isOwner ? "OWNER" : "USER";
-            document.getElementById('role-badge').style.background = isOwner ? "var(--accent)" : "var(--primary)";
-            document.getElementById('n-txt').innerText = isOwner ? "Dashboard" : "Store";
-            
             document.getElementById('u-name').innerText = user.displayName;
             document.getElementById('u-email').innerText = user.email;
-            document.getElementById('u-img').src = user.photoURL;
+            document.getElementById('u-photo').src = user.photoURL;
             document.getElementById('user-greet').innerText = "नमस्ते, " + user.displayName.split(' ')[0] + "!";
-
+            document.getElementById('n-txt').innerText = isOwner ? "Dashboard" : "Store";
             openMain();
             loadStore();
-            if(isOwner) loadOwnerData();
         } else {
             nav('auth');
         }
     });
 
-    // --- STORE LOGIC ---
+    // --- पक्का फिक्स: स्टोर में सामान लाइव करने वाला बटन ---
+    document.getElementById('btn-publish').onclick = async () => {
+        const name = document.getElementById('s-name').value.trim();
+        const price = document.getElementById('s-price').value.trim();
+        const img = document.getElementById('s-img').value.trim();
+
+        if(!name || !price) {
+            alert("कृपया नाम और कीमत भरें!");
+            return;
+        }
+
+        try {
+            document.getElementById('btn-publish').disabled = true;
+            document.getElementById('btn-publish').innerText = "लाइव हो रहा है...";
+            
+            await addDoc(collection(db, "services"), {
+                name: name,
+                price: price,
+                img: img || "https://images.unsplash.com/photo-1582407947304-fd86f028f716?q=80&w=400",
+                createdAt: serverTimestamp()
+            });
+
+            alert("सफलता! '" + name + "' अब स्टोर में लाइव है।");
+            
+            // फॉर्म साफ करें
+            document.getElementById('s-name').value = "";
+            document.getElementById('s-price').value = "";
+            document.getElementById('s-img').value = "";
+            
+        } catch (e) {
+            alert("गलती: " + e.message);
+        } finally {
+            document.getElementById('btn-publish').disabled = false;
+            document.getElementById('btn-publish').innerText = "स्टोर में लाइव करें";
+        }
+    };
+
     function loadStore() {
         onSnapshot(query(collection(db, "services"), orderBy("createdAt", "desc")), snap => {
-            const list = document.getElementById('store-services');
+            const list = document.getElementById('store-list');
             list.innerHTML = "";
             snap.forEach(d => {
                 const s = d.data();
                 list.innerHTML += `
-                    <div class="card">
+                    <div class="service-item">
                         <img src="${s.img}" class="service-img">
                         <div style="padding: 15px;">
-                            <h4>${s.name}</h4>
-                            <div class="pricing"><span class="selling-price">₹${s.price}</span></div>
-                            <button class="btn btn-primary" onclick="alert('Order Feature Coming Soon')">अभी खरीदें</button>
+                            <h4 style="font-weight: 800;">${s.name}</h4>
+                            <p style="color: var(--primary); font-weight: 800; font-size: 18px; margin: 5px 0;">₹${s.price}</p>
+                            <button class="btn btn-live" style="padding: 10px;">अभी खरीदें</button>
                         </div>
                     </div>
                 `;
             });
-        });
-    }
-
-    // --- OWNER LOGIC ---
-    window.addNewService = async () => {
-        const name = document.getElementById('svc-name').value;
-        const price = document.getElementById('svc-price').value;
-        const img = document.getElementById('svc-img').value;
-        if(!name || !price) return alert("नाम और कीमत भरें!");
-        await addDoc(collection(db, "services"), { name, price, img, createdAt: serverTimestamp() });
-        alert("सर्विस लाइव हो गई!");
-        document.getElementById('svc-name').value = "";
-    };
-
-    function loadOwnerData() {
-        onSnapshot(collection(db, "orders"), snap => {
-            document.getElementById('adm-orders').innerText = snap.size;
-            // Additional revenue logic here
         });
     }
 </script>
