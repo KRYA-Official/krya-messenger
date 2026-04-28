@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYALIVE | Premium Digital Store</title>
+    <title>KRYALIVE | Professional Service Platform</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,50 +11,54 @@
     <style>
         :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --light: #f8fafc; --red: #ef4444; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--light); color: var(--dark); height: 100vh; overflow: hidden; }
+        body { background: var(--light); color: var(--dark); height: 100vh; overflow: hidden; position: fixed; width: 100%; }
         
+        /* Layout Structure */
         .app-shell { display: flex; flex-direction: column; height: 100vh; }
-        header { background: #fff; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; z-index: 1000; }
+        header { background: #fff; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .brand { font-size: 22px; font-weight: 800; color: var(--dark); }
         .brand span { color: var(--primary); }
 
-        main { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 110px; }
-        .view { display: none; animation: slideUp 0.4s ease; }
+        main { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 110px; scroll-behavior: smooth; }
+        .view { display: none; animation: slideUp 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
         .view.active { display: block; }
 
-        /* Premium Service Card */
-        .card { background: #fff; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; margin-bottom: 20px; overflow: hidden; position: relative; }
-        .service-img { width: 100%; height: 160px; object-fit: cover; background: #eee; }
-        .offer-badge { position: absolute; top: 15px; left: 15px; background: var(--red); color: white; padding: 5px 12px; border-radius: 50px; font-size: 11px; font-weight: 800; z-index: 10; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); }
+        /* Premium Product Cards */
+        .card { background: #fff; border-radius: 28px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; margin-bottom: 25px; overflow: hidden; position: relative; }
+        .service-img { width: 100%; height: 180px; object-fit: cover; }
+        .discount-badge { position: absolute; top: 15px; left: 15px; background: var(--red); color: white; padding: 6px 14px; border-radius: 50px; font-size: 12px; font-weight: 800; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); z-index: 5; }
         
-        .card-content { padding: 20px; }
-        .card-content h4 { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
-        .card-content p { font-size: 11px; color: #64748b; margin-bottom: 15px; line-height: 1.4; }
+        .card-body { padding: 20px; }
+        .card-body h4 { font-size: 18px; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+        .card-body p { font-size: 12px; color: #64748b; line-height: 1.5; margin-bottom: 15px; }
 
-        /* Pricing UI */
-        .pricing-box { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-        .mrp { font-size: 14px; text-decoration: line-through; color: #94a3b8; }
-        .final-price { font-size: 22px; font-weight: 800; color: var(--primary); }
+        /* Pricing Section */
+        .price-row { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .mrp { font-size: 15px; text-decoration: line-through; color: #94a3b8; font-weight: 400; }
+        .selling-price { font-size: 24px; font-weight: 800; color: var(--primary); }
         
-        /* Coupon Section */
-        .coupon-box { background: #f0fdf4; border: 1px dashed var(--primary); padding: 10px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .coupon-text { font-size: 10px; font-weight: 700; color: var(--primary); }
-        .coupon-code { font-size: 12px; font-weight: 800; color: var(--dark); border: 1px solid #ddd; padding: 2px 8px; border-radius: 5px; background: #fff; }
+        /* Coupon UI */
+        .coupon-section { background: #f0fdf4; border: 1.5px dashed var(--primary); padding: 12px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .coupon-label { font-size: 11px; font-weight: 700; color: var(--primary); text-transform: uppercase; }
+        .coupon-code { font-size: 13px; font-weight: 800; color: #1e293b; background: white; padding: 3px 10px; border-radius: 6px; border: 1px solid #eee; }
 
-        .btn { padding: 15px; border-radius: 15px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; font-size: 14px; transition: 0.3s; }
-        .btn-primary { background: var(--accent); color: white; box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2); }
+        .btn { padding: 16px; border-radius: 16px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; font-size: 15px; transition: 0.3s; }
+        .btn-primary { background: var(--accent); color: white; box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25); }
+        .btn-google { background: white; color: var(--dark); border: 1.5px solid #e2e8f0; margin-top: 20px; }
 
-        /* Nav & Overlays */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; border-top: 1px solid #eee; padding: 12px 0 25px; z-index: 1000; }
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); display: flex; border-top: 1px solid #e2e8f0; padding: 12px 0 25px; z-index: 1000; }
         .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 11px; font-weight: 700; }
         .nav-item.active { color: var(--accent); }
-        .nav-item i { font-size: 22px; display: block; margin-bottom: 5px; }
+        .nav-item i { font-size: 24px; display: block; margin-bottom: 5px; }
 
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
-        .popup { background: #fff; width: 100%; max-width: 400px; border-radius: 30px; padding: 25px; max-height: 85vh; overflow-y: auto; }
-        input, textarea { width: 100%; padding: 14px; border: 1.5px solid #e2e8f0; border-radius: 12px; margin: 10px 0; font-size: 15px; outline: none; }
+        /* Overlay & Forms */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
+        .popup { background: #fff; width: 100%; max-width: 420px; border-radius: 32px; padding: 30px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        input, textarea { width: 100%; padding: 15px; border: 2px solid #f1f5f9; border-radius: 14px; margin: 12px 0; font-size: 16px; outline: none; background: #f8fafc; }
+        input:focus { border-color: var(--accent); background: white; }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -62,61 +66,76 @@
 <div class="app-shell">
     <header>
         <div class="brand">KRYA<span>LIVE</span></div>
-        <img id="top-avatar" src="" style="width:35px; height:35px; border-radius:50%; background:#eee; display:none; border:2px solid var(--primary);">
+        <div id="user-status" style="font-size: 10px; font-weight: 800; color: var(--primary);">● ONLINE</div>
     </header>
 
     <main id="app-content">
         <section id="view-auth" class="view active">
-            <div style="text-align: center; padding-top: 60px;">
-                <h2 style="font-size: 28px; font-weight: 800; margin-bottom: 10px;">नमस्ते!</h2>
-                <p style="color: #64748b; font-size: 14px; margin-bottom: 40px;">प्रीमियम सेवाओं के लिए लॉगिन करें।</p>
-                <button class="btn" style="background: white; border: 1.5px solid #ddd;" id="google-login-btn">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google के साथ लॉगिन
+            <div style="text-align: center; padding-top: 80px;">
+                <div style="background: var(--light); width: 80px; height: 80px; border-radius: 25px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-shield-alt fa-2x" style="color: var(--primary);"></i>
+                </div>
+                <h2 style="font-size: 28px; font-weight: 800;">स्वागत है!</h2>
+                <p style="color: #64748b; font-size: 15px; margin-bottom: 40px;">KRYALIVE डिजिटल साम्राज्य में आपका स्वागत है।</p>
+                <button class="btn btn-google" id="login-trigger">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="22"> Google के साथ लॉगिन करें
                 </button>
             </div>
         </section>
 
         <section id="view-home" class="view">
-            <div style="margin-bottom: 25px;">
-                <h3 id="greet-user" style="font-weight: 800; font-size: 20px;">नमस्ते मुकेश जी!</h3>
-                <p style="font-size: 12px; color: gray;">आज आपके लिए खास ऑफर्स यहाँ हैं।</p>
+            <div style="margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 id="welcome-txt" style="font-weight: 800; font-size: 22px;">नमस्ते!</h3>
+                    <p style="font-size: 12px; color: #64748b;">आज के बेहतरीन ऑफर्स यहाँ हैं।</p>
+                </div>
+                <img id="nav-photo" src="" style="width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--primary); display: none;">
             </div>
 
-            <div id="services-grid"></div>
+            <div id="services-container">
+                </div>
         </section>
 
         <section id="view-orders" class="view">
-            <h3 style="margin-bottom: 20px; font-weight: 800;">मेरे ऑर्डर्स</h3>
-            <div id="order-container"></div>
+            <h3 style="margin-bottom: 20px; font-weight: 800; font-size: 22px;">मेरे ऑर्डर्स</h3>
+            <div id="order-list-empty" style="text-align: center; margin-top: 60px; color: gray; display: none;">
+                <i class="fas fa-box-open fa-3x" style="margin-bottom: 15px; opacity: 0.3;"></i>
+                <p>अभी तक कोई ऑर्डर नहीं मिला।</p>
+            </div>
+            <div id="order-list-data"></div>
         </section>
 
         <section id="view-profile" class="view">
-            <h3 style="margin-bottom: 20px; font-weight: 800;">प्रोफाइल</h3>
-            <div class="card" style="text-align: center; padding: 30px;">
-                <img id="prof-photo" src="" style="width:100px; height:100px; border-radius:50%; border:4px solid var(--primary); margin-bottom:15px;">
-                <h4 id="prof-name">Name</h4>
-                <p id="prof-email" style="font-size: 12px; color: gray; margin-bottom:30px;">Email</p>
-                <button class="btn" style="background:#fee2e2; color:#ef4444;" id="logout-btn">लॉगआउट</button>
+            <h3 style="margin-bottom: 25px; font-weight: 800; font-size: 22px;">प्रोफाइल</h3>
+            <div class="card" style="text-align: center; padding: 40px 20px; border-radius: 35px;">
+                <img id="p-img" src="" style="width:110px; height:110px; border-radius:50%; border:5px solid var(--primary); margin-bottom:15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
+                <h4 id="p-user-name" style="font-size: 20px; font-weight: 800;">User Name</h4>
+                <p id="p-user-email" style="font-size: 13px; color: #64748b; margin-bottom:35px;">email@example.com</p>
+                <button class="btn" style="background:#fee2e2; color:#ef4444; border: 1px solid #fecaca;" id="logout-trigger">
+                    <i class="fas fa-sign-out-alt"></i> सुरक्षित लॉगआउट
+                </button>
             </div>
         </section>
     </main>
 
     <nav class="bottom-nav">
         <button class="nav-item active" id="n-home" onclick="nav('home')"><i class="fas fa-shopping-bag"></i><span>स्टोर</span></button>
-        <button class="nav-item" id="n-orders" onclick="nav('orders')"><i class="fas fa-list-ul"></i><span>ऑर्डर्स</span></button>
+        <button class="nav-item" id="n-orders" onclick="nav('orders')"><i class="fas fa-receipt"></i><span>ऑर्डर्स</span></button>
         <button class="nav-item" id="n-profile" onclick="nav('profile')"><i class="fas fa-user-circle"></i><span>प्रोफाइल</span></button>
     </nav>
 </div>
 
 <div class="overlay" id="form-overlay">
     <div class="popup">
-        <h3 id="pop-title">Service</h3>
-        <p id="pop-price" style="color:var(--primary); font-weight:800; font-size: 20px;">₹00</p>
-        <input type="text" id="cust-name" placeholder="आपका नाम">
-        <input type="tel" id="cust-phone" placeholder="व्हाट्सएप नंबर">
-        <textarea id="cust-details" placeholder="काम की जानकारी यहाँ लिखें..." rows="4"></textarea>
-        <button class="btn btn-primary" id="go-to-pay">भुगतान के लिए आगे बढ़ें</button>
-        <button class="btn" style="margin-top:10px; color:gray;" onclick="closeOverlays()">रद्द करें</button>
+        <h3 id="form-title" style="font-size: 22px; font-weight: 800;">Service Name</h3>
+        <p id="form-price" style="color:var(--primary); font-weight:800; font-size: 24px; margin-bottom: 20px;">₹00</p>
+        
+        <input type="text" id="cust-name" placeholder="आपका पूरा नाम">
+        <input type="tel" id="cust-phone" placeholder="व्हाट्सएप नंबर (+91)">
+        <textarea id="cust-note" placeholder="काम से जुड़ी अतिरिक्त जानकारी यहाँ लिखें..." rows="4"></textarea>
+        
+        <button class="btn btn-primary" id="submit-order-btn">पेमेंट के लिए आगे बढ़ें</button>
+        <button class="btn" style="margin-top:12px; color:#94a3b8; background:none;" onclick="closeAll()">रद्द करें</button>
     </div>
 </div>
 
@@ -125,6 +144,7 @@
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+    // ✅ पक्का फिक्स: आपकी असली कॉन्फ़िगरेशन
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
         authDomain: "signing-9fc01.firebaseapp.com",
@@ -140,14 +160,15 @@
     const provider = new GoogleAuthProvider();
 
     let user = null;
-    let selectedSvc = null;
+    let selectedService = null;
 
-    // --- Services Data with Images & MRP ---
+    // --- +++ प्लस डेटा: इमेजेस, MRP और कूपन्स ---
     const services = [
-        { id:1, name:'खतियान/जमीन नकल सेवा', mrp:200, price:100, off:'50%', img:'https://images.unsplash.com/photo-1582407947304-fd86f028f716?q=80&w=400', desc:'बिहार भूमि रिकॉर्ड्स की डिजिटल कॉपी प्राप्त करें।', coupon:'KRYA10' },
-        { id:2, name:'प्रोफेशनल वेबसाइट डिजाइन', mrp:2500, price:999, off:'60%', img:'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=400', desc:'अपने बिजनेस के लिए आधुनिक वेबसाइट बनवाएं।', coupon:'WEB20' },
-        { id:3, name:'गूगल मैप लिस्टिंग', mrp:600, price:299, off:'50%', img:'https://images.unsplash.com/photo-1569336415962-a4bd9f6dfc0f?q=80&w=400', desc:'दुकान को गूगल मैप्स पर लाइव दिखाएं।', coupon:'MAP50' },
-        { id:4, name:'ई-श्रम कार्ड आवेदन', mrp:100, price:50, off:'50%', img:'https://images.unsplash.com/photo-1626261737314-d74633215903?q=80&w=400', desc:'सरकारी ई-श्रम कार्ड रजिस्ट्रेशन सेवा।', coupon:'FREE' }
+        { id:1, name:'खतियान/जमीन नकल सेवा', mrp:200, price:100, off:'50%', img:'https://images.unsplash.com/photo-1582407947304-fd86f028f716?q=80&w=600', desc:'बिहार के किसी भी जिले का डिजिटल खतियान नकल प्राप्त करें।', coupon:'LAND50' },
+        { id:2, name:'प्रोफेशनल वेबसाइट डिजाइन', mrp:2999, price:999, off:'66%', img:'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=600', desc:'अपने बिजनेस के लिए आधुनिक और फास्ट वेबसाइट बनवाएं।', coupon:'WEBPLUS' },
+        { id:3, name:'गूगल मैप बिजनेस लिस्टिंग', mrp:599, price:299, off:'50%', img:'https://images.unsplash.com/photo-1569336415962-a4bd9f6dfc0f?q=80&w=600', desc:'अपनी दुकान को गूगल मैप पर 100% लाइव रजिस्टर करवाएं।', coupon:'MAP299' },
+        { id:4, name:'ई-श्रम कार्ड आवेदन', mrp:100, price:50, off:'50%', img:'https://images.unsplash.com/photo-1626261737314-d74633215903?q=80&w=600', desc:'नया ई-श्रम कार्ड पंजीकरण और तत्काल डाउनलोड सेवा।', coupon:'SHRAM50' },
+        { id:5, name:'SEO आर्टिकल राइटिंग', mrp:499, price:199, off:'60%', img:'https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=600', desc:'ब्लॉग या वेबसाइट के लिए 1000 शब्दों का प्रीमियम लेख।', coupon:'SEO199' }
     ];
 
     window.nav = (id) => {
@@ -158,21 +179,21 @@
         if(id === 'orders') fetchOrders();
     };
 
-    window.closeOverlays = () => { document.querySelectorAll('.overlay').forEach(o => o.style.display = 'none'); };
+    window.closeAll = () => { document.querySelectorAll('.overlay').forEach(o => o.style.display = 'none'); };
 
-    // --- Auth Logic ---
-    document.getElementById('google-login-btn').onclick = () => signInWithPopup(auth, provider);
-    document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
+    // --- Auth Event Listeners ---
+    document.getElementById('login-trigger').onclick = () => signInWithPopup(auth, provider);
+    document.getElementById('logout-trigger').onclick = () => { if(confirm("लॉगआउट?")) signOut(auth).then(()=>location.reload()); };
 
     onAuthStateChanged(auth, u => {
         if(u) {
             user = u;
-            document.getElementById('greet-user').innerText = `नमस्ते, ${u.displayName.split(' ')[0]}!`;
-            document.getElementById('prof-name').innerText = u.displayName;
-            document.getElementById('prof-email').innerText = u.email;
-            document.getElementById('prof-photo').src = u.photoURL;
-            document.getElementById('top-avatar').src = u.photoURL;
-            document.getElementById('top-avatar').style.display = 'block';
+            document.getElementById('welcome-txt').innerText = `नमस्ते, ${u.displayName.split(' ')[0]}!`;
+            document.getElementById('nav-photo').src = u.photoURL;
+            document.getElementById('nav-photo').style.display = 'block';
+            document.getElementById('p-user-name').innerText = u.displayName;
+            document.getElementById('p-user-email').innerText = u.email;
+            document.getElementById('p-img').src = u.photoURL;
             loadServices();
             nav('home');
         } else { nav('auth'); }
@@ -180,74 +201,80 @@
 
     // --- Load Services UI ---
     function loadServices() {
-        const grid = document.getElementById('services-grid');
-        grid.innerHTML = "";
+        const container = document.getElementById('services-container');
+        container.innerHTML = "";
         services.forEach(s => {
-            grid.innerHTML += `
-                <div class="card">
-                    <div class="offer-badge">FLAT ${s.off} OFF</div>
-                    <img src="${s.img}" class="service-img">
-                    <div class="card-content">
-                        <h4>${s.name}</h4>
-                        <p>${s.desc}</p>
-                        <div class="pricing-box">
-                            <span class="mrp">₹${s.mrp}</span>
-                            <span class="final-price">₹${s.price}</span>
-                        </div>
-                        <div class="coupon-box">
-                            <span class="coupon-text">कूपन कोड का उपयोग करें:</span>
-                            <span class="coupon-code">${s.coupon}</span>
-                        </div>
-                        <button class="btn btn-primary" onclick="openOrder('${s.id}')">अभी बुक करें</button>
+            const div = document.createElement('div');
+            div.className = "card animate__animated animate__fadeIn";
+            div.innerHTML = `
+                <div class="discount-badge">${s.off} की भारी छूट</div>
+                <img src="${s.img}" class="service-img">
+                <div class="card-body">
+                    <h4>${s.name}</h4>
+                    <p>${s.desc}</p>
+                    <div class="price-row">
+                        <span class="mrp">₹${s.mrp}</span>
+                        <span class="selling-price">₹${s.price}</span>
                     </div>
+                    <div class="coupon-section">
+                        <span class="coupon-label">ऑफर कूपन:</span>
+                        <span class="coupon-code">${s.coupon}</span>
+                    </div>
+                    <button class="btn btn-primary" id="book-${s.id}">अभी ऑर्डर करें</button>
                 </div>
             `;
+            container.appendChild(div);
+            document.getElementById(`book-${s.id}`).onclick = () => {
+                selectedService = s;
+                document.getElementById('form-title').innerText = s.name;
+                document.getElementById('form-price').innerText = `₹${s.price}`;
+                document.getElementById('form-overlay').style.display = 'flex';
+            };
         });
     }
 
-    window.openOrder = (id) => {
-        selectedSvc = services.find(x => x.id == id);
-        document.getElementById('pop-title').innerText = selectedSvc.name;
-        document.getElementById('pop-price').innerText = `₹${selectedSvc.price}`;
-        document.getElementById('form-overlay').style.display = 'flex';
-    };
+    // --- Order Submission ---
+    document.getElementById('submit-order-btn').onclick = async () => {
+        const name = document.getElementById('cust-name').value.trim();
+        const phone = document.getElementById('cust-phone').value.trim();
+        const note = document.getElementById('cust-note').value.trim();
 
-    document.getElementById('go-to-pay').onclick = async () => {
-        const name = document.getElementById('cust-name').value;
-        const phone = document.getElementById('cust-phone').value;
-        if(!name || !phone) return alert("नाम और नंबर जरूरी है!");
+        if(!name || !phone) return alert("कृपया नाम और मोबाइल नंबर भरें!");
 
-        const upi = `upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh&am=${selectedSvc.price}&cu=INR`;
-        window.location.href = upi;
-        
-        // Save Order to Firebase
+        const upiUrl = `upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh&am=${selectedService.price}&cu=INR&tn=KRYA_Order`;
+        window.location.href = upiUrl;
+
         await addDoc(collection(db, "orders"), {
             uid: user.uid,
-            service: selectedSvc.name,
-            price: selectedSvc.price,
-            name, phone,
+            service: selectedService.name,
+            amount: selectedService.price,
+            name, phone, note,
             status: 'Pending',
             createdAt: serverTimestamp()
         });
-        
-        closeOverlays();
+
+        closeAll();
         alert("पेमेंट के बाद 'ऑर्डर्स' टैब में अपना स्टेटस चेक करें।");
     };
 
+    // --- Fetch User Orders ---
     function fetchOrders() {
         const q = query(collection(db, "orders"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
         onSnapshot(q, snap => {
-            const container = document.getElementById('order-container');
-            container.innerHTML = snap.empty ? '<p style="text-align:center; margin-top:50px; color:gray;">कोई ऑर्डर नहीं मिला।</p>' : "";
+            const container = document.getElementById('order-list-data');
+            const empty = document.getElementById('order-list-empty');
+            container.innerHTML = "";
+            if(snap.empty) { empty.style.display = 'block'; return; }
+            empty.style.display = 'none';
             snap.forEach(d => {
                 const o = d.data();
                 container.innerHTML += `
-                    <div class="card" style="padding:15px; display:flex; justify-content:space-between; align-items:center;">
+                    <div class="card" style="padding:15px; display:flex; justify-content:space-between; align-items:center; border-left: 5px solid var(--accent);">
                         <div>
                             <b style="font-size:14px;">${o.service}</b><br>
-                            <span style="font-size:11px; color:gray;">₹${o.price} | ${new Date(o.createdAt?.toDate()).toLocaleDateString()}</span>
+                            <span style="font-size:11px; color:gray;">₹${o.amount} | ${new Date(o.createdAt?.toDate()).toLocaleDateString()}</span>
                         </div>
-                        <span style="font-size:10px; font-weight:800; color:var(--accent); text-transform:uppercase;">${o.status}</span>
+                        <span style="font-size:10px; font-weight:800; color:var(--accent); text-transform:uppercase; background:#f1f5f9; padding:4px 10px; border-radius:6px;">${o.status}</span>
                     </div>
                 `;
             });
@@ -256,4 +283,5 @@
 </script>
 
 </body>
-</html>
+    </html>
+    
