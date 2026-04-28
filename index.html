@@ -51,13 +51,11 @@
 
         .badge-status { padding: 2px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
         .status-pending { background: #fef3c7; color: #92400e; }
-        .status-confirmed { background: #d1fae5; color: #065f46; }
 
         .hidden { display: none !important; }
         .loader { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 10px 20px; border-radius: 10px; color: white; display: none; z-index: 9999; min-width: 200px; text-align: center; }
+        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 12px 25px; border-radius: 10px; color: white; display: none; z-index: 9999; text-align: center; font-weight: 600; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
@@ -65,7 +63,7 @@
     <div class="app-container">
         <header>
             <div class="brand">KRYA<span>Digital</span></div>
-            <div id="auth-status" style="font-size: 10px; font-weight: bold; color: var(--slate);">Guest Mode</div>
+            <div id="auth-status" style="font-size: 10px; font-weight: bold; color: var(--primary);">● Live</div>
         </header>
 
         <main id="main-content">
@@ -92,31 +90,27 @@
                             </select>
                         </div>
                         <button type="submit" class="btn-primary" id="regBtn">
-                            <div class="loader" id="regLoader"></div> <span id="regText">सदस्य बनें</span>
+                            <div class="loader" id="regLoader"></div> <span id="regText">सुरक्षित पंजीकरण करें</span>
                         </button>
                     </form>
                 </div>
             </section>
 
             <section id="view-market" class="view hidden animate__animated animate__fadeIn">
-                <h3 style="margin-bottom: 15px;">उपलब्ध सेवाएँ</h3>
-                <div id="product-list">
-                    <div class="card">
-                        <h4>3D Logo Design</h4>
-                        <p style="font-size: 12px; color: var(--slate); margin: 5px 0 15px;">प्रोफेशनल ब्रांडिंग सेवा</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-weight: 800; color: var(--primary);">₹199</span>
-                            <button onclick="handleOrder('3D Logo', 199)" class="btn-primary" style="width: auto; padding: 8px 20px;">Buy Now</button>
-                        </div>
+                <h3 style="margin-bottom: 15px;">KRYA मार्केटप्लेस</h3>
+                <div class="card">
+                    <h4>3D Professional Logo</h4>
+                    <p style="font-size: 12px; color: var(--slate); margin: 5px 0 15px;">आपके ब्रांड के लिए प्रीमियम लोगो डिजाइन।</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 800; color: var(--primary);">₹199</span>
+                        <button onclick="handleOrder('3D Logo', 199)" class="btn-primary" style="width: auto; padding: 8px 20px;">अभी खरीदें</button>
                     </div>
                 </div>
             </section>
 
             <section id="view-chat" class="view hidden animate__animated animate__fadeIn">
                 <div class="chat-view">
-                    <div class="chat-messages" id="chatList">
-                        <div class="msg msg-them">KRYA हेल्प डेस्क में आपका स्वागत है।</div>
-                    </div>
+                    <div class="chat-messages" id="chatList"></div>
                     <div class="chat-input-box">
                         <input type="text" id="chatMsg" placeholder="मैसेज लिखें...">
                         <button id="sendChatBtn" style="background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 50%;"><i class="fas fa-paper-plane"></i></button>
@@ -126,25 +120,14 @@
 
             <section id="view-panel" class="view hidden animate__animated animate__fadeIn">
                 <div class="card">
-                    <h4>मेरा प्रोफाइल</h4>
+                    <h4>मेरा डिजिटल कार्ड</h4>
                     <hr style="margin: 10px 0; opacity: 0.1;">
                     <p id="p_name">नाम: लोड हो रहा है...</p>
                     <p id="p_id" style="font-size: 10px; color: var(--slate);">ID: ---</p>
-                    <button onclick="logout()" style="margin-top:10px; background:#fee2e2; color:#b91c1c; border:none; padding:5px 10px; border-radius:5px; font-size:10px;">Logout</button>
+                    <button onclick="logout()" style="margin-top:15px; background:#fee2e2; color:#b91c1c; border:none; padding:8px 15px; border-radius:8px; font-size:11px; font-weight:bold;">लॉगआउट (Logout)</button>
                 </div>
-                <h4>मेरे ऑर्डर्स</h4>
+                <h4 style="margin-top:20px;">मेरे ऑर्डर्स</h4>
                 <div id="orderList"></div>
-            </section>
-
-            <section id="view-admin" class="view hidden animate__animated animate__fadeIn">
-                <div class="card">
-                    <h3>Admin Control</h3>
-                    <div id="adminData">
-                        <p>Total Users: <span id="count_users">0</span></p>
-                        <p>Total Orders: <span id="count_orders">0</span></p>
-                    </div>
-                </div>
-                <div id="allUsersList"></div>
             </section>
         </main>
 
@@ -153,7 +136,6 @@
             <button class="nav-item" id="nav-market"><i class="fas fa-shopping-bag"></i><span>Market</span></button>
             <button class="nav-item" id="nav-chat"><i class="fas fa-comments"></i><span>Chat</span></button>
             <button class="nav-item" id="nav-panel"><i class="fas fa-user-circle"></i><span>Panel</span></button>
-            <button class="nav-item" id="nav-admin"><i class="fas fa-user-shield"></i><span>Admin</span></button>
         </nav>
     </div>
 
@@ -161,16 +143,17 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, getDocs, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Firebase Config (अपनी असली की यहाँ डालें)
+        // ✅ आपकी ओरिजिनल कॉन्फ़िगरेशन यहाँ सेट कर दी गई है
         const firebaseConfig = {
-            apiKey: "AIzaSy...", 
-            authDomain: "krya-digital.firebaseapp.com",
-            projectId: "krya-digital",
-            storageBucket: "krya-digital.appspot.com",
-            messagingSenderId: "12345",
-            appId: "1:123:web:abc"
+            apiKey: "AIzaSyCtSIGAybHuIga19QpPRS1egRrsbhvJV2c",
+            authDomain: "krya-94e55.firebaseapp.com",
+            projectId: "krya-94e55",
+            storageBucket: "krya-94e55.firebasestorage.app",
+            messagingSenderId: "1025043894227",
+            appId: "1:1025043894227:web:fa57c21ed2f6381a792926",
+            measurementId: "G-VMC9CDSCXK"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -178,24 +161,21 @@
 
         let currentUser = JSON.parse(localStorage.getItem('krya_user')) || null;
 
-        // --- Navigation Logic ---
+        // --- Navigation ---
         const nav = (id) => {
             document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById('view-' + id).classList.remove('hidden');
             document.getElementById('nav-' + id).classList.add('active');
             if (id === 'panel') loadUserData();
-            if (id === 'admin') loadAdminData();
         };
 
-        // Button Attachments (Module Scope Fix)
         document.getElementById('nav-home').onclick = () => nav('home');
         document.getElementById('nav-market').onclick = () => nav('market');
         document.getElementById('nav-chat').onclick = () => nav('chat');
         document.getElementById('nav-panel').onclick = () => nav('panel');
-        document.getElementById('nav-admin').onclick = () => nav('admin');
 
-        window.handleOrder = (service, price) => placeOrder(service, price);
+        window.handleOrder = (s, p) => placeOrder(s, p);
         window.logout = () => { localStorage.clear(); location.reload(); };
 
         // --- Registration ---
@@ -210,7 +190,6 @@
                 name: document.getElementById('reg_name').value,
                 phone: document.getElementById('reg_phone').value,
                 district: document.getElementById('reg_district').value,
-                role: 'member',
                 createdAt: serverTimestamp()
             };
 
@@ -222,26 +201,29 @@
                 showToast("✅ पंजीकरण सफल!", "#10b981");
                 nav('panel');
             } catch (err) {
-                showToast("❌ सर्वर एरर!", "#ef4444");
+                console.error(err);
+                showToast("❌ एरर! कृपया दोबारा कोशिश करें", "#ef4444");
             } finally {
                 btn.disabled = false;
                 loader.style.display = 'none';
             }
         };
 
-        // --- Chat Logic ---
+        // --- Chat ---
         document.getElementById('sendChatBtn').onclick = async () => {
             const input = document.getElementById('chatMsg');
             if (!currentUser) return showToast("कृपया पहले रजिस्टर करें", "#fbbf24");
             if (!input.value.trim()) return;
 
-            await addDoc(collection(db, "chats"), {
-                uid: currentUser.id,
-                userName: currentUser.name,
-                msg: input.value,
-                time: serverTimestamp()
-            });
-            input.value = "";
+            try {
+                await addDoc(collection(db, "chats"), {
+                    uid: currentUser.id,
+                    userName: currentUser.name,
+                    msg: input.value,
+                    time: serverTimestamp()
+                });
+                input.value = "";
+            } catch (e) { showToast("कनेक्शन एरर", "#ef4444"); }
         };
 
         onSnapshot(query(collection(db, "chats"), orderBy("time", "asc")), (snap) => {
@@ -257,7 +239,7 @@
 
         // --- Orders ---
         async function placeOrder(service, price) {
-            if (!currentUser) return nav('home');
+            if (!currentUser) { showToast("कृपया पहले पंजीकरण करें", "#fbbf24"); return nav('home'); }
             try {
                 await addDoc(collection(db, "orders"), {
                     uid: currentUser.id,
@@ -267,31 +249,28 @@
                     status: 'pending',
                     time: serverTimestamp()
                 });
-                showToast("📦 ऑर्डर सफल!", "#2563eb");
+                showToast("📦 ऑर्डर बुक हो गया!", "#2563eb");
                 nav('panel');
-            } catch (e) { showToast("❌ एरर", "#ef4444"); }
+            } catch (e) { showToast("ऑर्डर फेल हुआ", "#ef4444"); }
         }
 
         function loadUserData() {
-            if (!currentUser) return;
+            if (!currentUser) {
+                document.getElementById('p_name').innerText = "कृपया रजिस्टर करें";
+                return;
+            }
             document.getElementById('p_name').innerText = "नाम: " + currentUser.name;
             document.getElementById('p_id').innerText = "ID: " + currentUser.id;
             
             onSnapshot(query(collection(db, "orders"), where("uid", "==", currentUser.id)), (snap) => {
                 const list = document.getElementById('orderList');
                 list.innerHTML = "";
+                if(snap.empty) list.innerHTML = "<p style='font-size:12px; color:gray;'>कोई ऑर्डर नहीं मिला।</p>";
                 snap.forEach(doc => {
                     const d = doc.data();
-                    list.innerHTML += `<div class="card">${d.service} - <span class="badge-status status-${d.status}">${d.status}</span></div>`;
+                    list.innerHTML += `<div class="card" style="padding:15px; font-size:13px;">${d.service} <span class="badge-status status-pending">Pending</span></div>`;
                 });
             });
-        }
-
-        async function loadAdminData() {
-            const uSnap = await getDocs(collection(db, "users"));
-            const oSnap = await getDocs(collection(db, "orders"));
-            document.getElementById('count_users').innerText = uSnap.size;
-            document.getElementById('count_orders').innerText = oSnap.size;
         }
 
         function showToast(msg, color) {
@@ -299,6 +278,9 @@
             t.innerText = msg; t.style.background = color; t.style.display = 'block';
             setTimeout(() => t.style.display = 'none', 3000);
         }
+
+        // ऑटो-चेक अगर यूजर लॉग-इन है
+        if(currentUser) nav('panel');
     </script>
 </body>
 </html>
