@@ -20,7 +20,6 @@
         body, html { height: 100%; width: 100%; overflow: hidden; background: var(--light); }
         .app-container { display: flex; flex-direction: column; height: 100vh; }
 
-        /* Navigation & Header */
         header { background: #fff; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; z-index: 1000; }
         .brand { font-size: 20px; font-weight: 800; color: var(--dark); }
         .brand span { color: var(--primary); }
@@ -28,12 +27,11 @@
         main { flex: 1; overflow-y: auto; padding: 15px 15px 90px; scrollbar-width: none; }
         
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 10px 0 25px; border-top: 1px solid #e2e8f0; z-index: 1001; }
-        .nav-item { border: none; background: none; color: #94a3b8; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .nav-item { border: none; background: none; color: #94a3b8; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; outline: none; }
         .nav-item.active { color: var(--accent); }
         .nav-item i { font-size: 20px; }
         .nav-item span { font-size: 10px; font-weight: 700; }
 
-        /* Components */
         .card { background: #fff; padding: 20px; border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 20px; border: 1px solid #f1f5f9; }
         .btn-primary { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
         .btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
@@ -42,8 +40,7 @@
         .input-group label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 5px; color: var(--slate); }
         .form-control { width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #e2e8f0; outline: none; }
 
-        /* Messenger Full Screen */
-        .chat-view { height: calc(100vh - 180px); display: flex; flex-direction: column; background: #0f172a; border-radius: 20px; overflow: hidden; }
+        .chat-view { height: calc(100vh - 250px); display: flex; flex-direction: column; background: #0f172a; border-radius: 20px; overflow: hidden; }
         .chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
         .msg { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 14px; color: #fff; }
         .msg-me { align-self: flex-end; background: var(--primary); border-bottom-right-radius: 2px; }
@@ -52,7 +49,6 @@
         .chat-input-box { padding: 10px; background: #1e293b; display: flex; gap: 8px; }
         .chat-input-box input { flex: 1; padding: 10px; border-radius: 20px; border: none; outline: none; background: #0f172a; color: #fff; }
 
-        /* Admin & Status Badges */
         .badge-status { padding: 2px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
         .status-pending { background: #fef3c7; color: #92400e; }
         .status-confirmed { background: #d1fae5; color: #065f46; }
@@ -60,6 +56,8 @@
         .hidden { display: none !important; }
         .loader { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        
+        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 10px 20px; border-radius: 10px; color: white; display: none; z-index: 9999; min-width: 200px; text-align: center; }
     </style>
 </head>
 <body>
@@ -67,7 +65,7 @@
     <div class="app-container">
         <header>
             <div class="brand">KRYA<span>Digital</span></div>
-            <div id="auth-status" style="font-size: 10px; font-weight: bold; color: var(--slate);">Guest</div>
+            <div id="auth-status" style="font-size: 10px; font-weight: bold; color: var(--slate);">Guest Mode</div>
         </header>
 
         <main id="main-content">
@@ -82,7 +80,7 @@
                         </div>
                         <div class="input-group">
                             <label>मोबाइल नंबर *</label>
-                            <input type="tel" id="reg_phone" class="form-control" placeholder="10 अंकों का नंबर" required>
+                            <input type="tel" id="reg_phone" class="form-control" placeholder="10 अंकों का नंबर" pattern="[0-9]{10}" required>
                         </div>
                         <div class="input-group">
                             <label>जिला *</label>
@@ -94,7 +92,7 @@
                             </select>
                         </div>
                         <button type="submit" class="btn-primary" id="regBtn">
-                            <div class="loader"></div> <span>सदस्य बनें</span>
+                            <div class="loader" id="regLoader"></div> <span id="regText">सदस्य बनें</span>
                         </button>
                     </form>
                 </div>
@@ -104,11 +102,11 @@
                 <h3 style="margin-bottom: 15px;">उपलब्ध सेवाएँ</h3>
                 <div id="product-list">
                     <div class="card">
-                        <h4 id="prod_title">3D Logo Design</h4>
+                        <h4>3D Logo Design</h4>
                         <p style="font-size: 12px; color: var(--slate); margin: 5px 0 15px;">प्रोफेशनल ब्रांडिंग सेवा</p>
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <span style="font-weight: 800; color: var(--primary);">₹199</span>
-                            <button onclick="placeOrder('3D Logo', 199)" class="btn-primary" style="width: auto; padding: 8px 20px;">Buy Now</button>
+                            <button onclick="handleOrder('3D Logo', 199)" class="btn-primary" style="width: auto; padding: 8px 20px;">Buy Now</button>
                         </div>
                     </div>
                 </div>
@@ -121,17 +119,18 @@
                     </div>
                     <div class="chat-input-box">
                         <input type="text" id="chatMsg" placeholder="मैसेज लिखें...">
-                        <button onclick="sendMessage()" style="background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 50%;"><i class="fas fa-paper-plane"></i></button>
+                        <button id="sendChatBtn" style="background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 50%;"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
             </section>
 
             <section id="view-panel" class="view hidden animate__animated animate__fadeIn">
-                <div class="card" id="userProfile">
+                <div class="card">
                     <h4>मेरा प्रोफाइल</h4>
                     <hr style="margin: 10px 0; opacity: 0.1;">
-                    <p id="p_name">लोड हो रहा है...</p>
-                    <p id="p_id" style="font-size: 10px; color: var(--slate);"></p>
+                    <p id="p_name">नाम: लोड हो रहा है...</p>
+                    <p id="p_id" style="font-size: 10px; color: var(--slate);">ID: ---</p>
+                    <button onclick="logout()" style="margin-top:10px; background:#fee2e2; color:#b91c1c; border:none; padding:5px 10px; border-radius:5px; font-size:10px;">Logout</button>
                 </div>
                 <h4>मेरे ऑर्डर्स</h4>
                 <div id="orderList"></div>
@@ -150,21 +149,21 @@
         </main>
 
         <nav class="bottom-nav">
-            <button class="nav-item active" onclick="nav('home')"><i class="fas fa-id-card"></i><span>संघ</span></button>
-            <button class="nav-item" onclick="nav('market')"><i class="fas fa-shopping-bag"></i><span>Market</span></button>
-            <button class="nav-item" onclick="nav('chat')"><i class="fas fa-comments"></i><span>Chat</span></button>
-            <button class="nav-item" onclick="nav('panel')"><i class="fas fa-user-circle"></i><span>Panel</span></button>
-            <button class="nav-item" onclick="nav('admin')"><i class="fas fa-user-shield"></i><span>Admin</span></button>
+            <button class="nav-item active" id="nav-home"><i class="fas fa-id-card"></i><span>संघ</span></button>
+            <button class="nav-item" id="nav-market"><i class="fas fa-shopping-bag"></i><span>Market</span></button>
+            <button class="nav-item" id="nav-chat"><i class="fas fa-comments"></i><span>Chat</span></button>
+            <button class="nav-item" id="nav-panel"><i class="fas fa-user-circle"></i><span>Panel</span></button>
+            <button class="nav-item" id="nav-admin"><i class="fas fa-user-shield"></i><span>Admin</span></button>
         </nav>
     </div>
 
-    <div id="toast" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 10px 20px; border-radius: 10px; color: white; display: none; z-index: 9999;"></div>
+    <div id="toast"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, setDoc, getDocs, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, getDocs, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // 🔥 IMPORTANT: अपनी असली कॉन्फ़िगरेशन यहाँ डालें
+        // Firebase Config (अपनी असली की यहाँ डालें)
         const firebaseConfig = {
             apiKey: "AIzaSy...", 
             authDomain: "krya-digital.firebaseapp.com",
@@ -177,24 +176,35 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Global State
         let currentUser = JSON.parse(localStorage.getItem('krya_user')) || null;
 
-        // 1. Navigation
-        window.nav = (id) => {
+        // --- Navigation Logic ---
+        const nav = (id) => {
             document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById('view-'+id).classList.remove('hidden');
+            document.getElementById('view-' + id).classList.remove('hidden');
+            document.getElementById('nav-' + id).classList.add('active');
             if (id === 'panel') loadUserData();
             if (id === 'admin') loadAdminData();
         };
 
-        // 2. Registration Logic
-        document.getElementById('regForm').addEventListener('submit', async (e) => {
+        // Button Attachments (Module Scope Fix)
+        document.getElementById('nav-home').onclick = () => nav('home');
+        document.getElementById('nav-market').onclick = () => nav('market');
+        document.getElementById('nav-chat').onclick = () => nav('chat');
+        document.getElementById('nav-panel').onclick = () => nav('panel');
+        document.getElementById('nav-admin').onclick = () => nav('admin');
+
+        window.handleOrder = (service, price) => placeOrder(service, price);
+        window.logout = () => { localStorage.clear(); location.reload(); };
+
+        // --- Registration ---
+        document.getElementById('regForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('regBtn');
+            const loader = document.getElementById('regLoader');
             btn.disabled = true;
-            btn.querySelector('.loader').style.display = 'block';
+            loader.style.display = 'block';
 
             const userData = {
                 name: document.getElementById('reg_name').value,
@@ -212,17 +222,18 @@
                 showToast("✅ पंजीकरण सफल!", "#10b981");
                 nav('panel');
             } catch (err) {
-                showToast("❌ त्रुटि!", "#ef4444");
+                showToast("❌ सर्वर एरर!", "#ef4444");
             } finally {
                 btn.disabled = false;
-                btn.querySelector('.loader').style.display = 'none';
+                loader.style.display = 'none';
             }
-        });
+        };
 
-        // 3. Real-time Chat Logic
-        window.sendMessage = async () => {
+        // --- Chat Logic ---
+        document.getElementById('sendChatBtn').onclick = async () => {
             const input = document.getElementById('chatMsg');
-            if (!currentUser || !input.value.trim()) return;
+            if (!currentUser) return showToast("कृपया पहले रजिस्टर करें", "#fbbf24");
+            if (!input.value.trim()) return;
 
             await addDoc(collection(db, "chats"), {
                 uid: currentUser.id,
@@ -244,10 +255,9 @@
             list.scrollTop = list.scrollHeight;
         });
 
-        // 4. Marketplace & Orders
-        window.placeOrder = async (service, price) => {
+        // --- Orders ---
+        async function placeOrder(service, price) {
             if (!currentUser) return nav('home');
-            
             try {
                 await addDoc(collection(db, "orders"), {
                     uid: currentUser.id,
@@ -257,12 +267,11 @@
                     status: 'pending',
                     time: serverTimestamp()
                 });
-                showToast("📦 ऑर्डर बुक हो गया!", "#2563eb");
+                showToast("📦 ऑर्डर सफल!", "#2563eb");
                 nav('panel');
-            } catch (e) { showToast("❌ त्रुटि", "#ef4444"); }
-        };
+            } catch (e) { showToast("❌ एरर", "#ef4444"); }
+        }
 
-        // 5. Dashboard Data
         function loadUserData() {
             if (!currentUser) return;
             document.getElementById('p_name').innerText = "नाम: " + currentUser.name;
@@ -278,26 +287,16 @@
             });
         }
 
-        // 6. Admin Panel Logic (Simple)
         async function loadAdminData() {
-            const userSnap = await getDocs(collection(db, "users"));
-            const orderSnap = await getDocs(collection(db, "orders"));
-            document.getElementById('count_users').innerText = userSnap.size;
-            document.getElementById('count_orders').innerText = orderSnap.size;
-            
-            const list = document.getElementById('allUsersList');
-            list.innerHTML = "<h4>User List</h4>";
-            userSnap.forEach(doc => {
-                list.innerHTML += `<div class="card" style="font-size:12px;">${doc.data().name} (${doc.data().district})</div>`;
-            });
+            const uSnap = await getDocs(collection(db, "users"));
+            const oSnap = await getDocs(collection(db, "orders"));
+            document.getElementById('count_users').innerText = uSnap.size;
+            document.getElementById('count_orders').innerText = oSnap.size;
         }
 
-        // Helpers
         function showToast(msg, color) {
             const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.style.background = color;
-            t.style.display = 'block';
+            t.innerText = msg; t.style.background = color; t.style.display = 'block';
             setTimeout(() => t.style.display = 'none', 3000);
         }
     </script>
