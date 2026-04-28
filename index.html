@@ -6,369 +6,243 @@
     <title>KRYALIVE Super App</title>
     
     <meta name="theme-color" content="#10b981">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="manifest" href="/manifest.json">
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
     <style>
         :root {
             --primary: #10b981;
             --accent: #2563eb;
             --dark: #0f172a;
-            --slate: #475569;
             --light: #f8fafc;
-            --gold: #fbbf24;
-            --glass: rgba(255, 255, 255, 0.85);
             --gradient: linear-gradient(135deg, #10b981 0%, #2563eb 100%);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body, html { height: 100%; width: 100%; background: var(--light); color: var(--dark); overflow: hidden; position: fixed; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--light); color: var(--dark); overflow-x: hidden; }
         
-        .app-container { display: flex; flex-direction: column; height: 100vh; width: 100%; }
-
         header { 
-            background: #fff; padding: 15px 20px; display: flex; justify-content: space-between; 
-            align-items: center; border-bottom: 1px solid #e2e8f0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            background: #fff; padding: 15px; display: flex; justify-content: space-between; 
+            align-items: center; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 1000;
         }
-        .brand { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+        .brand { font-size: 20px; font-weight: 800; }
         .brand span { color: var(--primary); }
 
-        main { flex: 1; overflow-y: auto; padding-bottom: 90px; scrollbar-width: none; }
-        main::-webkit-scrollbar { display: none; }
-        .view { display: none; padding: 15px; }
-        .view.active { display: block; animation: fadeInUp 0.4s ease; }
+        .view { display: none; padding: 20px; min-height: 80vh; }
+        .view.active { display: block; }
 
-        /* Premium Wallet & Stats */
+        /* Auth UI */
+        .auth-container { text-align: center; padding-top: 50px; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        
+        .input-group { margin-bottom: 15px; text-align: left; }
+        input { width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid #e2e8f0; font-size: 16px; outline: none; }
+        input:focus { border-color: var(--accent); }
+
+        .btn { 
+            width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700; 
+            font-size: 16px; cursor: pointer; transition: 0.3s;
+        }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-success { background: var(--primary); color: white; }
+
+        /* Dashboard UI */
         .wallet-card {
-            background: var(--gradient); color: white; padding: 25px; border-radius: 28px;
-            margin: 10px 0 20px; box-shadow: 0 12px 24px rgba(37, 99, 235, 0.25);
-            display: flex; justify-content: space-between; align-items: center;
+            background: var(--gradient); color: white; padding: 25px; border-radius: 25px;
+            margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;
         }
-        .wallet-balance h2 { font-size: 28px; font-weight: 800; margin-top: 5px; }
-        .wallet-balance p { font-size: 11px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
-
-        /* Engagement Grid */
-        .engage-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-        .engage-item { background: #fff; padding: 12px 5px; border-radius: 18px; text-align: center; font-size: 10px; font-weight: 700; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
-        .engage-item i { font-size: 20px; margin-bottom: 6px; display: block; color: var(--accent); }
-
-        /* Store Grid */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .card { 
-            background: #fff; border-radius: 24px; padding: 15px; border: 1px solid #f1f5f9;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: 0.3s; position: relative;
-        }
-        .card:active { transform: scale(0.96); }
-        .card h4 { font-size: 13px; margin-bottom: 8px; height: 38px; overflow: hidden; }
-        .card .price { color: var(--primary); font-weight: 800; font-size: 18px; margin-bottom: 12px; display: block; }
 
         /* Bottom Nav */
         .bottom-nav { 
-            position: fixed; bottom: 0; width: 100%; background: var(--glass); backdrop-filter: blur(20px);
-            display: flex; border-top: 1px solid #e2e8f0; padding: 10px 0 25px; z-index: 1000;
+            position: fixed; bottom: 0; width: 100%; background: #fff; 
+            display: flex; border-top: 1px solid #eee; padding: 10px 0; z-index: 1000;
         }
-        .nav-item { 
-            flex: 1; border: none; background: none; color: #94a3b8; display: flex; 
-            flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-weight: 700;
-        }
+        .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; cursor: pointer; }
         .nav-item.active { color: var(--accent); }
-        .nav-item i { font-size: 20px; }
+        .nav-item i { font-size: 20px; display: block; }
+        .nav-item span { font-size: 10px; font-weight: 700; }
 
-        /* Buttons & Inputs */
-        .btn { width: 100%; padding: 16px; border-radius: 16px; border: none; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-primary { background: var(--accent); color: white; box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2); }
-        .btn-success { background: var(--primary); color: white; }
-        .input-field { width: 100%; padding: 16px; border-radius: 16px; border: 1.5px solid #e2e8f0; margin-bottom: 15px; outline: none; font-size: 16px; background: #fff; }
-
-        /* Chat System */
-        .chat-container { height: calc(100vh - 280px); display: flex; flex-direction: column; background: #fff; border-radius: 28px; overflow: hidden; border: 1px solid #e2e8f0; }
-        .messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
-        .bubble { max-width: 80%; padding: 12px 18px; border-radius: 20px; font-size: 13px; line-height: 1.5; }
-        .bubble.ai { align-self: flex-start; background: #f1f5f9; border-bottom-left-radius: 4px; }
-        .bubble.user { align-self: flex-end; background: var(--accent); color: white; border-bottom-right-radius: 4px; }
-
-        /* Modal / Payment Popup */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
-        .modal-content { background: white; width: 100%; max-width: 400px; padding: 30px; border-radius: 32px; text-align: center; animation: zoomIn 0.3s; }
-
-        /* Animations */
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 14px 28px; border-radius: 14px; color: white; display: none; z-index: 99999; font-weight: 700; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+        #toast { 
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); 
+            padding: 12px 25px; background: #333; color: white; border-radius: 50px; 
+            display: none; z-index: 2000; font-size: 14px; white-space: nowrap;
+        }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <header>
-        <div class="brand">KRYA<span>LIVE</span></div>
-        <div id="admin-indicator" style="display:none; font-size: 10px; background: #ef4444; color: white; padding: 4px 8px; border-radius: 20px;">ADMIN</div>
-    </header>
+<div id="toast">संदेश यहाँ दिखेगा</div>
 
-    <main id="main-viewport">
-        <section id="view-auth" class="view active">
-            <div style="text-align: center; padding: 40px 10px;">
-                <h2 style="font-size: 28px; font-weight: 800; margin-bottom: 10px;">नमस्ते!</h2>
-                <p style="color: var(--slate); font-size: 14px; margin-bottom: 30px;">Login with OTP to start earning daily.</p>
+<header>
+    <div class="brand">KRYA<span>LIVE</span></div>
+    <div id="user-status" style="font-size: 12px; font-weight: 700; color: var(--primary);">OFFLINE</div>
+</header>
+
+<main>
+    <section id="view-auth" class="view active">
+        <div class="auth-container">
+            <div class="card">
+                <h2 style="margin-bottom: 10px;">लॉगिन करें</h2>
+                <p style="color: #64748b; font-size: 14px; margin-bottom: 25px;">KRYALIVE में आपका स्वागत है।</p>
+                
                 <div id="recaptcha-container"></div>
-                <input type="tel" id="login-phone" class="input-field" placeholder="Phone Number (+91XXXX)">
-                <button class="btn btn-primary" onclick="handleSendOTP()">Send OTP</button>
-                <div id="otp-group" style="display: none; margin-top: 15px;">
-                    <input type="number" id="login-otp" class="input-field" placeholder="6-Digit OTP">
-                    <button class="btn btn-success" onclick="handleVerifyOTP()">Verify & Login</button>
+                
+                <div class="input-group">
+                    <input type="tel" id="phone" placeholder="मोबाइल नंबर (+91XXXXXXXXXX)">
                 </div>
-            </div>
-        </section>
-
-        <section id="view-home" class="view">
-            <div class="wallet-card">
-                <div class="wallet-balance">
-                    <p>Total Balance</p>
-                    <h2>₹<span id="display-balance">0.00</span></h2>
+                <button id="send-otp-btn" class="btn btn-primary">OTP भेजें</button>
+                
+                <div id="otp-section" style="display: none; margin-top: 20px;">
+                    <div class="input-group">
+                        <input type="number" id="otp" placeholder="6 अंकों का OTP डालें">
+                    </div>
+                    <button id="verify-otp-btn" class="btn btn-success">वेरिफाई करें</button>
                 </div>
-                <button class="btn" style="width: auto; background: rgba(255,255,255,0.2); color: white; padding: 8px 20px; border-radius: 12px;" onclick="nav('wallet')">Withdraw</button>
-            </div>
-
-            <div class="engage-grid">
-                <div class="engage-item" onclick="dailyReward()"><i class="fas fa-calendar-check" style="color: #10b981;"></i>Reward</div>
-                <div class="engage-item" onclick="nav('tasks')"><i class="fas fa-tasks" style="color: #2563eb;"></i>Tasks</div>
-                <div class="engage-item" onclick="nav('spin')"><i class="fas fa-dharmachakra" style="color: #f59e0b;"></i>Spin</div>
-                <div class="engage-item" onclick="joinTelegram()"><i class="fab fa-telegram" style="color: #0ea5e9;"></i>Join</div>
-            </div>
-
-            <div class="card" style="border: 1.5px dashed var(--accent);">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h4 style="font-weight: 800;">Referral Link</h4>
-                    <span id="ref-count" style="font-size: 10px; font-weight: 800; color: var(--accent);">0 Refs</span>
-                </div>
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <input type="text" id="ref-link" readonly class="input-field" style="margin:0; flex:1; font-size:12px; font-weight:700;">
-                    <button class="btn btn-primary" style="width: 50px; padding:0;" onclick="copyRef()"><i class="fas fa-copy"></i></button>
-                </div>
-            </div>
-
-            <h4 style="font-weight: 800; margin: 20px 0 10px;">Order History</h4>
-            <div id="order-list"></div>
-        </section>
-
-        <section id="view-store" class="view">
-            <h3 style="font-weight: 800; margin-bottom: 20px;">Hot Deals 🔥</h3>
-            <div class="grid" id="store-grid"></div>
-        </section>
-
-        <section id="view-chat" class="view">
-            <h3 style="font-weight: 800; margin-bottom: 15px;">KRYA AI Assistant</h3>
-            <div class="chat-container">
-                <div class="messages" id="chat-msgs">
-                    <div class="bubble ai">नमस्ते मुकेश जी के KRYALIVE में आपका स्वागत है! मैं आपकी कैसे मदद कर सकता हूँ?</div>
-                </div>
-                <div style="padding: 12px; display: flex; gap: 10px; background: white; border-top: 1px solid #f1f5f9;">
-                    <input type="text" id="chat-input" placeholder="Type here..." style="margin:0; border-radius: 30px;">
-                    <button class="btn btn-primary" style="width: 48px; height: 48px; border-radius: 50%; padding: 0;" onclick="handleChat()"><i class="fas fa-paper-plane"></i></button>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <nav class="bottom-nav">
-        <button class="nav-item active" id="nav-home" onclick="nav('home')"><i class="fas fa-house"></i><span>Home</span></button>
-        <button class="nav-item" id="nav-store" onclick="nav('store')"><i class="fas fa-shopping-bag"></i><span>Store</span></button>
-        <button class="nav-item" id="nav-chat" onclick="nav('chat')"><i class="fas fa-robot"></i><span>AI Chat</span></button>
-        <button class="nav-item" id="nav-auth" onclick="nav('auth')"><i class="fas fa-user-circle"></i><span>Account</span></button>
-    </nav>
-</div>
-
-<div id="pay-modal" class="modal">
-    <div class="modal-content">
-        <h3 id="m-title" style="font-weight: 800;">Product Name</h3>
-        <h2 id="m-price" style="color: var(--primary); margin: 10px 0; font-size: 32px;">₹00</h2>
-        <div style="background: #f8fafc; padding: 15px; border-radius: 18px; margin-bottom: 20px; border: 1px solid #e2e8f0; text-align: left;">
-            <p style="font-size: 10px; text-transform: uppercase; color: var(--slate);">Send to UPI ID:</p>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                <b style="font-size: 14px;">93690mukeshkumar@axl</b>
-                <i class="fas fa-copy" style="color: var(--accent);" onclick="copyToClipboard('93690mukeshkumar@axl')"></i>
             </div>
         </div>
-        <button class="btn btn-primary" onclick="launchUPI()">PAY NOW</button>
-        <div style="margin-top: 25px; border-top: 1px solid #f1f5f9; padding-top: 20px; text-align: left;">
-            <label style="font-size: 11px; font-weight: 800; color: var(--slate);">Enter 12-Digit UTR No.</label>
-            <input type="number" id="pay-utr" class="input-field" placeholder="UTR Number" style="margin-top:5px;">
-            <button class="btn btn-success" onclick="handleOrderSubmit()">Submit Order</button>
-        </div>
-        <button style="margin-top: 15px; background: none; border: none; color: #94a3b8; font-weight: 600;" onclick="closeModal()">Cancel</button>
-    </div>
-</div>
+    </section>
 
-<div id="toast">Message here</div>
+    <section id="view-home" class="view">
+        <div class="wallet-card">
+            <div>
+                <p style="font-size: 12px; opacity: 0.9;">कुल कमाई</p>
+                <h2 id="balance">₹0.00</h2>
+            </div>
+            <i class="fas fa-wallet fa-2x"></i>
+        </div>
+        <div class="card">
+            <h4>आपका रेफरल लिंक</h4>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <input type="text" id="ref-link" readonly style="font-size: 12px; background: #f1f5f9;">
+                <button class="btn btn-primary" style="width: auto; padding: 0 15px;" onclick="copyLink()">कॉपी</button>
+            </div>
+        </div>
+        <h4 style="margin: 20px 0 10px;">हाल के ऑर्डर्स</h4>
+        <div id="order-history"></div>
+    </section>
+
+    <section id="view-store" class="view">
+        <h3>डिजिटल स्टोर</h3>
+        <div id="product-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+            </div>
+    </section>
+</main>
+
+<nav class="bottom-nav">
+    <button class="nav-item active" onclick="showPage('home')"><i class="fas fa-home"></i><span>Home</span></button>
+    <button class="nav-item" onclick="showPage('store')"><i class="fas fa-store"></i><span>Store</span></button>
+    <button class="nav-item" onclick="showPage('auth')"><i class="fas fa-user"></i><span>Profile</span></button>
+</nav>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, where, orderBy, serverTimestamp, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+    import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // Configuration
+    // --- मुकेश जी: अपनी Firebase Config यहाँ डालें ---
     const firebaseConfig = {
-        apiKey: "YOUR_FIREBASE_API_KEY",
-        authDomain: "kryalive-super.firebaseapp.com",
-        projectId: "kryalive-super",
-        storageBucket: "kryalive-super.appspot.com",
-        messagingSenderId: "YOUR_SENDER_ID",
-        appId: "YOUR_APP_ID"
+        apiKey: "AIzaSy...", 
+        authDomain: "your-app.firebaseapp.com",
+        projectId: "your-app",
+        storageBucket: "your-app.appspot.com",
+        messagingSenderId: "123456789",
+        appId: "1:123456789:web:abcdef"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const storage = getStorage(app);
 
-    const ADMIN_PHONE = "+916379403821";
-    let userData = null;
-    let confirmRes = null;
-    let selectedProd = null;
+    let confirmationResult = null;
 
-    // View Management
-    window.nav = (id) => {
+    // --- Navigation Logic ---
+    window.showPage = (id) => {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById('view-' + id).classList.add('active');
-        document.getElementById('nav-' + id).classList.add('active');
-        if(id === 'home' && userData) syncDashboard();
+        // Logic for nav item activation
     };
 
-    window.toast = (msg, bg = "#0f172a") => {
+    // --- Toast Function ---
+    function showToast(msg) {
         const t = document.getElementById('toast');
-        t.innerText = msg; t.style.background = bg; t.style.display = 'block';
+        t.innerText = msg;
+        t.style.display = 'block';
         setTimeout(() => t.style.display = 'none', 3000);
+    }
+
+    // --- AUTHENTICATION ---
+    window.onload = () => {
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+            'size': 'invisible'
+        });
     };
 
-    // Auth Logic
-    window.handleSendOTP = () => {
-        let phone = document.getElementById('login-phone').value.trim();
-        if(phone.length < 10) return toast("Invalid Phone Number", "#ef4444");
-        if(!phone.startsWith("+")) phone = "+91" + phone;
+    document.getElementById('send-otp-btn').addEventListener('click', () => {
+        let phone = document.getElementById('phone').value.trim();
+        if(!phone.startsWith('+')) phone = "+91" + phone;
 
-        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
         signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
-            .then(res => {
-                confirmRes = res;
-                document.getElementById('otp-group').style.display = 'block';
-                toast("OTP Sent!", "#10b981");
-            }).catch(err => toast(err.message, "#ef4444"));
-    };
+            .then(result => {
+                confirmationResult = result;
+                document.getElementById('otp-section').style.display = 'block';
+                showToast("OTP भेज दिया गया है!");
+            }).catch(err => {
+                showToast("गलती: " + err.message);
+                console.error(err);
+            });
+    });
 
-    window.handleVerifyOTP = () => {
-        const otp = document.getElementById('login-otp').value;
-        confirmRes.confirm(otp).then(async (res) => {
-            await initUser(res.user);
+    document.getElementById('verify-otp-btn').addEventListener('click', () => {
+        const code = document.getElementById('otp').value;
+        confirmationResult.confirm(code).then(async (result) => {
+            await syncUser(result.user);
             location.reload();
-        }).catch(() => toast("Wrong OTP", "#ef4444"));
-    };
+        }).catch(() => showToast("गलत OTP!"));
+    });
 
-    async function initUser(user) {
-        const docRef = doc(db, "users", user.uid);
-        const snap = await getDoc(docRef);
+    async function syncUser(user) {
+        const ref = doc(db, "users", user.uid);
+        const snap = await getDoc(ref);
         if(!snap.exists()) {
-            const refCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-            const referredBy = new URLSearchParams(window.location.search).get('ref');
-            await setDoc(docRef, {
+            await setDoc(ref, {
                 uid: user.uid,
                 phone: user.phoneNumber,
-                referralCode: refCode,
-                referredBy: referredBy || null,
-                walletBalance: referredBy ? 5 : 0,
-                referralCount: 0,
+                walletBalance: 0,
+                referralCode: Math.random().toString(36).substring(7).toUpperCase(),
                 createdAt: serverTimestamp()
             });
         }
     }
 
-    onAuthStateChanged(auth, async (user) => {
+    onAuthStateChanged(auth, user => {
         if(user) {
-            const snap = await getDoc(doc(db, "users", user.uid));
-            userData = snap.data();
-            if(userData.phone === ADMIN_PHONE) document.getElementById('admin-indicator').style.display = 'block';
-            nav('home');
-            loadProducts();
+            document.getElementById('user-status').innerText = "ONLINE";
+            showPage('home');
+            loadUserData(user.uid);
         } else {
-            nav('auth');
+            showPage('auth');
         }
     });
 
-    // Dashboard Sync
-    function syncDashboard() {
-        onSnapshot(doc(db, "users", userData.uid), snap => {
-            const d = snap.data();
-            document.getElementById('display-balance').innerText = d.walletBalance.toFixed(2);
-            document.getElementById('ref-link').value = `https://kryalive.com?ref=${d.referralCode}`;
-            document.getElementById('ref-count').innerText = `${d.referralCount} Refs`;
-        });
-
-        const q = query(collection(db, "orders"), where("uid", "==", userData.uid), orderBy("timestamp", "desc"));
-        onSnapshot(q, snap => {
-            const list = document.getElementById('order-list');
-            list.innerHTML = "";
-            snap.forEach(doc => {
-                const o = doc.data();
-                const color = o.status === "APPROVED" ? "#10b981" : (o.status === "REJECTED" ? "#ef4444" : "#f59e0b");
-                list.innerHTML += `
-                    <div class="card animate__animated animate__fadeIn" style="padding: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
-                        <div><b>${o.productName}</b><br><span style="color:gray;">UTR: ${o.utr}</span></div>
-                        <span style="color:${color}; font-weight:800;">${o.status}</span>
-                    </div>
-                `;
-            });
-            if(snap.empty) list.innerHTML = `<p style="text-align: center; color: gray; font-size: 11px;">No orders yet.</p>`;
+    function loadUserData(uid) {
+        onSnapshot(doc(db, "users", uid), snap => {
+            const data = snap.data();
+            document.getElementById('balance').innerText = "₹" + data.walletBalance;
+            document.getElementById('ref-link').value = "https://kryalive.com?ref=" + data.referralCode;
         });
     }
 
-    // Store Logic
-    function loadProducts() {
-        const grid = document.getElementById('store-grid');
-        onSnapshot(collection(db, "products"), snap => {
-            grid.innerHTML = "";
-            snap.forEach(doc => {
-                const p = doc.data();
-                grid.innerHTML += `
-                    <div class="card">
-                        <h4>${p.name}</h4>
-                        <span class="price">₹${p.price}</span>
-                        <button class="btn btn-primary" style="padding: 10px; font-size: 11px;" onclick="openBuy('${doc.id}', '${p.name}', ${p.price})">BUY</button>
-                    </div>
-                `;
-            });
-        });
-    }
-
-    window.openBuy = (id, name, price) => {
-        selectedProd = { id, name, price };
-        document.getElementById('m-title').innerText = name;
-        document.getElementById('m-price').innerText = "₹" + price;
-        document.getElementById('pay-modal').style.display = 'flex';
+    window.copyLink = () => {
+        const copyText = document.getElementById("ref-link");
+        copyText.select();
+        document.execCommand("copy");
+        showToast("लिंक कॉपी हो गया!");
     };
+</script>
 
-    window.closeModal = () => document.getElementById('pay-modal').style.display = 'none';
-
-    window.launchUPI = () => {
-        const url = `upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh&am=${selectedProd.price}&cu=INR`;
-        window.location.href = url;
-    };
-
-    window.handleOrderSubmit = async () => {
-        const utr = document.getElementById('pay-utr').value.trim();
-        if(utr.length < 12) return toast("Invalid UTR No.", "#ef4444");
-
-        await addDoc(collection(db, "orders"), {
-            uid: userData.uid,
-            phone: userData.phone,
-            productName: selectedProd.name,
-            amount: selectedProd.price,
-            utr: utr,
-            status: "PENDING",
-            timestamp: serverTimestamp()
-        });
-        closeModal();
-        toast("Order Submitted!",
+</body>
+    </html>
+    
