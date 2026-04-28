@@ -145,15 +145,15 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // ✅ आपकी ओरिजिनल कॉन्फ़िगरेशन यहाँ सेट कर दी गई है
+        // ✅ नया 'Signing' प्रोजेक्ट कॉन्फ़िगरेशन अपडेट कर दिया गया है
         const firebaseConfig = {
-            apiKey: "AIzaSyCtSIGAybHuIga19QpPRS1egRrsbhvJV2c",
-            authDomain: "krya-94e55.firebaseapp.com",
-            projectId: "krya-94e55",
-            storageBucket: "krya-94e55.firebasestorage.app",
-            messagingSenderId: "1025043894227",
-            appId: "1:1025043894227:web:fa57c21ed2f6381a792926",
-            measurementId: "G-VMC9CDSCXK"
+            apiKey: "AIzaSyCJ_heMnqu6ENYS12hecty9V0IOKQlakFs",
+            authDomain: "signing-9fc01.firebaseapp.com",
+            projectId: "signing-9fc01",
+            storageBucket: "signing-9fc01.firebasestorage.app",
+            messagingSenderId: "926296137348",
+            appId: "1:926296137348:web:c42cdf48199ba877246cd5",
+            measurementId: "G-2821V0DH0F"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -161,7 +161,6 @@
 
         let currentUser = JSON.parse(localStorage.getItem('krya_user')) || null;
 
-        // --- Navigation ---
         const nav = (id) => {
             document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -178,7 +177,6 @@
         window.handleOrder = (s, p) => placeOrder(s, p);
         window.logout = () => { localStorage.clear(); location.reload(); };
 
-        // --- Registration ---
         document.getElementById('regForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('regBtn');
@@ -209,7 +207,6 @@
             }
         };
 
-        // --- Chat ---
         document.getElementById('sendChatBtn').onclick = async () => {
             const input = document.getElementById('chatMsg');
             if (!currentUser) return showToast("कृपया पहले रजिस्टर करें", "#fbbf24");
@@ -237,7 +234,6 @@
             list.scrollTop = list.scrollHeight;
         });
 
-        // --- Orders ---
         async function placeOrder(service, price) {
             if (!currentUser) { showToast("कृपया पहले पंजीकरण करें", "#fbbf24"); return nav('home'); }
             try {
@@ -279,7 +275,6 @@
             setTimeout(() => t.style.display = 'none', 3000);
         }
 
-        // ऑटो-चेक अगर यूजर लॉग-इन है
         if(currentUser) nav('panel');
     </script>
 </body>
