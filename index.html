@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA Digital | Real-World Platform</title>
+    <title>KRYA Digital | AI Powered Platform</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -32,30 +32,30 @@
         .nav-item i { font-size: 20px; }
         .nav-item span { font-size: 10px; font-weight: 700; }
 
-        .card { background: #fff; padding: 20px; border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 20px; border: 1px solid #f1f5f9; }
-        .btn-primary { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
-        .btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
+        .card { background: #fff; padding: 20px; border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 20px; border: 1px solid #f1f5f9; position: relative; }
+        .btn-primary { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; text-decoration: none; }
         
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 5px; color: var(--slate); }
-        .form-control { width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #e2e8f0; outline: none; }
+        .form-control { width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #e2e8f0; outline: none; margin-bottom: 15px; }
 
-        .chat-view { height: calc(100vh - 250px); display: flex; flex-direction: column; background: #0f172a; border-radius: 20px; overflow: hidden; }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 14px; color: #fff; }
+        /* AI Chat Enhancements */
+        .chat-view { height: calc(100vh - 250px); display: flex; flex-direction: column; background: #0f172a; border-radius: 20px; overflow: hidden; border: 2px solid #1e293b; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
+        .msg { max-width: 85%; padding: 10px 15px; border-radius: 15px; font-size: 13px; color: #fff; line-height: 1.5; }
         .msg-me { align-self: flex-end; background: var(--primary); border-bottom-right-radius: 2px; }
         .msg-them { align-self: flex-start; background: #1e293b; border-bottom-left-radius: 2px; }
+        .msg-ai { align-self: flex-start; background: linear-gradient(135deg, #6366f1, #a855f7); border-bottom-left-radius: 2px; border-left: 4px solid var(--gold); }
         
+        .ai-avatar-badge { font-size: 9px; background: var(--gold); color: #000; padding: 1px 5px; border-radius: 4px; margin-bottom: 3px; display: inline-block; font-weight: 900; }
+
         .chat-input-box { padding: 10px; background: #1e293b; display: flex; gap: 8px; }
         .chat-input-box input { flex: 1; padding: 10px; border-radius: 20px; border: none; outline: none; background: #0f172a; color: #fff; }
 
-        .badge-status { padding: 2px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
-        .status-pending { background: #fef3c7; color: #92400e; }
-
         .hidden { display: none !important; }
-        .loader { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
-        @keyframes spin { to { transform: rotate(360deg); } }
         #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 12px 25px; border-radius: 10px; color: white; display: none; z-index: 9999; text-align: center; font-weight: 600; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        
+        /* Payment Modal */
+        #payment-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .payment-card { background: white; width: 100%; max-width: 350px; padding: 25px; border-radius: 20px; text-align: center; }
     </style>
 </head>
 <body>
@@ -63,68 +63,71 @@
     <div class="app-container">
         <header>
             <div class="brand">KRYA<span>Digital</span></div>
-            <div id="auth-status" style="font-size: 10px; font-weight: bold; color: var(--primary);">● Live</div>
+            <div style="font-size: 10px; font-weight: bold; color: var(--primary);"><i class="fas fa-robot"></i> AI Active</div>
         </header>
 
         <main id="main-content">
             <section id="view-home" class="view animate__animated animate__fadeIn">
                 <div class="card">
                     <h2 style="margin-bottom: 10px; color: var(--accent);">राष्ट्रीय एकता संघ</h2>
-                    <p style="font-size: 12px; color: var(--slate); margin-bottom: 20px;">मजदूर कल्याण एवं डिजिटल सदस्यता पंजीकरण</p>
+                    <p style="font-size: 12px; color: var(--slate); margin-bottom: 20px;">डिजिटल सदस्यता पंजीकरण पोर्टल</p>
                     <form id="regForm">
-                        <div class="input-group">
-                            <label>पूरा नाम *</label>
-                            <input type="text" id="reg_name" class="form-control" placeholder="नाम लिखें" required>
-                        </div>
-                        <div class="input-group">
-                            <label>मोबाइल नंबर *</label>
-                            <input type="tel" id="reg_phone" class="form-control" placeholder="10 अंकों का नंबर" pattern="[0-9]{10}" required>
-                        </div>
-                        <div class="input-group">
-                            <label>जिला *</label>
-                            <select id="reg_district" class="form-control" required>
-                                <option value="">चुनें...</option>
-                                <option value="Banka">बांका</option>
-                                <option value="Delhi">दिल्ली</option>
-                                <option value="Munger">मुंगेर</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn-primary" id="regBtn">
-                            <div class="loader" id="regLoader"></div> <span id="regText">सुरक्षित पंजीकरण करें</span>
-                        </button>
+                        <input type="text" id="reg_name" class="form-control" placeholder="पूरा नाम लिखें" required>
+                        <input type="tel" id="reg_phone" class="form-control" placeholder="मोबाइल नंबर (10 अंक)" pattern="[0-9]{10}" required>
+                        <select id="reg_district" class="form-control" required>
+                            <option value="">अपना जिला चुनें...</option>
+                            <option value="Banka">बांका (Bihar)</option>
+                            <option value="Delhi">दिल्ली (Delhi)</option>
+                            <option value="Other">अन्य</option>
+                        </select>
+                        <button type="submit" class="btn-primary" id="regBtn">सुरक्षित पंजीकरण करें</button>
                     </form>
                 </div>
             </section>
 
             <section id="view-market" class="view hidden animate__animated animate__fadeIn">
-                <h3 style="margin-bottom: 15px;">KRYA मार्केटप्लेस</h3>
+                <h3 style="margin-bottom: 15px;">डिजिटल स्टोर</h3>
                 <div class="card">
-                    <h4>3D Professional Logo</h4>
-                    <p style="font-size: 12px; color: var(--slate); margin: 5px 0 15px;">आपके ब्रांड के लिए प्रीमियम लोगो डिजाइन।</p>
+                    <h4>3D प्रोफेशनल लोगो डिजाइन</h4>
+                    <p style="font-size: 12px; color: var(--slate); margin-bottom: 15px;">ब्रांडिंग के लिए हाई-क्वालिटी लोगो।</p>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-weight: 800; color: var(--primary);">₹199</span>
-                        <button onclick="handleOrder('3D Logo', 199)" class="btn-primary" style="width: auto; padding: 8px 20px;">अभी खरीदें</button>
+                        <span style="font-weight: 800; color: var(--primary); font-size: 18px;">₹199</span>
+                        <button onclick="openPayment('3D Logo', 199)" class="btn-primary" style="width: auto; padding: 8px 15px;">खरीदें</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <h4>सरकारी फॉर्म/पैन कार्ड सुधार</h4>
+                    <p style="font-size: 12px; color: var(--slate); margin-bottom: 15px;">ऑनलाइन फॉर्म भरने में पूरी सहायता।</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 800; color: var(--primary); font-size: 18px;">₹99</span>
+                        <button onclick="openPayment('Form Support', 99)" class="btn-primary" style="width: auto; padding: 8px 15px;">खरीदें</button>
                     </div>
                 </div>
             </section>
 
             <section id="view-chat" class="view hidden animate__animated animate__fadeIn">
                 <div class="chat-view">
-                    <div class="chat-messages" id="chatList"></div>
+                    <div class="chat-messages" id="chatList">
+                        <div class="msg msg-ai">
+                            <span class="ai-avatar-badge">KRYA AI</span><br>
+                            नमस्ते! मैं KRYA डिजिटल असिस्टेंट हूँ। मैं आपकी कैसे मदद कर सकता हूँ? आप मुझसे स्टोर, रजिस्ट्रेशन या किसी भी सर्विस के बारे में पूछ सकते हैं।
+                        </div>
+                    </div>
                     <div class="chat-input-box">
-                        <input type="text" id="chatMsg" placeholder="मैसेज लिखें...">
+                        <input type="text" id="chatMsg" placeholder="AI से कुछ पूछें...">
                         <button id="sendChatBtn" style="background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 50%;"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
             </section>
 
             <section id="view-panel" class="view hidden animate__animated animate__fadeIn">
-                <div class="card">
-                    <h4>मेरा डिजिटल कार्ड</h4>
-                    <hr style="margin: 10px 0; opacity: 0.1;">
-                    <p id="p_name">नाम: लोड हो रहा है...</p>
-                    <p id="p_id" style="font-size: 10px; color: var(--slate);">ID: ---</p>
-                    <button onclick="logout()" style="margin-top:15px; background:#fee2e2; color:#b91c1c; border:none; padding:8px 15px; border-radius:8px; font-size:11px; font-weight:bold;">लॉगआउट (Logout)</button>
+                <div class="card" style="background: linear-gradient(135deg, #2563eb, #1e40af); color: white; border: none;">
+                    <h4 style="color: white;">KRYA मेम्बरशिप कार्ड</h4>
+                    <hr style="margin: 10px 0; opacity: 0.3;">
+                    <p id="p_name" style="font-weight: bold; font-size: 18px;">नाम: ---</p>
+                    <p id="p_phone" style="font-size: 14px;">मोबाइल: ---</p>
+                    <p id="p_id" style="font-size: 10px; margin-top: 10px; opacity: 0.8;">UID: ---</p>
+                    <button onclick="logout()" style="margin-top:15px; background:rgba(255,255,255,0.2); color:white; border:none; padding:5px 12px; border-radius:5px; font-size:10px;">लॉगआउट</button>
                 </div>
                 <h4 style="margin-top:20px;">मेरे ऑर्डर्स</h4>
                 <div id="orderList"></div>
@@ -133,10 +136,22 @@
 
         <nav class="bottom-nav">
             <button class="nav-item active" id="nav-home"><i class="fas fa-id-card"></i><span>संघ</span></button>
-            <button class="nav-item" id="nav-market"><i class="fas fa-shopping-bag"></i><span>Market</span></button>
-            <button class="nav-item" id="nav-chat"><i class="fas fa-comments"></i><span>Chat</span></button>
-            <button class="nav-item" id="nav-panel"><i class="fas fa-user-circle"></i><span>Panel</span></button>
+            <button class="nav-item" id="nav-market"><i class="fas fa-shopping-bag"></i><span>स्टोर</span></button>
+            <button class="nav-item" id="nav-chat"><i class="fas fa-robot"></i><span>AI चैट</span></button>
+            <button class="nav-item" id="nav-panel"><i class="fas fa-user-circle"></i><span>पैनल</span></button>
         </nav>
+    </div>
+
+    <div id="payment-modal">
+        <div class="payment-card">
+            <h3 id="pay-item-name">Product</h3>
+            <p id="pay-item-price" style="font-size: 24px; font-weight: 800; color: var(--primary); margin: 10px 0;">₹0</p>
+            <div style="background: #f1f5f9; padding: 20px; border-radius: 15px; margin-bottom: 20px; font-weight: bold;">
+                [ यहाँ आपका QR कोड लगेगा ]
+            </div>
+            <button onclick="confirmPayment()" class="btn-primary" style="background: #10b981;">पेमेंट कर दिया है</button>
+            <button onclick="document.getElementById('payment-modal').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--slate); font-size: 12px;">कैंसिल</button>
+        </div>
     </div>
 
     <div id="toast"></div>
@@ -145,7 +160,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // ✅ नया 'Signing' प्रोजेक्ट कॉन्फ़िगरेशन अपडेट कर दिया गया है
         const firebaseConfig = {
             apiKey: "AIzaSyCJ_heMnqu6ENYS12hecty9V0IOKQlakFs",
             authDomain: "signing-9fc01.firebaseapp.com",
@@ -160,6 +174,7 @@
         const db = getFirestore(app);
 
         let currentUser = JSON.parse(localStorage.getItem('krya_user')) || null;
+        let selectedProduct = null;
 
         const nav = (id) => {
             document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
@@ -169,28 +184,20 @@
             if (id === 'panel') loadUserData();
         };
 
-        document.getElementById('nav-home').onclick = () => nav('home');
-        document.getElementById('nav-market').onclick = () => nav('market');
-        document.getElementById('nav-chat').onclick = () => nav('chat');
-        document.getElementById('nav-panel').onclick = () => nav('panel');
+        document.querySelectorAll('.nav-item').forEach(btn => {
+            btn.onclick = () => nav(btn.id.split('-')[1]);
+        });
 
-        window.handleOrder = (s, p) => placeOrder(s, p);
         window.logout = () => { localStorage.clear(); location.reload(); };
 
         document.getElementById('regForm').onsubmit = async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('regBtn');
-            const loader = document.getElementById('regLoader');
-            btn.disabled = true;
-            loader.style.display = 'block';
-
             const userData = {
                 name: document.getElementById('reg_name').value,
                 phone: document.getElementById('reg_phone').value,
                 district: document.getElementById('reg_district').value,
                 createdAt: serverTimestamp()
             };
-
             try {
                 const docRef = await addDoc(collection(db, "users"), userData);
                 userData.id = docRef.id;
@@ -198,73 +205,74 @@
                 currentUser = userData;
                 showToast("✅ पंजीकरण सफल!", "#10b981");
                 nav('panel');
-            } catch (err) {
-                console.error(err);
-                showToast("❌ एरर! कृपया दोबारा कोशिश करें", "#ef4444");
-            } finally {
-                btn.disabled = false;
-                loader.style.display = 'none';
-            }
+            } catch (err) { showToast("एरर! दोबारा कोशिश करें", "#ef4444"); }
         };
 
+        // Payment
+        window.openPayment = (name, price) => {
+            if (!currentUser) { showToast("कृपया रजिस्टर करें", "#fbbf24"); return nav('home'); }
+            selectedProduct = { name, price };
+            document.getElementById('pay-item-name').innerText = name;
+            document.getElementById('pay-item-price').innerText = "₹" + price;
+            document.getElementById('payment-modal').style.display = 'flex';
+        };
+
+        window.confirmPayment = async () => {
+            await addDoc(collection(db, "orders"), {
+                uid: currentUser.id, uName: currentUser.name, service: selectedProduct.name, price: selectedProduct.price, status: 'pending', time: serverTimestamp()
+            });
+            document.getElementById('payment-modal').style.display = 'none';
+            showToast("📦 ऑर्डर बुक हुआ!", "#2563eb");
+            nav('panel');
+        };
+
+        // Smart AI Chat Logic
         document.getElementById('sendChatBtn').onclick = async () => {
             const input = document.getElementById('chatMsg');
-            if (!currentUser) return showToast("कृपया पहले रजिस्टर करें", "#fbbf24");
-            if (!input.value.trim()) return;
+            const text = input.value.trim();
+            if (!currentUser || !text) return;
 
-            try {
+            // 1. User Message
+            await addDoc(collection(db, "chats"), {
+                uid: currentUser.id, userName: currentUser.name, msg: text, time: serverTimestamp()
+            });
+            input.value = "";
+
+            // 2. AI Logic (Simple keyword response)
+            setTimeout(async () => {
+                let aiRes = "मैं आपकी बात समझ रहा हूँ। क्या आप KRYA की किसी सर्विस के बारे में जानना चाहते हैं?";
+                if(text.includes("हेलो") || text.includes("hi")) aiRes = "नमस्ते " + currentUser.name + "! मैं आपकी क्या मदद कर सकता हूँ?";
+                if(text.includes("पैसा") || text.includes("कमाई")) aiRes = "KRYA स्टोर पर सर्विस बेचकर आप कमाई शुरू कर सकते हैं।";
+                if(text.includes("ऑर्डर") || text.includes("खरीद")) aiRes = "स्टोर सेक्शन में जाकर आप कोई भी डिजिटल सर्विस ऑर्डर कर सकते हैं।";
+
                 await addDoc(collection(db, "chats"), {
-                    uid: currentUser.id,
-                    userName: currentUser.name,
-                    msg: input.value,
-                    time: serverTimestamp()
+                    uid: "ai_bot", userName: "KRYA AI", msg: aiRes, isAI: true, time: serverTimestamp()
                 });
-                input.value = "";
-            } catch (e) { showToast("कनेक्शन एरर", "#ef4444"); }
+            }, 1000);
         };
 
         onSnapshot(query(collection(db, "chats"), orderBy("time", "asc")), (snap) => {
             const list = document.getElementById('chatList');
             list.innerHTML = "";
             snap.forEach(doc => {
-                const data = doc.data();
-                const side = data.uid === currentUser?.id ? 'msg-me' : 'msg-them';
-                list.innerHTML += `<div class="msg ${side}"><b>${data.userName}:</b><br>${data.msg}</div>`;
+                const d = doc.data();
+                let cls = d.uid === currentUser?.id ? 'msg-me' : (d.isAI ? 'msg-ai' : 'msg-them');
+                let badge = d.isAI ? '<span class="ai-avatar-badge">KRYA AI</span><br>' : `<b>${d.userName}:</b><br>`;
+                list.innerHTML += `<div class="msg ${cls}">${badge}${d.msg}</div>`;
             });
             list.scrollTop = list.scrollHeight;
         });
 
-        async function placeOrder(service, price) {
-            if (!currentUser) { showToast("कृपया पहले पंजीकरण करें", "#fbbf24"); return nav('home'); }
-            try {
-                await addDoc(collection(db, "orders"), {
-                    uid: currentUser.id,
-                    uName: currentUser.name,
-                    service: service,
-                    price: price,
-                    status: 'pending',
-                    time: serverTimestamp()
-                });
-                showToast("📦 ऑर्डर बुक हो गया!", "#2563eb");
-                nav('panel');
-            } catch (e) { showToast("ऑर्डर फेल हुआ", "#ef4444"); }
-        }
-
         function loadUserData() {
-            if (!currentUser) {
-                document.getElementById('p_name').innerText = "कृपया रजिस्टर करें";
-                return;
-            }
+            if (!currentUser) return;
             document.getElementById('p_name').innerText = "नाम: " + currentUser.name;
-            document.getElementById('p_id').innerText = "ID: " + currentUser.id;
-            
+            document.getElementById('p_phone').innerText = "मोबाइल: " + currentUser.phone;
+            document.getElementById('p_id').innerText = "UID: " + currentUser.id;
             onSnapshot(query(collection(db, "orders"), where("uid", "==", currentUser.id)), (snap) => {
-                const list = document.getElementById('orderList');
-                list.innerHTML = "";
-                if(snap.empty) list.innerHTML = "<p style='font-size:12px; color:gray;'>कोई ऑर्डर नहीं मिला।</p>";
+                const list = document.getElementById('orderList'); list.innerHTML = "";
                 snap.forEach(doc => {
                     const d = doc.data();
-                    list.innerHTML += `<div class="card" style="padding:15px; font-size:13px;">${d.service} <span class="badge-status status-pending">Pending</span></div>`;
+                    list.innerHTML += `<div class="card" style="padding:10px; font-size:12px;"><b>${d.service}</b> - ₹${d.price} <br>Status: ${d.status}</div>`;
                 });
             });
         }
@@ -274,8 +282,8 @@
             t.innerText = msg; t.style.background = color; t.style.display = 'block';
             setTimeout(() => t.style.display = 'none', 3000);
         }
-
         if(currentUser) nav('panel');
     </script>
 </body>
-</html>
+                        </html>
+                                                                                              
