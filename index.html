@@ -2,102 +2,127 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYALIVE | Owner Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KRYALIVE | Smart Service Hub</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --white: #ffffff; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: #f1f5f9; color: var(--dark); }
-
-        header { background: var(--white); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .brand { font-weight: 800; font-size: 20px; color: var(--primary); }
+        :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --light: #f8fafc; --red: #ef4444; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--light); color: var(--dark); overflow-x: hidden; width: 100%; height: 100vh; }
         
-        .main-container { padding: 20px; max-width: 1200px; margin: auto; }
-        .card { background: var(--white); padding: 20px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); margin-bottom: 20px; }
+        /* Navigation & Header */
+        header { background: #fff; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .brand { font-size: 22px; font-weight: 800; color: var(--dark); }
+        .brand span { color: var(--primary); }
         
-        /* Stats Grid */
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
-        .stat-box { background: white; padding: 15px; border-radius: 15px; text-align: center; border-bottom: 4px solid var(--accent); }
-        .stat-box h2 { font-size: 20px; font-weight: 800; }
-        .stat-box p { font-size: 10px; color: gray; text-transform: uppercase; }
+        main { height: calc(100vh - 140px); overflow-y: auto; padding: 15px; }
+        .view { display: none; }
+        .view.active { display: block; animation: fadeIn 0.4s ease; }
 
-        /* Form Controls */
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #ddd; outline: none; }
-        .btn { padding: 12px 20px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; width: 100%; transition: 0.3s; }
-        .btn-add { background: var(--primary); color: white; }
-        .btn-wa { background: #25d366; color: white; margin-top: 10px; font-size: 12px; }
+        /* Auth Screen */
+        #auth-screen { height: 80vh; display: flex; align-items: center; justify-content: center; text-align: center; }
+        .auth-card { background: #fff; padding: 40px 30px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); width: 100%; max-width: 400px; }
 
-        /* Order List */
-        .order-item { border-left: 5px solid var(--accent); padding: 15px; background: #f8fafc; border-radius: 10px; margin-bottom: 10px; }
-        .badge { font-size: 10px; padding: 3px 8px; border-radius: 5px; font-weight: 800; }
-        .pending { background: #fef3c7; color: #d97706; }
-        .completed { background: #dcfce7; color: #15803d; }
+        /* Store UI (User Mode) */
+        .card { background: #fff; border-radius: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); margin-bottom: 20px; overflow: hidden; border: 1px solid #f1f5f9; position: relative; }
+        .service-img { width: 100%; height: 160px; object-fit: cover; }
+        .pricing { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
+        .selling-price { font-size: 20px; font-weight: 800; color: var(--primary); }
+        .mrp { text-decoration: line-through; color: #94a3b8; font-size: 14px; }
 
-        #auth-screen { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        /* Admin UI (Owner Mode) */
+        .admin-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-box { background: white; padding: 20px; border-radius: 20px; text-align: center; border-bottom: 4px solid var(--accent); }
+        .admin-form input, .admin-form textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; outline: none; }
+
+        /* Buttons */
+        .btn { width: 100%; padding: 15px; border-radius: 15px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
+        .btn-google { background: white; color: #444; border: 1.5px solid #e2e8f0; }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-success { background: var(--primary); color: white; }
+
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; border-top: 1px solid #eee; padding: 12px 0 25px; z-index: 1000; }
+        .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 10px; font-weight: 700; }
+        .nav-item.active { color: var(--accent); }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div id="auth-screen">
-    <div class="card" style="max-width: 400px; width: 100%;">
-        <i class="fas fa-user-crown fa-3x" style="color: var(--primary); margin-bottom: 20px;"></i>
-        <h2>KRYA मालिक लॉगिन</h2>
-        <p style="font-size: 12px; color: gray; margin-bottom: 25px;">केवल <b>krya.global@gmail.com</b> के लिए अधिकृत।</p>
-        <button onclick="login()" class="btn btn-add" style="background: white; color: black; border: 1px solid #ddd;">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" style="margin-right: 10px;"> Google से लॉगिन
-        </button>
-    </div>
-</div>
+<header id="app-header" style="display: none;">
+    <div class="brand">KRYA<span>LIVE</span></div>
+    <div id="role-badge" style="font-size: 10px; font-weight: 800; color: white; background: var(--primary); padding: 3px 10px; border-radius: 20px;">USER</div>
+</header>
 
-<div id="admin-panel" style="display: none;">
-    <header>
-        <div class="brand">KRYA<span>OWNER</span></div>
-        <button onclick="logout()" style="background:none; border:none; color:red;"><i class="fas fa-sign-out-alt"></i></button>
-    </header>
-
-    <div class="main-container">
-        <div class="stats-grid">
-            <div class="stat-box">
-                <h2 id="total-orders">0</h2>
-                <p>कुल ऑर्डर्स</p>
-            </div>
-            <div class="stat-box">
-                <h2 id="total-revenue">₹0</h2>
-                <p>कुल कमाई</p>
+<main>
+    <section id="view-auth" class="view active">
+        <div id="auth-screen">
+            <div class="auth-card">
+                <div style="background: var(--light); width: 60px; height: 60px; border-radius: 20px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-fingerprint fa-2x" style="color: var(--accent);"></i>
+                </div>
+                <h2 style="font-weight: 800;">प्रवेश करें</h2>
+                <p style="font-size: 13px; color: gray; margin: 10px 0 30px;">KRYALIVE डिजिटल स्टोर में आपका स्वागत है।</p>
+                <button class="btn btn-google" id="login-btn">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Google से लॉगिन
+                </button>
             </div>
         </div>
+    </section>
 
-        <div class="card">
-            <h3><i class="fas fa-plus-circle"></i> नई सर्विस जोड़ें</h3>
-            <div style="margin-top: 15px;">
+    <section id="view-owner" class="view">
+        <div class="admin-stat-grid">
+            <div class="stat-box"><h2 id="adm-orders">0</h2><p>कुल ऑर्डर</p></div>
+            <div class="stat-box"><h2 id="adm-rev">₹0</h2><p>कुल कमाई</p></div>
+        </div>
+        <div class="card" style="padding: 20px;">
+            <h3>नई सर्विस जोड़ें</h3>
+            <div class="admin-form" style="margin-top: 15px;">
                 <input type="text" id="svc-name" placeholder="सर्विस का नाम">
-                <input type="number" id="svc-mrp" placeholder="MRP (कटी हुई कीमत)">
-                <input type="number" id="svc-price" placeholder="बेचने वाली कीमत (अमाउंट)">
-                <input type="text" id="svc-img" placeholder="इमेज लिंक (URL)">
-                <textarea id="svc-desc" placeholder="सर्विस की जानकारी लिखें..."></textarea>
-                <button class="btn btn-add" onclick="addNewService()">स्टोर में जोड़ें</button>
+                <input type="number" id="svc-price" placeholder="बेचने वाली कीमत">
+                <input type="text" id="svc-img" placeholder="फोटो लिंक (URL)">
+                <button class="btn btn-success" onclick="addNewService()">स्टोर में लाइव करें</button>
             </div>
         </div>
+        <h3>हाल के ऑर्डर</h3>
+        <div id="admin-orders-list" style="margin-top: 15px;"></div>
+    </section>
 
-        <div class="card">
-            <h3><i class="fas fa-list"></i> ग्राहक ऑर्डर्स</h3>
-            <div id="orders-list" style="margin-top: 15px;">
-                <p style="text-align: center; color: gray;">ऑर्डर्स लोड हो रहे हैं...</p>
-            </div>
+    <section id="view-store" class="view">
+        <div style="margin-bottom: 20px;">
+            <h3 id="user-greet">नमस्ते!</h3>
+            <p style="font-size: 12px; color: gray;">आज के खास डिजिटल ऑफर्स यहाँ हैं।</p>
         </div>
-    </div>
-</div>
+        <div id="store-services">
+            </div>
+    </section>
+
+    <section id="view-profile" class="view">
+        <div class="auth-card" style="margin: 0 auto;">
+            <img id="u-img" src="" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 10px;">
+            <h4 id="u-name">User Name</h4>
+            <p id="u-email" style="font-size: 12px; color: gray; margin-bottom: 30px;">email@example.com</p>
+            <button class="btn" style="background: #fee2e2; color: #ef4444;" onclick="logout()">लॉगआउट</button>
+        </div>
+    </section>
+</main>
+
+<nav class="bottom-nav" id="app-nav" style="display: none;">
+    <button class="nav-item active" id="n-main" onclick="openMain()"><i class="fas fa-shopping-bag"></i><span id="n-txt">Store</span></button>
+    <button class="nav-item" id="n-profile" onclick="nav('profile')"><i class="fas fa-user-circle"></i><span>Profile</span></button>
+</nav>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, setDoc, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    const firebaseConfig = {
+    const config = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
         authDomain: "signing-9fc01.firebaseapp.com",
         projectId: "signing-9fc01",
@@ -106,86 +131,89 @@
         appId: "1:926296137348:web:c42cdf88199ba877246cd1"
     };
 
-    const app = initializeApp(firebaseConfig);
+    const app = initializeApp(config);
     const auth = getAuth(app);
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
     const OWNER_EMAIL = "krya.global@gmail.com";
+    let currentUser = null;
+    let isOwner = false;
 
-    window.login = () => signInWithPopup(auth, provider);
+    window.nav = (id) => {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById('view-' + id).classList.add('active');
+        document.getElementById('n-' + (id === 'owner' || id === 'store' ? 'main' : id)).classList.add('active');
+    };
+
+    window.openMain = () => isOwner ? nav('owner') : nav('store');
+
+    document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
     window.logout = () => signOut(auth).then(() => location.reload());
 
     onAuthStateChanged(auth, user => {
-        if(user && user.email === OWNER_EMAIL) {
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('admin-panel').style.display = 'block';
-            fetchOrders();
-        } else if(user) {
-            alert("यह केवल मालिक के लिए है!");
-            signOut(auth);
+        if(user) {
+            currentUser = user;
+            isOwner = user.email === OWNER_EMAIL;
+            
+            document.getElementById('app-header').style.display = 'flex';
+            document.getElementById('app-nav').style.display = 'flex';
+            document.getElementById('role-badge').innerText = isOwner ? "OWNER" : "USER";
+            document.getElementById('role-badge').style.background = isOwner ? "var(--accent)" : "var(--primary)";
+            document.getElementById('n-txt').innerText = isOwner ? "Dashboard" : "Store";
+            
+            document.getElementById('u-name').innerText = user.displayName;
+            document.getElementById('u-email').innerText = user.email;
+            document.getElementById('u-img').src = user.photoURL;
+            document.getElementById('user-greet').innerText = "नमस्ते, " + user.displayName.split(' ')[0] + "!";
+
+            openMain();
+            loadStore();
+            if(isOwner) loadOwnerData();
+        } else {
+            nav('auth');
         }
     });
 
-    // नई सर्विस स्टोर में जोड़ना
-    window.addNewService = async () => {
-        const name = document.getElementById('svc-name').value;
-        const mrp = document.getElementById('svc-mrp').value;
-        const price = document.getElementById('svc-price').value;
-        const img = document.getElementById('svc-img').value;
-        const desc = document.getElementById('svc-desc').value;
-
-        if(!name || !price) return alert("नाम और कीमत जरूरी है!");
-
-        try {
-            await addDoc(collection(db, "services"), {
-                name, mrp, price, img, desc, createdAt: serverTimestamp()
-            });
-            alert("सर्विस स्टोर में जुड़ गई!");
-            location.reload();
-        } catch(e) { alert("एरर!"); }
-    };
-
-    // ऑर्डर्स को लाइव ट्रैक करना
-    function fetchOrders() {
-        const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
-        onSnapshot(q, snap => {
-            const list = document.getElementById('orders-list');
-            let total = 0, revenue = 0;
+    // --- STORE LOGIC ---
+    function loadStore() {
+        onSnapshot(query(collection(db, "services"), orderBy("createdAt", "desc")), snap => {
+            const list = document.getElementById('store-services');
             list.innerHTML = "";
-
             snap.forEach(d => {
-                const o = d.data();
-                total++;
-                if(o.status === 'Completed') revenue += Number(o.amount);
-
+                const s = d.data();
                 list.innerHTML += `
-                    <div class="order-item">
-                        <div style="display:flex; justify-content:space-between;">
-                            <b>${o.service}</b>
-                            <span class="badge ${o.status.toLowerCase()}">${o.status}</span>
-                        </div>
-                        <p style="font-size:12px; margin-top:5px;"><b>ग्राहक:</b> ${o.name} (${o.phone})</p>
-                        <p style="font-size:11px; color:gray;">अमाउंट: ₹${o.amount}</p>
-                        <button class="btn btn-wa" onclick="window.open('https://wa.me/${o.phone}?text=नमस्ते ${o.name}!')">WhatsApp Chat</button>
-                        <div style="margin-top:10px; display:flex; gap:5px;">
-                            <button onclick="updateStatus('${d.id}', 'Completed')" style="flex:1; font-size:10px; background:var(--primary); color:white; border:none; padding:5px; border-radius:5px;">पूरा हुआ</button>
-                            <button onclick="deleteOrder('${d.id}')" style="flex:1; font-size:10px; background:red; color:white; border:none; padding:5px; border-radius:5px;">डिलीट</button>
+                    <div class="card">
+                        <img src="${s.img}" class="service-img">
+                        <div style="padding: 15px;">
+                            <h4>${s.name}</h4>
+                            <div class="pricing"><span class="selling-price">₹${s.price}</span></div>
+                            <button class="btn btn-primary" onclick="alert('Order Feature Coming Soon')">अभी खरीदें</button>
                         </div>
                     </div>
                 `;
             });
-            document.getElementById('total-orders').innerText = total;
-            document.getElementById('total-revenue').innerText = "₹" + revenue;
         });
     }
 
-    window.updateStatus = async (id, status) => {
-        await updateDoc(doc(db, "orders", id), { status });
+    // --- OWNER LOGIC ---
+    window.addNewService = async () => {
+        const name = document.getElementById('svc-name').value;
+        const price = document.getElementById('svc-price').value;
+        const img = document.getElementById('svc-img').value;
+        if(!name || !price) return alert("नाम और कीमत भरें!");
+        await addDoc(collection(db, "services"), { name, price, img, createdAt: serverTimestamp() });
+        alert("सर्विस लाइव हो गई!");
+        document.getElementById('svc-name').value = "";
     };
-    window.deleteOrder = async (id) => {
-        if(confirm("क्या आप इसे डिलीट करना चाहते हैं?")) await deleteDoc(doc(db, "orders", id));
-    };
+
+    function loadOwnerData() {
+        onSnapshot(collection(db, "orders"), snap => {
+            document.getElementById('adm-orders').innerText = snap.size;
+            // Additional revenue logic here
+        });
+    }
 </script>
 </body>
 </html>
