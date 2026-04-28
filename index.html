@@ -94,9 +94,6 @@
 
         <h3>मैनेज प्रोडक्ट्स & कोड्स</h3>
         <div id="admin-product-list"></div>
-
-        <h3 style="margin-top: 30px;">मैनेज ऑर्डर्स (ग्राहक)</h3>
-        <div id="admin-orders-list"></div>
     </section>
 
     <section id="view-store" class="view">
@@ -143,9 +140,9 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    // 💡 ध्यान दें: यहाँ getRedirectResult जोड़ा गया है ताकि एरर का पता चल सके
-    import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    // 💡 ध्यान दें: यहाँ मैंने signInWithRedirect लगाया है जो मोबाइल के लिए एकदम सही है।
+    import { getAuth, GoogleAuthProvider, signInWithRedirect, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
@@ -167,11 +164,6 @@
 
     const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, style: {background: c, borderRadius: "15px"}}).showToast();
 
-    // 💡 नया: अगर लॉगिन में कोई दिक्कत आती है तो यह बताएगा
-    getRedirectResult(auth).catch((error) => {
-        alert("⚠️ गूगल लॉगिन एरर: " + error.message + "\n(मुकेश जी, कृपया Firebase में kryalive.com डोमेन जोड़ें)");
-    });
-
     window.nav = (id) => {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -182,8 +174,9 @@
 
     window.openMain = () => isOwner ? nav('owner') : nav('store');
 
+    // 💡 फिक्स: यहाँ रीडायरेक्ट सिस्टम लगा दिया गया है
     document.getElementById('login-btn').onclick = () => {
-        showToast("सुरक्षित लॉगिन हो रहा है...");
+        showToast("सुरक्षित लॉगिन हो रहा है, कृपया प्रतीक्षा करें...");
         signInWithRedirect(auth, provider);
     };
 
@@ -218,13 +211,6 @@
         if(confirm("डिलीट करें?")) {
             await deleteDoc(doc(db, "services", id));
             showToast("प्रोडक्ट हटा दिया गया", "var(--red)");
-        }
-    };
-
-    window.approveOrder = async (id) => {
-        if(confirm("क्या पेमेंट आ चुकी है? ऑर्डर Approved करें?")) {
-            await updateDoc(doc(db, "orders", id), { status: "Approved" });
-            showToast("ऑर्डर Approved हो गया!", "var(--primary)");
         }
     };
 
@@ -273,7 +259,7 @@
                     </div>`;
                 if(isOwner) {
                     adminList.innerHTML += `
-                        <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px; margin-bottom:10px;">
+                        <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px;">
                             <div><small style="color:var(--accent);font-weight:800;">${s.serviceCode}</small><br><span>${s.name}</span></div>
                             <button class="btn btn-del" onclick="deleteProduct('${d.id}')">हटाएं</button>
                         </div>`;
@@ -320,7 +306,7 @@
             snap.forEach(doc => {
                 const o = doc.data();
                 container.innerHTML += `
-                    <div class="card" style="padding:15px; border-left: 5px solid ${o.status === 'Approved' ? 'var(--primary)' : 'var(--gold)'}; margin-bottom:15px;">
+                    <div class="card" style="padding:15px; border-left: 5px solid ${o.status === 'Approved' ? 'var(--primary)' : 'var(--gold)'};">
                         <b>${o.serviceName}</b><br><small>ID: ${o.orderID}</small><br><small>Code: ${o.serviceCode}</small>
                         <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; font-size:12px;">
                             <span>₹${o.amount}</span><span style="font-weight:800; color:var(--accent);">${o.status}</span>
@@ -331,22 +317,27 @@
     }
 
     function loadAdminStats() {
-        onSnapshot(query(collection(db, "orders"), orderBy("createdAt", "desc")), snap => {
+        onSnapshot(collection(db, "orders"), snap => {
             document.getElementById('total-ord').innerText = snap.size;
-            let rev = 0;
-            const ordersList = document.getElementById('admin-orders-list');
-            ordersList.innerHTML = "";
+            let rev = 0; snap.forEach(d => { if(d.data().status === 'Approved') rev += Number(d.data().amount); });
+            document.getElementById('total-rev').innerText = "₹" + rev;
+        });
+        onSnapshot(collection(db, "subscribers"), snap => document.getElementById('total-subs').innerText = snap.size);
+    }
 
-            snap.forEach(d => {
-                const o = d.data();
-                if(o.status === 'Approved') rev += Number(o.amount); 
-
-                ordersList.innerHTML += `
-                    <div class="card" style="padding:15px; margin-bottom: 10px; border-left: 5px solid ${o.status === 'Approved' ? 'var(--primary)' : 'var(--gold)'};">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <div>
-                                <b style="font-size:14px;">${o.userName}</b> <br>
-                                <small style="color:gray;">${o.serviceName} (₹${o.amount})</small><br>
-                                <small style="color:var(--accent); font-weight:800;">${o.status}</small>
-                            </div>
-                            ${o.status !== 'Approved' ? `<button class="btn btn-live" style="width:auto; padding:8px 15
+    window.shareWebsite = () => {
+        const shareData = {
+            title: 'KRYALIVE Digital Hub',
+            text: 'नमस्ते! घर बैठे प्रोफेशनल डिजिटल सर्विसेज के लिए KRYALIVE से जुड़ें।',
+            url: window.location.href
+        };
+        if (navigator.share) {
+            navigator.share(shareData).then(() => showToast("शेयर करने के लिए धन्यवाद!")).catch(console.log);
+        } else {
+            window.open(`https://wa.me/?text=नमस्ते! KRYALIVE से जुड़ें: ${window.location.href}`, '_blank');
+        }
+    };
+</script>
+</body>
+            </html>
+                
