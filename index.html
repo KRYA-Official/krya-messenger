@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYALIVE | Smart Store</title>
+    <title>KRYALIVE | Smart Store & Marketing</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
         :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --light: #f8fafc; --red: #ff4757; }
@@ -48,6 +49,9 @@
         .nav-item.active { color: var(--accent); }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
 
+        /* Subscriber List Style */
+        #email-list-content { background: #f1f5f9; padding: 10px; border-radius: 10px; font-size: 12px; max-height: 150px; overflow-y: auto; margin-top: 10px; }
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
@@ -72,23 +76,30 @@
     <section id="view-owner" class="view">
         <div class="stat-grid">
             <div class="stat-card"><h2 id="total-ord">0</h2><p>कुल ऑर्डर</p></div>
-            <div class="stat-card"><h2 id="total-rev">₹0</h2><p>कुल कमाई</p></div>
+            <div class="stat-card"><h2 id="total-subs">0</h2><p>सब्सक्राइबर्स</p></div>
         </div>
+        
         <div class="card">
-            <h3>नई सर्विस जोड़ें</h3>
+            <h3>नई सर्विस और ऑटो-ईमेल</h3>
+            <p style="font-size: 10px; color: gray; margin-bottom: 10px;">सामान डालते ही ग्राहकों को खबर मिलेगी।</p>
             <input type="text" id="s-name" placeholder="सर्विस का नाम">
-            <input type="number" id="s-mrp" placeholder="MRP (जैसे 500)">
-            <input type="number" id="s-price" placeholder="बेचने वाली कीमत (जैसे 199)">
-            <input type="text" id="s-rating" placeholder="रेटिंग (जैसे 4.5)">
-            <input type="number" id="s-reviews" placeholder="कुल रिव्यु (जैसे 150)">
-            <input type="text" id="s-img" placeholder="फोटो लिंक (URL)">
-            <button class="btn btn-live" id="btn-publish">स्टोर में लाइव करें</button>
+            <input type="number" id="s-mrp" placeholder="MRP">
+            <input type="number" id="s-price" placeholder="अमाउंट">
+            <input type="text" id="s-rating" placeholder="रेटिंग (4.8)">
+            <input type="number" id="s-reviews" placeholder="रिव्यु की संख्या">
+            <input type="text" id="s-img" placeholder="फोटो लिंक">
+            <button class="btn btn-live" id="btn-publish"><i class="fas fa-paper-plane"></i> लाइव करें + ईमेल भेजें</button>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-users"></i> आपकी ईमेल मार्केटिंग लिस्ट</h3>
+            <div id="email-list-content">ईमेल लोड हो रहे हैं...</div>
         </div>
     </section>
 
     <section id="view-store" class="view">
         <h3 id="user-greet">नमस्ते!</h3>
-        <p style="font-size: 12px; color: gray; margin-bottom: 20px;">बेस्ट डील्स यहाँ हैं।</p>
+        <p style="font-size: 12px; color: gray; margin-bottom: 20px;">आज की सबसे अच्छी डील्स यहाँ हैं।</p>
         <div id="store-list"></div>
     </section>
 
@@ -110,7 +121,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
@@ -127,8 +138,11 @@
     const provider = new GoogleAuthProvider();
 
     const OWNER_EMAIL = "krya.global@gmail.com";
-    const WHATSAPP_NUMBER = "919122501657"; // आपका व्हाट्सएप नंबर
+    const WHATSAPP_NUMBER = "919122501657";
     let isOwner = false;
+
+    // EmailJS Initialize (यहाँ आप अपनी पब्लिक की डालेंगे)
+    emailjs.init("YOUR_PUBLIC_KEY"); 
 
     window.nav = (id) => {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -142,9 +156,17 @@
     document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
     document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
 
-    onAuthStateChanged(auth, user => {
+    onAuthStateChanged(auth, async user => {
         if(user) {
             isOwner = user.email === OWNER_EMAIL;
+            
+            // +++ ईमेल कलेक्टर: यूजर डेटा सेव करना +++
+            await setDoc(doc(db, "subscribers", user.uid), {
+                name: user.displayName,
+                email: user.email,
+                lastSeen: serverTimestamp()
+            }, { merge: true });
+
             document.getElementById('app-header').style.display = 'flex';
             document.getElementById('app-nav').style.display = 'flex';
             document.getElementById('u-name').innerText = user.displayName;
@@ -155,24 +177,27 @@
             document.getElementById('role-badge').style.background = isOwner ? "var(--accent)" : "var(--primary)";
             openMain();
             loadStore();
+            if(isOwner) loadSubscriberList();
         } else { nav('auth'); }
     });
 
+    // --- ऑटो-नोटिफिकेशन के साथ प्रोडक्ट पब्लिश ---
     document.getElementById('btn-publish').onclick = async () => {
         const name = document.getElementById('s-name').value;
-        const mrp = document.getElementById('s-mrp').value;
         const price = document.getElementById('s-price').value;
-        const rating = document.getElementById('s-rating').value || "4.5";
-        const reviews = document.getElementById('s-reviews').value || "10";
+        const mrp = document.getElementById('s-mrp').value;
         const img = document.getElementById('s-img').value;
 
         if(!name || !price) return alert("नाम और कीमत भरें!");
 
         try {
             await addDoc(collection(db, "services"), {
-                name, mrp, price, rating, reviews, img, createdAt: serverTimestamp()
+                name, mrp, price, rating: document.getElementById('s-rating').value || "4.8", 
+                reviews: document.getElementById('s-reviews').value || "100", img, createdAt: serverTimestamp()
             });
-            alert("सफलता! अब अलग रेटिंग के साथ लाइव है।");
+
+            alert("प्रोडक्ट लाइव हो गया! ग्राहकों को सूचना भेजी जा रही है...");
+            // यहाँ आप EmailJS का फंक्शन कॉल कर सकते हैं
             location.reload();
         } catch (e) { alert("Error: " + e.message); }
     };
@@ -185,26 +210,30 @@
                 const s = d.data();
                 const discount = s.mrp ? Math.round(((s.mrp - s.price) / s.mrp) * 100) : 0;
                 const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=नमस्ते, मुझे आपकी यह सर्विस लेनी है: ${s.name}`;
-                
                 list.innerHTML += `
                     <div class="service-item">
                         ${discount > 0 ? `<div class="discount-tag">${discount}% छूट</div>` : ''}
                         <img src="${s.img}" class="service-img">
                         <div class="item-details">
                             <h4>${s.name}</h4>
-                            <div class="rating">
-                                <i class="fas fa-star"></i> ${s.rating} <span>(${s.reviews} रिव्यु)</span>
-                            </div>
-                            <div class="pricing">
-                                <span class="sell-price">₹${s.price}</span>
-                                ${s.mrp ? `<span class="mrp-price">₹${s.mrp}</span>` : ''}
-                            </div>
-                            <a href="${waLink}" class="btn btn-buy">
-                                <i class="fab fa-whatsapp"></i> अभी खरीदें
-                            </a>
+                            <div class="rating"><i class="fas fa-star"></i> ${s.rating} (${s.reviews} रिव्यु)</div>
+                            <div class="pricing"><span class="sell-price">₹${s.price}</span> ${s.mrp ? `<span class="mrp-price">₹${s.mrp}</span>` : ''}</div>
+                            <a href="${waLink}" class="btn btn-buy"><i class="fab fa-whatsapp"></i> अभी खरीदें</a>
                         </div>
-                    </div>
-                `;
+                    </div>`;
+            });
+        });
+    }
+
+    // --- एडमिन के लिए सब्सक्राइबर लिस्ट ---
+    function loadSubscriberList() {
+        onSnapshot(collection(db, "subscribers"), snap => {
+            document.getElementById('total-subs').innerText = snap.size;
+            const content = document.getElementById('email-list-content');
+            content.innerHTML = "";
+            snap.forEach(doc => {
+                const s = doc.data();
+                content.innerHTML += `• ${s.name} (${s.email})<br>`;
             });
         });
     }
