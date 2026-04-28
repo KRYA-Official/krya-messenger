@@ -1,41 +1,104 @@
-<div class="card auth-card">
-    <h3>सुरक्षित लॉगिन</h3>
-    <p style="font-size: 12px; color: #64748b; margin-bottom: 20px;">अपना मोबाइल नंबर दर्ज करें</p>
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KRYALIVE Super App</title>
     
-    <div id="recaptcha-container"></div>
-    
-    <div class="input-group">
-        <input type="tel" id="phone-number" placeholder="जैसे: 6379403821" style="font-size: 18px; font-weight: bold;">
-    </div>
-    
-    <button class="btn btn-primary" id="send-otp-btn">
-        <span id="btn-text">OTP भेजें</span>
-        <div id="loader" style="display:none; width: 20px; height: 20px; border: 3px solid #fff; border-top: 3px solid transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-    </button>
-    
-    <div id="otp-section" style="display:none; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
-        <input type="number" id="otp-code" placeholder="6-अंकों का कोड यहाँ डालें">
-        <button class="btn btn-success" id="verify-otp-btn">वेरिफाई करें</button>
-    </div>
-</div>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<style>
-    @keyframes spin { to { transform: rotate(360deg); } }
-</style>
+    <style>
+        :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --light: #f8fafc; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--light); color: var(--dark); overflow-x: hidden; position: fixed; width: 100%; height: 100%; }
+        
+        .app-shell { height: 100vh; display: flex; flex-direction: column; }
+        header { background: #fff; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; z-index: 1000; }
+        .brand { font-size: 20px; font-weight: 800; }
+        .brand span { color: var(--primary); }
+
+        main { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 90px; }
+        .view { display: none; animation: fadeIn 0.3s ease; }
+        .view.active { display: block; }
+
+        .card { background: #fff; padding: 25px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; text-align: center; }
+        input { width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid #e2e8f0; font-size: 16px; outline: none; margin-bottom: 15px; font-weight: 600; }
+        
+        .btn { width: 100%; padding: 16px; border-radius: 15px; border: none; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-primary { background: var(--accent); color: white; box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2); }
+        
+        /* Navigation */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; border-top: 1px solid #eee; padding: 12px 0 25px; z-index: 1000; }
+        .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 10px; font-weight: 700; }
+        .nav-item.active { color: var(--accent); }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #loader { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="app-shell">
+    <header>
+        <div class="brand">KRYA<span>LIVE</span></div>
+        <div id="status-badge" style="font-size: 10px; font-weight: 800; color: var(--primary);">● सुरक्षित</div>
+    </header>
+
+    <main id="content">
+        <section id="view-auth" class="view active">
+            <div class="card" style="margin-top: 40px;">
+                <h2 style="margin-bottom: 10px;">नमस्ते!</h2>
+                <p style="color: #64748b; font-size: 13px; margin-bottom: 25px;">OTP सत्यापन के साथ लॉगिन करें।</p>
+                
+                <div id="recaptcha-container"></div>
+                
+                <input type="tel" id="phone" placeholder="मोबाइल नंबर (उदा: 6379403821)">
+                <button class="btn btn-primary" id="btn-send-otp">
+                    <span id="btn-text">OTP भेजें</span>
+                    <div id="loader"></div>
+                </button>
+                
+                <div id="otp-group" style="display: none; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+                    <input type="number" id="otp-input" placeholder="6-अंकों का OTP डालें">
+                    <button class="btn btn-primary" style="background: var(--primary);" id="btn-verify-otp">लॉगिन सत्यापित करें</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-home" class="view">
+            <div class="card" style="background: linear-gradient(135deg, #10b981, #2563eb); color: white; border: none;">
+                <p style="opacity: 0.9; font-size: 12px;">आपका स्वागत है</p>
+                <h2 id="user-phone" style="font-size: 22px; margin-top: 5px;">User</h2>
+            </div>
+            <div class="card" style="margin-top: 15px;">
+                <p style="color: gray; font-size: 12px;">स्टोर और अर्निंग फीचर्स जल्द ही लाइव होंगे।</p>
+            </div>
+        </section>
+    </main>
+
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="nav('home')"><i class="fas fa-home"></i>Home</button>
+        <button class="nav-item" onclick="nav('auth')"><i class="fas fa-user-circle"></i>Account</button>
+    </nav>
+</div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // 1. Firebase Configuration (इसे अपनी असली चाबियों से बदलें)
+    // 🟢 मुकेश जी, आपकी नई और असली चाबी यहाँ जोड़ दी गई है
     const firebaseConfig = {
-        apiKey: "AIzaSyCJ_heMnqu6ENYS12hecty9V0IOKQlakFs",
+        apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
         authDomain: "signing-9fc01.firebaseapp.com",
         projectId: "signing-9fc01",
         storageBucket: "signing-9fc01.firebasestorage.app",
         messagingSenderId: "926296137348",
-        appId: "1:926296137348:web:c42cdf48199ba877246cd5"
+        appId: "1:926296137348:web:c42cdf88199ba877246cd1",
+        measurementId: "G-2R21VXNHKF"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -44,107 +107,79 @@
 
     let confirmationResult = null;
 
-    // 2. Recaptcha Setup (Invisible Mode)
-    function setupRecaptcha() {
-        if (!window.recaptchaVerifier) {
-            console.log("Initializing Recaptcha...");
-            window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-                'size': 'invisible',
-                'callback': (response) => { console.log("Recaptcha solved!"); }
-            });
-        }
-    }
+    // --- नेविगेशन ---
+    window.nav = (id) => {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById('view-' + id).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    };
 
-    // 3. Send OTP Function
-    async function handleSendOTP() {
-        const btn = document.getElementById('send-otp-btn');
-        const btnText = document.getElementById('btn-text');
+    // --- OTP भेजने का फंक्शन ---
+    async function sendOTP() {
+        const phoneInput = document.getElementById('phone').value.trim();
+        let phone = phoneInput;
+
+        if (!phone.startsWith('+')) {
+            phone = phone.startsWith('91') ? '+' + phone : '+91' + phone;
+        }
+
+        if (phone.length < 13) return alert("कृपया सही नंबर डालें");
+
+        const btn = document.getElementById('btn-send-otp');
         const loader = document.getElementById('loader');
-        let phone = document.getElementById('phone-number').value.trim();
+        const text = document.getElementById('btn-text');
 
-        // ऑटो-फिक्स नंबर (अगर +91 नहीं लगा है)
-        if (!phone.startsWith("+")) {
-            phone = phone.startsWith("91") ? "+" + phone : "+91" + phone;
-        }
-
-        if (phone.length < 13) {
-            alert("कृपया सही मोबाइल नंबर डालें");
-            return;
-        }
-
-        // UI Loading State
         btn.disabled = true;
-        btnText.style.display = 'none';
         loader.style.display = 'block';
+        text.style.display = 'none';
 
-        console.log("Sending OTP to:", phone);
-        setupRecaptcha();
+        if (!window.recaptchaVerifier) {
+            window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'invisible' });
+        }
 
         try {
             const result = await signInWithPhoneNumber(auth, phone, window.recaptchaVerifier);
             confirmationResult = result;
-            console.log("OTP Sent Successfully!");
-            
-            document.getElementById('otp-section').style.display = 'block';
+            document.getElementById('otp-group').style.display = 'block';
             alert("OTP भेज दिया गया है!");
-        } catch (error) {
-            console.error("OTP Error:", error.code, error.message);
-            alert("ओह! " + error.message);
-            // Reset ReCaptcha on error
-            if (window.recaptchaVerifier) {
-                window.recaptchaVerifier.render().then(widgetId => {
-                    grecaptcha.reset(widgetId);
-                });
-            }
+        } catch (err) {
+            alert("त्रुटि: " + err.message);
+            location.reload();
         } finally {
             btn.disabled = false;
-            btnText.style.display = 'block';
             loader.style.display = 'none';
+            text.style.display = 'block';
         }
     }
 
-    // 4. Verify OTP Function
-    async function handleVerifyOTP() {
-        const code = document.getElementById('otp-code').value;
-        if (code.length !== 6) return alert("6 अंकों का कोड डालें");
-
+    // --- OTP वेरिफाई करने का फंक्शन ---
+    async function verifyOTP() {
+        const code = document.getElementById('otp-input').value;
         try {
-            const result = await confirmationResult.confirm(code);
-            const user = result.user;
-            console.log("Login Success!", user.uid);
-            
-            // डेटाबेस में यूजर सेव करें
-            await setDoc(doc(db, "users", user.uid), {
-                uid: user.uid,
-                phone: user.phoneNumber,
-                lastLogin: serverTimestamp()
-            }, { merge: true });
-
-            alert("लॉगिन सफल!");
+            const res = await confirmationResult.confirm(code);
+            const user = res.user;
+            await setDoc(doc(db, "users", user.uid), { phone: user.phoneNumber, loginAt: serverTimestamp() }, { merge: true });
+            alert("सफलतापूर्वक लॉगिन हुआ!");
             location.reload();
-        } catch (error) {
-            alert("गलत OTP! कृपया फिर से जाँचें।");
+        } catch (err) {
+            alert("गलत OTP! कृपया फिर से कोशिश करें।");
         }
     }
 
-    // 5. Event Listeners (बटन क्लिक फिक्स)
-    document.getElementById('send-otp-btn').addEventListener('click', (e) => {
-        e.preventDefault();
-        handleSendOTP();
-    });
+    // --- बटन इवेंट्स ---
+    document.getElementById('btn-send-otp').onclick = sendOTP;
+    document.getElementById('btn-verify-otp').onclick = verifyOTP;
 
-    document.getElementById('verify-otp-btn').addEventListener('click', (e) => {
-        e.preventDefault();
-        handleVerifyOTP();
-    });
-
-    // 6. Auth State Check
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            console.log("User is logged in:", user.phoneNumber);
-            // यहाँ आप होम पेज पर भेज सकते हैं (nav('home'))
+    // --- लॉगिन चेक ---
+    onAuthStateChanged(auth, user => {
+        if(user) {
+            document.getElementById('user-phone').innerText = user.phoneNumber;
+            nav('home');
+        } else {
+            nav('auth');
         }
     });
 
-            </script>
-            
+</script>
+</body>
+</html>
