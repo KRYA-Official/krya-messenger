@@ -3,59 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYALIVE | Professional Service App</title>
+    <title>KRYALIVE | Premium Digital Store</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --light: #f8fafc; --gray: #94a3b8; }
+        :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --light: #f8fafc; --red: #ef4444; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--light); color: var(--dark); height: 100vh; overflow: hidden; }
         
-        /* Layout Structure */
         .app-shell { display: flex; flex-direction: column; height: 100vh; }
         header { background: #fff; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; z-index: 1000; }
-        .brand { font-size: 22px; font-weight: 800; }
+        .brand { font-size: 22px; font-weight: 800; color: var(--dark); }
         .brand span { color: var(--primary); }
 
-        main { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 100px; }
-        .view { display: none; animation: slideUp 0.3s ease; }
+        main { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 110px; }
+        .view { display: none; animation: slideUp 0.4s ease; }
         .view.active { display: block; }
 
-        /* Component Styles */
-        .card { background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; margin-bottom: 15px; }
-        .btn { padding: 15px; border-radius: 14px; border: none; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; transition: 0.2s; font-size: 14px; }
-        .btn-primary { background: var(--accent); color: white; }
-        .btn-success { background: var(--primary); color: white; }
-        .btn-outline { background: white; border: 1.5px solid #e2e8f0; color: var(--dark); }
+        /* Premium Service Card */
+        .card { background: #fff; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; margin-bottom: 20px; overflow: hidden; position: relative; }
+        .service-img { width: 100%; height: 160px; object-fit: cover; background: #eee; }
+        .offer-badge { position: absolute; top: 15px; left: 15px; background: var(--red); color: white; padding: 5px 12px; border-radius: 50px; font-size: 11px; font-weight: 800; z-index: 10; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); }
+        
+        .card-content { padding: 20px; }
+        .card-content h4 { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
+        .card-content p { font-size: 11px; color: #64748b; margin-bottom: 15px; line-height: 1.4; }
 
-        /* Service Item UI */
-        .service-card { border-left: 6px solid var(--primary); }
-        .service-info { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-        .price { font-size: 18px; font-weight: 800; color: var(--primary); }
+        /* Pricing UI */
+        .pricing-box { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .mrp { font-size: 14px; text-decoration: line-through; color: #94a3b8; }
+        .final-price { font-size: 22px; font-weight: 800; color: var(--primary); }
+        
+        /* Coupon Section */
+        .coupon-box { background: #f0fdf4; border: 1px dashed var(--primary); padding: 10px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .coupon-text { font-size: 10px; font-weight: 700; color: var(--primary); }
+        .coupon-code { font-size: 12px; font-weight: 800; color: var(--dark); border: 1px solid #ddd; padding: 2px 8px; border-radius: 5px; background: #fff; }
 
-        /* Order Status Badges */
-        .badge { padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-        .pending { background: #fef3c7; color: #d97706; }
-        .processing { background: #dbeafe; color: #2563eb; }
-        .completed { background: #dcfce7; color: #15803d; }
+        .btn { padding: 15px; border-radius: 15px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; font-size: 14px; transition: 0.3s; }
+        .btn-primary { background: var(--accent); color: white; box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2); }
 
-        /* Bottom Navigation */
+        /* Nav & Overlays */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; border-top: 1px solid #eee; padding: 12px 0 25px; z-index: 1000; }
-        .nav-item { flex: 1; text-align: center; border: none; background: none; color: var(--gray); font-size: 11px; font-weight: 700; cursor: pointer; }
+        .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 11px; font-weight: 700; }
         .nav-item.active { color: var(--accent); }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 5px; }
 
-        /* Form Overlay */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
-        .popup { background: #fff; width: 100%; max-width: 450px; border-radius: 25px; padding: 25px; max-height: 85vh; overflow-y: auto; }
-        input, textarea, select { width: 100%; padding: 14px; border: 1.5px solid #e2e8f0; border-radius: 12px; margin: 10px 0; font-size: 15px; outline: none; }
+        .popup { background: #fff; width: 100%; max-width: 400px; border-radius: 30px; padding: 25px; max-height: 85vh; overflow-y: auto; }
+        input, textarea { width: 100%; padding: 14px; border: 1.5px solid #e2e8f0; border-radius: 12px; margin: 10px 0; font-size: 15px; outline: none; }
 
-        /* Animations */
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -63,30 +62,24 @@
 <div class="app-shell">
     <header>
         <div class="brand">KRYA<span>LIVE</span></div>
-        <div id="admin-indicator" style="display:none; font-size:10px; background:var(--accent); color:white; padding:4px 10px; border-radius:20px; font-weight:800;">ADMIN</div>
-        <img id="top-avatar" src="" style="width:35px; height:35px; border-radius:50%; background:#eee; display:none;">
+        <img id="top-avatar" src="" style="width:35px; height:35px; border-radius:50%; background:#eee; display:none; border:2px solid var(--primary);">
     </header>
 
     <main id="app-content">
         <section id="view-auth" class="view active">
-            <div class="card" style="margin-top: 60px; text-align: center;">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="60" style="margin-bottom:20px;">
-                <h2 style="margin-bottom:10px;">शुरू करें</h2>
-                <p style="font-size:14px; color:var(--gray); margin-bottom:30px;">KRYALIVE की डिजिटल सेवाओं का लाभ उठाने के लिए सुरक्षित लॉगिन करें।</p>
-                <button class="btn btn-outline" id="google-login-trigger">
+            <div style="text-align: center; padding-top: 60px;">
+                <h2 style="font-size: 28px; font-weight: 800; margin-bottom: 10px;">नमस्ते!</h2>
+                <p style="color: #64748b; font-size: 14px; margin-bottom: 40px;">प्रीमियम सेवाओं के लिए लॉगिन करें।</p>
+                <button class="btn" style="background: white; border: 1.5px solid #ddd;" id="google-login-btn">
                     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google के साथ लॉगिन
                 </button>
             </div>
         </section>
 
         <section id="view-home" class="view">
-            <div class="card" style="background: linear-gradient(135deg, #10b981, #2563eb); color: white; border:none;">
-                <h3 id="greet-user">नमस्ते!</h3>
-                <p style="font-size: 11px; opacity: 0.8;">आपकी पसंदीदा डिजिटल सेवाएं यहाँ हैं।</p>
-            </div>
-
-            <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <input type="text" id="service-search" placeholder="सेवा खोजें..." style="margin:0; flex:1;">
+            <div style="margin-bottom: 25px;">
+                <h3 id="greet-user" style="font-weight: 800; font-size: 20px;">नमस्ते मुकेश जी!</h3>
+                <p style="font-size: 12px; color: gray;">आज आपके लिए खास ऑफर्स यहाँ हैं।</p>
             </div>
 
             <div id="services-grid"></div>
@@ -94,82 +87,44 @@
 
         <section id="view-orders" class="view">
             <h3 style="margin-bottom: 20px; font-weight: 800;">मेरे ऑर्डर्स</h3>
-            <div id="order-container">
-                <p style="text-align: center; color: var(--gray); margin-top: 50px;">कोई ऑर्डर नहीं मिला।</p>
-            </div>
+            <div id="order-container"></div>
         </section>
 
         <section id="view-profile" class="view">
             <h3 style="margin-bottom: 20px; font-weight: 800;">प्रोफाइल</h3>
-            <div class="card" style="text-align: center;">
-                <img id="prof-photo" src="" style="width:90px; height:90px; border-radius:50%; border:3px solid var(--primary); margin-bottom:15px;">
+            <div class="card" style="text-align: center; padding: 30px;">
+                <img id="prof-photo" src="" style="width:100px; height:100px; border-radius:50%; border:4px solid var(--primary); margin-bottom:15px;">
                 <h4 id="prof-name">Name</h4>
-                <p id="prof-email" style="font-size: 12px; color: var(--gray); margin-bottom:20px;">Email</p>
-                
-                <div style="text-align: left; border-top: 1px solid #eee; padding-top: 15px;">
-                    <label style="font-size: 12px; font-weight: 700; color: var(--gray);">आपका व्हाट्सएप नंबर</label>
-                    <input type="tel" id="user-phone-input" placeholder="91XXXXXXXXXX">
-                    <button class="btn btn-success" id="save-phone-btn">नंबर सेव करें</button>
-                </div>
-
-                <button class="btn btn-outline" style="margin-top:30px; color:#ef4444;" id="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> सुरक्षित लॉगआउट
-                </button>
+                <p id="prof-email" style="font-size: 12px; color: gray; margin-bottom:30px;">Email</p>
+                <button class="btn" style="background:#fee2e2; color:#ef4444;" id="logout-btn">लॉगआउट</button>
             </div>
-        </section>
-
-        <section id="view-admin" class="view">
-            <h3 style="margin-bottom: 15px; font-weight: 800;">एडमिन कंट्रोल</h3>
-            <div id="admin-orders"></div>
         </section>
     </main>
 
     <nav class="bottom-nav">
-        <button class="nav-item active" id="n-home" onclick="nav('home')"><i class="fas fa-store"></i><span>स्टोर</span></button>
-        <button class="nav-item" id="n-orders" onclick="nav('orders')"><i class="fas fa-list-check"></i><span>ऑर्डर्स</span></button>
+        <button class="nav-item active" id="n-home" onclick="nav('home')"><i class="fas fa-shopping-bag"></i><span>स्टोर</span></button>
+        <button class="nav-item" id="n-orders" onclick="nav('orders')"><i class="fas fa-list-ul"></i><span>ऑर्डर्स</span></button>
         <button class="nav-item" id="n-profile" onclick="nav('profile')"><i class="fas fa-user-circle"></i><span>प्रोफाइल</span></button>
     </nav>
 </div>
 
 <div class="overlay" id="form-overlay">
     <div class="popup">
-        <h3 id="pop-service-name">सर्विस का नाम</h3>
-        <p id="pop-service-price" style="color:var(--primary); font-weight:800;">₹00</p>
-        <div id="order-form-body">
-            <input type="text" id="cust-name" placeholder="आपका नाम">
-            <input type="tel" id="cust-phone" placeholder="व्हाट्सएप नंबर">
-            <textarea id="cust-details" placeholder="काम से जुड़ी जानकारी यहाँ लिखें..." rows="4"></textarea>
-            <label style="font-size: 12px; color: var(--gray);">दस्तावेज अपलोड करें (यदि हो)</label>
-            <input type="file" id="cust-file">
-        </div>
-        <button class="btn btn-primary" id="submit-details-btn">विवरण सबमिट करें <div class="spinner" id="s1"></div></button>
-        <button class="btn btn-outline" style="margin-top:10px;" onclick="closeOverlays()">रद्द करें</button>
-    </div>
-</div>
-
-<div class="overlay" id="pay-overlay">
-    <div class="popup" style="text-align: center;">
-        <h3>भुगतान करें</h3>
-        <p style="font-size: 13px; margin: 15px 0;">कृपया ₹<span id="p-amt">0</span> का भुगतान इस UPI ID पर करें:</p>
-        <div style="background:#f1f5f9; padding:15px; border-radius:15px; font-weight:800; font-size:16px; margin-bottom:15px;">
-            93690mukeshkumar@axl
-            <i class="fas fa-copy" style="margin-left:10px; color:var(--accent);" onclick="copyUPI()"></i>
-        </div>
-        <button class="btn btn-primary" id="open-upi-btn" style="background:#10b981;">PhonePe / GooglePay ओपन करें</button>
-        <div style="margin-top:20px; border-top: 1px solid #eee; padding-top:15px;">
-            <input type="text" id="utr-input" placeholder="12-अंकों का UTR/Ref No. दर्ज करें">
-            <button class="btn btn-primary" id="final-confirm-btn">पेमेंट कन्फर्म करें <div class="spinner" id="s2"></div></button>
-        </div>
+        <h3 id="pop-title">Service</h3>
+        <p id="pop-price" style="color:var(--primary); font-weight:800; font-size: 20px;">₹00</p>
+        <input type="text" id="cust-name" placeholder="आपका नाम">
+        <input type="tel" id="cust-phone" placeholder="व्हाट्सएप नंबर">
+        <textarea id="cust-details" placeholder="काम की जानकारी यहाँ लिखें..." rows="4"></textarea>
+        <button class="btn btn-primary" id="go-to-pay">भुगतान के लिए आगे बढ़ें</button>
+        <button class="btn" style="margin-top:10px; color:gray;" onclick="closeOverlays()">रद्द करें</button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, where, orderBy, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // ✅ Firebase Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
         authDomain: "signing-9fc01.firebaseapp.com",
@@ -182,50 +137,32 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const storage = getStorage(app);
     const provider = new GoogleAuthProvider();
 
-    const ADMIN_UID = "p8zS3FpM6YV9Z5V..."; // इसे अपनी UID से बदलें (Firestore से देखकर)
     let user = null;
-    let currentService = null;
-    let tempFormData = null;
+    let selectedSvc = null;
 
-    // --- Services Database ---
+    // --- Services Data with Images & MRP ---
     const services = [
-        { id:1, name:'खतियान/जमीन नकल सेवा', price:100, time:'1-2 दिन', desc:'बिहार भूमि रिकॉर्ड्स की डिजिटल कॉपी प्राप्त करें।' },
-        { id:2, name:'प्रोफेशनल वेबसाइट डिजाइन', price:999, time:'4-6 दिन', desc:'अपने बिजनेस के लिए आधुनिक वेबसाइट बनवाएं।' },
-        { id:3, name:'गूगल मैप लिस्टिंग', price:299, time:'2 दिन', desc:'दुकान को गूगल मैप्स पर लाइव दिखाएं।' },
-        { id:4, name:'SEO आर्टिकल राइटिंग', price:199, time:'24 घंटे', desc:'ब्लॉग के लिए 1000 शब्दों का प्रीमियम आर्टिकल।' },
-        { id:5, name:'ई-श्रम कार्ड आवेदन', price:50, time:'आज ही', desc:'सरकारी ई-श्रम कार्ड रजिस्ट्रेशन और डाउनलोड।' }
+        { id:1, name:'खतियान/जमीन नकल सेवा', mrp:200, price:100, off:'50%', img:'https://images.unsplash.com/photo-1582407947304-fd86f028f716?q=80&w=400', desc:'बिहार भूमि रिकॉर्ड्स की डिजिटल कॉपी प्राप्त करें।', coupon:'KRYA10' },
+        { id:2, name:'प्रोफेशनल वेबसाइट डिजाइन', mrp:2500, price:999, off:'60%', img:'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=400', desc:'अपने बिजनेस के लिए आधुनिक वेबसाइट बनवाएं।', coupon:'WEB20' },
+        { id:3, name:'गूगल मैप लिस्टिंग', mrp:600, price:299, off:'50%', img:'https://images.unsplash.com/photo-1569336415962-a4bd9f6dfc0f?q=80&w=400', desc:'दुकान को गूगल मैप्स पर लाइव दिखाएं।', coupon:'MAP50' },
+        { id:4, name:'ई-श्रम कार्ड आवेदन', mrp:100, price:50, off:'50%', img:'https://images.unsplash.com/photo-1626261737314-d74633215903?q=80&w=400', desc:'सरकारी ई-श्रम कार्ड रजिस्ट्रेशन सेवा।', coupon:'FREE' }
     ];
 
-    // --- Navigation ---
     window.nav = (id) => {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById('view-' + id).classList.add('active');
         document.getElementById('n-' + id).classList.add('active');
         if(id === 'orders') fetchOrders();
-        if(id === 'admin') fetchAdminOrders();
     };
 
     window.closeOverlays = () => { document.querySelectorAll('.overlay').forEach(o => o.style.display = 'none'); };
 
-    // --- Auth Event Listeners ---
-    document.getElementById('google-login-trigger').addEventListener('click', async () => {
-        try {
-            const res = await signInWithPopup(auth, provider);
-            const uRef = doc(db, "users", res.user.uid);
-            const snap = await getDoc(uRef);
-            if(!snap.exists()) {
-                await setDoc(uRef, { name: res.user.displayName, email: res.user.email, phone: "", role: 'user' });
-            }
-        } catch (e) { alert("लॉगिन एरर!"); }
-    });
-
-    document.getElementById('logout-btn').addEventListener('click', () => {
-        if(confirm("लॉगआउट करना चाहते हैं?")) signOut(auth).then(() => location.reload());
-    });
+    // --- Auth Logic ---
+    document.getElementById('google-login-btn').onclick = () => signInWithPopup(auth, provider);
+    document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
 
     onAuthStateChanged(auth, u => {
         if(u) {
@@ -236,127 +173,87 @@
             document.getElementById('prof-photo').src = u.photoURL;
             document.getElementById('top-avatar').src = u.photoURL;
             document.getElementById('top-avatar').style.display = 'block';
-            
-            getDoc(doc(db, "users", u.uid)).then(snap => {
-                const d = snap.data();
-                if(d.phone) document.getElementById('user-phone-input').value = d.phone;
-                if(d.role === 'admin') document.getElementById('admin-indicator').style.display = 'block';
-            });
-
             loadServices();
             nav('home');
         } else { nav('auth'); }
     });
 
-    // --- Service Logic ---
+    // --- Load Services UI ---
     function loadServices() {
         const grid = document.getElementById('services-grid');
         grid.innerHTML = "";
         services.forEach(s => {
-            const div = document.createElement('div');
-            div.className = 'card service-card';
-            div.innerHTML = `
-                <h4>${s.name}</h4>
-                <p>${s.desc}</p>
-                <div class="service-info">
-                    <span><i class="far fa-clock"></i> ${s.time}</span>
-                    <span class="price">₹${s.price}</span>
+            grid.innerHTML += `
+                <div class="card">
+                    <div class="offer-badge">FLAT ${s.off} OFF</div>
+                    <img src="${s.img}" class="service-img">
+                    <div class="card-content">
+                        <h4>${s.name}</h4>
+                        <p>${s.desc}</p>
+                        <div class="pricing-box">
+                            <span class="mrp">₹${s.mrp}</span>
+                            <span class="final-price">₹${s.price}</span>
+                        </div>
+                        <div class="coupon-box">
+                            <span class="coupon-text">कूपन कोड का उपयोग करें:</span>
+                            <span class="coupon-code">${s.coupon}</span>
+                        </div>
+                        <button class="btn btn-primary" onclick="openOrder('${s.id}')">अभी बुक करें</button>
+                    </div>
                 </div>
-                <button class="btn btn-primary" style="margin-top:10px;" id="sbtn-${s.id}">विवरण भरें</button>
             `;
-            grid.appendChild(div);
-            document.getElementById(`sbtn-${s.id}`).onclick = () => {
-                currentService = s;
-                document.getElementById('pop-service-name').innerText = s.name;
-                document.getElementById('pop-service-price').innerText = `₹${s.price}`;
-                document.getElementById('form-overlay').style.display = 'flex';
-            };
         });
     }
 
-    // --- Order Process ---
-    document.getElementById('submit-details-btn').onclick = async () => {
+    window.openOrder = (id) => {
+        selectedSvc = services.find(x => x.id == id);
+        document.getElementById('pop-title').innerText = selectedSvc.name;
+        document.getElementById('pop-price').innerText = `₹${selectedSvc.price}`;
+        document.getElementById('form-overlay').style.display = 'flex';
+    };
+
+    document.getElementById('go-to-pay').onclick = async () => {
         const name = document.getElementById('cust-name').value;
         const phone = document.getElementById('cust-phone').value;
-        const details = document.getElementById('cust-details').value;
-        const file = document.getElementById('cust-file').files[0];
+        if(!name || !phone) return alert("नाम और नंबर जरूरी है!");
 
-        if(!name || !phone) return alert("नाम और नंबर भरें!");
-
-        document.getElementById('s1').style.display = 'inline-block';
-        let fileURL = "";
-        if(file) {
-            const fRef = ref(storage, `docs/${Date.now()}_${file.name}`);
-            await uploadBytes(fRef, file);
-            fileURL = await getDownloadURL(fRef);
-        }
-
-        tempFormData = { name, phone, details, fileURL };
-        document.getElementById('s1').style.display = 'none';
-        document.getElementById('form-overlay').style.display = 'none';
-        document.getElementById('p-amt').innerText = currentService.price;
-        document.getElementById('pay-overlay').style.display = 'flex';
-    };
-
-    window.copyUPI = () => {
-        navigator.clipboard.writeText("93690mukeshkumar@axl");
-        alert("UPI ID कॉपी हो गया!");
-    };
-
-    document.getElementById('open-upi-btn').onclick = () => {
-        window.location.href = `upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh&am=${currentService.price}&cu=INR`;
-    };
-
-    document.getElementById('final-confirm-btn').onclick = async () => {
-        const utr = document.getElementById('utr-input').value;
-        if(utr.length < 8) return alert("सही UTR नंबर डालें!");
-
-        document.getElementById('s2').style.display = 'inline-block';
-        const orderID = "KRYA-" + Math.random().toString(36).substring(7).toUpperCase();
-
+        const upi = `upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh&am=${selectedSvc.price}&cu=INR`;
+        window.location.href = upi;
+        
+        // Save Order to Firebase
         await addDoc(collection(db, "orders"), {
-            orderID, uid: user.uid, service: currentService.name, amount: currentService.price,
-            formData: tempFormData, utr, status: 'pending', createdAt: serverTimestamp()
+            uid: user.uid,
+            service: selectedSvc.name,
+            price: selectedSvc.price,
+            name, phone,
+            status: 'Pending',
+            createdAt: serverTimestamp()
         });
-
-        document.getElementById('s2').style.display = 'none';
+        
         closeOverlays();
-        alert("ऑर्डर सफल! व्हाट्सएप ओपन हो रहा है...");
-        window.open(`https://wa.me/916379403821?text=New Order: ${orderID}%0AService: ${currentService.name}`, '_blank');
-        nav('orders');
+        alert("पेमेंट के बाद 'ऑर्डर्स' टैब में अपना स्टेटस चेक करें।");
     };
 
-    // --- Order Fetching ---
     function fetchOrders() {
         const q = query(collection(db, "orders"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
         onSnapshot(q, snap => {
             const container = document.getElementById('order-container');
-            container.innerHTML = snap.empty ? '<p style="text-align:center;margin-top:50px;">कोई ऑर्डर नहीं है।</p>' : '';
+            container.innerHTML = snap.empty ? '<p style="text-align:center; margin-top:50px; color:gray;">कोई ऑर्डर नहीं मिला।</p>' : "";
             snap.forEach(d => {
                 const o = d.data();
                 container.innerHTML += `
-                    <div class="card" style="padding:15px;">
-                        <div style="display:flex;justify-content:space-between;align-items:start;">
-                            <div><b>${o.service}</b><br><small style="color:gray;">ID: ${o.orderID}</small></div>
-                            <span class="badge ${o.status}">${o.status}</span>
+                    <div class="card" style="padding:15px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <b style="font-size:14px;">${o.service}</b><br>
+                            <span style="font-size:11px; color:gray;">₹${o.price} | ${new Date(o.createdAt?.toDate()).toLocaleDateString()}</span>
                         </div>
-                        <div style="margin-top:10px;font-size:12px;display:flex;justify-content:space-between;">
-                            <span>₹${o.amount}</span>
-                            <span>${new Date(o.createdAt?.toDate()).toLocaleDateString()}</span>
-                        </div>
+                        <span style="font-size:10px; font-weight:800; color:var(--accent); text-transform:uppercase;">${o.status}</span>
                     </div>
                 `;
             });
         });
     }
-
-    document.getElementById('save-phone-btn').onclick = async () => {
-        const p = document.getElementById('user-phone-input').value;
-        await updateDoc(doc(db, "users", user.uid), { phone: p });
-        alert("नंबर सेव हो गया!");
-    };
 </script>
 
 </body>
-    </html>
-    
+</html>
