@@ -7,7 +7,9 @@
     
     <meta property="og:title" content="KRYALIVE | Smart Business Hub">
     <meta property="og:description" content="Kryalive.com: घर बैठे प्रोफेशनल डिजिटल सर्विसेज। ईमानदारी हमारी पहचान।">
-    <meta property="og:image" content="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg">
+    <meta property="og:image" content="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s600/1000537308.jpg">
+    <meta property="og:image:width" content="600">
+    <meta property="og:image:height" content="600">
     <meta property="og:url" content="https://kryalive.com">
     <meta property="og:type" content="website">
 
@@ -21,7 +23,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--light); color: var(--dark); overflow-x: hidden; height: 100vh; }
         
-        /* गेटकीपर सुरक्षा: लॉगिन से पहले हेडर और नेव को पूरी तरह छुपाएं */
+        /* गेटकीपर सुरक्षा: लॉगिन से पहले सब कुछ छुपाएं */
         header, .bottom-nav { display: none !important; }
         .view { display: none !important; }
         .view.active { display: block !important; animation: slideUp 0.4s ease; }
@@ -68,7 +70,7 @@
         <div style="text-align: center; padding-top: 80px;">
             <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" style="width: 110px; height: 110px; border-radius: 50%; margin-bottom: 20px; border: 3px solid var(--primary);">
             <h2 style="font-weight: 800; font-size: 26px;">नमस्ते!</h2>
-            <p style="color: gray; margin-bottom: 40px; padding: 0 20px;">Kryalive.com में प्रवेश के लिए कृपया लॉगिन करें।</p>
+            <p style="color: gray; margin-bottom: 40px; padding: 0 20px;">Kryalive.com में प्रवेश के लिए लॉगिन करें।</p>
             <button class="btn" id="login-btn" style="background: white; color: #000; border: 1.5px solid #eee; width: 85%; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google के साथ शुरू करें
             </button>
@@ -82,9 +84,9 @@
             <div class="stat-card" style="grid-column: span 2;"><i class="fas fa-wallet" style="color:var(--gold);"></i><h2 id="total-rev">₹0</h2><p>कुल राजस्व</p></div>
         </div>
         <div class="card">
-            <h3 style="margin-bottom:15px;">नया सर्विस पब्लिश करें</h3>
+            <h3>नया सर्विस पब्लिश करें</h3>
             <input type="text" id="s-name" placeholder="सर्विस का नाम">
-            <input type="number" id="s-mrp" placeholder="MRP (कटी हुई कीमत)">
+            <input type="number" id="s-mrp" placeholder="MRP">
             <input type="number" id="s-price" placeholder="असली कीमत">
             <input type="text" id="s-img" placeholder="फोटो का लिंक">
             <button class="btn btn-primary" id="btn-publish"><i class="fas fa-plus"></i> पब्लिश करें</button>
@@ -110,7 +112,7 @@
             <p id="u-email" style="color: gray; font-size: 12px; margin-bottom: 25px;">email</p>
             <button class="btn btn-primary" style="margin-bottom: 15px;" onclick="shareWebsite()"><i class="fas fa-share-alt"></i> Kryalive.com शेयर करें</button>
             <div style="font-size: 11px; color: gray; text-align: left; background: #f8fafc; padding: 15px; border-radius: 15px; border: 1px solid #eee;">
-                <b>हमारी नीति:</b> हम ईमानदारी और पारदर्शिता में विश्वास रखते हैं। आपका हर ऑर्डर सुरक्षित और कानूनी है।
+                <b>हमारी नीति:</b> हम ईमानदारी और पारदर्शिता में विश्वास रखते हैं।
             </div>
             <button class="btn" style="background: #fee2e2; color: #ef4444; margin-top: 20px;" id="logout-btn">लॉगआउट</button>
         </div>
@@ -171,8 +173,6 @@
         if(u) {
             user = u;
             isOwner = u.email === OWNER_EMAIL;
-            
-            // UI दिखाएं (Strict Logic)
             header.style.setProperty('display', 'flex', 'important');
             navBar.style.setProperty('display', 'flex', 'important');
             
@@ -184,7 +184,6 @@
             document.getElementById('role-badge').innerText = isOwner ? "OWNER" : "USER";
             document.getElementById('role-badge').style.background = isOwner ? "var(--accent)" : "var(--primary)";
             document.getElementById('n-txt').innerText = isOwner ? "Admin" : "Store";
-            
             document.getElementById('user-greet').innerText = "नमस्ते, " + u.displayName.split(' ')[0] + "!";
             
             openMain();
@@ -229,7 +228,6 @@
 
             snap.forEach(d => {
                 const s = d.data();
-                const disc = s.mrp ? Math.round(((s.mrp-s.price)/s.mrp)*100) : 0;
                 list.innerHTML += `
                     <div class="service-item">
                         <img src="${s.img || 'https://via.placeholder.com/400x200'}" class="service-img">
@@ -296,4 +294,4 @@
 </script>
 </body>
     </html>
-    
+        
