@@ -23,14 +23,12 @@
         .view { display: none; }
         .view.active { display: block; animation: slideUp 0.4s ease; }
 
-        /* Dashboard Stats */
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .stat-card { background: white; padding: 20px; border-radius: 24px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-bottom: 4px solid var(--accent); }
         .stat-card i { font-size: 20px; margin-bottom: 8px; color: var(--accent); }
         .stat-card h2 { font-size: 24px; font-weight: 800; }
         .stat-card p { font-size: 10px; color: gray; font-weight: 600; text-transform: uppercase; }
 
-        /* Form Card */
         .card { background: #fff; border-radius: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 20px; border: 1px solid #f1f5f9; }
         input { width: 100%; padding: 14px; border-radius: 14px; border: 1.5px solid #e2e8f0; font-size: 14px; outline: none; margin-bottom: 12px; background: #f8fafc; display: block; }
 
@@ -38,12 +36,10 @@
         .btn-primary { background: var(--accent); color: white; }
         .btn-del { background: #fee2e2; color: var(--red); width: auto; padding: 8px 15px; font-size: 11px; }
 
-        /* Store Card */
         .service-item { position: relative; border-radius: 26px; overflow: hidden; background: #fff; margin-bottom: 25px; box-shadow: 0 12px 30px rgba(0,0,0,0.06); border: 1px solid #f1f5f9; }
         .service-img { width: 100%; height: 200px; object-fit: cover; }
         .discount-tag { position: absolute; top: 15px; left: 15px; background: var(--red); color: white; padding: 5px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; z-index: 10; }
 
-        /* शेयर बटन और पॉलिसी स्टाइल */
         .share-btn { background: var(--accent); color: white; padding: 14px 20px; border-radius: 16px; font-size: 13px; font-weight: 800; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 15px auto; width: 100%; transition: 0.3s; }
         .policy-text { font-size: 12px; color: #64748b; line-height: 1.6; text-align: left; margin-top: 20px; padding: 15px; background: #f1f5f9; border-radius: 15px; border: 1px solid #e2e8f0; }
         .policy-text h5 { color: var(--dark); margin-bottom: 5px; font-weight: 800; }
@@ -52,6 +48,10 @@
         .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 11px; font-weight: 700; }
         .nav-item.active { color: var(--accent); }
         .nav-item i { font-size: 24px; display: block; margin-bottom: 4px; }
+
+        /* Checkout Modal CSS */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-box { background: #fff; padding: 25px; border-radius: 28px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2); animation: slideUp 0.3s ease; }
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -132,6 +132,23 @@
     </section>
 </main>
 
+<div class="modal-overlay" id="checkout-modal">
+    <div class="modal-box">
+        <h3 style="font-weight: 800; margin-bottom: 5px; color: var(--dark);">पेमेंट पूरा करें</h3>
+        <p style="font-size: 12px; color: gray; margin-bottom: 20px;">ऑर्डर कन्फर्म करने के लिए 2 आसान स्टेप्स:</p>
+
+        <button class="btn" style="background: #5f259f; color: white; margin-bottom: 15px;" id="btn-upi-pay">
+            <i class="fas fa-rupee-sign"></i> 1. PhonePe / UPI से पेमेंट करें
+        </button>
+
+        <button class="btn" style="background: #25d366; color: white;" id="btn-wa-confirm">
+            <i class="fab fa-whatsapp"></i> 2. व्हाट्सएप पर स्क्रीनशॉट भेजें
+        </button>
+
+        <button style="margin-top: 20px; background: none; border: none; color: #94a3b8; text-decoration: underline; font-size: 12px; cursor: pointer;" onclick="closeModal()">रद्द करें (Cancel)</button>
+    </div>
+</div>
+
 <nav class="bottom-nav" id="app-nav" style="display: none;">
     <button class="nav-item active" id="n-main" onclick="openMain()"><i class="fas fa-store"></i><span id="n-txt">Store</span></button>
     <button class="nav-item" id="n-orders" onclick="nav('orders')"><i class="fas fa-box"></i><span>Orders</span></button>
@@ -140,8 +157,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    // 💡 ध्यान दें: यहाँ मैंने signInWithRedirect लगाया है जो मोबाइल के लिए एकदम सही है।
-    import { getAuth, GoogleAuthProvider, signInWithRedirect, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -160,7 +176,10 @@
 
     const OWNER_EMAIL = "krya.global@gmail.com";
     const WHATSAPP_NUMBER = "916379403821"; 
+    const UPI_ID = "93690mukeshkumar@axl"; // आपकी UPI ID
+
     let user = null, isOwner = false;
+    let currentOrder = null; // मौजूदा ऑर्डर का डेटा स्टोर करने के लिए
 
     const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, style: {background: c, borderRadius: "15px"}}).showToast();
 
@@ -174,16 +193,8 @@
 
     window.openMain = () => isOwner ? nav('owner') : nav('store');
 
-    // 💡 फिक्स: यहाँ रीडायरेक्ट सिस्टम लगा दिया गया है
-    document.getElementById('login-btn').onclick = () => {
-        showToast("सुरक्षित लॉगिन हो रहा है, कृपया प्रतीक्षा करें...");
-        signInWithRedirect(auth, provider);
-    };
-
-    document.getElementById('logout-btn').onclick = () => {
-        showToast("लॉगआउट हो रहा है...");
-        signOut(auth).then(() => location.reload());
-    };
+    document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
+    document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
 
     onAuthStateChanged(auth, async u => {
         if(u) {
@@ -268,13 +279,31 @@
         });
     }
 
-    window.buyNow = async (n, p, c) => {
+    // --- स्मार्ट चेकआउट फ्लो (PhonePe UPI) ---
+    window.buyNow = (n, p, c) => {
         if(!user) return showToast("कृपया पहले लॉगिन करें", "var(--red)");
+        currentOrder = { name: n, price: p, code: c };
+        document.getElementById('checkout-modal').style.display = 'flex'; // पॉपअप खोलें
+    };
+
+    window.closeModal = () => { document.getElementById('checkout-modal').style.display = 'none'; };
+
+    // स्टेप 1: PhonePe/UPI ऐप खोलना
+    document.getElementById('btn-upi-pay').onclick = () => {
+        const upiUrl = `upi://pay?pa=${UPI_ID}&pn=KRYALIVE&am=${currentOrder.price}&cu=INR&tn=Order-${currentOrder.code}`;
+        window.location.href = upiUrl; // यह फ़ोन का पेमेंट ऐप खोलेगा
+        showToast("PhonePe / UPI ऐप खुल रहा है...");
+    };
+
+    // स्टेप 2: व्हाट्सएप पर मैसेज भेजना
+    document.getElementById('btn-wa-confirm').onclick = async () => {
+        document.getElementById('checkout-modal').style.display = 'none';
         const oID = "KRYA-ORD-" + Math.floor(1000 + Math.random() * 9000);
         
+        // डेटाबेस में सेव
         await addDoc(collection(db, "orders"), {
-            orderID: oID, serviceCode: c, userName: user.displayName, userEmail: user.email,
-            serviceName: n, amount: p, status: "Waiting for Payment", createdAt: serverTimestamp()
+            orderID: oID, serviceCode: currentOrder.code, userName: user.displayName, userEmail: user.email,
+            serviceName: currentOrder.name, amount: currentOrder.price, status: "Waiting for Payment", createdAt: serverTimestamp()
         });
 
         const rawMessage = `नमस्ते Kryalive.com टीम!
@@ -282,9 +311,9 @@
 
 👤 नाम: ${user.displayName}
 📧 ईमेल आईडी: ${user.email}
-📦 सर्विस का नाम: ${n}
-🔖 सर्विस कोड: ${c}
-💳 अमाउंट: ₹${p}
+📦 सर्विस का नाम: ${currentOrder.name}
+🔖 सर्विस कोड: ${currentOrder.code}
+💳 अमाउंट: ₹${currentOrder.price}
 
 मैंने पेमेंट कर दी है।
 ✅ मेरा UTR / Reference नंबर है: ____________
@@ -295,7 +324,7 @@
 
         const waMsg = encodeURIComponent(rawMessage);
         window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${waMsg}`, '_blank');
-        showToast("ऑर्डर दर्ज! व्हाट्सएप पर जानकारी भेजें।");
+        showToast("ऑर्डर दर्ज! व्हाट्सएप पर स्क्रीनशॉट भेजें।");
     };
 
     function loadUserOrders() {
@@ -309,34 +338,4 @@
                     <div class="card" style="padding:15px; border-left: 5px solid ${o.status === 'Approved' ? 'var(--primary)' : 'var(--gold)'};">
                         <b>${o.serviceName}</b><br><small>ID: ${o.orderID}</small><br><small>Code: ${o.serviceCode}</small>
                         <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; font-size:12px;">
-                            <span>₹${o.amount}</span><span style="font-weight:800; color:var(--accent);">${o.status}</span>
-                        </div>
-                    </div>`;
-            });
-        });
-    }
-
-    function loadAdminStats() {
-        onSnapshot(collection(db, "orders"), snap => {
-            document.getElementById('total-ord').innerText = snap.size;
-            let rev = 0; snap.forEach(d => { if(d.data().status === 'Approved') rev += Number(d.data().amount); });
-            document.getElementById('total-rev').innerText = "₹" + rev;
-        });
-        onSnapshot(collection(db, "subscribers"), snap => document.getElementById('total-subs').innerText = snap.size);
-    }
-
-    window.shareWebsite = () => {
-        const shareData = {
-            title: 'KRYALIVE Digital Hub',
-            text: 'नमस्ते! घर बैठे प्रोफेशनल डिजिटल सर्विसेज के लिए KRYALIVE से जुड़ें।',
-            url: window.location.href
-        };
-        if (navigator.share) {
-            navigator.share(shareData).then(() => showToast("शेयर करने के लिए धन्यवाद!")).catch(console.log);
-        } else {
-            window.open(`https://wa.me/?text=नमस्ते! KRYALIVE से जुड़ें: ${window.location.href}`, '_blank');
-        }
-    };
-</script>
-</body>
-</html>
+                            <span>₹${o.amount}</
