@@ -43,6 +43,11 @@
         .service-img { width: 100%; height: 200px; object-fit: cover; }
         .discount-tag { position: absolute; top: 15px; left: 15px; background: var(--red); color: white; padding: 5px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; z-index: 10; }
 
+        /* शेयर बटन और पॉलिसी स्टाइल */
+        .share-btn { background: var(--accent); color: white; padding: 14px 20px; border-radius: 16px; font-size: 13px; font-weight: 800; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 15px auto; width: 100%; transition: 0.3s; }
+        .policy-text { font-size: 12px; color: #64748b; line-height: 1.6; text-align: left; margin-top: 20px; padding: 15px; background: #f1f5f9; border-radius: 15px; border: 1px solid #e2e8f0; }
+        .policy-text h5 { color: var(--dark); margin-bottom: 5px; font-weight: 800; }
+
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; border-top: 1px solid #eee; padding: 12px 0 25px; z-index: 1000; }
         .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 11px; font-weight: 700; }
         .nav-item.active { color: var(--accent); }
@@ -105,8 +110,24 @@
         <div class="card" style="text-align: center; padding: 40px 20px;">
             <img id="u-photo" src="" style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--primary); margin-bottom: 20px;">
             <h4 id="u-name">Name</h4>
-            <p id="u-email" style="color: gray; font-size: 12px; margin-bottom: 30px;">email</p>
-            <button class="btn" style="background: #fee2e2; color: #ef4444;" id="logout-btn">लॉगआउट</button>
+            <p id="u-email" style="color: gray; font-size: 12px; margin-bottom: 10px;">email</p>
+
+            <button class="share-btn" onclick="shareWebsite()">
+                <i class="fas fa-share-alt"></i> दोस्तों के साथ शेयर करें
+            </button>
+
+            <div class="policy-text">
+                <h5>Privacy Policy</h5>
+                <p>KRYALIVE आपकी प्राइवेसी का सम्मान करता है। हम आपका डेटा केवल सर्विस देने और जरूरी अपडेट भेजने के लिए उपयोग करते हैं।</p>
+                <br>
+                <h5>Terms & Conditions</h5>
+                <p>हमारी डिजिटल सेवाओं का उपयोग करके आप हमारी शर्तों से सहमत होते हैं। सभी प्रक्रियाएं सुरक्षित और पारदर्शी हैं।</p>
+                <br>
+                <h5>Refund Policy</h5>
+                <p>एक बार काम शुरू होने के बाद रिफंड संभव नहीं है। किसी भी तकनीकी समस्या के लिए हमारी टीम सहायता के लिए उपलब्ध है।</p>
+            </div>
+
+            <button class="btn" style="background: #fee2e2; color: #ef4444; margin-top: 25px;" id="logout-btn">लॉगआउट</button>
         </div>
     </section>
 </main>
@@ -177,7 +198,6 @@
         } else { nav('auth'); }
     });
 
-    // Admin Delete Function
     window.deleteProduct = async (id) => {
         if(confirm("डिलीट करें?")) {
             await deleteDoc(doc(db, "services", id));
@@ -185,7 +205,6 @@
         }
     };
 
-    // Publish with Auto-Generated Service Code
     document.getElementById('btn-publish').onclick = async () => {
         const name = document.getElementById('s-name').value;
         const mrp = document.getElementById('s-mrp').value;
@@ -240,7 +259,6 @@
         });
     }
 
-    // PhonePay + WhatsApp Order System
     window.buyNow = async (n, p, c) => {
         if(!user) return showToast("कृपया पहले लॉगिन करें", "var(--red)");
         const oID = "KRYA-ORD-" + Math.floor(1000 + Math.random() * 9000);
@@ -279,6 +297,20 @@
         });
         onSnapshot(collection(db, "subscribers"), snap => document.getElementById('total-subs').innerText = snap.size);
     }
+
+    // Share Function
+    window.shareWebsite = () => {
+        const shareData = {
+            title: 'KRYALIVE Digital Hub',
+            text: 'नमस्ते! घर बैठे प्रोफेशनल डिजिटल सर्विसेज के लिए KRYALIVE से जुड़ें।',
+            url: window.location.href
+        };
+        if (navigator.share) {
+            navigator.share(shareData).then(() => showToast("शेयर करने के लिए धन्यवाद!")).catch(console.log);
+        } else {
+            window.open(`https://wa.me/?text=नमस्ते! KRYALIVE से जुड़ें: ${window.location.href}`, '_blank');
+        }
+    };
 </script>
 </body>
 </html>
