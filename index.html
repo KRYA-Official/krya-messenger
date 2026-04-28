@@ -1,154 +1,41 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYALIVE Super App</title>
+<div class="card auth-card">
+    <h3>सुरक्षित लॉगिन</h3>
+    <p style="font-size: 12px; color: #64748b; margin-bottom: 20px;">अपना मोबाइल नंबर दर्ज करें</p>
     
-    <meta name="theme-color" content="#10b981">
-    <link rel="manifest" href="/manifest.json">
+    <div id="recaptcha-container"></div>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <div class="input-group">
+        <input type="tel" id="phone-number" placeholder="जैसे: 6379403821" style="font-size: 18px; font-weight: bold;">
+    </div>
+    
+    <button class="btn btn-primary" id="send-otp-btn">
+        <span id="btn-text">OTP भेजें</span>
+        <div id="loader" style="display:none; width: 20px; height: 20px; border: 3px solid #fff; border-top: 3px solid transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+    </button>
+    
+    <div id="otp-section" style="display:none; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+        <input type="number" id="otp-code" placeholder="6-अंकों का कोड यहाँ डालें">
+        <button class="btn btn-success" id="verify-otp-btn">वेरिफाई करें</button>
+    </div>
+</div>
 
-    <style>
-        :root {
-            --primary: #10b981;
-            --accent: #2563eb;
-            --dark: #0f172a;
-            --light: #f8fafc;
-            --gradient: linear-gradient(135deg, #10b981 0%, #2563eb 100%);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--light); color: var(--dark); overflow-x: hidden; }
-        
-        header { 
-            background: #fff; padding: 15px; display: flex; justify-content: space-between; 
-            align-items: center; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 1000;
-        }
-        .brand { font-size: 20px; font-weight: 800; }
-        .brand span { color: var(--primary); }
-
-        .view { display: none; padding: 20px; min-height: 80vh; }
-        .view.active { display: block; }
-
-        /* Auth UI */
-        .auth-container { text-align: center; padding-top: 50px; }
-        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        
-        .input-group { margin-bottom: 15px; text-align: left; }
-        input { width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid #e2e8f0; font-size: 16px; outline: none; }
-        input:focus { border-color: var(--accent); }
-
-        .btn { 
-            width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700; 
-            font-size: 16px; cursor: pointer; transition: 0.3s;
-        }
-        .btn-primary { background: var(--accent); color: white; }
-        .btn-success { background: var(--primary); color: white; }
-
-        /* Dashboard UI */
-        .wallet-card {
-            background: var(--gradient); color: white; padding: 25px; border-radius: 25px;
-            margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;
-        }
-
-        /* Bottom Nav */
-        .bottom-nav { 
-            position: fixed; bottom: 0; width: 100%; background: #fff; 
-            display: flex; border-top: 1px solid #eee; padding: 10px 0; z-index: 1000;
-        }
-        .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; cursor: pointer; }
-        .nav-item.active { color: var(--accent); }
-        .nav-item i { font-size: 20px; display: block; }
-        .nav-item span { font-size: 10px; font-weight: 700; }
-
-        #toast { 
-            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); 
-            padding: 12px 25px; background: #333; color: white; border-radius: 50px; 
-            display: none; z-index: 2000; font-size: 14px; white-space: nowrap;
-        }
-    </style>
-</head>
-<body>
-
-<div id="toast">संदेश यहाँ दिखेगा</div>
-
-<header>
-    <div class="brand">KRYA<span>LIVE</span></div>
-    <div id="user-status" style="font-size: 12px; font-weight: 700; color: var(--primary);">OFFLINE</div>
-</header>
-
-<main>
-    <section id="view-auth" class="view active">
-        <div class="auth-container">
-            <div class="card">
-                <h2 style="margin-bottom: 10px;">लॉगिन करें</h2>
-                <p style="color: #64748b; font-size: 14px; margin-bottom: 25px;">KRYALIVE में आपका स्वागत है।</p>
-                
-                <div id="recaptcha-container"></div>
-                
-                <div class="input-group">
-                    <input type="tel" id="phone" placeholder="मोबाइल नंबर (+91XXXXXXXXXX)">
-                </div>
-                <button id="send-otp-btn" class="btn btn-primary">OTP भेजें</button>
-                
-                <div id="otp-section" style="display: none; margin-top: 20px;">
-                    <div class="input-group">
-                        <input type="number" id="otp" placeholder="6 अंकों का OTP डालें">
-                    </div>
-                    <button id="verify-otp-btn" class="btn btn-success">वेरिफाई करें</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="view-home" class="view">
-        <div class="wallet-card">
-            <div>
-                <p style="font-size: 12px; opacity: 0.9;">कुल कमाई</p>
-                <h2 id="balance">₹0.00</h2>
-            </div>
-            <i class="fas fa-wallet fa-2x"></i>
-        </div>
-        <div class="card">
-            <h4>आपका रेफरल लिंक</h4>
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <input type="text" id="ref-link" readonly style="font-size: 12px; background: #f1f5f9;">
-                <button class="btn btn-primary" style="width: auto; padding: 0 15px;" onclick="copyLink()">कॉपी</button>
-            </div>
-        </div>
-        <h4 style="margin: 20px 0 10px;">हाल के ऑर्डर्स</h4>
-        <div id="order-history"></div>
-    </section>
-
-    <section id="view-store" class="view">
-        <h3>डिजिटल स्टोर</h3>
-        <div id="product-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
-            </div>
-    </section>
-</main>
-
-<nav class="bottom-nav">
-    <button class="nav-item active" onclick="showPage('home')"><i class="fas fa-home"></i><span>Home</span></button>
-    <button class="nav-item" onclick="showPage('store')"><i class="fas fa-store"></i><span>Store</span></button>
-    <button class="nav-item" onclick="showPage('auth')"><i class="fas fa-user"></i><span>Profile</span></button>
-</nav>
+<style>
+    @keyframes spin { to { transform: rotate(360deg); } }
+</style>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // --- मुकेश जी: अपनी Firebase Config यहाँ डालें ---
+    // 1. Firebase Configuration (इसे अपनी असली चाबियों से बदलें)
     const firebaseConfig = {
-        apiKey: "AIzaSy...", 
-        authDomain: "your-app.firebaseapp.com",
-        projectId: "your-app",
-        storageBucket: "your-app.appspot.com",
-        messagingSenderId: "123456789",
-        appId: "1:123456789:web:abcdef"
+        apiKey: "AIzaSyCJ_heMnqu6ENYS12hecty9V0IOKQlakFs",
+        authDomain: "signing-9fc01.firebaseapp.com",
+        projectId: "signing-9fc01",
+        storageBucket: "signing-9fc01.firebasestorage.app",
+        messagingSenderId: "926296137348",
+        appId: "1:926296137348:web:c42cdf48199ba877246cd5"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -157,92 +44,107 @@
 
     let confirmationResult = null;
 
-    // --- Navigation Logic ---
-    window.showPage = (id) => {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById('view-' + id).classList.add('active');
-        // Logic for nav item activation
-    };
-
-    // --- Toast Function ---
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.innerText = msg;
-        t.style.display = 'block';
-        setTimeout(() => t.style.display = 'none', 3000);
+    // 2. Recaptcha Setup (Invisible Mode)
+    function setupRecaptcha() {
+        if (!window.recaptchaVerifier) {
+            console.log("Initializing Recaptcha...");
+            window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+                'size': 'invisible',
+                'callback': (response) => { console.log("Recaptcha solved!"); }
+            });
+        }
     }
 
-    // --- AUTHENTICATION ---
-    window.onload = () => {
-        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-            'size': 'invisible'
-        });
-    };
+    // 3. Send OTP Function
+    async function handleSendOTP() {
+        const btn = document.getElementById('send-otp-btn');
+        const btnText = document.getElementById('btn-text');
+        const loader = document.getElementById('loader');
+        let phone = document.getElementById('phone-number').value.trim();
 
-    document.getElementById('send-otp-btn').addEventListener('click', () => {
-        let phone = document.getElementById('phone').value.trim();
-        if(!phone.startsWith('+')) phone = "+91" + phone;
+        // ऑटो-फिक्स नंबर (अगर +91 नहीं लगा है)
+        if (!phone.startsWith("+")) {
+            phone = phone.startsWith("91") ? "+" + phone : "+91" + phone;
+        }
 
-        signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
-            .then(result => {
-                confirmationResult = result;
-                document.getElementById('otp-section').style.display = 'block';
-                showToast("OTP भेज दिया गया है!");
-            }).catch(err => {
-                showToast("गलती: " + err.message);
-                console.error(err);
-            });
-    });
+        if (phone.length < 13) {
+            alert("कृपया सही मोबाइल नंबर डालें");
+            return;
+        }
 
-    document.getElementById('verify-otp-btn').addEventListener('click', () => {
-        const code = document.getElementById('otp').value;
-        confirmationResult.confirm(code).then(async (result) => {
-            await syncUser(result.user);
-            location.reload();
-        }).catch(() => showToast("गलत OTP!"));
-    });
+        // UI Loading State
+        btn.disabled = true;
+        btnText.style.display = 'none';
+        loader.style.display = 'block';
 
-    async function syncUser(user) {
-        const ref = doc(db, "users", user.uid);
-        const snap = await getDoc(ref);
-        if(!snap.exists()) {
-            await setDoc(ref, {
+        console.log("Sending OTP to:", phone);
+        setupRecaptcha();
+
+        try {
+            const result = await signInWithPhoneNumber(auth, phone, window.recaptchaVerifier);
+            confirmationResult = result;
+            console.log("OTP Sent Successfully!");
+            
+            document.getElementById('otp-section').style.display = 'block';
+            alert("OTP भेज दिया गया है!");
+        } catch (error) {
+            console.error("OTP Error:", error.code, error.message);
+            alert("ओह! " + error.message);
+            // Reset ReCaptcha on error
+            if (window.recaptchaVerifier) {
+                window.recaptchaVerifier.render().then(widgetId => {
+                    grecaptcha.reset(widgetId);
+                });
+            }
+        } finally {
+            btn.disabled = false;
+            btnText.style.display = 'block';
+            loader.style.display = 'none';
+        }
+    }
+
+    // 4. Verify OTP Function
+    async function handleVerifyOTP() {
+        const code = document.getElementById('otp-code').value;
+        if (code.length !== 6) return alert("6 अंकों का कोड डालें");
+
+        try {
+            const result = await confirmationResult.confirm(code);
+            const user = result.user;
+            console.log("Login Success!", user.uid);
+            
+            // डेटाबेस में यूजर सेव करें
+            await setDoc(doc(db, "users", user.uid), {
                 uid: user.uid,
                 phone: user.phoneNumber,
-                walletBalance: 0,
-                referralCode: Math.random().toString(36).substring(7).toUpperCase(),
-                createdAt: serverTimestamp()
-            });
+                lastLogin: serverTimestamp()
+            }, { merge: true });
+
+            alert("लॉगिन सफल!");
+            location.reload();
+        } catch (error) {
+            alert("गलत OTP! कृपया फिर से जाँचें।");
         }
     }
 
-    onAuthStateChanged(auth, user => {
-        if(user) {
-            document.getElementById('user-status').innerText = "ONLINE";
-            showPage('home');
-            loadUserData(user.uid);
-        } else {
-            showPage('auth');
+    // 5. Event Listeners (बटन क्लिक फिक्स)
+    document.getElementById('send-otp-btn').addEventListener('click', (e) => {
+        e.preventDefault();
+        handleSendOTP();
+    });
+
+    document.getElementById('verify-otp-btn').addEventListener('click', (e) => {
+        e.preventDefault();
+        handleVerifyOTP();
+    });
+
+    // 6. Auth State Check
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            console.log("User is logged in:", user.phoneNumber);
+            // यहाँ आप होम पेज पर भेज सकते हैं (nav('home'))
         }
     });
 
-    function loadUserData(uid) {
-        onSnapshot(doc(db, "users", uid), snap => {
-            const data = snap.data();
-            document.getElementById('balance').innerText = "₹" + data.walletBalance;
-            document.getElementById('ref-link').value = "https://kryalive.com?ref=" + data.referralCode;
-        });
-    }
-
-    window.copyLink = () => {
-        const copyText = document.getElementById("ref-link");
-        copyText.select();
-        document.execCommand("copy");
-        showToast("लिंक कॉपी हो गया!");
-    };
-</script>
-
-</body>
-    </html>
-    
+            </script>
+            
