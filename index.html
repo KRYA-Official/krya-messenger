@@ -143,7 +143,8 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithRedirect, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    // 💡 ध्यान दें: यहाँ getRedirectResult जोड़ा गया है ताकि एरर का पता चल सके
+    import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -166,6 +167,11 @@
 
     const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, style: {background: c, borderRadius: "15px"}}).showToast();
 
+    // 💡 नया: अगर लॉगिन में कोई दिक्कत आती है तो यह बताएगा
+    getRedirectResult(auth).catch((error) => {
+        alert("⚠️ गूगल लॉगिन एरर: " + error.message + "\n(मुकेश जी, कृपया Firebase में kryalive.com डोमेन जोड़ें)");
+    });
+
     window.nav = (id) => {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -177,7 +183,7 @@
     window.openMain = () => isOwner ? nav('owner') : nav('store');
 
     document.getElementById('login-btn').onclick = () => {
-        showToast("सुरक्षित लॉगिन हो रहा है, कृपया प्रतीक्षा करें...");
+        showToast("सुरक्षित लॉगिन हो रहा है...");
         signInWithRedirect(auth, provider);
     };
 
@@ -215,7 +221,6 @@
         }
     };
 
-    // नया फीचर: ऑर्डर Approve करना
     window.approveOrder = async (id) => {
         if(confirm("क्या पेमेंट आ चुकी है? ऑर्डर Approved करें?")) {
             await updateDoc(doc(db, "orders", id), { status: "Approved" });
@@ -325,7 +330,6 @@
         });
     }
 
-    // एडमिन डैशबोर्ड: ऑर्डर्स लिस्ट और रेवेन्यू अपडेट
     function loadAdminStats() {
         onSnapshot(query(collection(db, "orders"), orderBy("createdAt", "desc")), snap => {
             document.getElementById('total-ord').innerText = snap.size;
@@ -335,7 +339,7 @@
 
             snap.forEach(d => {
                 const o = d.data();
-                if(o.status === 'Approved') rev += Number(o.amount); // सिर्फ Approved का पैसा जुड़ेगा
+                if(o.status === 'Approved') rev += Number(o.amount); 
 
                 ordersList.innerHTML += `
                     <div class="card" style="padding:15px; margin-bottom: 10px; border-left: 5px solid ${o.status === 'Approved' ? 'var(--primary)' : 'var(--gold)'};">
@@ -345,5 +349,4 @@
                                 <small style="color:gray;">${o.serviceName} (₹${o.amount})</small><br>
                                 <small style="color:var(--accent); font-weight:800;">${o.status}</small>
                             </div>
-                            ${o.status !== 'Approved' ? `<button class="btn btn-live" style="width:auto; padding:8px 15px; font-size:11px;" onclick="approveOrder('${d.id}')">Approve</button>` : `<i class="fas fa-check-circle" style="color:var(--primary); font-size:24px;"></i>`}
-                        <
+                            ${o.status !== 'Approved' ? `<button class="btn btn-live" style="width:auto; padding:8px 15
