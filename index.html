@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYA Digital | AI Powered Platform</title>
+    <title>KRYA Digital | AI Audio Platform</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -24,7 +24,6 @@
         .brand { font-size: 20px; font-weight: 800; color: var(--dark); }
         .brand span { color: var(--primary); }
         
-        /* Pull to Refresh Spinner */
         #ptr-spinner { position: absolute; top: 60px; left: 50%; transform: translateX(-50%); display: none; z-index: 999; }
         .spinner-icon { color: var(--accent); font-size: 24px; animation: spin 1s linear infinite; }
 
@@ -68,12 +67,10 @@
     <div class="app-container">
         <header>
             <div class="brand">KRYA<span>Digital</span></div>
-            <div style="font-size: 10px; font-weight: bold; color: var(--primary);"><i class="fas fa-sync-alt"></i> खींचकर रिफ्रेश करें</div>
+            <div id="voice-indicator" style="font-size: 10px; font-weight: bold; color: var(--gold);"><i class="fas fa-volume-up"></i> AI Voice ON</div>
         </header>
 
-        <div id="ptr-spinner">
-            <i class="fas fa-sync-alt spinner-icon"></i>
-        </div>
+        <div id="ptr-spinner"><i class="fas fa-sync-alt spinner-icon"></i></div>
 
         <main id="main-content">
             <section id="view-home" class="view animate__animated animate__fadeIn">
@@ -104,14 +101,6 @@
                         <button onclick="openPayment('3D Logo', 199)" class="btn-primary" style="width: auto; padding: 8px 15px;">खरीदें</button>
                     </div>
                 </div>
-                <div class="card">
-                    <h4>सरकारी फॉर्म/पैन कार्ड सुधार</h4>
-                    <p style="font-size: 12px; color: var(--slate); margin-bottom: 15px;">ऑनलाइन फॉर्म भरने में पूरी सहायता।</p>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-weight: 800; color: var(--primary); font-size: 18px;">₹99</span>
-                        <button onclick="openPayment('Form Support', 99)" class="btn-primary" style="width: auto; padding: 8px 15px;">खरीदें</button>
-                    </div>
-                </div>
             </section>
 
             <section id="view-chat" class="view hidden animate__animated animate__fadeIn">
@@ -119,11 +108,11 @@
                     <div class="chat-messages" id="chatList">
                         <div class="msg msg-ai">
                             <span class="ai-avatar-badge">KRYA AI</span><br>
-                            नमस्ते! मैं KRYA डिजिटल असिस्टेंट हूँ। क्या आप अपनी प्रोफाइल या किसी ऑर्डर के बारे में जानना चाहते हैं? बस पूछें!
+                            नमस्ते! मैं KRYA हूँ। मैं बोलकर भी आपकी मदद कर सकता हूँ। कुछ पूछिए!
                         </div>
                     </div>
                     <div class="chat-input-box">
-                        <input type="text" id="chatMsg" placeholder="AI से कुछ पूछें...">
+                        <input type="text" id="chatMsg" placeholder="AI से बात करें...">
                         <button id="sendChatBtn" style="background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 50%;"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
@@ -155,9 +144,7 @@
         <div class="payment-card">
             <h3 id="pay-item-name">Product</h3>
             <p id="pay-item-price" style="font-size: 24px; font-weight: 800; color: var(--primary); margin: 10px 0;">₹0</p>
-            <div style="background: #f1f5f9; padding: 20px; border-radius: 15px; margin-bottom: 20px; font-weight: bold;">
-                [ यहाँ आपका QR कोड लगेगा ]
-            </div>
+            <div style="background: #f1f5f9; padding: 20px; border-radius: 15px; margin-bottom: 20px; font-weight: bold;">[ यहाँ आपका QR लगेगा ]</div>
             <button onclick="confirmPayment()" class="btn-primary" style="background: #10b981;">पेमेंट कर दिया है</button>
             <button onclick="document.getElementById('payment-modal').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--slate); font-size: 12px;">कैंसिल</button>
         </div>
@@ -185,49 +172,39 @@
         let currentUser = JSON.parse(localStorage.getItem('krya_user')) || null;
         let selectedProduct = null;
 
-        // Pull to Refresh Logic
+        // --- AI Voice Function ---
+        function speak(text) {
+            const speech = new SpeechSynthesisUtterance();
+            speech.text = text;
+            speech.lang = 'hi-IN'; // हिंदी आवाज़
+            speech.rate = 1;
+            window.speechSynthesis.speak(speech);
+        }
+
+        // --- Pull to Refresh ---
         let startY = 0;
         const mainContent = document.getElementById('main-content');
         const spinner = document.getElementById('ptr-spinner');
-
-        mainContent.addEventListener('touchstart', (e) => {
-            if (mainContent.scrollTop === 0) {
-                startY = e.touches[0].pageY;
-            }
-        });
-
+        mainContent.addEventListener('touchstart', (e) => { if (mainContent.scrollTop === 0) startY = e.touches[0].pageY; });
         mainContent.addEventListener('touchmove', (e) => {
-            const y = e.touches[0].pageY;
-            const diff = y - startY;
+            const y = e.touches[0].pageY; const diff = y - startY;
             if (diff > 0 && mainContent.scrollTop === 0) {
-                e.preventDefault();
-                const moveY = Math.min(diff / 2, 60);
+                e.preventDefault(); const moveY = Math.min(diff / 2, 60);
                 mainContent.style.transform = `translateY(${moveY}px)`;
                 if (moveY > 40) spinner.style.display = 'block';
             }
         });
-
         mainContent.addEventListener('touchend', (e) => {
-            const diff = e.changedTouches[0].pageY - startY;
-            if (diff > 50 && mainContent.scrollTop === 0) {
-                refreshApp();
-            }
+            if (e.changedTouches[0].pageY - startY > 50 && mainContent.scrollTop === 0) refreshApp();
             mainContent.style.transform = 'translateY(0)';
         });
-
-        async function refreshApp() {
-            spinner.style.display = 'block';
-            showToast("डेटा अपडेट हो रहा है...", "#2563eb");
-            
-            // डेटा रीलोड करने का सिम्युलेशन
+        function refreshApp() { 
+            spinner.style.display = 'block'; 
             if (currentUser) loadUserData();
-            
-            setTimeout(() => {
-                spinner.style.display = 'none';
-                showToast("✅ ऐप अपडेट हो गया!", "#10b981");
-            }, 1000);
+            setTimeout(() => { spinner.style.display = 'none'; showToast("✅ अपडेटेड!", "#10b981"); }, 1000); 
         }
 
+        // --- Navigation ---
         const nav = (id) => {
             document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -235,68 +212,39 @@
             document.getElementById('nav-' + id).classList.add('active');
             if (id === 'panel') loadUserData();
         };
-
-        document.querySelectorAll('.nav-item').forEach(btn => {
-            btn.onclick = () => nav(btn.id.split('-')[1]);
-        });
-
+        document.querySelectorAll('.nav-item').forEach(btn => { btn.onclick = () => nav(btn.id.split('-')[1]); });
         window.logout = () => { localStorage.clear(); location.reload(); };
 
+        // --- Registration ---
         document.getElementById('regForm').onsubmit = async (e) => {
             e.preventDefault();
-            const userData = {
-                name: document.getElementById('reg_name').value,
-                phone: document.getElementById('reg_phone').value,
-                district: document.getElementById('reg_district').value,
-                createdAt: serverTimestamp()
-            };
-            try {
-                const docRef = await addDoc(collection(db, "users"), userData);
-                userData.id = docRef.id;
-                localStorage.setItem('krya_user', JSON.stringify(userData));
-                currentUser = userData;
-                showToast("✅ पंजीकरण सफल!", "#10b981");
-                nav('panel');
-            } catch (err) { showToast("एरर!", "#ef4444"); }
+            const userData = { name: document.getElementById('reg_name').value, phone: document.getElementById('reg_phone').value, district: document.getElementById('reg_district').value, createdAt: serverTimestamp() };
+            const docRef = await addDoc(collection(db, "users"), userData);
+            userData.id = docRef.id; localStorage.setItem('krya_user', JSON.stringify(userData));
+            currentUser = userData; nav('panel');
         };
 
-        window.openPayment = (name, price) => {
-            if (!currentUser) { showToast("कृपया रजिस्टर करें", "#fbbf24"); return nav('home'); }
-            selectedProduct = { name, price };
-            document.getElementById('pay-item-name').innerText = name;
-            document.getElementById('pay-item-price').innerText = "₹" + price;
-            document.getElementById('payment-modal').style.display = 'flex';
-        };
-
-        window.confirmPayment = async () => {
-            await addDoc(collection(db, "orders"), {
-                uid: currentUser.id, uName: currentUser.name, service: selectedProduct.name, price: selectedProduct.price, status: 'pending', time: serverTimestamp()
-            });
-            document.getElementById('payment-modal').style.display = 'none';
-            showToast("📦 ऑर्डर बुक हुआ!", "#2563eb");
-            nav('panel');
-        };
-
+        // --- Chat & AI Logic ---
         document.getElementById('sendChatBtn').onclick = async () => {
             const input = document.getElementById('chatMsg');
             const text = input.value.trim();
             if (!currentUser || !text) return;
-            await addDoc(collection(db, "chats"), {
-                uid: currentUser.id, userName: currentUser.name, msg: text, time: serverTimestamp()
-            });
+            await addDoc(collection(db, "chats"), { uid: currentUser.id, userName: currentUser.name, msg: text, time: serverTimestamp() });
             input.value = "";
+            
+            // AI Response
             setTimeout(async () => {
-                let aiRes = "मैं आपकी मदद कर सकता हूँ। क्या आप स्टोर सेक्शन देखना चाहेंगे?";
-                if(text.includes("हेलो")) aiRes = "नमस्ते " + currentUser.name + "! KRYA में आपका स्वागत है।";
-                await addDoc(collection(db, "chats"), {
-                    uid: "ai_bot", userName: "KRYA AI", msg: aiRes, isAI: true, time: serverTimestamp()
-                });
+                let aiRes = "मैं आपकी मदद के लिए तैयार हूँ।";
+                if(text.includes("नमस्ते") || text.includes("हेलो")) aiRes = "नमस्ते " + currentUser.name + "! KRYA में आपका स्वागत है। मैं आपकी क्या मदद करूँ?";
+                if(text.includes("काम") || text.includes("पैसा")) aiRes = "आप KRYA स्टोर पर सर्विस ऑर्डर करके अपना डिजिटल काम शुरू कर सकते हैं।";
+                
+                await addDoc(collection(db, "chats"), { uid: "ai_bot", userName: "KRYA AI", msg: aiRes, isAI: true, time: serverTimestamp() });
+                speak(aiRes); // AI आवाज़ बोलेगा
             }, 1000);
         };
 
         onSnapshot(query(collection(db, "chats"), orderBy("time", "asc")), (snap) => {
-            const list = document.getElementById('chatList');
-            list.innerHTML = "";
+            const list = document.getElementById('chatList'); list.innerHTML = "";
             snap.forEach(doc => {
                 const d = doc.data();
                 let cls = d.uid === currentUser?.id ? 'msg-me' : (d.isAI ? 'msg-ai' : 'msg-them');
@@ -320,13 +268,25 @@
             });
         }
 
+        window.openPayment = (name, price) => {
+            if (!currentUser) return nav('home');
+            selectedProduct = { name, price };
+            document.getElementById('pay-item-name').innerText = name;
+            document.getElementById('pay-item-price').innerText = "₹" + price;
+            document.getElementById('payment-modal').style.display = 'flex';
+        };
+
+        window.confirmPayment = async () => {
+            await addDoc(collection(db, "orders"), { uid: currentUser.id, uName: currentUser.name, service: selectedProduct.name, price: selectedProduct.price, status: 'pending', time: serverTimestamp() });
+            document.getElementById('payment-modal').style.display = 'none';
+            nav('panel');
+        };
+
         function showToast(msg, color) {
-            const t = document.getElementById('toast');
-            t.innerText = msg; t.style.background = color; t.style.display = 'block';
+            const t = document.getElementById('toast'); t.innerText = msg; t.style.background = color; t.style.display = 'block';
             setTimeout(() => t.style.display = 'none', 3000);
         }
         if(currentUser) nav('panel');
     </script>
 </body>
-                        </html>
-                        
+</html>
