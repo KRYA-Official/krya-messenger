@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYALIVE | Ultimate Smart Hub</title>
+    <title>KRYALIVE | Smart Business Hub</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -30,7 +30,7 @@
         .stat-card h2 { font-size: 24px; font-weight: 800; }
         .stat-card p { font-size: 10px; color: gray; font-weight: 600; text-transform: uppercase; }
 
-        /* Form Styling (Fixed from screenshot) */
+        /* Form Card */
         .card { background: #fff; border-radius: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 20px; border: 1px solid #f1f5f9; }
         input { width: 100%; padding: 14px; border-radius: 14px; border: 1.5px solid #e2e8f0; font-size: 14px; outline: none; margin-bottom: 12px; background: #f8fafc; display: block; }
 
@@ -38,6 +38,7 @@
         .btn-primary { background: var(--accent); color: white; }
         .btn-del { background: #fee2e2; color: var(--red); width: auto; padding: 8px 15px; font-size: 11px; }
 
+        /* Store Card */
         .service-item { position: relative; border-radius: 26px; overflow: hidden; background: #fff; margin-bottom: 25px; box-shadow: 0 12px 30px rgba(0,0,0,0.06); border: 1px solid #f1f5f9; }
         .service-img { width: 100%; height: 200px; object-fit: cover; }
         .discount-tag { position: absolute; top: 15px; left: 15px; background: var(--red); color: white; padding: 5px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; z-index: 10; }
@@ -176,6 +177,7 @@
         } else { nav('auth'); }
     });
 
+    // Admin Delete Function
     window.deleteProduct = async (id) => {
         if(confirm("डिलीट करें?")) {
             await deleteDoc(doc(db, "services", id));
@@ -183,6 +185,7 @@
         }
     };
 
+    // Publish with Auto-Generated Service Code
     document.getElementById('btn-publish').onclick = async () => {
         const name = document.getElementById('s-name').value;
         const mrp = document.getElementById('s-mrp').value;
@@ -237,14 +240,17 @@
         });
     }
 
+    // PhonePay + WhatsApp Order System
     window.buyNow = async (n, p, c) => {
+        if(!user) return showToast("कृपया पहले लॉगिन करें", "var(--red)");
         const oID = "KRYA-ORD-" + Math.floor(1000 + Math.random() * 9000);
         await addDoc(collection(db, "orders"), {
             orderID: oID, serviceCode: c, userName: user.displayName, userEmail: user.email,
-            serviceName: n, amount: p, status: "Pending", createdAt: serverTimestamp()
+            serviceName: n, amount: p, status: "Waiting for Payment", createdAt: serverTimestamp()
         });
-        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=नमस्ते!%0Aऑर्डर आईडी: ${oID}%0Aसर्विस कोड: ${c}%0Aनाम: ${n}`, '_blank');
-        showToast("ऑर्डर दर्ज!");
+        const waMsg = `नमस्ते KRYALIVE!%0Aमैंने ऑर्डर किया है: *${n}*%0Aकीमत: *₹${p}*%0Aकोड: *${c}*%0AID: *${oID}*%0A%0Aकृपया अपना PhonePe नंबर भेजें।`;
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${waMsg}`, '_blank');
+        showToast("ऑर्डर दर्ज! व्हाट्सएप चेक करें।");
     };
 
     function loadUserOrders() {
@@ -275,5 +281,4 @@
     }
 </script>
 </body>
-                </html>
-                                                                         
+</html>
