@@ -23,11 +23,13 @@
         .view.active { display: block; }
 
         .card { background: #fff; padding: 25px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; text-align: center; }
-        input { width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid #e2e8f0; font-size: 16px; outline: none; margin-bottom: 15px; font-weight: 600; }
         
-        .btn { width: 100%; padding: 16px; border-radius: 15px; border: none; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-primary { background: var(--accent); color: white; box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2); }
+        .btn { width: 100%; padding: 16px; border-radius: 15px; border: none; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
+        .btn-google { background: #fff; color: #444; border: 1px solid #ddd; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .btn-google img { width: 20px; }
         
+        .wallet-card { background: linear-gradient(135deg, #10b981, #2563eb); color: white; padding: 25px; border-radius: 25px; margin-bottom: 20px; }
+
         /* Navigation */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; border-top: 1px solid #eee; padding: 12px 0 25px; z-index: 1000; }
         .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 10px; font-weight: 700; }
@@ -35,8 +37,6 @@
         .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        #loader { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
-        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -44,38 +44,41 @@
 <div class="app-shell">
     <header>
         <div class="brand">KRYA<span>LIVE</span></div>
-        <div id="status-badge" style="font-size: 10px; font-weight: 800; color: var(--primary);">● सुरक्षित</div>
+        <div id="status-badge" style="font-size: 10px; font-weight: 800; color: var(--primary);">● लाइव</div>
     </header>
 
     <main id="content">
         <section id="view-auth" class="view active">
-            <div class="card" style="margin-top: 40px;">
-                <h2 style="margin-bottom: 10px;">नमस्ते!</h2>
-                <p style="color: #64748b; font-size: 13px; margin-bottom: 25px;">OTP सत्यापन के साथ लॉगिन करें।</p>
+            <div class="card" style="margin-top: 60px;">
+                <h2 style="margin-bottom: 10px;">स्वागत है!</h2>
+                <p style="color: #64748b; font-size: 13px; margin-bottom: 30px;">KRYALIVE में सुरक्षित लॉगिन करें।</p>
                 
-                <div id="recaptcha-container"></div>
-                
-                <input type="tel" id="phone" placeholder="मोबाइल नंबर (उदा: 6379403821)">
-                <button class="btn btn-primary" id="btn-send-otp">
-                    <span id="btn-text">OTP भेजें</span>
-                    <div id="loader"></div>
+                <button class="btn btn-google" id="btn-google-login">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                    <span>Google के साथ आगे बढ़ें</span>
                 </button>
                 
-                <div id="otp-group" style="display: none; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
-                    <input type="number" id="otp-input" placeholder="6-अंकों का OTP डालें">
-                    <button class="btn btn-primary" style="background: var(--primary);" id="btn-verify-otp">लॉगिन सत्यापित करें</button>
-                </div>
+                <p style="font-size: 10px; color: gray; margin-top: 20px;">लॉगिन करके आप हमारी शर्तों को स्वीकार करते हैं।</p>
             </div>
         </section>
 
         <section id="view-home" class="view">
-            <div class="card" style="background: linear-gradient(135deg, #10b981, #2563eb); color: white; border: none;">
-                <p style="opacity: 0.9; font-size: 12px;">आपका स्वागत है</p>
-                <h2 id="user-phone" style="font-size: 22px; margin-top: 5px;">User</h2>
+            <div class="wallet-card">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <img id="user-photo" src="" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid white; display: none;">
+                    <div>
+                        <p style="opacity: 0.9; font-size: 12px;">नमस्ते,</p>
+                        <h2 id="user-name" style="font-size: 20px;">यूजर</h2>
+                    </div>
+                </div>
             </div>
-            <div class="card" style="margin-top: 15px;">
-                <p style="color: gray; font-size: 12px;">स्टोर और अर्निंग फीचर्स जल्द ही लाइव होंगे।</p>
+
+            <div class="card">
+                <h4 style="color: var(--accent);">KRYALIVE डिजिटल स्टोर</h4>
+                <p style="font-size: 12px; color: gray; margin-top: 10px;">हम आपकी कमाई के टूल्स सेटअप कर रहे हैं। कृपया जुड़े रहें!</p>
             </div>
+
+            <button class="btn" style="background: #fee2e2; color: #ef4444; margin-top: 30px;" id="btn-logout">लॉगआउट करें</button>
         </section>
     </main>
 
@@ -87,25 +90,23 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // 🟢 मुकेश जी, आपकी नई और असली चाबी यहाँ जोड़ दी गई है
+    // ✅ आपकी असली कॉन्फ़िगरेशन
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
         authDomain: "signing-9fc01.firebaseapp.com",
         projectId: "signing-9fc01",
         storageBucket: "signing-9fc01.firebasestorage.app",
         messagingSenderId: "926296137348",
-        appId: "1:926296137348:web:c42cdf88199ba877246cd1",
-        measurementId: "G-2R21VXNHKF"
+        appId: "1:926296137348:web:c42cdf88199ba877246cd1"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-
-    let confirmationResult = null;
+    const provider = new GoogleAuthProvider();
 
     // --- नेविगेशन ---
     window.nav = (id) => {
@@ -114,66 +115,44 @@
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     };
 
-    // --- OTP भेजने का फंक्शन ---
-    async function sendOTP() {
-        const phoneInput = document.getElementById('phone').value.trim();
-        let phone = phoneInput;
-
-        if (!phone.startsWith('+')) {
-            phone = phone.startsWith('91') ? '+' + phone : '+91' + phone;
-        }
-
-        if (phone.length < 13) return alert("कृपया सही नंबर डालें");
-
-        const btn = document.getElementById('btn-send-otp');
-        const loader = document.getElementById('loader');
-        const text = document.getElementById('btn-text');
-
-        btn.disabled = true;
-        loader.style.display = 'block';
-        text.style.display = 'none';
-
-        if (!window.recaptchaVerifier) {
-            window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'invisible' });
-        }
-
+    // --- Google लॉगिन फंक्शन ---
+    async function loginWithGoogle() {
         try {
-            const result = await signInWithPhoneNumber(auth, phone, window.recaptchaVerifier);
-            confirmationResult = result;
-            document.getElementById('otp-group').style.display = 'block';
-            alert("OTP भेज दिया गया है!");
-        } catch (err) {
-            alert("त्रुटि: " + err.message);
-            location.reload();
-        } finally {
-            btn.disabled = false;
-            loader.style.display = 'none';
-            text.style.display = 'block';
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+            
+            // डेटाबेस में यूजर की जानकारी सेव करें
+            await setDoc(doc(db, "users", user.uid), {
+                name: user.displayName,
+                email: user.email,
+                photo: user.photoURL,
+                lastLogin: serverTimestamp()
+            }, { merge: true });
+
+            alert("लॉगिन सफल: " + user.displayName);
+        } catch (error) {
+            console.error("Login Error:", error);
+            alert("लॉगिन विफल हुआ। कृपया साइन-इन मेथड चेक करें।");
         }
     }
 
-    // --- OTP वेरिफाई करने का फंक्शन ---
-    async function verifyOTP() {
-        const code = document.getElementById('otp-input').value;
-        try {
-            const res = await confirmationResult.confirm(code);
-            const user = res.user;
-            await setDoc(doc(db, "users", user.uid), { phone: user.phoneNumber, loginAt: serverTimestamp() }, { merge: true });
-            alert("सफलतापूर्वक लॉगिन हुआ!");
-            location.reload();
-        } catch (err) {
-            alert("गलत OTP! कृपया फिर से कोशिश करें।");
-        }
+    // --- लॉगआउट फंक्शन ---
+    async function logout() {
+        await signOut(auth);
+        location.reload();
     }
 
-    // --- बटन इवेंट्स ---
-    document.getElementById('btn-send-otp').onclick = sendOTP;
-    document.getElementById('btn-verify-otp').onclick = verifyOTP;
+    // --- इवेंट्स ---
+    document.getElementById('btn-google-login').onclick = loginWithGoogle;
+    document.getElementById('btn-logout').onclick = logout;
 
     // --- लॉगिन चेक ---
     onAuthStateChanged(auth, user => {
         if(user) {
-            document.getElementById('user-phone').innerText = user.phoneNumber;
+            document.getElementById('user-name').innerText = user.displayName;
+            const photoImg = document.getElementById('user-photo');
+            photoImg.src = user.photoURL;
+            photoImg.style.display = 'block';
             nav('home');
         } else {
             nav('auth');
