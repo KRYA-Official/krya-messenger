@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYALIVE | Professional Digital Services</title>
+    <title>KRYALIVE | Digital Store</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -13,170 +13,71 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--light); color: var(--dark); overflow-x: hidden; width: 100%; height: 100%; }
         
-        /* Layout */
         .app-shell { display: flex; flex-direction: column; height: 100vh; }
-        header { background: #fff; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .brand { font-size: 22px; font-weight: 800; color: var(--dark); }
+        header { background: #fff; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; z-index: 1000; }
+        .brand { font-size: 22px; font-weight: 800; }
         .brand span { color: var(--primary); }
 
-        main { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 90px; }
-        .view { display: none; animation: fadeIn 0.3s ease; }
-        .view.active { display: block; }
+        main { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 100px; }
+        .view { display: none; }
+        .view.active { display: block; animation: fadeIn 0.3s ease; }
 
-        /* UI Elements */
-        .card { background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; margin-bottom: 15px; }
-        .btn { padding: 14px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; transition: 0.2s; }
-        .btn-primary { background: var(--accent); color: white; width: 100%; }
-        .btn-success { background: var(--primary); color: white; }
-        .btn-outline { border: 1px solid #e2e8f0; background: #fff; }
-
-        /* Service Cards */
-        .service-card { display: flex; flex-direction: column; gap: 10px; border-left: 5px solid var(--primary); }
-        .service-card h4 { font-size: 16px; }
-        .service-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--gray); font-weight: 600; }
-        .price-tag { color: var(--primary); font-size: 18px; font-weight: 800; }
-
-        /* Order Status Badges */
-        .badge { padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
-        .pending { background: #fef3c7; color: #d97706; }
-        .processing { background: #dbeafe; color: #2563eb; }
-        .completed { background: #dcfce7; color: #15803d; }
-
-        /* Navigation */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; border-top: 1px solid #eee; padding: 10px 0 25px; z-index: 1000; }
-        .nav-item { flex: 1; text-align: center; border: none; background: none; color: var(--gray); font-size: 10px; font-weight: 700; }
+        .card { background: #fff; padding: 25px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; text-align: center; }
+        
+        .btn { width: 100%; padding: 16px; border-radius: 15px; border: none; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .btn-google { background: #fff; color: #444; border: 1px solid #ddd; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-top: 20px; }
+        
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; border-top: 1px solid #eee; padding: 12px 0 25px; z-index: 1000; }
+        .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 10px; font-weight: 700; outline: none; }
         .nav-item.active { color: var(--accent); }
         .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
 
-        /* Popups */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
-        .popup { background: #fff; width: 100%; max-width: 400px; border-radius: 25px; padding: 25px; position: relative; max-height: 90vh; overflow-y: auto; }
-        input, textarea, select { width: 100%; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 10px; margin: 10px 0; outline: none; font-size: 14px; }
-
-        /* Animations */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: rotate 1s linear infinite; display: none; }
-        @keyframes rotate { to { transform: rotate(360deg); } }
-
-        #toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 25px; border-radius: 50px; font-size: 13px; z-index: 9999; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
 
-<div id="toast">संदेश यहाँ आएगा</div>
-
 <div class="app-shell">
     <header>
         <div class="brand">KRYA<span>LIVE</span></div>
-        <div id="admin-badge" style="display:none; font-size:10px; background:var(--accent); color:white; padding:2px 8px; border-radius:10px;">ADMIN</div>
-        <div id="user-avatar-top" style="width:35px; height:35px; border-radius:50%; background:#eee; background-size:cover;"></div>
+        <div style="font-size: 10px; font-weight: 800; color: var(--primary);">● लाइव</div>
     </header>
 
     <main id="content">
         <section id="view-auth" class="view active">
-            <div class="card" style="margin-top: 50px; text-align: center;">
+            <div class="card" style="margin-top: 60px;">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="50" style="margin-bottom:20px;">
-                <h2 style="margin-bottom:10px;">डिजिटल सफर शुरू करें</h2>
-                <p style="font-size:13px; color:var(--gray); margin-bottom:30px;">KRYALIVE की प्रीमियम सेवाओं का लाभ उठाने के लिए लॉगिन करें।</p>
-                <button class="btn btn-outline" style="width:100%;" id="btn-login">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Google के साथ लॉगिन करें
+                <h2 style="margin-bottom: 10px;">डिजिटल सफर शुरू करें</h2>
+                <p style="color: #64748b; font-size: 13px; margin-bottom: 30px;">KRYALIVE की प्रीमियम सेवाओं का लाभ उठाने के लिए लॉगिन करें।</p>
+                
+                <button class="btn btn-google" id="btn-login">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
+                    <span>Google के साथ लॉगिन करें</span>
                 </button>
             </div>
         </section>
 
         <section id="view-home" class="view">
-            <div class="card" style="background: linear-gradient(135deg, #10b981, #2563eb); color: white; border:none;">
-                <h3 id="welcome-name">नमस्ते मुकेश जी!</h3>
-                <p style="font-size: 11px; opacity: 0.8;">आपकी पसंदीदा डिजिटल सेवाएं यहाँ हैं।</p>
+            <div class="card" style="background: linear-gradient(135deg, #10b981, #2563eb); color: white; border: none;">
+                <h3 id="welcome-user">नमस्ते!</h3>
+                <p style="font-size: 11px; opacity: 0.8;">आपकी सर्विसेज यहाँ दिखेंगी।</p>
             </div>
-            
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <input type="text" id="search-input" placeholder="सर्विस सर्च करें..." style="margin:0; flex:1;">
-                <button class="btn btn-outline" style="padding:10px 15px;"><i class="fas fa-search"></i></button>
-            </div>
-
-            <div id="services-list">
-                </div>
-        </section>
-
-        <section id="view-orders" class="view">
-            <h3 style="margin-bottom: 15px; font-weight: 800;">मेरे ऑर्डर्स</h3>
-            <div id="user-orders-list">
-                <p style="text-align: center; color: var(--gray); margin-top: 50px;">कोई ऑर्डर नहीं मिला।</p>
-            </div>
-        </section>
-
-        <section id="view-profile" class="view">
-            <h3 style="margin-bottom: 20px; font-weight: 800;">प्रोफाइल</h3>
-            <div class="card" style="text-align: center;">
-                <div id="p-photo" style="width:80px; height:80px; border-radius:50%; margin: 0 auto 15px; background:#eee; background-size:cover; border:3px solid var(--primary);"></div>
-                <h4 id="p-name">Name</h4>
-                <p id="p-email" style="font-size: 12px; color: var(--gray);">Email</p>
-                <div style="margin-top: 20px; text-align: left; border-top: 1px solid #eee; padding-top: 15px;">
-                    <label style="font-size: 11px; font-weight: 700; color: var(--gray);">मोबाइल नंबर</label>
-                    <div style="display:flex; gap:10px;">
-                        <input type="tel" id="profile-phone" placeholder="91XXXXXXXX" style="margin:5px 0;">
-                        <button class="btn btn-success" id="btn-save-phone" style="padding:0 15px; height:45px; margin-top:5px;"><i class="fas fa-save"></i></button>
-                    </div>
-                </div>
-                <button class="btn" style="background:#fee2e2; color:#ef4444; margin-top:30px; width:100%;" id="btn-logout">
-                    <i class="fas fa-sign-out-alt"></i> सुरक्षित लॉगआउट
-                </button>
-            </div>
-        </section>
-
-        <section id="view-admin" class="view">
-            <h3 style="margin-bottom: 15px; font-weight: 800;">एडमिन डैशबोर्ड</h3>
-            <div id="admin-orders-list"></div>
+            <p style="margin-top:20px; text-align:center; color:gray; font-size:12px;">हम स्टोर सेटअप कर रहे हैं...</p>
         </section>
     </main>
 
     <nav class="bottom-nav">
         <button class="nav-item active" id="n-home" onclick="nav('home')"><i class="fas fa-store"></i><span>स्टोर</span></button>
         <button class="nav-item" id="n-orders" onclick="nav('orders')"><i class="fas fa-shopping-bag"></i><span>ऑर्डर्स</span></button>
-        <button class="nav-item" id="n-profile" onclick="nav('profile')"><i class="fas fa-user-circle"></i><span>प्रोफाइल</span></button>
+        <button class="nav-item" id="n-profile" onclick="nav('profile')"><i class="fas fa-user-circle"></i><span>प्रोफ़ाइल</span></button>
     </nav>
-</div>
-
-<div class="overlay" id="order-overlay">
-    <div class="popup">
-        <h3 id="form-service-name">सर्विस का नाम</h3>
-        <p id="form-service-price" style="color:var(--primary); font-weight:800; margin-bottom:15px;">₹00</p>
-        <div id="dynamic-form-fields">
-            <input type="text" id="order-user-name" placeholder="आपका नाम">
-            <input type="tel" id="order-user-phone" placeholder="मोबाइल नंबर">
-            <textarea id="order-details" placeholder="सर्विस से जुड़ी जानकारी यहाँ लिखें..."></textarea>
-            <label style="font-size: 11px; color: var(--gray);">जरूरी फाइल अपलोड करें (ऑप्शनल)</label>
-            <input type="file" id="order-file" style="padding:8px;">
-        </div>
-        <button class="btn btn-primary" id="btn-submit-order" style="margin-top:10px;">विवरण सबमिट करें <div class="spinner" id="spin-order"></div></button>
-        <button class="btn btn-outline" style="width:100%; margin-top:10px;" onclick="closePopup()">बंद करें</button>
-    </div>
-</div>
-
-<div class="overlay" id="pay-overlay">
-    <div class="popup" style="text-align: center;">
-        <h3>पेमेंट कन्फर्म करें</h3>
-        <p style="font-size: 12px; margin: 10px 0;">कृपया ₹<span id="pay-amt">0</span> का भुगतान इस UPI पर करें:</p>
-        <div style="background:#f1f5f9; padding:15px; border-radius:15px; font-weight:800; margin: 15px 0;">
-            93690mukeshkumar@axl
-            <i class="fas fa-copy" style="margin-left:10px; color:var(--accent);" onclick="copyUPI()"></i>
-        </div>
-        <button class="btn btn-primary" onclick="openUPIApp()">PhonePe / GooglePay से पे करें</button>
-        <div style="margin-top:20px; border-top:1px solid #eee; padding-top:15px;">
-            <input type="text" id="pay-utr" placeholder="12-अंकों का UTR नंबर दर्ज करें">
-            <button class="btn btn-success" id="btn-confirm-pay" style="width:100%;">पेमेंट कन्फर्म करें <div class="spinner" id="spin-pay"></div></button>
-        </div>
-    </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, where, orderBy, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    // ✅ Firebase Configuration
+    // ✅ आपकी असली कॉन्फ़िगरेशन
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
         authDomain: "signing-9fc01.firebaseapp.com",
@@ -188,179 +89,42 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
     const provider = new GoogleAuthProvider();
 
-    const ADMIN_EMAIL = "your-email@gmail.com"; // यहाँ अपना ईमेल डालें
-    let userData = null;
-    let activeOrderData = null;
-
-    // --- Services Database ---
-    const services = [
-        { id: 'web', name: 'वेबसाइट डिजाइन (Basic)', price: 999, time: '3-5 दिन', desc: 'बिजनेस के लिए 5 पेज की प्रोफेशनल वेबसाइट।' },
-        { id: 'shram', name: 'ई-श्रम कार्ड रजिस्ट्रेशन', price: 50, time: '24 घंटे', desc: 'सरकारी लाभ के लिए नया ई-श्रम कार्ड आवेदन।' },
-        { id: 'gmap', name: 'गूगल मैप लिस्टिंग', price: 299, time: '2 दिन', desc: 'अपनी दुकान को गूगल मैप पर 100% लाइव दिखाएं।' },
-        { id: 'land', name: 'खतियान/जमीन नकल', price: 100, time: '1-2 दिन', desc: 'ऑनलाइन जमीन का दस्तावेज/खतियान प्राप्त करें।' },
-        { id: 'seo', name: 'SEO आर्टिकल राइटिंग', price: 199, time: '3 दिन', desc: 'वेबसाइट के लिए 1000 शब्दों का यूनिक आर्टिकल।' }
-    ];
-
-    // --- Navigation ---
+    // --- नेविगेशन फंक्शन ---
     window.nav = (id) => {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById('view-' + id).classList.add('active');
-        document.getElementById('n-' + id).classList.add('active');
-        if(id === 'orders') fetchUserOrders();
-        if(id === 'admin') fetchAdminOrders();
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        const activeNav = document.getElementById('n-' + id);
+        if(activeNav) activeNav.classList.add('active');
     };
 
-    const toast = (msg) => {
-        const t = document.getElementById('toast');
-        t.innerText = msg; t.style.display = 'block';
-        setTimeout(() => t.style.display = 'none', 3000);
-    };
-
-    // --- Auth Logic ---
-    document.getElementById('btn-login').onclick = async () => {
-        try {
-            const res = await signInWithPopup(auth, provider);
-            const user = res.user;
-            const userRef = doc(db, "users", user.uid);
-            const snap = await getDoc(userRef);
-            if(!snap.exists()) {
-                await setDoc(userRef, { name: user.displayName, email: user.email, photo: user.photoURL, phone: "", createdAt: serverTimestamp() });
-                toast("स्वागत है! कृपया प्रोफाइल में मोबाइल नंबर जोड़ें।");
+    // --- बटन क्लिक इवेंट (सबसे महत्वपूर्ण फिक्स) ---
+    const loginBtn = document.getElementById('btn-login');
+    if(loginBtn) {
+        loginBtn.addEventListener('click', async () => {
+            console.log("Login button clicked!");
+            try {
+                await signInWithPopup(auth, provider);
+                console.log("Login Success");
+            } catch (error) {
+                console.error("Login Error:", error);
+                alert("लॉगिन विफल: " + error.message);
             }
-        } catch (e) { toast("लॉगिन एरर!"); }
-    };
-
-    document.getElementById('btn-logout').onclick = () => { if(confirm("लॉगआउट?")) signOut(auth).then(() => location.reload()); };
-
-    onAuthStateChanged(auth, user => {
-        if(user) {
-            userData = user;
-            document.getElementById('welcome-name').innerText = `नमस्ते, ${user.displayName.split(' ')[0]}!`;
-            document.getElementById('p-name').innerText = user.displayName;
-            document.getElementById('p-email').innerText = user.email;
-            document.getElementById('p-photo').style.backgroundImage = `url(${user.photoURL})`;
-            document.getElementById('user-avatar-top').style.backgroundImage = `url(${user.photoURL})`;
-            
-            if(user.email === ADMIN_EMAIL) document.getElementById('admin-badge').style.display = 'block';
-            
-            loadServices();
-            nav('home');
-        } else { nav('auth'); }
-    });
-
-    // --- Store Logic ---
-    function loadServices() {
-        const list = document.getElementById('services-list');
-        list.innerHTML = "";
-        services.forEach(s => {
-            list.innerHTML += `
-                <div class="card service-card">
-                    <h4>${s.name}</h4>
-                    <p style="font-size:11px; color:var(--gray);">${s.desc}</p>
-                    <div class="service-info">
-                        <span><i class="far fa-clock"></i> ${s.time}</span>
-                        <span class="price-tag">₹${s.price}</span>
-                    </div>
-                    <button class="btn btn-primary" onclick="openOrderPopup('${s.id}')">विवरण भरें</button>
-                </div>
-            `;
         });
     }
 
-    window.openOrderPopup = (id) => {
-        const s = services.find(x => x.id === id);
-        activeOrderData = s;
-        document.getElementById('form-service-name').innerText = s.name;
-        document.getElementById('form-service-price').innerText = `₹${s.price}`;
-        document.getElementById('order-overlay').style.display = 'flex';
-    };
-
-    window.closePopup = () => {
-        document.querySelectorAll('.overlay').forEach(o => o.style.display = 'none');
-    };
-
-    // --- Order Submission ---
-    document.getElementById('btn-submit-order').onclick = async () => {
-        const name = document.getElementById('order-user-name').value;
-        const phone = document.getElementById('order-user-phone').value;
-        const details = document.getElementById('order-details').value;
-        const file = document.getElementById('order-file').files[0];
-
-        if(!name || !phone) return toast("नाम और नंबर जरूरी है!");
-
-        document.getElementById('spin-order').style.display = 'inline-block';
-        let fileURL = "";
-
-        if(file) {
-            const sRef = ref(storage, `orders/${Date.now()}_${file.name}`);
-            await uploadBytes(sRef, file);
-            fileURL = await getDownloadURL(sRef);
+    // --- लॉगिन चेक ---
+    onAuthStateChanged(auth, user => {
+        if(user) {
+            document.getElementById('welcome-user').innerText = "नमस्ते, " + user.displayName;
+            nav('home');
+        } else {
+            nav('auth');
         }
+    });
+</script>
 
-        activeOrderData.formData = { name, phone, details, fileURL };
-        
-        document.getElementById('spin-order').style.display = 'none';
-        document.getElementById('order-overlay').style.display = 'none';
-        document.getElementById('pay-amt').innerText = activeOrderData.price;
-        document.getElementById('pay-overlay').style.display = 'flex';
-    };
-
-    window.openUPIApp = () => {
-        const url = `upi://pay?pa=93690mukeshkumar@axl&pn=Mukesh%20Kumar&am=${activeOrderData.price}&cu=INR&tn=KRYA_Order`;
-        window.location.href = url;
-    };
-
-    document.getElementById('btn-confirm-pay').onclick = async () => {
-        const utr = document.getElementById('pay-utr').value;
-        if(utr.length < 8) return toast("सही UTR नंबर डालें!");
-
-        document.getElementById('spin-pay').style.display = 'inline-block';
-        
-        const orderID = "KRYA-" + Math.random().toString(36).substring(7).toUpperCase();
-
-        await addDoc(collection(db, "orders"), {
-            orderID: orderID,
-            uid: userData.uid,
-            serviceName: activeOrderData.name,
-            amount: activeOrderData.price,
-            formData: activeOrderData.formData,
-            utr: utr,
-            status: 'pending',
-            createdAt: serverTimestamp()
-        });
-
-        document.getElementById('spin-pay').style.display = 'none';
-        closePopup();
-        toast("ऑर्डर सफल! WhatsApp ओपन हो रहा है...");
-        
-        const waMsg = `New Order: ${orderID}%0AService: ${activeOrderData.name}%0AUTR: ${utr}`;
-        window.open(`https://wa.me/916379403821?text=${waMsg}`, '_blank');
-        nav('orders');
-    };
-
-    // --- Fetch User Orders ---
-    function fetchUserOrders() {
-        const q = query(collection(db, "orders"), where("uid", "==", userData.uid), orderBy("createdAt", "desc"));
-        onSnapshot(q, snap => {
-            const list = document.getElementById('user-orders-list');
-            list.innerHTML = "";
-            snap.forEach(doc => {
-                const o = doc.data();
-                list.innerHTML += `
-                    <div class="card" style="padding:15px;">
-                        <div style="display:flex; justify-content:space-between; align-items:start;">
-                            <div>
-                                <b style="font-size:14px;">${o.serviceName}</b><br>
-                                <span style="font-size:10px; color:var(--gray);">ID: ${o.orderID}</span>
-                            </div>
-                            <span class="badge ${o.status}">${o.status}</span>
-                        </div>
-                        <div style="margin-top:10px; font-size:11px; display:flex; justify-content:space-between;">
-                            <span>₹${o.amount}</span>
-                            <span>${new Date(o.createdAt?.toDate()).toLocaleDateString()}</span>
-                        </div
+</body>
+</html>
