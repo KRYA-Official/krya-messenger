@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KRYALIVE | Smart Business Hub</title>
     
+    <meta property="og:title" content="KRYALIVE | Smart Business Hub">
+    <meta property="og:description" content="Kryalive.com: घर बैठे प्रोफेशनल डिजिटल सर्विसेज के लिए आज ही जुड़ें।">
+    <meta property="og:image" content="https://raw.githubusercontent.com/jiomukesh/assets/main/krya-logo.jpg">
+    <meta property="og:url" content="https://kryalive.com">
+    <meta property="og:type" content="website">
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
@@ -112,11 +118,11 @@
             </button>
 
             <div class="policy-text">
-                <h5>Privacy Policy</h5>
+                <h5>प्राइवेसी पॉलिसी</h5>
                 <p>Kryalive.com आपकी प्राइवेसी का सम्मान करता है। आपका डेटा 100% सुरक्षित है।</p>
                 <br>
-                <h5>Terms & Conditions</h5>
-                <p>हमारी डिजिटल सेवाओं का उपयोग करके आप हमारी शर्तों से सहमत होते हैं।</p>
+                <h5>नियम और शर्तें</h5>
+                <p>हमारी डिजिटल सेवाओं का उपयोग करके आप हमारी शर्तों से सहमत होते हैं। ईमानदारी हमारी पहचान है।</p>
             </div>
 
             <button class="btn" style="background: #fee2e2; color: #ef4444; margin-top: 25px;" id="logout-btn">लॉगआउट</button>
@@ -193,7 +199,7 @@
     });
 
     window.deleteProduct = async (id) => {
-        if(confirm("डिलीट करें?")) {
+        if(confirm("प्रोडक्ट डिलीट करें?")) {
             await deleteDoc(doc(db, "services", id));
             showToast("हटा दिया गया", "var(--red)");
         }
@@ -273,7 +279,7 @@
 मैंने पेमेंट कर दी है।
 ✅ UTR नंबर: ____________
 
-यह ऑर्डर ${DOMAIN_NAME} से जेनरेट किया गया है।`;
+यह ऑर्डर ${DOMAIN_NAME} से जेनरेट किया गया है। 🚀`;
 
         window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(rawMessage)}`, '_blank');
         showToast("ऑर्डर दर्ज! व्हाट्सएप पर पेमेंट भेजें।");
@@ -283,7 +289,7 @@
         const q = query(collection(db, "orders"), where("userEmail", "==", user.email), orderBy("createdAt", "desc"));
         onSnapshot(q, snap => {
             const container = document.getElementById('user-orders-display');
-            container.innerHTML = snap.empty ? "<p style='text-align:center;color:gray;'>कोई ऑर्डर नहीं।</p>" : "";
+            container.innerHTML = snap.empty ? "<p style='text-align:center;color:gray;'>अभी तक कोई ऑर्डर नहीं है।</p>" : "";
             snap.forEach(doc => {
                 const o = doc.data();
                 container.innerHTML += `
