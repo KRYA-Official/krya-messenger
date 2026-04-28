@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYALIVE | Owner Control</title>
+    <title>KRYALIVE | Owner Control & Store</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --light: #f8fafc; }
+        :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --light: #f8fafc; --red: #ff4757; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--light); color: var(--dark); overflow-x: hidden; width: 100%; height: 100vh; }
         
-        header { background: #fff; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        header { background: #fff; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .brand { font-size: 22px; font-weight: 800; }
         .brand span { color: var(--primary); }
         
-        main { height: calc(100vh - 140px); overflow-y: auto; padding: 15px; }
+        main { height: calc(100vh - 140px); overflow-y: auto; padding: 15px; scroll-behavior: smooth; }
         .view { display: none; }
         .view.active { display: block; animation: fadeIn 0.4s ease; }
 
@@ -29,23 +29,34 @@
 
         /* Owner Form */
         .card { background: #fff; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 20px; }
-        input { width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid #e2e8f0; font-size: 15px; outline: none; margin-bottom: 12px; background: #f8fafc; }
+        input, textarea { width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid #e2e8f0; font-size: 15px; outline: none; margin-bottom: 12px; background: #f8fafc; }
         input:focus { border-color: var(--primary); background: #fff; }
 
         .btn { width: 100%; padding: 16px; border-radius: 15px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
         .btn-live { background: var(--primary); color: white; box-shadow: 0 6px 15px rgba(16, 185, 129, 0.2); }
+        .btn-buy { background: var(--accent); color: white; border-radius: 12px; }
         .btn-google { background: white; border: 1.5px solid #eee; margin-top: 50px; }
 
-        /* Store UI */
-        .service-item { background: white; border-radius: 20px; overflow: hidden; margin-bottom: 20px; border: 1px solid #eee; }
-        .service-img { width: 100%; height: 160px; object-fit: cover; }
+        /* Professional Store Card UI */
+        .service-item { position: relative; border-radius: 24px; overflow: hidden; background: #fff; margin-bottom: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; animation: slideUp 0.4s ease; }
+        .service-img { width: 100%; height: 190px; object-fit: cover; background: #eee; }
+        .discount-tag { position: absolute; top: 12px; left: 12px; background: var(--red); color: white; padding: 4px 10px; border-radius: 10px; font-size: 11px; font-weight: 800; z-index: 10; box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3); }
+
+        .item-details { padding: 18px; }
+        .item-details h4 { font-weight: 800; font-size: 17px; color: var(--dark); margin-bottom: 4px; }
+        .rating { color: #ffc107; font-size: 12px; margin-bottom: 10px; }
+        
+        .pricing { display: flex; align-items: baseline; gap: 10px; margin-bottom: 15px; }
+        .sell-price { font-size: 24px; font-weight: 800; color: var(--primary); }
+        .mrp-price { font-size: 15px; text-decoration: line-through; color: #94a3b8; }
 
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; border-top: 1px solid #eee; padding: 12px 0 25px; z-index: 1000; }
         .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 11px; font-weight: 700; }
         .nav-item.active { color: var(--accent); }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -58,10 +69,13 @@
 <main>
     <section id="view-auth" class="view active">
         <div style="text-align: center; padding-top: 80px;">
-            <h2 style="font-weight: 800;">नमस्ते!</h2>
-            <p style="color: gray; font-size: 14px; margin-bottom: 40px;">KRYALIVE में प्रवेश करें।</p>
+            <div style="background: #f1f5f9; width: 80px; height: 80px; border-radius: 25px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-fingerprint fa-2x" style="color: var(--accent);"></i>
+            </div>
+            <h2 style="font-weight: 800;">KRYALIVE</h2>
+            <p style="color: gray; font-size: 14px; margin-bottom: 40px;">सुरक्षित तरीके से लॉगिन करें</p>
             <button class="btn btn-google" id="login-btn">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google से लॉगिन
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google के साथ लॉगिन
             </button>
         </div>
     </section>
@@ -74,24 +88,25 @@
         <div class="card">
             <h3 style="margin-bottom: 15px;">नई सर्विस जोड़ें</h3>
             <input type="text" id="s-name" placeholder="सर्विस का नाम">
+            <input type="number" id="s-mrp" placeholder="MRP (जैसे 500)">
             <input type="number" id="s-price" placeholder="अमाउंट (जैसे 199)">
             <input type="text" id="s-img" placeholder="फोटो लिंक (URL)">
-            <button class="btn btn-live" id="btn-publish">स्टोर में लाइव करें</button>
+            <button class="btn btn-live" id="btn-publish"><i class="fas fa-cloud-upload-alt"></i> स्टोर में लाइव करें</button>
         </div>
         <h3 style="margin-top: 10px;">हाल के ऑर्डर</h3>
         <div id="orders-list" style="margin-top: 15px; color: gray; font-size: 12px; text-align: center;">अभी कोई ऑर्डर नहीं है।</div>
     </section>
 
     <section id="view-store" class="view">
-        <h3 id="user-greet" style="margin-bottom: 5px;">नमस्ते!</h3>
-        <p style="font-size: 12px; color: gray; margin-bottom: 20px;">आज के ऑफर्स यहाँ हैं।</p>
+        <h3 id="user-greet" style="margin-bottom: 5px; font-weight: 800;">नमस्ते!</h3>
+        <p style="font-size: 12px; color: gray; margin-bottom: 20px;">KRYALIVE की बेस्ट डील्स यहाँ हैं।</p>
         <div id="store-list"></div>
     </section>
 
     <section id="view-profile" class="view">
         <div class="card" style="text-align: center;">
-            <img id="u-photo" src="" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 10px;">
-            <h4 id="u-name">Name</h4>
+            <img id="u-photo" src="" style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--primary); margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+            <h4 id="u-name" style="font-weight: 800;">Name</h4>
             <p id="u-email" style="font-size: 12px; color: gray; margin-bottom: 30px;">email</p>
             <button class="btn" style="background: #fee2e2; color: #ef4444;" id="logout-btn">लॉगआउट</button>
         </div>
@@ -106,7 +121,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
@@ -148,48 +163,38 @@
             document.getElementById('u-photo').src = user.photoURL;
             document.getElementById('user-greet').innerText = "नमस्ते, " + user.displayName.split(' ')[0] + "!";
             document.getElementById('n-txt').innerText = isOwner ? "Dashboard" : "Store";
+            document.getElementById('role-badge').innerText = isOwner ? "OWNER" : "USER";
+            document.getElementById('role-badge').style.background = isOwner ? "var(--accent)" : "var(--primary)";
             openMain();
             loadStore();
+            if(isOwner) loadAdminStats();
         } else {
             nav('auth');
         }
     });
 
-    // --- पक्का फिक्स: स्टोर में सामान लाइव करने वाला बटन ---
     document.getElementById('btn-publish').onclick = async () => {
         const name = document.getElementById('s-name').value.trim();
+        const mrp = document.getElementById('s-mrp').value.trim();
         const price = document.getElementById('s-price').value.trim();
         const img = document.getElementById('s-img').value.trim();
 
-        if(!name || !price) {
-            alert("कृपया नाम और कीमत भरें!");
-            return;
-        }
+        if(!name || !price) return alert("नाम और कीमत भरें!");
 
         try {
             document.getElementById('btn-publish').disabled = true;
             document.getElementById('btn-publish').innerText = "लाइव हो रहा है...";
             
             await addDoc(collection(db, "services"), {
-                name: name,
-                price: price,
-                img: img || "https://images.unsplash.com/photo-1582407947304-fd86f028f716?q=80&w=400",
+                name, mrp, price, img: img || "https://images.unsplash.com/photo-1582407947304-fd86f028f716?q=80&w=400",
                 createdAt: serverTimestamp()
             });
 
-            alert("सफलता! '" + name + "' अब स्टोर में लाइव है।");
-            
-            // फॉर्म साफ करें
-            document.getElementById('s-name').value = "";
-            document.getElementById('s-price').value = "";
-            document.getElementById('s-img').value = "";
-            
-        } catch (e) {
-            alert("गलती: " + e.message);
-        } finally {
-            document.getElementById('btn-publish').disabled = false;
-            document.getElementById('btn-publish').innerText = "स्टोर में लाइव करें";
-        }
+            alert("सफलता! अब यह स्टोर में लाइव है।");
+            document.getElementById('s-name').value = ""; document.getElementById('s-mrp').value = "";
+            document.getElementById('s-price').value = ""; document.getElementById('s-img').value = "";
+        } catch (e) { alert("गलती: " + e.message); }
+        finally { document.getElementById('btn-publish').disabled = false; document.getElementById('btn-publish').innerText = "स्टोर में लाइव करें"; }
     };
 
     function loadStore() {
@@ -198,17 +203,31 @@
             list.innerHTML = "";
             snap.forEach(d => {
                 const s = d.data();
+                const discount = s.mrp ? Math.round(((s.mrp - s.price) / s.mrp) * 100) : 0;
                 list.innerHTML += `
                     <div class="service-item">
+                        ${discount > 0 ? `<div class="discount-tag">${discount}% OFF</div>` : ''}
                         <img src="${s.img}" class="service-img">
-                        <div style="padding: 15px;">
-                            <h4 style="font-weight: 800;">${s.name}</h4>
-                            <p style="color: var(--primary); font-weight: 800; font-size: 18px; margin: 5px 0;">₹${s.price}</p>
-                            <button class="btn btn-live" style="padding: 10px;">अभी खरीदें</button>
+                        <div class="item-details">
+                            <h4>${s.name}</h4>
+                            <div class="rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i> <span>(4.8)</span></div>
+                            <div class="pricing">
+                                <span class="sell-price">₹${s.price}</span>
+                                ${s.mrp ? `<span class="mrp-price">₹${s.mrp}</span>` : ''}
+                            </div>
+                            <button class="btn btn-buy"><i class="fas fa-bolt"></i> अभी खरीदें</button>
                         </div>
                     </div>
                 `;
             });
+        });
+    }
+
+    function loadAdminStats() {
+        onSnapshot(collection(db, "orders"), snap => {
+            document.getElementById('total-ord').innerText = snap.size;
+            let rev = 0; snap.forEach(doc => rev += Number(doc.data().amount || 0));
+            document.getElementById('total-rev').innerText = "₹" + rev;
         });
     }
 </script>
