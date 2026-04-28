@@ -7,7 +7,7 @@
     
     <meta property="og:title" content="KRYALIVE | Smart Business Hub">
     <meta property="og:description" content="Kryalive.com: घर बैठे प्रोफेशनल डिजिटल सर्विसेज के लिए आज ही जुड़ें।">
-    <meta property="og:image" content="https://raw.githubusercontent.com/jiomukesh/assets/main/krya-logo.jpg">
+    <meta property="og:image" content="https://jiomukeshofficial.blogspot.com/2026/04/blog-post_25.html">
     <meta property="og:url" content="https://kryalive.com">
     <meta property="og:type" content="website">
 
@@ -88,12 +88,10 @@
             <h3>नया सर्विस पब्लिश करें</h3>
             <input type="text" id="s-name" placeholder="सर्विस का नाम">
             <input type="number" id="s-mrp" placeholder="MRP">
-            <input type="number" id="s-price" placeholder="डिस्काउंट कीमत">
+            <input type="number" id="s-price" placeholder="कीमत">
             <input type="text" id="s-img" placeholder="फोटो लिंक">
             <button class="btn btn-primary" id="btn-publish"><i class="fas fa-plus"></i> पब्लिश करें</button>
         </div>
-
-        <h3>मैनेज प्रोडक्ट्स</h3>
         <div id="admin-product-list"></div>
     </section>
 
@@ -118,11 +116,11 @@
             </button>
 
             <div class="policy-text">
-                <h5>प्राइवेसी पॉलिसी</h5>
-                <p>Kryalive.com आपकी प्राइवेसी का सम्मान करता है। आपका डेटा 100% सुरक्षित है।</p>
+                <h5>ईमानदारी की नीति</h5>
+                <p>Kryalive.com बांका से शुरू हुआ एक सपना है। हम आपकी डिजिटल प्रगति के लिए समर्पित हैं।</p>
                 <br>
-                <h5>नियम और शर्तें</h5>
-                <p>हमारी डिजिटल सेवाओं का उपयोग करके आप हमारी शर्तों से सहमत होते हैं। ईमानदारी हमारी पहचान है।</p>
+                <h5>Privacy Policy</h5>
+                <p>आपका डेटा 100% सुरक्षित है। हम प्राइवेसी का सम्मान करते हैं।</p>
             </div>
 
             <button class="btn" style="background: #fee2e2; color: #ef4444; margin-top: 25px;" id="logout-btn">लॉगआउट</button>
@@ -199,7 +197,7 @@
     });
 
     window.deleteProduct = async (id) => {
-        if(confirm("प्रोडक्ट डिलीट करें?")) {
+        if(confirm("डिलीट करें?")) {
             await deleteDoc(doc(db, "services", id));
             showToast("हटा दिया गया", "var(--red)");
         }
@@ -289,7 +287,7 @@
         const q = query(collection(db, "orders"), where("userEmail", "==", user.email), orderBy("createdAt", "desc"));
         onSnapshot(q, snap => {
             const container = document.getElementById('user-orders-display');
-            container.innerHTML = snap.empty ? "<p style='text-align:center;color:gray;'>अभी तक कोई ऑर्डर नहीं है।</p>" : "";
+            container.innerHTML = snap.empty ? "<p style='text-align:center;color:gray;'>कोई ऑर्डर नहीं।</p>" : "";
             snap.forEach(doc => {
                 const o = doc.data();
                 container.innerHTML += `
