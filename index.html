@@ -23,14 +23,12 @@
         .view { display: none; }
         .view.active { display: block; animation: slideUp 0.4s ease; }
 
-        /* Dashboard Stats */
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .stat-card { background: white; padding: 20px; border-radius: 24px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-bottom: 4px solid var(--accent); }
         .stat-card i { font-size: 20px; margin-bottom: 8px; color: var(--accent); }
         .stat-card h2 { font-size: 24px; font-weight: 800; }
         .stat-card p { font-size: 10px; color: gray; font-weight: 600; text-transform: uppercase; }
 
-        /* Form Card */
         .card { background: #fff; border-radius: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 20px; border: 1px solid #f1f5f9; }
         input { width: 100%; padding: 14px; border-radius: 14px; border: 1.5px solid #e2e8f0; font-size: 14px; outline: none; margin-bottom: 12px; background: #f8fafc; display: block; }
 
@@ -38,12 +36,10 @@
         .btn-primary { background: var(--accent); color: white; }
         .btn-del { background: #fee2e2; color: var(--red); width: auto; padding: 8px 15px; font-size: 11px; }
 
-        /* Store Card */
         .service-item { position: relative; border-radius: 26px; overflow: hidden; background: #fff; margin-bottom: 25px; box-shadow: 0 12px 30px rgba(0,0,0,0.06); border: 1px solid #f1f5f9; }
         .service-img { width: 100%; height: 200px; object-fit: cover; }
         .discount-tag { position: absolute; top: 15px; left: 15px; background: var(--red); color: white; padding: 5px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; z-index: 10; }
 
-        /* शेयर बटन और पॉलिसी स्टाइल */
         .share-btn { background: var(--accent); color: white; padding: 14px 20px; border-radius: 16px; font-size: 13px; font-weight: 800; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 15px auto; width: 100%; transition: 0.3s; }
         .policy-text { font-size: 12px; color: #64748b; line-height: 1.6; text-align: left; margin-top: 20px; padding: 15px; background: #f1f5f9; border-radius: 15px; border: 1px solid #e2e8f0; }
         .policy-text h5 { color: var(--dark); margin-bottom: 5px; font-weight: 800; }
@@ -67,9 +63,9 @@
     <section id="view-auth" class="view active">
         <div style="text-align: center; padding-top: 100px;">
             <h2 style="font-weight: 800; font-size: 28px;">नमस्ते!</h2>
-            <p style="color: gray; margin-bottom: 50px;">KRYALIVE डिजिटल Hub में प्रवेश करें</p>
+            <p style="color: gray; margin-bottom: 50px;">Kryalive.com में आपका स्वागत है</p>
             <button class="btn btn-primary" id="login-btn" style="background: white; color: #000; border: 1.5px solid #eee;">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google के साथ शुरू करें
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google से शुरू करें
             </button>
         </div>
     </section>
@@ -84,15 +80,14 @@
         
         <div class="card">
             <h3>नया सर्विस पब्लिश करें</h3>
-            <p style="font-size: 10px; color: gray; margin-bottom: 10px;">सिस्टम ऑटोमैटिक कोड जेनरेट करेगा।</p>
             <input type="text" id="s-name" placeholder="सर्विस का नाम">
-            <input type="number" id="s-mrp" placeholder="MRP (कटी हुई कीमत)">
-            <input type="number" id="s-price" placeholder="अमाउंट (असली कीमत)">
+            <input type="number" id="s-mrp" placeholder="MRP">
+            <input type="number" id="s-price" placeholder="डिस्काउंट कीमत">
             <input type="text" id="s-img" placeholder="फोटो लिंक">
             <button class="btn btn-primary" id="btn-publish"><i class="fas fa-plus"></i> पब्लिश करें</button>
         </div>
 
-        <h3>मैनेज प्रोडक्ट्स & कोड्स</h3>
+        <h3>मैनेज प्रोडक्ट्स</h3>
         <div id="admin-product-list"></div>
     </section>
 
@@ -113,18 +108,15 @@
             <p id="u-email" style="color: gray; font-size: 12px; margin-bottom: 10px;">email</p>
 
             <button class="share-btn" onclick="shareWebsite()">
-                <i class="fas fa-share-alt"></i> दोस्तों के साथ शेयर करें
+                <i class="fas fa-share-alt"></i> Kryalive.com शेयर करें
             </button>
 
             <div class="policy-text">
                 <h5>Privacy Policy</h5>
-                <p>KRYALIVE आपकी प्राइवेसी का सम्मान करता है। हम आपका डेटा केवल सर्विस देने और जरूरी अपडेट भेजने के लिए उपयोग करते हैं।</p>
+                <p>Kryalive.com आपकी प्राइवेसी का सम्मान करता है। आपका डेटा 100% सुरक्षित है।</p>
                 <br>
                 <h5>Terms & Conditions</h5>
-                <p>हमारी डिजिटल सेवाओं का उपयोग करके आप हमारी शर्तों से सहमत होते हैं। सभी प्रक्रियाएं सुरक्षित और पारदर्शी हैं।</p>
-                <br>
-                <h5>Refund Policy</h5>
-                <p>एक बार काम शुरू होने के बाद रिफंड संभव नहीं है। किसी भी तकनीकी समस्या के लिए हमारी टीम सहायता के लिए उपलब्ध है।</p>
+                <p>हमारी डिजिटल सेवाओं का उपयोग करके आप हमारी शर्तों से सहमत होते हैं।</p>
             </div>
 
             <button class="btn" style="background: #fee2e2; color: #ef4444; margin-top: 25px;" id="logout-btn">लॉगआउट</button>
@@ -158,7 +150,9 @@
     const provider = new GoogleAuthProvider();
 
     const OWNER_EMAIL = "krya.global@gmail.com";
-    const WHATSAPP_NUMBER = "916379403821"; // नया व्हाट्सएप नंबर
+    const WHATSAPP_NUMBER = "916379403821";
+    const DOMAIN_NAME = "Kryalive.com";
+
     let user = null, isOwner = false;
 
     const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, style: {background: c, borderRadius: "15px"}}).showToast();
@@ -201,7 +195,7 @@
     window.deleteProduct = async (id) => {
         if(confirm("डिलीट करें?")) {
             await deleteDoc(doc(db, "services", id));
-            showToast("प्रोडक्ट हटा दिया गया", "var(--red)");
+            showToast("हटा दिया गया", "var(--red)");
         }
     };
 
@@ -218,7 +212,7 @@
             await addDoc(collection(db, "services"), {
                 name, mrp, price, img, serviceCode: sCode, createdAt: serverTimestamp()
             });
-            showToast("पब्लिश सफल! कोड: " + sCode);
+            showToast("सफल! कोड: " + sCode);
             document.querySelectorAll('input').forEach(i => i.value="");
         } catch (e) { showToast(e.message, "var(--red)"); }
     };
@@ -227,7 +221,6 @@
         onSnapshot(query(collection(db, "services"), orderBy("createdAt", "desc")), snap => {
             const list = document.getElementById('store-list');
             const adminList = document.getElementById('admin-product-list');
-            
             document.getElementById('total-services').innerText = snap.size;
             list.innerHTML = ""; if(isOwner) adminList.innerHTML = "";
 
@@ -259,9 +252,8 @@
         });
     }
 
-    // नया स्मार्ट व्हाट्सएप ऑर्डर सिस्टम
     window.buyNow = async (n, p, c) => {
-        if(!user) return showToast("कृपया पहले लॉगिन करें", "var(--red)");
+        if(!user) return showToast("लॉगिन करें", "var(--red)");
         const oID = "KRYA-ORD-" + Math.floor(1000 + Math.random() * 9000);
         
         await addDoc(collection(db, "orders"), {
@@ -269,39 +261,35 @@
             serviceName: n, amount: p, status: "Waiting for Payment", createdAt: serverTimestamp()
         });
 
-        // प्रोफेशनल व्हाट्सएप मैसेज ड्राफ्ट
-        const rawMessage = `नमस्ते Kryalive.com टीम!
-मैंने आपकी वेबसाइट से एक सर्विस के लिए रिक्वेस्ट की है। कृपया इसे चेक करें:
+        const rawMessage = `नमस्ते ${DOMAIN_NAME} टीम!
+मैंने वेबसाइट से सर्विस के लिए रिक्वेस्ट की है:
 
 👤 नाम: ${user.displayName}
-📧 ईमेल आईडी: ${user.email}
-📦 सर्विस का नाम: ${n}
-🔖 सर्विस कोड: ${c}
+📧 ईमेल: ${user.email}
+📦 सर्विस: ${n}
+🔖 कोड: ${c}
 💳 अमाउंट: ₹${p}
 
 मैंने पेमेंट कर दी है।
-✅ मेरा UTR / Reference नंबर है: ____________
-(कृपया अपना UTR नंबर ऊपर लिखें और साथ में पेमेंट का स्क्रीनशॉट भेजें)
+✅ UTR नंबर: ____________
 
-----------------------------------
-🌟 Kryalive.com पर भरोसा जताने के लिए आपका दिल से धन्यवाद। हमारी ईमानदारी और मेहनत ही हमारी असली पहचान है। आपके सपनों और डिजिटल तरक्की के इस सफर में Kryalive.com हमेशा आपके साथ है! 🚀`;
+यह ऑर्डर ${DOMAIN_NAME} से जेनरेट किया गया है।`;
 
-        const waMsg = encodeURIComponent(rawMessage);
-        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${waMsg}`, '_blank');
-        showToast("ऑर्डर दर्ज! व्हाट्सएप पर जानकारी भेजें।");
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(rawMessage)}`, '_blank');
+        showToast("ऑर्डर दर्ज! व्हाट्सएप पर पेमेंट भेजें।");
     };
 
     function loadUserOrders() {
         const q = query(collection(db, "orders"), where("userEmail", "==", user.email), orderBy("createdAt", "desc"));
         onSnapshot(q, snap => {
             const container = document.getElementById('user-orders-display');
-            container.innerHTML = snap.empty ? "<p style='text-align:center;margin-top:50px;color:gray;'>कोई ऑर्डर नहीं है।</p>" : "";
+            container.innerHTML = snap.empty ? "<p style='text-align:center;color:gray;'>कोई ऑर्डर नहीं।</p>" : "";
             snap.forEach(doc => {
                 const o = doc.data();
                 container.innerHTML += `
                     <div class="card" style="padding:15px; border-left: 5px solid ${o.status === 'Approved' ? 'var(--primary)' : 'var(--gold)'};">
-                        <b>${o.serviceName}</b><br><small>ID: ${o.orderID}</small><br><small>Code: ${o.serviceCode}</small>
-                        <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; font-size:12px;">
+                        <b>${o.serviceName}</b><br><small>ID: ${o.orderID}</small>
+                        <div style="margin-top:10px; display:flex; justify-content:space-between; font-size:12px;">
                             <span>₹${o.amount}</span><span style="font-weight:800; color:var(--accent);">${o.status}</span>
                         </div>
                     </div>`;
@@ -318,18 +306,10 @@
         onSnapshot(collection(db, "subscribers"), snap => document.getElementById('total-subs').innerText = snap.size);
     }
 
-    // Share Function
     window.shareWebsite = () => {
-        const shareData = {
-            title: 'KRYALIVE Digital Hub',
-            text: 'नमस्ते! घर बैठे प्रोफेशनल डिजिटल सर्विसेज के लिए KRYALIVE से जुड़ें।',
-            url: window.location.href
-        };
-        if (navigator.share) {
-            navigator.share(shareData).then(() => showToast("शेयर करने के लिए धन्यवाद!")).catch(console.log);
-        } else {
-            window.open(`https://wa.me/?text=नमस्ते! KRYALIVE से जुड़ें: ${window.location.href}`, '_blank');
-        }
+        const shareData = { title: DOMAIN_NAME, text: 'KRYALIVE डिजिटल Hub से जुड़ें।', url: 'https://' + DOMAIN_NAME };
+        if (navigator.share) navigator.share(shareData);
+        else window.open(`https://wa.me/?text=जुड़ें ${DOMAIN_NAME}: https://${DOMAIN_NAME}`, '_blank');
     };
 </script>
 </body>
