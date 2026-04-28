@@ -94,6 +94,9 @@
 
         <h3>मैनेज प्रोडक्ट्स & कोड्स</h3>
         <div id="admin-product-list"></div>
+
+        <h3 style="margin-top: 30px;">मैनेज ऑर्डर्स (ग्राहक)</h3>
+        <div id="admin-orders-list"></div>
     </section>
 
     <section id="view-store" class="view">
@@ -118,7 +121,7 @@
 
             <div class="policy-text">
                 <h5>Privacy Policy</h5>
-                <p>KRYALIVE आपकी प्राइवेसी का सम्मान करता है। हम आपका डेटा केवल सर्विस देने और जरूरी अपडेट भेजने के लिए उपयोग करते हैं।</p>
+                <p>KRYALIVE आपकी प्राइवेसी का सम्मान करता है। हम आपका डेटा केवल सर्विस देने और जरूरी अपडेट भेजने के लिए उपयोग करते हैं。</p>
                 <br>
                 <h5>Terms & Conditions</h5>
                 <p>हमारी डिजिटल सेवाओं का उपयोग करके आप हमारी शर्तों से सहमत होते हैं। सभी प्रक्रियाएं सुरक्षित और पारदर्शी हैं।</p>
@@ -140,9 +143,9 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    // 💡 ध्यान दें: यहाँ मैंने signInWithRedirect लगाया है जो मोबाइल के लिए एकदम सही है।
-    import { getAuth, GoogleAuthProvider, signInWithRedirect, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    // 💡 यहाँ मैंने updateDoc जोड़ दिया है जो Approve करने के लिए चाहिए
+    import { getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
@@ -164,6 +167,11 @@
 
     const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, style: {background: c, borderRadius: "15px"}}).showToast();
 
+    // एरर चेकर
+    getRedirectResult(auth).catch((error) => {
+        alert("⚠️ गूगल लॉगिन एरर: " + error.message);
+    });
+
     window.nav = (id) => {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -174,7 +182,6 @@
 
     window.openMain = () => isOwner ? nav('owner') : nav('store');
 
-    // 💡 फिक्स: यहाँ रीडायरेक्ट सिस्टम लगा दिया गया है
     document.getElementById('login-btn').onclick = () => {
         showToast("सुरक्षित लॉगिन हो रहा है, कृपया प्रतीक्षा करें...");
         signInWithRedirect(auth, provider);
@@ -211,6 +218,14 @@
         if(confirm("डिलीट करें?")) {
             await deleteDoc(doc(db, "services", id));
             showToast("प्रोडक्ट हटा दिया गया", "var(--red)");
+        }
+    };
+
+    // 💡 नया: ऑर्डर को Approve करने वाला फंक्शन
+    window.approveOrder = async (id) => {
+        if(confirm("क्या पेमेंट आ चुकी है? ऑर्डर Approved करें?")) {
+            await updateDoc(doc(db, "orders", id), { status: "Approved" });
+            showToast("ऑर्डर Approved हो गया!", "var(--primary)");
         }
     };
 
@@ -316,28 +331,25 @@
         });
     }
 
+    // 💡 नया: एडमिन के लिए ऑर्डर्स लिस्ट और रेवेन्यू अप्रूवल
     function loadAdminStats() {
-        onSnapshot(collection(db, "orders"), snap => {
+        onSnapshot(query(collection(db, "orders"), orderBy("createdAt", "desc")), snap => {
             document.getElementById('total-ord').innerText = snap.size;
-            let rev = 0; snap.forEach(d => { if(d.data().status === 'Approved') rev += Number(d.data().amount); });
-            document.getElementById('total-rev').innerText = "₹" + rev;
-        });
-        onSnapshot(collection(db, "subscribers"), snap => document.getElementById('total-subs').innerText = snap.size);
-    }
+            let rev = 0;
+            const ordersList = document.getElementById('admin-orders-list');
+            if (ordersList) ordersList.innerHTML = "";
 
-    window.shareWebsite = () => {
-        const shareData = {
-            title: 'KRYALIVE Digital Hub',
-            text: 'नमस्ते! घर बैठे प्रोफेशनल डिजिटल सर्विसेज के लिए KRYALIVE से जुड़ें।',
-            url: window.location.href
-        };
-        if (navigator.share) {
-            navigator.share(shareData).then(() => showToast("शेयर करने के लिए धन्यवाद!")).catch(console.log);
-        } else {
-            window.open(`https://wa.me/?text=नमस्ते! KRYALIVE से जुड़ें: ${window.location.href}`, '_blank');
-        }
-    };
-</script>
-</body>
-            </html>
-                
+            snap.forEach(d => {
+                const o = d.data();
+                if(o.status === 'Approved') rev += Number(o.amount); // सिर्फ Approved का पैसा जुड़ेगा
+
+                if (ordersList) {
+                    ordersList.innerHTML += `
+                        <div class="card" style="padding:15px; margin-bottom: 10px; border-left: 5px solid ${o.status === 'Approved' ? 'var(--primary)' : 'var(--gold)'};">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <b style="font-size:14px;">${o.userName}</b> <br>
+                                    <small style="color:gray;">${o.serviceName} (₹${o.amount})</small><br>
+                                    <small style="color:var(--accent); font-weight:800;">${o.status}</small>
+                                </div>
+                         
