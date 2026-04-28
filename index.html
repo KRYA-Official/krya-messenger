@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYALIVE Super App</title>
+    <title>KRYALIVE Digital Store</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -18,27 +18,27 @@
         .brand { font-size: 20px; font-weight: 800; }
         .brand span { color: var(--primary); }
 
-        main { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 100px; }
+        main { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 110px; }
         .view { display: none; animation: fadeIn 0.3s ease; }
         .view.active { display: block; }
 
         .card { background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; margin-bottom: 15px; }
-        .section-title { font-size: 16px; font-weight: 800; margin: 20px 0 10px; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+        .section-title { font-size: 15px; font-weight: 800; margin: 15px 0 10px; color: var(--accent); display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; }
         
-        .service-card { text-align: left; border-left: 5px solid var(--primary); transition: 0.2s; }
+        .service-card { text-align: left; border-left: 5px solid var(--primary); transition: 0.2s; position: relative; }
         .service-card.land { border-left-color: var(--gold); }
         .service-card h4 { font-size: 15px; color: var(--dark); }
-        .service-card p { font-size: 11px; color: #64748b; margin: 4px 0; }
-        .price { font-size: 17px; font-weight: 800; color: var(--primary); }
+        .service-card p { font-size: 11px; color: #64748b; margin: 4px 0; line-height: 1.4; }
+        .price-tag { background: #f0fdf4; color: var(--primary); padding: 4px 10px; border-radius: 8px; font-weight: 800; font-size: 16px; }
 
-        .btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-buy { background: var(--accent); color: white; font-size: 13px; margin-top: 10px; }
+        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-buy { background: var(--accent); color: white; font-size: 13px; margin-top: 10px; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2); }
         .btn-google { background: #fff; color: #444; border: 1px solid #ddd; padding: 16px; margin-top: 50px; }
         
-        .wallet-card { background: linear-gradient(135deg, #10b981, #2563eb); color: white; padding: 20px; border-radius: 20px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+        .user-banner { background: var(--gradient); background: linear-gradient(135deg, #10b981, #2563eb); color: white; padding: 20px; border-radius: 20px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
         .user-img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid white; }
 
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; border-top: 1px solid #eee; padding: 10px 0 25px; z-index: 1000; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; border-top: 1px solid #eee; padding: 12px 0 25px; z-index: 1000; }
         .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 10px; font-weight: 700; outline: none; }
         .nav-item.active { color: var(--accent); }
         .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
@@ -51,87 +51,94 @@
 <div class="app-shell">
     <header>
         <div class="brand">KRYA<span>LIVE</span></div>
-        <div style="font-size: 10px; font-weight: 800; color: var(--primary);">● लाइव</div>
+        <div style="font-size: 10px; font-weight: 800; color: var(--primary);">● LIVE STORE</div>
     </header>
 
     <main id="content">
         <section id="view-auth" class="view active">
             <div class="card" style="margin-top: 60px; text-align: center;">
-                <h2>नमस्ते मुकेश जी!</h2>
-                <p style="color: #64748b; font-size: 13px; margin-bottom: 20px;">KRYALIVE डिजिटल स्टोर में आपका स्वागत है।</p>
+                <h2 style="font-weight: 800;">KRYA Digital</h2>
+                <p style="color: #64748b; font-size: 13px; margin-bottom: 30px;">प्रोफेशनल डिजिटल सेवाओं के लिए लॉगिन करें।</p>
                 <button class="btn btn-google" id="btn-google-login">
                     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
-                    <span>Google के साथ लॉगिन करें</span>
+                    <span>Google से लॉगिन करें</span>
                 </button>
             </div>
         </section>
 
         <section id="view-home" class="view">
-            <div class="wallet-card">
-                <img id="home-user-photo" src="" class="user-img" style="display: none;">
+            <div class="user-banner">
+                <img id="h-photo" src="" class="user-img" style="display:none;">
                 <div>
-                    <p style="opacity: 0.9; font-size: 11px;">नमस्ते,</p>
-                    <h2 id="home-user-name" style="font-size: 18px;">यूजर</h2>
+                    <p style="font-size: 11px; opacity: 0.9;">नमस्ते मुकेश जी के ग्राहक,</p>
+                    <h2 id="h-name" style="font-size: 18px;">यूजर</h2>
                 </div>
             </div>
 
-            <div class="section-title"><i class="fas fa-map-marked-alt"></i> जमीन दस्तावेज केंद्र</div>
-            
+            <div class="section-title"><i class="fas fa-file-invoice"></i> जमीन दस्तावेज केंद्र</div>
             <div class="card service-card land">
-                <h4>भू-लेख / खतियान नकल</h4>
-                <p>पुराना या नया खतियान (डिजिटल कॉपी) ऑनलाइन प्राप्त करें।</p>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span class="price">₹100/-</span>
-                    <button class="btn btn-buy" style="width: auto; background: var(--gold);" onclick="buyService('खतियान नकल', 100)">निकालें</button>
-                </div>
-            </div>
-
-            <div class="card service-card land">
-                <h4>एलपीसी (LPC) प्रमाण पत्र</h4>
-                <p>भूमि कब्जा प्रमाण पत्र (Land Possession Certificate) आवेदन।</p>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span class="price">₹150/-</span>
-                    <button class="btn btn-buy" style="width: auto; background: var(--gold);" onclick="buyService('LPC सर्टिफिकेट', 150)">आवेदन करें</button>
+                <h4>खतियान नकल (Digital Copy)</h4>
+                <p>बिहार के किसी भी जिले का नया/पुराना खतियान प्राप्त करें।</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="price-tag">₹100</span>
+                    <button class="btn btn-buy" style="width:auto; background:var(--gold);" onclick="pay('खतियान नकल', 100)">निकालें</button>
                 </div>
             </div>
 
             <div class="card service-card land">
-                <h4>लगान रसीद (जमीन रसीद)</h4>
-                <p>अपनी जमीन का पिछला और वर्तमान लगान रसीद ऑनलाइन काटें।</p>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span class="price">₹50/-</span>
-                    <button class="btn btn-buy" style="width: auto; background: var(--gold);" onclick="buyService('लगान रसीद', 50)">रसीद काटें</button>
+                <h4>LPC (भू-स्वामित्व प्रमाण पत्र)</h4>
+                <p>जमीन कब्जा प्रमाण पत्र के लिए ऑनलाइन आवेदन सेवा।</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="price-tag">₹150</span>
+                    <button class="btn btn-buy" style="width:auto; background:var(--gold);" onclick="pay('LPC आवेदन', 150)">आवेदन दें</button>
                 </div>
             </div>
 
-            <div class="section-title"><i class="fas fa-laptop-code"></i> अन्य डिजिटल सेवाएं</div>
-
+            <div class="section-title"><i class="fas fa-laptop-code"></i> डिजिटल बिजनेस सर्विसेज</div>
             <div class="card service-card">
-                <h4>प्रोफेसनल वेबसाइट डिजाइन</h4>
-                <p>अपने बिजनेस के लिए बेहतरीन वेबसाइट बनवाएं।</p>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span class="price">₹999/-</span>
-                    <button class="btn btn-buy" style="width: auto;" onclick="buyService('वेबसाइट डिजाइन', 999)">ऑर्डर करें</button>
+                <h4>प्रोफेशनल वेबसाइट मेकिंग</h4>
+                <p>KRYA ब्रांड जैसी सुंदर वेबसाइट अपने बिजनेस के लिए बनवाएं।</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="price-tag">₹999</span>
+                    <button class="btn btn-buy" style="width:auto;" onclick="pay('वेबसाइट मेकिंग', 999)">ऑर्डर दें</button>
                 </div>
             </div>
 
             <div class="card service-card">
-                <h4>गूगल मैप बिजनेस लिस्टिंग</h4>
-                <p>अपनी दुकान को ऑनलाइन गूगल मैप्स पर रजिस्टर करवाएं।</p>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span class="price">₹299/-</span>
-                    <button class="btn btn-buy" style="width: auto;" onclick="buyService('गूगल मैप लिस्टिंग', 299)">रजिस्टर करें</button>
+                <h4>गूगल मैप लिस्टिंग (दुकान)</h4>
+                <p>अपनी दुकान को गूगल मैप पर 100% लाइव दिखाएं।</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="price-tag">₹299</span>
+                    <button class="btn btn-buy" style="width:auto;" onclick="pay('गूगल मैप लिस्टिंग', 299)">दुकान जोड़ें</button>
+                </div>
+            </div>
+
+            <div class="card service-card">
+                <h4>SEO आर्टिकल/ब्लॉग राइटिंग</h4>
+                <p>वेबसाइट के लिए प्रोफेशनल आर्टिकल लिखवाने की सेवा।</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="price-tag">₹199</span>
+                    <button class="btn btn-buy" style="width:auto;" onclick="pay('SEO आर्टिकल', 199)">लिखवाएं</button>
+                </div>
+            </div>
+
+            <div class="card service-card">
+                <h4>ई-श्रम कार्ड रजिस्ट्रेशन</h4>
+                <p>नया ई-श्रम कार्ड या उसमें सुधार करने की सेवा।</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="price-tag">₹50</span>
+                    <button class="btn btn-buy" style="width:auto;" onclick="pay('ई-श्रम कार्ड', 50)">बनवाएं</button>
                 </div>
             </div>
         </section>
 
-        <section id="view-account" class="view">
-            <h3 style="margin-bottom: 20px; font-weight: 800;">मेरा प्रोफाइल</h3>
+        <section id="view-acc" class="view">
+            <h3 style="font-weight: 800; margin-bottom: 20px;">प्रोफाइल</h3>
             <div class="card" style="text-align: center;">
-                <img id="acc-user-photo" src="" class="user-img" style="margin: 0 auto 15px; display: block; width: 80px; height: 80px;">
-                <h4 id="acc-user-name">यूजर नेम</h4>
-                <p id="acc-user-email" style="font-size: 12px; color: gray;">email@example.com</p>
-                <button class="btn" style="background: #fee2e2; color: #ef4444; margin-top: 30px; font-size: 14px;" id="btn-logout">
+                <img id="a-photo" src="" class="user-img" style="margin: 0 auto 15px; display: block; width: 70px; height: 70px;">
+                <h4 id="a-name">Name</h4>
+                <p id="a-email" style="font-size: 12px; color: gray;">Email</p>
+                <button class="btn" style="background:#fee2e2; color:#ef4444; margin-top:30px; font-size:14px;" id="btn-out">
                     <i class="fas fa-sign-out-alt"></i> सुरक्षित लॉगआउट
                 </button>
             </div>
@@ -139,8 +146,8 @@
     </main>
 
     <nav class="bottom-nav">
-        <button class="nav-item active" id="nav-home" onclick="nav('home')"><i class="fas fa-shopping-bag"></i>Store</button>
-        <button class="nav-item" id="nav-account" onclick="nav('account')"><i class="fas fa-user-circle"></i>Profile</button>
+        <button class="nav-item active" id="n-home" onclick="nav('home')"><i class="fas fa-shopping-cart"></i>Store</button>
+        <button class="nav-item" id="n-acc" onclick="nav('acc')"><i class="fas fa-user-circle"></i>Profile</button>
     </nav>
 </div>
 
@@ -149,7 +156,7 @@
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    const firebaseConfig = {
+    const config = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
         authDomain: "signing-9fc01.firebaseapp.com",
         projectId: "signing-9fc01",
@@ -158,58 +165,48 @@
         appId: "1:926296137348:web:c42cdf88199ba877246cd1"
     };
 
-    const app = initializeApp(firebaseConfig);
+    const app = initializeApp(config);
     const auth = getAuth(app);
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
     window.nav = (id) => {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.getElementById('view-' + id).classList.add('active');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById('nav-' + id).classList.add('active');
+        document.getElementById('view-' + id).classList.add('active');
+        document.getElementById('n-' + id).classList.add('active');
     };
 
-    window.buyService = (name, price) => {
-        const upiId = "93690mukeshkumar@axl";
-        const upiUrl = `upi://pay?pa=${upiId}&pn=KRYA%20Digital&am=${price}&cu=INR&tn=Order%20for%20${name}`;
+    window.pay = (name, amt) => {
+        const upi = "93690mukeshkumar@axl";
+        const url = `upi://pay?pa=${upi}&pn=Mukesh%20Kumar&am=${amt}&cu=INR&tn=Order_${name.replace(/ /g, '_')}`;
         
-        if(confirm(`क्या आप ${name} के लिए ₹${price} का भुगतान करना चाहते हैं?`)) {
-            window.location.href = upiUrl;
-            alert("भुगतान के बाद स्क्रीनशॉट भेजें ताकि हम काम शुरू कर सकें।");
+        if(confirm(`क्या आप ${name} के लिए ₹${amt} का भुगतान करना चाहते हैं?`)) {
+            window.location.href = url;
+            setTimeout(() => {
+                const utr = prompt("भुगतान सफल होने के बाद 12 अंकों का UTR/Ref No. यहाँ दर्ज करें:");
+                if(utr) alert("धन्यवाद! आपका ऑर्डर दर्ज हो गया है। हम जल्द ही आपसे संपर्क करेंगे।");
+            }, 3000);
         }
     };
 
-    async function loginWithGoogle() {
+    document.getElementById('btn-google-login').onclick = async () => {
         try {
-            const result = await signInWithPopup(auth, provider);
-            await setDoc(doc(db, "users", result.user.uid), {
-                name: result.user.displayName,
-                email: result.user.email,
-                photo: result.user.photoURL,
-                lastLogin: serverTimestamp()
-            }, { merge: true });
-        } catch (error) { alert("लॉगिन सफल नहीं हुआ!"); }
-    }
+            const res = await signInWithPopup(auth, provider);
+            await setDoc(doc(db, "users", res.user.uid), { name: res.user.displayName, email: res.user.email, photo: res.user.photoURL, time: serverTimestamp() }, { merge: true });
+        } catch (e) { alert("लॉगिन एरर!"); }
+    };
 
-    async function logout() {
-        if(confirm("क्या आप लॉगआउट करना चाहते हैं?")) {
-            await signOut(auth);
-            location.reload();
-        }
-    }
-
-    document.getElementById('btn-google-login').onclick = loginWithGoogle;
-    document.getElementById('btn-logout').onclick = logout;
+    document.getElementById('btn-out').onclick = () => { if(confirm("लॉगआउट?")) signOut(auth).then(() => location.reload()); };
 
     onAuthStateChanged(auth, user => {
         if(user) {
-            document.getElementById('home-user-name').innerText = user.displayName;
-            document.getElementById('home-user-photo').src = user.photoURL;
-            document.getElementById('home-user-photo').style.display = 'block';
-            document.getElementById('acc-user-name').innerText = user.displayName;
-            document.getElementById('acc-user-email').innerText = user.email;
-            document.getElementById('acc-user-photo').src = user.photoURL;
+            document.getElementById('h-name').innerText = user.displayName;
+            document.getElementById('h-photo').src = user.photoURL;
+            document.getElementById('h-photo').style.display = 'block';
+            document.getElementById('a-name').innerText = user.displayName;
+            document.getElementById('a-email').innerText = user.email;
+            document.getElementById('a-photo').src = user.photoURL;
             nav('home');
         } else {
             nav('auth');
@@ -217,4 +214,5 @@
     });
 </script>
 </body>
-</html>
+                        </html>
+    
