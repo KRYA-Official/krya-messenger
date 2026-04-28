@@ -94,6 +94,9 @@
 
         <h3>मैनेज प्रोडक्ट्स & कोड्स</h3>
         <div id="admin-product-list"></div>
+
+        <h3 style="margin-top: 30px;">मैनेज ऑर्डर्स (ग्राहक)</h3>
+        <div id="admin-orders-list"></div>
     </section>
 
     <section id="view-store" class="view">
@@ -140,9 +143,8 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    // 💡 ध्यान दें: यहाँ मैंने signInWithRedirect लगाया है जो मोबाइल के लिए एकदम सही है।
     import { getAuth, GoogleAuthProvider, signInWithRedirect, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
@@ -174,7 +176,6 @@
 
     window.openMain = () => isOwner ? nav('owner') : nav('store');
 
-    // 💡 फिक्स: यहाँ रीडायरेक्ट सिस्टम लगा दिया गया है
     document.getElementById('login-btn').onclick = () => {
         showToast("सुरक्षित लॉगिन हो रहा है, कृपया प्रतीक्षा करें...");
         signInWithRedirect(auth, provider);
@@ -209,4 +210,140 @@
 
     window.deleteProduct = async (id) => {
         if(confirm("डिलीट करें?")) {
-            await deleteDoc(doc(db, "services", id))
+            await deleteDoc(doc(db, "services", id));
+            showToast("प्रोडक्ट हटा दिया गया", "var(--red)");
+        }
+    };
+
+    // नया फीचर: ऑर्डर Approve करना
+    window.approveOrder = async (id) => {
+        if(confirm("क्या पेमेंट आ चुकी है? ऑर्डर Approved करें?")) {
+            await updateDoc(doc(db, "orders", id), { status: "Approved" });
+            showToast("ऑर्डर Approved हो गया!", "var(--primary)");
+        }
+    };
+
+    document.getElementById('btn-publish').onclick = async () => {
+        const name = document.getElementById('s-name').value;
+        const mrp = document.getElementById('s-mrp').value;
+        const price = document.getElementById('s-price').value;
+        const img = document.getElementById('s-img').value;
+
+        if(!name || !price) return showToast("विवरण भरें", "var(--red)");
+
+        try {
+            const sCode = "KRYA-S-" + Math.floor(1000 + Math.random() * 9000);
+            await addDoc(collection(db, "services"), {
+                name, mrp, price, img, serviceCode: sCode, createdAt: serverTimestamp()
+            });
+            showToast("पब्लिश सफल! कोड: " + sCode);
+            document.querySelectorAll('input').forEach(i => i.value="");
+        } catch (e) { showToast(e.message, "var(--red)"); }
+    };
+
+    function loadStore() {
+        onSnapshot(query(collection(db, "services"), orderBy("createdAt", "desc")), snap => {
+            const list = document.getElementById('store-list');
+            const adminList = document.getElementById('admin-product-list');
+            
+            document.getElementById('total-services').innerText = snap.size;
+            list.innerHTML = ""; if(isOwner) adminList.innerHTML = "";
+
+            snap.forEach(d => {
+                const s = d.data();
+                const discount = s.mrp ? Math.round(((s.mrp - s.price) / s.mrp) * 100) : 0;
+                list.innerHTML += `
+                    <div class="service-item">
+                        ${discount > 0 ? `<div class="discount-tag">${discount}% OFF</div>` : ''}
+                        <img src="${s.img || 'https://via.placeholder.com/400x200'}" class="service-img">
+                        <div style="padding: 20px;">
+                            <small style="color:gray; font-weight:800;">${s.serviceCode}</small>
+                            <h4 style="font-weight: 800;">${s.name}</h4>
+                            <div style="margin: 10px 0; display:flex; align-items:baseline; gap:8px;">
+                                <span style="font-size: 24px; font-weight: 800; color: var(--primary);">₹${s.price}</span>
+                                ${s.mrp ? `<span style="text-decoration: line-through; color: gray; font-size: 14px;">₹${s.mrp}</span>` : ''}
+                            </div>
+                            <button class="btn btn-primary" onclick="buyNow('${s.name}', '${s.price}', '${s.serviceCode}')">अभी खरीदें</button>
+                        </div>
+                    </div>`;
+                if(isOwner) {
+                    adminList.innerHTML += `
+                        <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px; margin-bottom:10px;">
+                            <div><small style="color:var(--accent);font-weight:800;">${s.serviceCode}</small><br><span>${s.name}</span></div>
+                            <button class="btn btn-del" onclick="deleteProduct('${d.id}')">हटाएं</button>
+                        </div>`;
+                }
+            });
+        });
+    }
+
+    window.buyNow = async (n, p, c) => {
+        if(!user) return showToast("कृपया पहले लॉगिन करें", "var(--red)");
+        const oID = "KRYA-ORD-" + Math.floor(1000 + Math.random() * 9000);
+        
+        await addDoc(collection(db, "orders"), {
+            orderID: oID, serviceCode: c, userName: user.displayName, userEmail: user.email,
+            serviceName: n, amount: p, status: "Waiting for Payment", createdAt: serverTimestamp()
+        });
+
+        const rawMessage = `नमस्ते Kryalive.com टीम!
+मैंने आपकी वेबसाइट से एक सर्विस के लिए रिक्वेस्ट की है। कृपया इसे चेक करें:
+
+👤 नाम: ${user.displayName}
+📧 ईमेल आईडी: ${user.email}
+📦 सर्विस का नाम: ${n}
+🔖 सर्विस कोड: ${c}
+💳 अमाउंट: ₹${p}
+
+मैंने पेमेंट कर दी है।
+✅ मेरा UTR / Reference नंबर है: ____________
+(कृपया अपना UTR नंबर ऊपर लिखें और साथ में पेमेंट का स्क्रीनशॉट भेजें)
+
+----------------------------------
+🌟 Kryalive.com पर भरोसा जताने के लिए आपका दिल से धन्यवाद। हमारी ईमानदारी और मेहनत ही हमारी असली पहचान है। आपके सपनों और डिजिटल तरक्की के इस सफर में Kryalive.com हमेशा आपके साथ है! 🚀`;
+
+        const waMsg = encodeURIComponent(rawMessage);
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${waMsg}`, '_blank');
+        showToast("ऑर्डर दर्ज! व्हाट्सएप पर जानकारी भेजें।");
+    };
+
+    function loadUserOrders() {
+        const q = query(collection(db, "orders"), where("userEmail", "==", user.email), orderBy("createdAt", "desc"));
+        onSnapshot(q, snap => {
+            const container = document.getElementById('user-orders-display');
+            container.innerHTML = snap.empty ? "<p style='text-align:center;margin-top:50px;color:gray;'>कोई ऑर्डर नहीं है।</p>" : "";
+            snap.forEach(doc => {
+                const o = doc.data();
+                container.innerHTML += `
+                    <div class="card" style="padding:15px; border-left: 5px solid ${o.status === 'Approved' ? 'var(--primary)' : 'var(--gold)'}; margin-bottom:15px;">
+                        <b>${o.serviceName}</b><br><small>ID: ${o.orderID}</small><br><small>Code: ${o.serviceCode}</small>
+                        <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; font-size:12px;">
+                            <span>₹${o.amount}</span><span style="font-weight:800; color:var(--accent);">${o.status}</span>
+                        </div>
+                    </div>`;
+            });
+        });
+    }
+
+    // एडमिन डैशबोर्ड: ऑर्डर्स लिस्ट और रेवेन्यू अपडेट
+    function loadAdminStats() {
+        onSnapshot(query(collection(db, "orders"), orderBy("createdAt", "desc")), snap => {
+            document.getElementById('total-ord').innerText = snap.size;
+            let rev = 0;
+            const ordersList = document.getElementById('admin-orders-list');
+            ordersList.innerHTML = "";
+
+            snap.forEach(d => {
+                const o = d.data();
+                if(o.status === 'Approved') rev += Number(o.amount); // सिर्फ Approved का पैसा जुड़ेगा
+
+                ordersList.innerHTML += `
+                    <div class="card" style="padding:15px; margin-bottom: 10px; border-left: 5px solid ${o.status === 'Approved' ? 'var(--primary)' : 'var(--gold)'};">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <b style="font-size:14px;">${o.userName}</b> <br>
+                                <small style="color:gray;">${o.serviceName} (₹${o.amount})</small><br>
+                                <small style="color:var(--accent); font-weight:800;">${o.status}</small>
+                            </div>
+                            ${o.status !== 'Approved' ? `<button class="btn btn-live" style="width:auto; padding:8px 15px; font-size:11px;" onclick="approveOrder('${d.id}')">Approve</button>` : `<i class="fas fa-check-circle" style="color:var(--primary); font-size:24px;"></i>`}
+                        <
