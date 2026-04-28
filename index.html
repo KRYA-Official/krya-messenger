@@ -22,17 +22,20 @@
         .view { display: none; animation: fadeIn 0.3s ease; }
         .view.active { display: block; }
 
-        .card { background: #fff; padding: 25px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; text-align: center; margin-bottom: 15px; }
-        
-        .btn { width: 100%; padding: 16px; border-radius: 15px; border: none; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
-        .btn-google { background: #fff; color: #444; border: 1px solid #ddd; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .btn-logout { background: #fee2e2; color: #ef4444; font-size: 14px; margin-top: 40px; border: 1px solid #fecaca; }
-        
-        .wallet-card { background: linear-gradient(135deg, #10b981, #2563eb); color: white; padding: 25px; border-radius: 25px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; text-align: left; }
-        .user-img { width: 60px; height: 60px; border-radius: 50%; border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .card { background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; margin-bottom: 15px; }
+        .service-card { text-align: left; border-left: 5px solid var(--primary); }
+        .service-card h4 { font-size: 16px; color: var(--dark); }
+        .service-card p { font-size: 11px; color: #64748b; margin: 5px 0; }
+        .price { font-size: 18px; font-weight: 800; color: var(--primary); }
 
-        /* Navigation */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; border-top: 1px solid #eee; padding: 12px 0 25px; z-index: 1000; }
+        .btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-buy { background: var(--accent); color: white; font-size: 14px; margin-top: 10px; }
+        .btn-google { background: #fff; color: #444; border: 1px solid #ddd; padding: 16px; margin-top: 50px; }
+        
+        .wallet-card { background: linear-gradient(135deg, #10b981, #2563eb); color: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; }
+        .user-img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid white; }
+
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; border-top: 1px solid #eee; padding: 10px 0 25px; z-index: 1000; }
         .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 10px; font-weight: 700; outline: none; }
         .nav-item.active { color: var(--accent); }
         .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
@@ -50,48 +53,80 @@
 
     <main id="content">
         <section id="view-auth" class="view active">
-            <div class="card" style="margin-top: 60px;">
-                <h2 style="margin-bottom: 10px;">नमस्ते!</h2>
-                <p style="color: #64748b; font-size: 13px; margin-bottom: 30px;">KRYALIVE में सुरक्षित लॉगिन करें।</p>
+            <div class="card" style="margin-top: 60px; text-align: center;">
+                <h2>स्वागत है मुकेश जी!</h2>
+                <p style="color: #64748b; font-size: 13px; margin-bottom: 20px;">KRYALIVE डिजिटल साम्राज्य में आपका स्वागत है।</p>
                 <button class="btn btn-google" id="btn-google-login">
                     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
-                    <span>Google के साथ आगे बढ़ें</span>
+                    <span>Google के साथ शुरू करें</span>
                 </button>
             </div>
         </section>
 
         <section id="view-home" class="view">
-            <div class="wallet-card animate__animated animate__fadeIn">
+            <div class="wallet-card">
                 <img id="home-user-photo" src="" class="user-img" style="display: none;">
                 <div>
-                    <p style="opacity: 0.9; font-size: 12px;">नमस्ते,</p>
-                    <h2 id="home-user-name" style="font-size: 20px;">यूजर</h2>
+                    <p style="opacity: 0.9; font-size: 11px;">नमस्ते,</p>
+                    <h2 id="home-user-name" style="font-size: 18px;">यूजर</h2>
                 </div>
             </div>
 
-            <div class="card">
-                <h4 style="color: var(--accent);">KRYALIVE डिजिटल स्टोर</h4>
-                <p style="font-size: 12px; color: gray; margin-top: 10px;">हम आपकी कमाई के टूल्स सेटअप कर रहे हैं। कृपया जुड़े रहें!</p>
+            <h3 style="margin-bottom: 15px; font-weight: 800; font-size: 18px;">KRYALIVE डिजिटल स्टोर</h3>
+
+            <div class="card service-card">
+                <h4>प्रोफेसनल वेबसाइट डिजाइन</h4>
+                <p>अपने बिजनेस के लिए सुंदर और फास्ट वेबसाइट बनवाएं।</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="price">₹999/-</span>
+                    <button class="btn btn-buy" style="width: auto;" onclick="buyService('वेबसाइट डिजाइन', 999)">खरीदें</button>
+                </div>
+            </div>
+
+            <div class="card service-card">
+                <h4>ई-श्रम कार्ड पंजीकरण</h4>
+                <p>सरकारी ई-श्रम कार्ड बनवाएं और सरकारी लाभ पाएं।</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="price">₹50/-</span>
+                    <button class="btn btn-buy" style="width: auto;" onclick="buyService('ई-श्रम कार्ड', 50)">खरीदें</button>
+                </div>
+            </div>
+
+            <div class="card service-card">
+                <h4>SEO आर्टिकल राइटिंग</h4>
+                <p>ब्लॉग या वेबसाइट के लिए बेहतरीन आर्टिकल लिखवाएं।</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="price">₹199/-</span>
+                    <button class="btn btn-buy" style="width: auto;" onclick="buyService('आर्टिकल राइटिंग', 199)">खरीदें</button>
+                </div>
+            </div>
+
+            <div class="card service-card">
+                <h4>गूगल मैप लिस्टिंग (दुकान)</h4>
+                <p>अपनी दुकान को गूगल मैप्स पर दिखाएं और ग्राहक बढ़ाएं।</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="price">₹299/-</span>
+                    <button class="btn btn-buy" style="width: auto;" onclick="buyService('गूगल मैप लिस्टिंग', 299)">खरीदें</button>
+                </div>
             </div>
         </section>
 
         <section id="view-account" class="view">
-            <h3 style="margin-bottom: 20px; font-weight: 800;">मेरा अकाउंट</h3>
-            <div class="card">
-                <img id="acc-user-photo" src="" class="user-img" style="margin: 0 auto 15px; display: block;">
-                <h4 id="acc-user-name" style="font-size: 18px;">यूजर नेम</h4>
-                <p id="acc-user-email" style="font-size: 12px; color: gray; margin-top: 5px;">email@example.com</p>
-                
-                <button class="btn btn-logout" id="btn-logout">
-                    <i class="fas fa-sign-out-alt"></i> सुरक्षित लॉगआउट करें
+            <h3 style="margin-bottom: 20px; font-weight: 800;">मेरा प्रोफाइल</h3>
+            <div class="card" style="text-align: center;">
+                <img id="acc-user-photo" src="" class="user-img" style="margin: 0 auto 15px; display: block; width: 80px; height: 80px;">
+                <h4 id="acc-user-name">यूजर नेम</h4>
+                <p id="acc-user-email" style="font-size: 12px; color: gray;">email@example.com</p>
+                <button class="btn" style="background: #fee2e2; color: #ef4444; margin-top: 30px; font-size: 14px;" id="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> सुरक्षित लॉगआउट
                 </button>
             </div>
         </section>
     </main>
 
     <nav class="bottom-nav">
-        <button class="nav-item active" id="nav-home" onclick="nav('home')"><i class="fas fa-home"></i>Home</button>
-        <button class="nav-item" id="nav-account" onclick="nav('account')"><i class="fas fa-user-circle"></i>Account</button>
+        <button class="nav-item active" id="nav-home" onclick="nav('home')"><i class="fas fa-shopping-bag"></i>Store</button>
+        <button class="nav-item" id="nav-account" onclick="nav('account')"><i class="fas fa-user-circle"></i>Profile</button>
     </nav>
 </div>
 
@@ -121,6 +156,16 @@
         document.getElementById('nav-' + id).classList.add('active');
     };
 
+    window.buyService = (name, price) => {
+        const upiId = "93690mukeshkumar@axl";
+        const upiUrl = `upi://pay?pa=${upiId}&pn=KRYA%20Digital&am=${price}&cu=INR&tn=Order%20for%20${name}`;
+        
+        if(confirm(`क्या आप ${name} के लिए ₹${price} का भुगतान करना चाहते हैं?`)) {
+            window.location.href = upiUrl;
+            alert("पेमेंट के बाद कृपया स्क्रीनशॉट हमारे व्हाट्सएप पर भेजें।");
+        }
+    };
+
     async function loginWithGoogle() {
         try {
             const result = await signInWithPopup(auth, provider);
@@ -130,11 +175,11 @@
                 photo: result.user.photoURL,
                 lastLogin: serverTimestamp()
             }, { merge: true });
-        } catch (error) { alert("लॉगिन विफल!"); }
+        } catch (error) { alert("लॉगिन सफल नहीं हुआ!"); }
     }
 
     async function logout() {
-        if(confirm("क्या आप वाकई लॉगआउट करना चाहते हैं?")) {
+        if(confirm("क्या आप लॉगआउट करना चाहते हैं?")) {
             await signOut(auth);
             location.reload();
         }
@@ -145,16 +190,12 @@
 
     onAuthStateChanged(auth, user => {
         if(user) {
-            // होम पेज का डेटा
             document.getElementById('home-user-name').innerText = user.displayName;
             document.getElementById('home-user-photo').src = user.photoURL;
             document.getElementById('home-user-photo').style.display = 'block';
-            
-            // अकाउंट पेज का डेटा
             document.getElementById('acc-user-name').innerText = user.displayName;
             document.getElementById('acc-user-email').innerText = user.email;
             document.getElementById('acc-user-photo').src = user.photoURL;
-            
             nav('home');
         } else {
             nav('auth');
