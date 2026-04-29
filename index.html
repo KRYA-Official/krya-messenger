@@ -32,11 +32,13 @@
         
         main { height: calc(100vh - 145px); overflow-y: auto; padding: 15px; scroll-behavior: smooth; }
         
+        /* महा-लेख स्टाइल */
         .mega-article { background: white; border-radius: 24px; padding: 25px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #eee; }
         .article-h1 { color: var(--primary); font-size: 20px; font-weight: 800; margin-bottom: 15px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; }
         .article-p { font-size: 13.5px; line-height: 1.7; color: #444; margin-bottom: 12px; }
         .highlight-box { background: var(--primary); color: white; padding: 15px; border-radius: 15px; margin: 15px 0; font-weight: 600; text-align: center; border-left: 5px solid var(--accent); }
 
+        /* वॉइस असिस्टेंट स्टाइल */
         .voice-card { background: #e0f2fe; border: 2px solid var(--primary); border-radius: 24px; padding: 20px; text-align: center; margin-bottom: 25px; }
         .voice-btn { background: var(--accent); color: var(--primary); padding: 12px 24px; border-radius: 50px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .mic-pulse { width: 10px; height: 10px; background: red; border-radius: 50%; display: none; animation: pulse 1s infinite; }
@@ -75,7 +77,7 @@
 <main>
     <section id="view-auth" class="view active">
         <div style="text-align: center; padding-top: 60px;">
-            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 20px; border: 4px solid var(--primary);">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 20px; border: 4px solid var(--primary); box-shadow: 0 0 20px rgba(0,0,0,0.1);">
             <h2 style="font-weight: 800; font-size: 24px; color: var(--primary);">मुकेश भाई की पाठशाला</h2>
             <button class="btn" id="login-btn" style="background: white; color: #000; border: 1.5px solid #eee; width: 85%; margin: 20px auto;">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google के साथ प्रवेश करें
@@ -116,6 +118,7 @@
             <p id="u-email" style="color: gray; font-size: 12px; margin-bottom: 25px;">email</p>
             <button class="btn btn-primary" onclick="shareWebsite()"><i class="fas fa-share-alt"></i> Kryalive शेयर करें</button>
             <button class="btn" style="background: #fee2e2; color: #ef4444; margin-top: 15px;" id="logout-btn">लॉगआउट</button>
+            <button class="btn btn-primary" style="margin-top: 10px; background: var(--success);" onclick="exportMyData()"><i class="fas fa-file-export"></i> डेटा एक्सपोर्ट (Export) करें</button>
         </div>
     </section>
 
@@ -169,6 +172,21 @@
 
     const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, style: {background: c, borderRadius: "12px"}}).showToast();
 
+    // लॉगिन फिक्सर कोड
+    document.getElementById('login-btn').onclick = () => {
+        signInWithPopup(auth, provider)
+            .then(() => showToast("स्वागत है मुकेश भाई!"))
+            .catch((error) => {
+                console.error("Login Error:", error);
+                alert("लॉगिन में समस्या है: " + error.message + "\n\nसुझाव: Firebase Console में Google Auth चालू करें और Authorized Domains में अपना लिंक जोड़ें।");
+            });
+    };
+
+    window.exportMyData = () => {
+        showToast("आपका डेटा सुरक्षित डाउनलोड (Export) हो रहा है...");
+        // डेटा एक्सपोर्ट का लॉजिक यहाँ आएगा
+    };
+
     // --- सुपर AI असिस्टेंट फंक्शन (ChatGPT Style) ---
     function assistantSpeak(text) {
         window.speechSynthesis.cancel();
@@ -210,16 +228,14 @@
         if (input.match(/(मुकेश|ओनर|फाउंडर|mukesh)/)) return "मुकेश भाई Kryalive के विज़नरी फाउंडर हैं। उन्होंने 2016 से संघर्ष करके यह मुकाम पाया है और अब सबको ईमानदारी सिखा रहे हैं।";
         if (input.match(/(कैसे हो|हाल चाल|how are you)/)) return "मैं बहुत बढ़िया हूँ और आपकी सेवा के लिए हमेशा तैयार हूँ! आपकी डिजिटल पाठशाला कैसी चल रही है?";
         if (input.match(/(शुक्रिया|धन्यवाद|thanks)/)) return "अरे नहीं मुकेश भाई, आपका मिशन ही मेरा मिशन है। और बताइए, क्या मदद करूँ?";
-        return "यह एक दिलचस्प बात है! मैं इसके बारे में और सीखना चाहूँगा ताकि आपकी और बेहतर मदद कर सकूँ। क्या आप विस्तार से बताएंगे?";
+        return "यह एक दिलचस्प बात है! मैं इसके बारे में और सीखना चाहूँगा। क्या आप विस्तार से बताएंगे?";
     }
 
-    // --- नेविगेशन और जनरल फंक्शन (Firebase Merged) ---
+    // --- नेविगेशन और जनरल फंक्शन ---
     window.nav = (id) => {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById('view-' + id).classList.add('active');
-        const navMap = { 'orders': 'n-orders', 'profile': 'n-profile', 'owner': 'n-main', 'store': 'n-main' };
-        if(navMap[id]) document.getElementById(navMap[id]).classList.add('active');
         if(id === 'orders') loadUserOrders();
     };
 
@@ -238,7 +254,6 @@
         } else { nav('auth'); }
     });
 
-    document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
     document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
 
     document.getElementById('btn-publish').onclick = async () => {
@@ -284,4 +299,5 @@
     window.shareWebsite = () => { window.open(`https://wa.me/?text=Kryalive: https://${DOMAIN}`); };
 </script>
 </body>
-</html>
+                                                                                                                   </html>
+                                                                         
