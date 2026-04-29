@@ -38,6 +38,12 @@
         .article-p { font-size: 13.5px; line-height: 1.7; color: #444; margin-bottom: 12px; }
         .highlight-box { background: var(--primary); color: white; padding: 15px; border-radius: 15px; margin: 15px 0; font-weight: 600; text-align: center; border-left: 5px solid var(--accent); }
 
+        /* वॉइस असिस्टेंट स्टाइल */
+        .voice-card { background: #e0f2fe; border: 2px solid var(--primary); border-radius: 24px; padding: 20px; text-align: center; margin-bottom: 25px; }
+        .voice-btn { background: var(--accent); color: var(--primary); padding: 12px 24px; border-radius: 50px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .mic-pulse { width: 10px; height: 10px; background: red; border-radius: 50%; display: none; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .stat-card { background: white; padding: 15px; border-radius: 20px; text-align: center; border: 1px solid #eee; }
         .card { background: #fff; border-radius: 24px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); padding: 20px; margin-bottom: 20px; }
@@ -72,32 +78,32 @@
 <main>
     <section id="view-auth" class="view active">
         <div style="text-align: center; padding-top: 60px;">
-            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 20px; border: 4px solid var(--primary); box-shadow: 0 0 20px rgba(0,0,0,0.1);">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 20px; border: 4px solid var(--primary);">
             <h2 style="font-weight: 800; font-size: 24px; color: var(--primary);">मुकेश भाई की पाठशाला</h2>
-            <p style="color: gray; margin-bottom: 40px; padding: 0 30px; font-size: 14px;">Kryalive.com: ईमानदारी और तकनीक का संगम।</p>
-            <button class="btn" id="login-btn" style="background: white; color: #000; border: 1.5px solid #eee; width: 85%; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+            <button class="btn" id="login-btn" style="background: white; color: #000; border: 1.5px solid #eee; width: 85%; margin: 20px auto;">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google के साथ प्रवेश करें
             </button>
         </div>
     </section>
 
     <section id="view-store" class="view">
-        <div class="mission-box">
-            <h3 style="color: var(--primary); font-weight: 800;">नमस्ते <span id="greet-name"></span>! 🙏</h3>
-            <p style="font-size: 12px; margin-top: 5px; color: #475569;">Kryalive.com में आपका स्वागत है। यहाँ आपकी डिजिटल तरक्की शुरू होती है।</p>
+        <div class="voice-card">
+            <h4 style="margin-bottom: 10px; font-weight: 800;">🎙️ मुकेश भाई का AI असिस्टेंट</h4>
+            <button class="voice-btn" id="start-voice">
+                <i class="fas fa-microphone"></i> असिस्टेंट से बात करें
+                <div class="mic-pulse" id="mic-active"></div>
+            </button>
+            <div id="voice-status" style="font-size: 12px; margin-top: 10px; color: var(--primary); font-weight: 600;"></div>
         </div>
 
         <article class="mega-article">
             <h1 class="article-h1">🎓 डिजिटल क्रांति और ईमानदारी का नया सवेरा</h1>
             <p class="article-p"><strong>प्रस्तावना:</strong> 2016 से शुरू हुआ मेरा सफर आज बांका से दिल्ली तक पहुँच चुका है। मज़दूरी से लेकर डिजिटल उद्यमी बनने तक का यह सफर ईमानदारी की नींव पर खड़ा है। 💪</p>
-            <p class="article-p"><strong>🛑 काला सच:</strong> शॉर्टकट के चक्कर में अपनी मेहनत बर्बाद न करें। नकली ऐप्स और धोखाधड़ी से सावधान रहें। KRYA का मतलब है—भरोसा। 🛡️</p>
-            <div class="highlight-box">
-                "मेहनत का पसीना जब तकनीक के साथ मिलता है, तभी सफलता का इतिहास लिखा जाता है।" ✍️💦⚙️
-            </div>
-            <p class="article-p"><strong>📈 मेरा संघर्ष:</strong> ओखला के इंडस्ट्रियल क्षेत्रों में काम करते हुए मुझे समझ आया कि असली आज़ादी आर्थिक आज़ादी है। आइए, साथ जुड़िए! 🚀</p>
+            <div class="highlight-box">"मेहनत का पसीना जब तकनीक के साथ मिलता है, तभी सफलता का इतिहास लिखा जाता है।"</div>
+            <p class="article-p"><strong>🛑 काला सच:</strong> शॉर्टकट के चक्कर में अपनी मेहनत बर्बाद न करें। KRYA का मतलब है—भरोसा। 🛡️</p>
         </article>
 
-        <h3 style="margin: 20px 0 10px; font-weight: 800; border-left: 5px solid var(--primary); padding-left: 10px;">🎓 पाठशाला के कोर्स और सेवाएं</h3>
+        <h3 style="margin: 20px 0 10px; font-weight: 800; border-left: 5px solid var(--primary); padding-left: 10px;">🎓 पाठशाला के कोर्स</h3>
         <div id="store-list"></div>
     </section>
 
@@ -111,22 +117,22 @@
             <img id="u-photo" src="" style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--accent); margin-bottom: 15px;">
             <h4 id="u-name" style="font-weight: 800;">Name</h4>
             <p id="u-email" style="color: gray; font-size: 12px; margin-bottom: 25px;">email</p>
-            <button class="btn btn-primary" style="margin-bottom: 15px;" onclick="shareWebsite()"><i class="fas fa-share-alt"></i> Kryalive.com शेयर करें</button>
-            <button class="btn" style="background: #fee2e2; color: #ef4444; border: 1px solid #fecaca;" id="logout-btn">लॉगआउट</button>
+            <button class="btn btn-primary" onclick="shareWebsite()"><i class="fas fa-share-alt"></i> Kryalive शेयर करें</button>
+            <button class="btn" style="background: #fee2e2; color: #ef4444; margin-top: 15px;" id="logout-btn">लॉगआउट</button>
         </div>
     </section>
 
     <section id="view-owner" class="view">
         <div class="stat-grid">
-            <div class="stat-card"><h2><i class="fas fa-shopping-cart"></i> <span id="total-ord">0</span></h2><p>ऑर्डर्स</p></div>
-            <div class="stat-card"><h2><i class="fas fa-wallet"></i> ₹<span id="total-rev">0</span></h2><p>राजस्व</p></div>
+            <div class="stat-card"><h2><span id="total-ord">0</span></h2><p>ऑर्डर्स</p></div>
+            <div class="stat-card"><h2>₹<span id="total-rev">0</span></h2><p>राजस्व</p></div>
         </div>
         <div class="card">
-            <h3 style="margin-bottom: 15px;">नया पब्लिश करें ✍️</h3>
-            <input type="text" id="s-name" placeholder="सर्विस का नाम">
-            <input type="number" id="s-price" placeholder="आपकी असली कीमत (₹)">
+            <h3>नया पब्लिश करें ✍️</h3>
+            <input type="text" id="s-name" placeholder="नाम">
+            <input type="number" id="s-price" placeholder="कीमत (₹)">
             <input type="text" id="s-img" placeholder="फोटो लिंक">
-            <textarea id="s-desc" placeholder="सर्विस की पूरी जानकारी यहाँ लिखें..." rows="4"></textarea>
+            <textarea id="s-desc" placeholder="विवरण यहाँ लिखें..." rows="4"></textarea>
             <button class="btn btn-primary" id="btn-publish">पब्लिश करें</button>
         </div>
         <div id="admin-product-list"></div>
@@ -134,7 +140,7 @@
 </main>
 
 <nav class="bottom-nav" id="app-nav" style="display: none;">
-    <button class="nav-item active" id="n-main" onclick="openMain()"><i class="fas fa-university"></i><span id="n-txt">पाठशाला</span></button>
+    <button class="nav-item active" id="n-main" onclick="openMain()"><i class="fas fa-university"></i><span>पाठशाला</span></button>
     <button class="nav-item" id="n-orders" onclick="nav('orders')"><i class="fas fa-box"></i><span>ऑर्डर्स</span></button>
     <button class="nav-item" id="n-profile" onclick="nav('profile')"><i class="fas fa-user-circle"></i><span>प्रोफ़ाइल</span></button>
 </nav>
@@ -166,49 +172,71 @@
 
     const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, style: {background: c, borderRadius: "12px"}}).showToast();
 
+    // --- वॉइस असिस्टेंट फंक्शन ---
+    function assistantSpeak(text) {
+        const speech = new SpeechSynthesisUtterance();
+        speech.text = text; speech.lang = 'hi-IN'; speech.rate = 0.9;
+        window.speechSynthesis.speak(speech);
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'hi-IN';
+        document.getElementById('start-voice').onclick = () => {
+            recognition.start();
+            document.getElementById('mic-active').style.display = 'block';
+            document.getElementById('voice-status').innerText = "सुन रहा हूँ...";
+            assistantSpeak("नमस्ते, मैं मुकेश भाई का असिस्टेंट बोल रहा हूँ। बोलिए क्या बात है?");
+        };
+        recognition.onresult = (e) => {
+            const transcript = e.results[0][0].transcript.toLowerCase();
+            document.getElementById('voice-status').innerText = "आपने कहा: " + transcript;
+            document.getElementById('mic-active').style.display = 'none';
+            // Simple Logic for Response
+            let reply = "ठीक है, मैं इसके बारे में मुकेश भाई को बता दूँगा।";
+            if(transcript.includes("नमस्ते")) reply = "नमस्ते! मैं आपकी क्या सेवा कर सकता हूँ?";
+            if(transcript.includes("कोर्स")) reply = "पाठशाला में कोडिंग और अर्निंग के कोर्सेस हैं, आप नीचे देख सकते हैं।";
+            assistantSpeak(reply);
+        };
+    }
+
+    // --- नेविगेशन और जनरल फंक्शन ---
     window.nav = (id) => {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById('view-' + id).classList.add('active');
-        const navMap = { 'orders': 'n-orders', 'profile': 'n-profile', 'owner': 'n-main', 'store': 'n-main' };
-        document.getElementById(navMap[id]).classList.add('active');
         if(id === 'orders') loadUserOrders();
     };
 
     window.openMain = () => isOwner ? nav('owner') : nav('store');
 
-    document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
-    document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
-
-    onAuthStateChanged(auth, async u => {
-        const h = document.getElementById('app-header');
-        const n = document.getElementById('app-nav');
+    onAuthStateChanged(auth, u => {
         if(u) {
             user = u; isOwner = u.email === OWNER_EMAIL;
-            h.style.setProperty('display', 'flex', 'important');
-            n.style.setProperty('display', 'flex', 'important');
+            document.getElementById('app-header').style.display = 'flex';
+            document.getElementById('app-nav').style.display = 'flex';
             document.getElementById('u-name').innerText = u.displayName;
             document.getElementById('u-email').innerText = u.email;
             document.getElementById('u-photo').src = u.photoURL;
-            document.getElementById('greet-name').innerText = u.displayName.split(' ')[0];
-            document.getElementById('role-badge').innerText = isOwner ? "OWNER" : "USER";
-            document.getElementById('n-txt').innerText = isOwner ? "Admin" : "पाठशाला";
             openMain(); loadStore(); if(isOwner) loadAdminStats();
         } else {
-            h.style.display = 'none'; n.style.display = 'none'; nav('auth');
+            nav('auth');
         }
     });
+
+    document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
+    document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
 
     document.getElementById('btn-publish').onclick = async () => {
         const name = document.getElementById('s-name').value;
         const price = document.getElementById('s-price').value;
         const img = document.getElementById('s-img').value;
         const desc = document.getElementById('s-desc').value;
-        if(!name || !price) return showToast("नाम और कीमत भरें!", "red");
+        if(!name || !price) return showToast("विवरण भरें");
         const code = "KRYA-" + Math.floor(1000 + Math.random() * 9000);
         await addDoc(collection(db, "services"), { name, price, img, desc, code, createdAt: serverTimestamp() });
-        showToast("पाठशाला में अपडेट किया गया!");
-        document.querySelectorAll('input, textarea').forEach(i => i.value="");
+        showToast("पाठशाला अपडेट हुई!");
     };
 
     function loadStore() {
@@ -218,23 +246,16 @@
             list.innerHTML = ""; if(isOwner) adminList.innerHTML = "";
             snap.forEach(d => {
                 const s = d.data();
-                const dHtml = s.desc ? `<p class="service-desc">${s.desc.replace(/\n/g, '<br>')}</p>` : '';
-                list.innerHTML += `
-                    <div class="service-item">
-                        <img src="${s.img || 'https://via.placeholder.com/400x200'}" class="service-img">
-                        <div style="padding: 20px;">
-                            <h4 style="font-weight: 800; color: var(--primary);">${s.name}</h4>
-                            <div style="font-size: 22px; font-weight: 800; margin: 10px 0;">₹${s.price}</div>
-                            ${dHtml}
-                            <button class="btn btn-order" onclick="buyNow('${s.name}', '${s.price}', '${s.code}')">
-                                <i class="fab fa-whatsapp"></i> अभी आर्डर करें
-                            </button>
-                        </div>
-                    </div>`;
+                list.innerHTML += `<div class="service-item">
+                    <img src="${s.img || 'https://via.placeholder.com/400x200'}" class="service-img">
+                    <div style="padding:15px;">
+                        <b>${s.name}</b><br>₹${s.price}<br>
+                        <button class="btn btn-order" onclick="buyNow('${s.name}','${s.price}','${s.code}')">आर्डर करें</button>
+                    </div>
+                </div>`;
                 if(isOwner) {
-                    adminList.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center;">
-                        <div><small>${s.code}</small><br><b>${s.name}</b></div>
-                        <button onclick="deleteDoc(doc(db,'services','${d.id}'))" style="color:red; border:none; background:none;"><i class="fas fa-trash"></i></button>
+                    adminList.innerHTML += `<div class="card" style="display:flex;justify-content:space-between;">
+                        <b>${s.name}</b><button onclick="deleteDoc(doc(db,'services','${d.id}'))" style="color:red;border:none;background:none;"><i class="fas fa-trash"></i></button>
                     </div>`;
                 }
             });
@@ -242,23 +263,18 @@
     }
 
     window.buyNow = async (n, p, c) => {
-        if(!user) return showToast("लॉगिन करें", "red");
         const oID = "ORD-" + Math.floor(1000 + Math.random() * 9000);
-        await addDoc(collection(db, "orders"), { oID, code: c, user: user.displayName, email: user.email, name: n, price: p, status: "Waiting", createdAt: serverTimestamp() });
-        const m = `नमस्ते ${DOMAIN}!\nऑर्डर: ${n}\nकीमत: ₹${p}\nकोड: ${c}\nID: ${oID}`;
-        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(m)}`, '_blank');
-        showToast("ऑर्डर व्हाट्सएप पर भेजें!");
+        await addDoc(collection(db, "orders"), { oID, code: c, email: user.email, name: n, price: p, status: "Waiting", createdAt: serverTimestamp() });
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=Order: ${n} - ₹${p}`, '_blank');
     };
 
     function loadUserOrders() {
         onSnapshot(query(collection(db, "orders"), where("email", "==", user.email), orderBy("createdAt", "desc")), snap => {
             const container = document.getElementById('user-orders-display');
-            container.innerHTML = snap.empty ? "<p style='text-align:center;color:gray;padding:20px;'>कोई आर्डर नहीं है।</p>" : "";
+            container.innerHTML = snap.empty ? "<p>कोई आर्डर नहीं।</p>" : "";
             snap.forEach(d => {
                 const o = d.data();
-                container.innerHTML += `<div class="card" style="border-left:5px solid var(--accent);">
-                    <b>${o.name}</b><br><small>Status: ${o.status} | ID: ${o.oID}</small>
-                </div>`;
+                container.innerHTML += `<div class="card" style="border-left:5px solid var(--accent);"><b>${o.name}</b><br>Status: ${o.status}</div>`;
             });
         });
     }
@@ -266,15 +282,13 @@
     function loadAdminStats() {
         onSnapshot(collection(db, "orders"), snap => {
             document.getElementById('total-ord').innerText = snap.size;
-            let r = 0; snap.forEach(d => { if(d.data().status === 'Approved') r += Number(d.data().price); });
-            document.getElementById('total-rev').innerText = r;
+            let rev = 0; snap.forEach(d => { if(d.data().status === 'Approved') rev += Number(d.data().price); });
+            document.getElementById('total-rev').innerText = rev;
         });
     }
 
     window.shareWebsite = () => {
-        const d = { title: DOMAIN, text: 'Kryalive: मुकेश भाई की पाठशाला से जुड़ें।', url: 'https://' + DOMAIN };
-        if(navigator.share) navigator.share(d);
-        else window.open(`https://wa.me/?text=Kryalive: https://${DOMAIN}`);
+        window.open(`https://wa.me/?text=Kryalive: https://${DOMAIN}`);
     };
 </script>
 </body>
