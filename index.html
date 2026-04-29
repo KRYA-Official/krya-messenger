@@ -21,21 +21,23 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--light); color: var(--dark); overflow-x: hidden; height: 100vh; }
         
-        /* गेटkeeper सुरक्षा - लॉगिन के बिना कुछ नहीं दिखेगा */
         header, .bottom-nav, .view { display: none !important; }
         .view.active { display: block !important; animation: slideUp 0.4s ease; }
 
         header { background: var(--primary); color: white; padding: 10px 20px; border-bottom: 3px solid var(--accent); justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 75px; }
         .brand-container { display: flex; align-items: center; gap: 10px; }
         .logo-img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
-        .brand { font-size: 20px; font-weight: 800; letter-spacing: 1px; }
+        .brand { font-size: 20px; font-weight: 800; }
         .brand span { color: var(--accent); }
         
         main { height: calc(100vh - 145px); overflow-y: auto; padding: 15px; scroll-behavior: smooth; }
         
-        /* मोटिवेशनल सेक्शन स्टाइल */
-        .mission-box { background: white; border-radius: 20px; padding: 20px; border-left: 6px solid var(--accent); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        
+        /* महा-लेख स्टाइल */
+        .mega-article { background: white; border-radius: 24px; padding: 25px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .article-h1 { color: var(--primary); font-size: 20px; font-weight: 800; margin-bottom: 15px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; }
+        .article-p { font-size: 13.5px; line-height: 1.7; color: #444; margin-bottom: 12px; }
+        .highlight-box { background: var(--primary); color: white; padding: 15px; border-radius: 15px; margin: 15px 0; font-weight: 600; text-align: center; border-left: 5px solid var(--accent); }
+
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .stat-card { background: white; padding: 15px; border-radius: 20px; text-align: center; border: 1px solid #eee; }
         .card { background: #fff; border-radius: 24px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); padding: 20px; margin-bottom: 20px; }
@@ -72,7 +74,7 @@
         <div style="text-align: center; padding-top: 60px;">
             <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 20px; border: 4px solid var(--primary); box-shadow: 0 0 20px rgba(0,0,0,0.1);">
             <h2 style="font-weight: 800; font-size: 24px; color: var(--primary);">मुकेश भाई की पाठशाला</h2>
-            <p style="color: gray; margin-bottom: 40px; padding: 0 30px; font-size: 14px;">Kryalive.com में आपका स्वागत है। ईमानदारी और तकनीक का संगम।</p>
+            <p style="color: gray; margin-bottom: 40px; padding: 0 30px; font-size: 14px;">Kryalive.com: ईमानदारी और तकनीक का संगम।</p>
             <button class="btn" id="login-btn" style="background: white; color: #000; border: 1.5px solid #eee; width: 85%; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google के साथ प्रवेश करें
             </button>
@@ -82,8 +84,20 @@
     <section id="view-store" class="view">
         <div class="mission-box">
             <h3 style="color: var(--primary); font-weight: 800;">नमस्ते <span id="greet-name"></span>! 🙏</h3>
-            <p style="font-size: 12px; margin-top: 5px; color: #475569;">यहाँ आपको मिलता है 100% लीगल ज्ञान और मेरा (मुकेश भाई) हमेशा रहने वाला साथ।</p>
+            <p style="font-size: 12px; margin-top: 5px; color: #475569;">Kryalive.com में आपका स्वागत है। यहाँ आपकी डिजिटल तरक्की शुरू होती है।</p>
         </div>
+
+        <article class="mega-article">
+            <h1 class="article-h1">🎓 डिजिटल क्रांति और ईमानदारी का नया सवेरा</h1>
+            <p class="article-p"><strong>प्रस्तावना:</strong> 2016 से शुरू हुआ मेरा सफर आज बांका से दिल्ली तक पहुँच चुका है। मज़दूरी से लेकर डिजिटल उद्यमी बनने तक का यह सफर ईमानदारी की नींव पर खड़ा है। 💪</p>
+            <p class="article-p"><strong>🛑 काला सच:</strong> शॉर्टकट के चक्कर में अपनी मेहनत बर्बाद न करें। नकली ऐप्स और धोखाधड़ी से सावधान रहें। KRYA का मतलब है—भरोसा। 🛡️</p>
+            <div class="highlight-box">
+                "मेहनत का पसीना जब तकनीक के साथ मिलता है, तभी सफलता का इतिहास लिखा जाता है।" ✍️💦⚙️
+            </div>
+            <p class="article-p"><strong>📈 मेरा संघर्ष:</strong> ओखला के इंडस्ट्रियल क्षेत्रों में काम करते हुए मुझे समझ आया कि असली आज़ादी आर्थिक आज़ादी है। आइए, साथ जुड़िए! 🚀</p>
+        </article>
+
+        <h3 style="margin: 20px 0 10px; font-weight: 800; border-left: 5px solid var(--primary); padding-left: 10px;">🎓 पाठशाला के कोर्स और सेवाएं</h3>
         <div id="store-list"></div>
     </section>
 
@@ -97,11 +111,6 @@
             <img id="u-photo" src="" style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--accent); margin-bottom: 15px;">
             <h4 id="u-name" style="font-weight: 800;">Name</h4>
             <p id="u-email" style="color: gray; font-size: 12px; margin-bottom: 25px;">email</p>
-            
-            <div style="background: #f1f5f9; padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: left; font-size: 13px;">
-                <b>🛡️ ईमानदारी का वादा:</b> हम केवल 100% कानूनी और सुरक्षित तरीके सिखाते हैं। मेहनत का पसीना जब तकनीक से मिलता है, तभी इतिहास रचा जाता है।
-            </div>
-
             <button class="btn btn-primary" style="margin-bottom: 15px;" onclick="shareWebsite()"><i class="fas fa-share-alt"></i> Kryalive.com शेयर करें</button>
             <button class="btn" style="background: #fee2e2; color: #ef4444; border: 1px solid #fecaca;" id="logout-btn">लॉगआउट</button>
         </div>
@@ -117,7 +126,7 @@
             <input type="text" id="s-name" placeholder="सर्विस का नाम">
             <input type="number" id="s-price" placeholder="आपकी असली कीमत (₹)">
             <input type="text" id="s-img" placeholder="फोटो लिंक">
-            <textarea id="s-desc" placeholder="सर्विस की पूरी जानकारी, नियम और शर्तें यहाँ लिखें..." rows="4"></textarea>
+            <textarea id="s-desc" placeholder="सर्विस की पूरी जानकारी यहाँ लिखें..." rows="4"></textarea>
             <button class="btn btn-primary" id="btn-publish">पब्लिश करें</button>
         </div>
         <div id="admin-product-list"></div>
@@ -135,7 +144,6 @@
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // आपका Firebase Config (वही जो आपने दिया था)
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
         authDomain: "signing-9fc01.firebaseapp.com",
