@@ -55,6 +55,7 @@
 
         .service-item { border-radius: 24px; overflow: hidden; background: #fff; margin-bottom: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border: 1px solid #eee; }
         .service-img { width: 100%; height: 200px; object-fit: cover; border-bottom: 1px solid #eee; }
+        .service-desc { font-size: 13px; color: #475569; margin-bottom: 15px; line-height: 1.6; }
 
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 2px solid var(--primary); padding: 10px 0 25px; z-index: 1000; }
         .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 11px; font-weight: 700; }
@@ -77,7 +78,7 @@
 <main>
     <section id="view-auth" class="view active">
         <div style="text-align: center; padding-top: 60px;">
-            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 20px; border: 4px solid var(--primary); box-shadow: 0 0 20px rgba(0,0,0,0.1);">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 20px; border: 4px solid var(--primary);">
             <h2 style="font-weight: 800; font-size: 24px; color: var(--primary);">मुकेश भाई की पाठशाला</h2>
             <button class="btn" id="login-btn" style="background: white; color: #000; border: 1.5px solid #eee; width: 85%; margin: 20px auto;">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google के साथ प्रवेश करें
@@ -87,7 +88,7 @@
 
     <section id="view-store" class="view">
         <div class="voice-card">
-            <h4 style="margin-bottom: 10px; font-weight: 800;">🎙️ KRYA सुपर इंटेलिजेंट असिस्टेंट</h4>
+            <h4 style="margin-bottom: 10px; font-weight: 800;">🎙️ मुकेश भाई का AI असिस्टेंट</h4>
             <button class="voice-btn" id="start-voice">
                 <i class="fas fa-microphone"></i> असिस्टेंट से बात करें
                 <div class="mic-pulse" id="mic-active"></div>
@@ -118,7 +119,6 @@
             <p id="u-email" style="color: gray; font-size: 12px; margin-bottom: 25px;">email</p>
             <button class="btn btn-primary" onclick="shareWebsite()"><i class="fas fa-share-alt"></i> Kryalive शेयर करें</button>
             <button class="btn" style="background: #fee2e2; color: #ef4444; margin-top: 15px;" id="logout-btn">लॉगआउट</button>
-            <button class="btn btn-primary" style="margin-top: 10px; background: var(--success);" onclick="exportMyData()"><i class="fas fa-file-export"></i> डेटा एक्सपोर्ट (Export) करें</button>
         </div>
     </section>
 
@@ -172,26 +172,10 @@
 
     const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, style: {background: c, borderRadius: "12px"}}).showToast();
 
-    // लॉगिन फिक्सर कोड
-    document.getElementById('login-btn').onclick = () => {
-        signInWithPopup(auth, provider)
-            .then(() => showToast("स्वागत है मुकेश भाई!"))
-            .catch((error) => {
-                console.error("Login Error:", error);
-                alert("लॉगिन में समस्या है: " + error.message + "\n\nसुझाव: Firebase Console में Google Auth चालू करें और Authorized Domains में अपना लिंक जोड़ें।");
-            });
-    };
-
-    window.exportMyData = () => {
-        showToast("आपका डेटा सुरक्षित डाउनलोड (Export) हो रहा है...");
-        // डेटा एक्सपोर्ट का लॉजिक यहाँ आएगा
-    };
-
-    // --- सुपर AI असिस्टेंट फंक्शन (ChatGPT Style) ---
+    // --- वॉइस असिस्टेंट फंक्शन ---
     function assistantSpeak(text) {
-        window.speechSynthesis.cancel();
         const speech = new SpeechSynthesisUtterance();
-        speech.text = text; speech.lang = 'hi-IN'; speech.rate = 1.0; speech.pitch = 1.1;
+        speech.text = text; speech.lang = 'hi-IN'; speech.rate = 0.9;
         window.speechSynthesis.speak(speech);
     }
 
@@ -199,36 +183,22 @@
     if (SpeechRecognition) {
         const recognition = new SpeechRecognition();
         recognition.lang = 'hi-IN';
-        recognition.continuous = false;
-
         document.getElementById('start-voice').onclick = () => {
             recognition.start();
             document.getElementById('mic-active').style.display = 'block';
-            document.getElementById('voice-status').innerText = "सुपर ब्रेन सक्रिय है...";
-            assistantSpeak("जी मुकेश भाई, मैं सुन रहा हूँ। बताइए आज हम क्या बड़ा करने वाले हैं?");
+            document.getElementById('voice-status').innerText = "सुन रहा हूँ...";
+            assistantSpeak("नमस्ते, मैं मुकेश भाई का असिस्टेंट बोल रहा हूँ। बोलिए क्या बात है?");
         };
-
         recognition.onresult = (e) => {
             const transcript = e.results[0][0].transcript.toLowerCase();
             document.getElementById('voice-status').innerText = "आपने कहा: " + transcript;
             document.getElementById('mic-active').style.display = 'none';
-            
-            const reply = generateAIResponse(transcript);
-            setTimeout(() => {
-                assistantSpeak(reply);
-                document.getElementById('voice-status').innerText = "असिस्टेंट: " + reply;
-            }, 600);
+            // Simple Logic for Response
+            let reply = "ठीक है, मैं इसके बारे में मुकेश भाई को बता दूँगा।";
+            if(transcript.includes("नमस्ते")) reply = "नमस्ते! मैं आपकी क्या सेवा कर सकता हूँ?";
+            if(transcript.includes("कोर्स")) reply = "पाठशाला में कोडिंग और अर्निंग के कोर्सेस हैं, आप नीचे देख सकते हैं।";
+            assistantSpeak(reply);
         };
-    }
-
-    function generateAIResponse(input) {
-        if (input.match(/(नमस्ते|हेलो|hi|hello)/)) return "नमस्ते! मैं 'मुकेश भाई की पाठशाला' का सुपर AI असिस्टेंट हूँ। आज आप क्या सीखना चाहते हैं?";
-        if (input.match(/(पैसे|कमाई|earning|income)/)) return "मुकेश भाई, कमाई के लिए हमारी पाठशाला में अमेज़न एफिलिएट और डिजिटल अर्निंग के 100% लीगल तरीके हैं। क्या मैं आपको कोर्सेस दिखाऊं?";
-        if (input.match(/(कोडिंग|वेबसाइट|coding|html)/)) return "कोडिंग ही आपकी ताकत है मुकेश भाई। आपकी वेबसाइट Kryalive.com इसी का उदाहरण है। क्या आप कुछ नया कोड करना चाहते हैं?";
-        if (input.match(/(मुकेश|ओनर|फाउंडर|mukesh)/)) return "मुकेश भाई Kryalive के विज़नरी फाउंडर हैं। उन्होंने 2016 से संघर्ष करके यह मुकाम पाया है और अब सबको ईमानदारी सिखा रहे हैं।";
-        if (input.match(/(कैसे हो|हाल चाल|how are you)/)) return "मैं बहुत बढ़िया हूँ और आपकी सेवा के लिए हमेशा तैयार हूँ! आपकी डिजिटल पाठशाला कैसी चल रही है?";
-        if (input.match(/(शुक्रिया|धन्यवाद|thanks)/)) return "अरे नहीं मुकेश भाई, आपका मिशन ही मेरा मिशन है। और बताइए, क्या मदद करूँ?";
-        return "यह एक दिलचस्प बात है! मैं इसके बारे में और सीखना चाहूँगा। क्या आप विस्तार से बताएंगे?";
     }
 
     // --- नेविगेशन और जनरल फंक्शन ---
@@ -249,34 +219,52 @@
             document.getElementById('u-name').innerText = u.displayName;
             document.getElementById('u-email').innerText = u.email;
             document.getElementById('u-photo').src = u.photoURL;
-            document.getElementById('greet-name').innerText = u.displayName.split(' ')[0];
             openMain(); loadStore(); if(isOwner) loadAdminStats();
-        } else { nav('auth'); }
+        } else {
+            nav('auth');
+        }
     });
 
+    document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
     document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
 
     document.getElementById('btn-publish').onclick = async () => {
-        const n = document.getElementById('s-name').value, p = document.getElementById('s-price').value, i = document.getElementById('s-img').value, d = document.getElementById('s-desc').value;
-        if(!n || !p) return showToast("विवरण भरें");
-        await addDoc(collection(db, "services"), { name: n, price: p, img: i, desc: d, code: "KRYA-"+Math.floor(1000+Math.random()*9000), createdAt: serverTimestamp() });
+        const name = document.getElementById('s-name').value;
+        const price = document.getElementById('s-price').value;
+        const img = document.getElementById('s-img').value;
+        const desc = document.getElementById('s-desc').value;
+        if(!name || !price) return showToast("विवरण भरें");
+        const code = "KRYA-" + Math.floor(1000 + Math.random() * 9000);
+        await addDoc(collection(db, "services"), { name, price, img, desc, code, createdAt: serverTimestamp() });
         showToast("पाठशाला अपडेट हुई!");
     };
 
     function loadStore() {
         onSnapshot(query(collection(db, "services"), orderBy("createdAt", "desc")), snap => {
-            const list = document.getElementById('store-list'), adminList = document.getElementById('admin-product-list');
+            const list = document.getElementById('store-list');
+            const adminList = document.getElementById('admin-product-list');
             list.innerHTML = ""; if(isOwner) adminList.innerHTML = "";
-            snap.forEach(docSnap => {
-                const s = docSnap.data();
-                list.innerHTML += `<div class="service-item"><img src="${s.img||'https://via.placeholder.com/400x200'}" class="service-img"><div style="padding:15px;"><b>${s.name}</b><br>₹${s.price}<br><button class="btn btn-order" onclick="buyNow('${s.name}','${s.price}','${s.code}')">आर्डर करें</button></div></div>`;
-                if(isOwner) adminList.innerHTML += `<div class="card" style="display:flex;justify-content:space-between;"><b>${s.name}</b><button onclick="deleteDoc(doc(db,'services','${docSnap.id}'))" style="color:red;border:none;background:none;"><i class="fas fa-trash"></i></button></div>`;
+            snap.forEach(d => {
+                const s = d.data();
+                list.innerHTML += `<div class="service-item">
+                    <img src="${s.img || 'https://via.placeholder.com/400x200'}" class="service-img">
+                    <div style="padding:15px;">
+                        <b>${s.name}</b><br>₹${s.price}<br>
+                        <button class="btn btn-order" onclick="buyNow('${s.name}','${s.price}','${s.code}')">आर्डर करें</button>
+                    </div>
+                </div>`;
+                if(isOwner) {
+                    adminList.innerHTML += `<div class="card" style="display:flex;justify-content:space-between;">
+                        <b>${s.name}</b><button onclick="deleteDoc(doc(db,'services','${d.id}'))" style="color:red;border:none;background:none;"><i class="fas fa-trash"></i></button>
+                    </div>`;
+                }
             });
         });
     }
 
     window.buyNow = async (n, p, c) => {
-        await addDoc(collection(db, "orders"), { oID: "ORD-"+Math.floor(1000+Math.random()*9000), code: c, email: user.email, name: n, price: p, status: "Waiting", createdAt: serverTimestamp() });
+        const oID = "ORD-" + Math.floor(1000 + Math.random() * 9000);
+        await addDoc(collection(db, "orders"), { oID, code: c, email: user.email, name: n, price: p, status: "Waiting", createdAt: serverTimestamp() });
         window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=Order: ${n} - ₹${p}`, '_blank');
     };
 
@@ -284,7 +272,10 @@
         onSnapshot(query(collection(db, "orders"), where("email", "==", user.email), orderBy("createdAt", "desc")), snap => {
             const container = document.getElementById('user-orders-display');
             container.innerHTML = snap.empty ? "<p>कोई आर्डर नहीं।</p>" : "";
-            snap.forEach(d => { const o = d.data(); container.innerHTML += `<div class="card" style="border-left:5px solid var(--accent);"><b>${o.name}</b><br>Status: ${o.status}</div>`; });
+            snap.forEach(d => {
+                const o = d.data();
+                container.innerHTML += `<div class="card" style="border-left:5px solid var(--accent);"><b>${o.name}</b><br>Status: ${o.status}</div>`;
+            });
         });
     }
 
@@ -296,8 +287,10 @@
         });
     }
 
-    window.shareWebsite = () => { window.open(`https://wa.me/?text=Kryalive: https://${DOMAIN}`); };
+    window.shareWebsite = () => {
+        window.open(`https://wa.me/?text=Kryalive: https://${DOMAIN}`);
+    };
 </script>
 </body>
-                                                                                                                   </html>
-                                                                         
+        </html>
+    
