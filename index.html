@@ -23,7 +23,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--light); color: var(--dark); overflow-x: hidden; height: 100vh; }
         
-        /* गेटकीपर सुरक्षा: लॉगिन से पहले सब कुछ छुपाएं */
+        /* गेटकीपर सुरक्षा */
         header, .bottom-nav { display: none !important; }
         .view { display: none !important; }
         .view.active { display: block !important; animation: slideUp 0.4s ease; }
@@ -39,13 +39,17 @@
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .stat-card { background: white; padding: 15px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .card { background: #fff; border-radius: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); padding: 20px; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; margin-bottom: 10px; background: #f8fafc; outline: none; }
+        
+        /* नया इनपुट और टेक्स्टबॉक्स स्टाइल */
+        input, textarea { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; margin-bottom: 10px; background: #f8fafc; outline: none; font-family: inherit; }
+        textarea { resize: vertical; }
 
         .btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
         .btn-primary { background: var(--accent); color: white; }
 
         .service-item { border-radius: 24px; overflow: hidden; background: #fff; margin-bottom: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
         .service-img { width: 100%; height: 190px; object-fit: cover; }
+        .service-desc { font-size: 13px; color: #475569; margin-bottom: 15px; line-height: 1.6; }
 
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid #eee; padding: 10px 0 25px; z-index: 1000; }
         .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 11px; font-weight: 700; }
@@ -86,9 +90,11 @@
         <div class="card">
             <h3>नया सर्विस पब्लिश करें</h3>
             <input type="text" id="s-name" placeholder="सर्विस का नाम">
-            <input type="number" id="s-mrp" placeholder="MRP">
-            <input type="number" id="s-price" placeholder="असली कीमत">
+            <input type="number" id="s-mrp" placeholder="MRP (बाजार भाव)">
+            <input type="number" id="s-price" placeholder="असली कीमत (आपका भाव)">
             <input type="text" id="s-img" placeholder="फोटो का लिंक">
+            <textarea id="s-desc" placeholder="सर्विस की पूरी जानकारी, नियम और शर्तें लिखें..." rows="5"></textarea>
+            
             <button class="btn btn-primary" id="btn-publish"><i class="fas fa-plus"></i> पब्लिश करें</button>
         </div>
         <div id="admin-product-list"></div>
@@ -208,14 +214,15 @@
         const mrp = document.getElementById('s-mrp').value;
         const price = document.getElementById('s-price').value;
         const img = document.getElementById('s-img').value;
+        const desc = document.getElementById('s-desc').value; // नई जानकारी कैप्चर करें
 
         if(!name || !price) return showToast("विवरण भरें", "var(--red)");
 
         try {
             const sCode = "KRYA-S-" + Math.floor(1000 + Math.random() * 9000);
-            await addDoc(collection(db, "services"), { name, mrp, price, img, serviceCode: sCode, createdAt: serverTimestamp() });
+            await addDoc(collection(db, "services"), { name, mrp, price, img, desc, serviceCode: sCode, createdAt: serverTimestamp() });
             showToast("सफल! कोड: " + sCode);
-            document.querySelectorAll('input').forEach(i => i.value="");
+            document.querySelectorAll('input, textarea').forEach(i => i.value="");
         } catch (e) { showToast("Error: " + e.message, "var(--red)"); }
     };
 
@@ -228,6 +235,9 @@
 
             snap.forEach(d => {
                 const s = d.data();
+                // जानकारी बॉक्स को स्टोर में दिखाना
+                const descHtml = s.desc ? `<p class="service-desc">${s.desc.replace(/\n/g, '<br>')}</p>` : '';
+                
                 list.innerHTML += `
                     <div class="service-item">
                         <img src="${s.img || 'https://via.placeholder.com/400x200'}" class="service-img">
@@ -237,6 +247,7 @@
                                 <span style="font-size: 22px; font-weight: 800; color: var(--primary);">₹${s.price}</span>
                                 ${s.mrp ? `<span style="text-decoration:line-through; color:gray; font-size:13px;">₹${s.mrp}</span>` : ''}
                             </div>
+                            ${descHtml}
                             <button class="btn btn-primary" onclick="buyNow('${s.name}', '${s.price}', '${s.serviceCode}')">अभी खरीदें</button>
                         </div>
                     </div>`;
@@ -293,5 +304,5 @@
     };
 </script>
 </body>
-    </html>
-        
+                </html>
+            
