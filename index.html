@@ -6,7 +6,7 @@
     <title>KRYALIVE | Smart Business Hub</title>
     
     <meta property="og:title" content="KRYALIVE | Smart Business Hub">
-    <meta property="og:description" content="Kryalive.com: प्रोफेशनल डिजिटल सर्विसेज। ईमानदारी हमारी पहचान।">
+    <meta property="og:description" content="Kryalive.com: घर बैठे प्रोफेशनल डिजिटल सर्विसेज। ईमानदारी हमारी पहचान।">
     <meta property="og:image" content="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s600/1000537308.jpg">
     <meta property="og:url" content="https://kryalive.com">
     <meta property="og:type" content="website">
@@ -34,6 +34,7 @@
         
         main { height: calc(100vh - 140px); overflow-y: auto; padding: 15px; scroll-behavior: smooth; }
         
+        /* Stats & Cards */
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .stat-card { background: white; padding: 15px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .card { background: #fff; border-radius: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); padding: 20px; margin-bottom: 20px; }
@@ -42,6 +43,7 @@
         .btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
         .btn-primary { background: var(--accent); color: white; }
 
+        /* --- Service Image Fix --- */
         .service-item { border-radius: 24px; overflow: hidden; background: #fff; margin-bottom: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); transition: 0.3s; }
         .service-image-container { width: 100%; overflow: hidden; background: #f1f5f9; }
         .service-img { width: 100%; height: 220px; object-fit: cover; display: block; transition: 0.3s ease; }
@@ -49,15 +51,15 @@
         .service-item:hover .service-img { transform: scale(1.03); }
         .service-desc { font-size: 12px; color: #475569; margin-bottom: 15px; line-height: 1.5; }
 
+        /* --- Visiting Card UI --- */
         #v-card { width: 100%; max-width: 350px; height: 200px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 15px; position: relative; margin: 0 auto; overflow: hidden; color: white; text-align: left; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); }
         .card-photo { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; border: 2px solid var(--primary); }
 
+        /* Navigation */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid #eee; padding: 10px 0 25px; z-index: 1000; }
         .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 11px; font-weight: 700; }
         .nav-item.active { color: var(--accent); }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 2px; }
-
-        .v-badge { color: var(--accent); margin-left: 5px; font-size: 14px; display: none; }
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -114,13 +116,8 @@
 
     <section id="view-profile" class="view">
         <div class="card" style="text-align: center; padding: 20px;">
-            <div style="position: relative; width: 80px; margin: 0 auto 10px;">
-                <img id="u-photo" src="" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary);">
-                <div id="u-v-tick" style="display:none; position: absolute; bottom: 0; right: 0; background: var(--accent); color: white; width: 22px; height: 22px; border-radius: 50%; border: 2px solid white; font-size: 12px; align-items: center; justify-content: center;">
-                    <i class="fas fa-check"></i>
-                </div>
-            </div>
-            <h4 id="profile-name-area">Name <i class="fas fa-check-circle v-badge" id="name-v-badge"></i></h4>
+            <img id="u-photo" src="" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 10px;">
+            <h4 id="u-name">Name</h4>
             <p id="u-email" style="color: gray; font-size: 11px; margin-bottom: 15px;">email</p>
             
             <button class="btn btn-primary" style="margin-bottom: 20px;" onclick="shareWebsite()"><i class="fas fa-share-alt"></i> KRYALIVE शेयर करें</button>
@@ -132,7 +129,7 @@
                         <img id="card-u-photo" src="" class="card-photo">
                         <div style="flex: 1; z-index: 1;">
                             <h2 id="card-u-name" style="font-size: 16px; margin: 0; font-weight: 800;">NAME</h2>
-                            <p id="v-status-text" style="font-size: 9px; color: var(--primary); font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">KRYA Partner</p>
+                            <p style="font-size: 9px; color: var(--primary); font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Verified Partner</p>
                             <div style="font-size: 10px; opacity: 0.8;">
                                 <i class="fas fa-envelope"></i> <span id="card-u-email">email</span><br>
                                 <i class="fas fa-globe"></i> Kryalive.com
@@ -187,18 +184,11 @@
     const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, style: {background: c, borderRadius: "15px"}}).showToast();
 
     window.nav = (id) => {
-        const views = ['auth', 'owner', 'store', 'orders', 'profile'];
-        views.forEach(v => {
-            const el = document.getElementById('view-' + v);
-            if(el) el.classList.remove('active');
-        });
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        
-        const targetView = document.getElementById('view-' + id);
-        if(targetView) targetView.classList.add('active');
-
+        document.getElementById('view-' + id).classList.add('active');
         const navMap = { 'orders': 'n-orders', 'profile': 'n-profile', 'owner': 'n-main', 'store': 'n-main' };
-        if(navMap[id]) document.getElementById(navMap[id]).classList.add('active');
+        document.getElementById(navMap[id]).classList.add('active');
         if(id === 'orders') loadUserOrders();
     };
 
@@ -213,53 +203,20 @@
         if(u) {
             user = u;
             isOwner = u.email === OWNER_EMAIL;
-
-            // Sync User to Firestore
-            const userRef = doc(db, "users", u.uid);
-            await setDoc(userRef, { 
-                name: u.displayName, 
-                email: u.email, 
-                photo: u.photoURL, 
-                lastLogin: serverTimestamp() 
-            }, { merge: true });
-
-            // Listen for Verification Status
-            onSnapshot(userRef, (snap) => {
-                const userData = snap.data();
-                const vTick = document.getElementById('u-v-tick');
-                const nBadge = document.getElementById('name-v-badge');
-                const vStatus = document.getElementById('v-status-text');
-                const cardName = document.getElementById('card-u-name');
-                const profileNameArea = document.getElementById('profile-name-area');
-
-                if(userData && userData.isVerified === true) {
-                    vTick.style.display = "flex";
-                    nBadge.style.display = "inline-block";
-                    vStatus.innerText = "Verified Partner";
-                    vStatus.style.color = "#2563eb";
-                    cardName.innerHTML = `${u.displayName} <i class="fas fa-check-circle" style="color:#2563eb; font-size:12px;"></i>`;
-                    profileNameArea.innerHTML = `${u.displayName} <i class="fas fa-check-circle v-badge" style="display:inline-block"></i>`;
-                } else {
-                    vTick.style.display = "none";
-                    nBadge.style.display = "none";
-                    vStatus.innerText = "KRYA Partner";
-                    vStatus.style.color = "var(--primary)";
-                    cardName.innerText = u.displayName;
-                    profileNameArea.innerHTML = `${u.displayName} <i class="fas fa-check-circle v-badge" id="name-v-badge"></i>`;
-                }
-            });
-
             header.style.setProperty('display', 'flex', 'important');
             navBar.style.setProperty('display', 'flex', 'important');
             
+            // Sync Data to Profile & Card
+            document.getElementById('u-name').innerText = u.displayName;
             document.getElementById('u-email').innerText = u.email;
             document.getElementById('u-photo').src = u.photoURL;
+            document.getElementById('card-u-name').innerText = u.displayName;
             document.getElementById('card-u-email').innerText = u.email;
             document.getElementById('card-u-photo').src = u.photoURL;
 
             document.getElementById('role-badge').innerText = isOwner ? "OWNER" : "USER";
             document.getElementById('role-badge').style.background = isOwner ? "var(--accent)" : "var(--primary)";
-            document.getElementById('user-greet').innerText = "नमस्ते, " + (u.displayName ? u.displayName.split(' ')[0] : 'User') + "!";
+            document.getElementById('user-greet').innerText = "नमस्ते, " + u.displayName.split(' ')[0] + "!";
             
             openMain();
             loadStore();
@@ -292,15 +249,14 @@
         const sCode = "KRYA-S-" + Math.floor(1000 + Math.random() * 9000);
         await addDoc(collection(db, "services"), { name, mrp, price, img, desc, serviceCode: sCode, createdAt: serverTimestamp() });
         showToast("सफल!");
-        document.querySelectorAll('#view-owner input, #view-owner textarea').forEach(i => i.value="");
+        document.querySelectorAll('input, textarea').forEach(i => i.value="");
     };
 
     function loadStore() {
         onSnapshot(query(collection(db, "services"), orderBy("createdAt", "desc")), snap => {
             const list = document.getElementById('store-list');
             const adminList = document.getElementById('admin-product-list');
-            if(!list) return;
-            list.innerHTML = ""; if(isOwner && adminList) adminList.innerHTML = "";
+            list.innerHTML = ""; if(isOwner) adminList.innerHTML = "";
             document.getElementById('total-services').innerText = snap.size;
 
             snap.forEach(d => {
@@ -320,4 +276,50 @@
                             <button class="btn btn-primary" onclick="buyNow('${s.name}', '${s.price}', '${s.serviceCode}')">अभी खरीदें</button>
                         </div>
                     </div>`;
-    
+                if(isOwner) {
+                    adminList.innerHTML += `
+                        <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:10px;">
+                            <div><b>${s.name}</b></div>
+                            <button class="btn" style="background:#fee2e2;color:red;width:auto;padding:5px 10px;" onclick="deleteProduct('${d.id}')">हटाएं</button>
+                        </div>`;
+                }
+            });
+        });
+    }
+
+    window.buyNow = async (n, p, c) => {
+        const oID = "KRYA-ORD-" + Math.floor(1000 + Math.random() * 9000);
+        await addDoc(collection(db, "orders"), {
+            orderID: oID, serviceCode: c, userName: user.displayName, userEmail: user.email,
+            serviceName: n, amount: p, status: "Waiting", createdAt: serverTimestamp()
+        });
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=नमस्ते, मैंने ऑर्डर किया है: ${n}`, '_blank');
+        showToast("ऑर्डर दर्ज!");
+    };
+
+    function loadUserOrders() {
+        const q = query(collection(db, "orders"), where("userEmail", "==", user.email), orderBy("createdAt", "desc"));
+        onSnapshot(q, snap => {
+            const container = document.getElementById('user-orders-display');
+            container.innerHTML = snap.empty ? "<p>कोई ऑर्डर नहीं।</p>" : "";
+            snap.forEach(doc => {
+                const o = doc.data();
+                container.innerHTML += `<div class="card" style="padding:15px; border-left:4px solid var(--primary);"><b>${o.serviceName}</b><br><small>Status: ${o.status}</small></div>`;
+            });
+        });
+    }
+
+    function loadAdminStats() {
+        onSnapshot(collection(db, "orders"), snap => {
+            document.getElementById('total-ord').innerText = snap.size;
+        });
+    }
+
+    window.shareWebsite = () => {
+        if (navigator.share) navigator.share({ title: DOMAIN_NAME, url: 'https://kryalive.com' });
+    };
+
+    window.deleteProduct = async (id) => { if(confirm("डिलीट करें?")) await deleteDoc(doc(db, "services", id)); };
+</script>
+</body>
+</html>
