@@ -207,21 +207,18 @@
         }
     });
 
-    // 🛒 आर्डर ट्रैक करने के लिए अपडेटेड फंक्शन
     window.placeOrder = async (serviceName, price) => {
         if(!user) {
             showToast("कृपया पहले लॉगिन करें!", "#ff4757");
             return;
         }
         
-        // मोबाइल नंबर की पुष्टि
         const mobile = prompt("अपना 10 अंकों का मोबाइल नंबर दर्ज करें:", "");
         if (!mobile || mobile.length !== 10) {
             showToast("❌ कृपया सही मोबाइल नंबर दर्ज करें!", "#ff4757");
             return;
         }
 
-        // पता (Address) की पुष्टि
         const address = prompt("अपना पूरा पता (Address) दर्ज करें:", "");
         if (!address) {
             showToast("❌ कृपया पता दर्ज करें!", "#ff4757");
@@ -249,7 +246,6 @@
         }
     };
 
-    // 📦 ऑर्डर्स लोड और डैशबोर्ड अपडेट फंक्शन
     window.loadUserOrders = () => {
         if(!user) return;
         let q = isOwner ? query(collection(db, "orders"), orderBy("timestamp", "desc")) : query(collection(db, "orders"), where("userId", "==", user.uid), orderBy("timestamp", "desc"));
@@ -288,7 +284,6 @@
         });
     };
 
-    // पब्लिश सर्विस फंक्शन
     document.getElementById('btn-publish').onclick = async () => {
         const name = document.getElementById('s-name').value;
         const mrp = document.getElementById('s-mrp').value;
@@ -345,4 +340,6 @@
 
     setInterval(() => {
         document.querySelectorAll('.offer-timer').forEach(el => {
-            const dist = new Date
+            const dist = new Date(el.getAttribute('data-end')).getTime() - new Date().getTime();
+            if (dist < 0) { el.innerHTML = "⏳ ऑफर समाप्त"; el.style.background = "#e2e8f0"; el.style.color = "#64748b"; }
+      
