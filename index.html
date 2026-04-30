@@ -212,27 +212,12 @@
             showToast("कृपया पहले लॉगिन करें!", "#ff4757");
             return;
         }
-        
-        const mobile = prompt("अपना 10 अंकों का मोबाइल नंबर दर्ज करें:", "");
-        if (!mobile || mobile.length !== 10) {
-            showToast("❌ कृपया सही मोबाइल नंबर दर्ज करें!", "#ff4757");
-            return;
-        }
-
-        const address = prompt("अपना पूरा पता (Address) दर्ज करें:", "");
-        if (!address) {
-            showToast("❌ कृपया पता दर्ज करें!", "#ff4757");
-            return;
-        }
-
         showToast("ऑर्डर प्रोसेस हो रहा है...");
         try {
             await addDoc(collection(db, "orders"), {
                 userId: user.uid,
                 customerName: user.displayName,
                 customerEmail: user.email,
-                customerMobile: mobile,
-                customerAddress: address,
                 serviceName: serviceName,
                 price: Number(price),
                 status: "Pending",
@@ -267,11 +252,8 @@
                             <b style="font-size: 14px;">${data.serviceName}</b>
                             <span style="background: #f8fafc; padding: 4px 10px; border-radius: 10px; color: ${statusColor}; font-weight: 800; font-size: 11px;">${data.status}</span>
                         </div>
-                        <p style="font-size: 12px; color: gray; margin-bottom: 4px;"><b>ग्राहक:</b> ${data.customerName}</p>
-                        <p style="font-size: 12px; color: gray; margin-bottom: 4px;"><b>मोबाइल:</b> ${data.customerMobile || 'N/A'}</p>
-                        <p style="font-size: 12px; color: gray; margin-bottom: 4px;"><b>ईमेल:</b> ${data.customerEmail}</p>
-                        <p style="font-size: 12px; color: gray; margin-bottom: 10px;"><b>पता:</b> ${data.customerAddress || 'N/A'}</p>
-                        <p style="font-size: 16px; font-weight: 800; color: var(--dark);">₹${data.price}</p>
+                        <p style="font-size: 11px; color: gray;">ग्राहक: ${data.customerName}</p>
+                        <p style="font-size: 16px; font-weight: 800; margin-top: 5px; color: var(--dark);">₹${data.price}</p>
                     </div>
                 `;
             });
@@ -342,4 +324,16 @@
         document.querySelectorAll('.offer-timer').forEach(el => {
             const dist = new Date(el.getAttribute('data-end')).getTime() - new Date().getTime();
             if (dist < 0) { el.innerHTML = "⏳ ऑफर समाप्त"; el.style.background = "#e2e8f0"; el.style.color = "#64748b"; }
-      
+            else {
+                const h = Math.floor((dist % (86400000)) / 3600000);
+                const m = Math.floor((dist % 3600000) / 60000);
+                const s = Math.floor((dist % 60000) / 1000);
+                el.innerHTML = `⏳ खत्म होगा: ${h}h ${m}m ${s}s`;
+            }
+        });
+    }, 1000);
+
+    window.shareWebsite = () => navigator.share ? navigator.share({title: 'KRYALIVE', url: 'https://kryalive.com'}) : showToast("Link Copied!");
+</script>
+</body>
+                </html>
