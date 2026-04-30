@@ -92,10 +92,8 @@
             <input type="number" id="s-mrp" placeholder="MRP (बाजार भाव)">
             <input type="number" id="s-price" placeholder="असली कीमत (आपका भाव)">
             <input type="text" id="s-img" placeholder="फोटो का लिंक">
-            
             <label style="font-size: 12px; color: gray; margin-bottom: 5px; display: block; font-weight: bold;">ऑफर खत्म होने का समय (ऑप्शनल):</label>
             <input type="datetime-local" id="s-timer">
-            
             <textarea id="s-desc" placeholder="सर्विस की पूरी जानकारी, नियम और शर्तें लिखें..." rows="5"></textarea>
             
             <button class="btn btn-primary" id="btn-publish"><i class="fas fa-plus"></i> पब्लिश करें</button>
@@ -137,7 +135,8 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, setDoc, doc, updateDoc, onSnapshotMetadata,onSnapshot, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, setDoc, doc, updateDoc, onSnapshotMetadata, onSnapshotOptions, onSnapshotOptionsWithFieldValue, onSnapshotListenOptions,onSnapshot, query, orderBy, serverTimestamp, deleteDoc, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
@@ -195,7 +194,7 @@
             if(isOwner) {
                 document.getElementById('n-txt').innerText = "Dashboard";
                 openMain(); 
-                loadUserOrders();
+                loadUserOrders(); 
             } else {
                 document.getElementById('n-txt').innerText = "Store";
                 document.getElementById('user-greet').innerText = "नमस्ते, " + u.displayName.split(" ")[0] + "!";
@@ -210,7 +209,7 @@
         }
     });
 
-    // 🛒 असली ऑर्डर बुक करने वाला फंक्शन
+    // 🛒 असली ऑर्डर बुक करने का फंक्शन
     window.placeOrder = async (serviceName, price) => {
         if(!user) {
             showToast("कृपया पहले लॉगिन करें!", "#ff4757");
@@ -227,7 +226,7 @@
                 status: "Pending",
                 timestamp: serverTimestamp()
             });
-            showToast("✅ आपका ऑर्डर सफलतापूर्वक बुक हो गया!");
+            showToast("✅ ऑर्डर सफलतापूर्वक बुक हो गया!");
             nav('orders');
         } catch (error) {
             console.error(error);
@@ -235,7 +234,7 @@
         }
     };
 
-    // 📦 एडमिन द्वारा ऑर्डर का स्टेटस अपडेट करने का फंक्शन
+    // 📦 ऑर्डर्स को अपडेट करने का फंक्शन (मालिक के लिए)
     window.updateOrderStatus = async (orderId, newStatus) => {
         try {
             const orderRef = doc(db, "orders", orderId);
@@ -261,7 +260,7 @@
             snapshot.forEach((docItem) => {
                 orderCount++;
                 const data = docItem.data();
-                const docId = docItem.id;
+                const docId = docItem.id; 
                 
                 if(data.status === "Completed") totalRevenue += data.price;
                 let statusColor = data.status === "Pending" ? "var(--gold)" : (data.status === "Completed" ? "var(--primary)" : "var(--red)");
@@ -275,7 +274,7 @@
                         </div>
                     `;
                 }
-
+                
                 ordersHTML += `
                     <div class="card" style="margin-bottom: 15px; padding: 15px;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
@@ -289,9 +288,7 @@
                 `;
             });
 
-            document.getElementById('user-orders-display').innerHTML = ordersHTML || "<div style='text-align:center; padding:40px 20px;'><p style='color:gray;'>अभी तक कोई ऑर्डर नहीं है।</p></div>";
-            
-            // डैशबोर्ड पर ऑर्डर्स और कुल राजस्व अपडेट करना
+            document.getElementById('user-orders-display').innerHTML = ordersHTML || "<div style='text-align:center; padding:40px 20px;'><p style='color:gray;'>कोई ऑर्डर नहीं है।</p></div>";
             if(isOwner) {
                 document.getElementById('total-ord').innerText = orderCount;
                 document.getElementById('total-rev').innerText = "₹" + totalRevenue;
@@ -299,7 +296,7 @@
         });
     };
 
-    // सर्विस पब्लिश करने का फंक्शन
+    // पब्लिश सर्विस फंक्शन
     document.getElementById('btn-publish').onclick = async () => {
         const name = document.getElementById('s-name').value;
         const mrp = document.getElementById('s-mrp').value;
@@ -331,9 +328,7 @@
             snapshot.forEach((doc) => {
                 totalCount++;
                 const data = doc.data();
-                
                 let timerBadge = data.endTime ? `<div class="offer-timer" data-end="${data.endTime}" style="background: #fee2e2; color: #ef4444; font-size: 11px; padding: 6px 12px; border-radius: 12px; font-weight: 800; margin-bottom: 12px; display: inline-block;">⏳ लोड हो रहा है...</div>` : "";
-                
                 servicesHTML += `
                     <div class="service-item">
                         <img src="${data.image}" class="service-img" style="width: 100%; height: 190px; object-fit: cover;">
@@ -343,5 +338,4 @@
                             <p class="service-desc" style="white-space: pre-wrap;">${data.desc}</p>
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div><span style="text-decoration: line-through; color: gray; font-size: 12px;">₹${data.mrp}</span><span style="color: var(--primary); font-weight: 800; font-size: 18px;"> ₹${data.price}</span></div>
-                                <button class="btn btn-primary" style="width: auto; padding: 8px 20px; font-size: 14px;" onclick="placeOrder('${data.name}', ${data.price})">ऑर्डर करें</button>
-        
+                                <button class="btn btn-primary" style="width: auto; padding: 8px 20px; font-size: 14px;" onclick="placeOrder('${data.name}', ${data.price
