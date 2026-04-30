@@ -42,21 +42,23 @@
         .btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
         .btn-primary { background: var(--accent); color: white; }
 
-        /* Service Cards */
         .service-item { border-radius: 24px; overflow: hidden; background: #fff; margin-bottom: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); transition: 0.3s; }
         .service-image-container { width: 100%; overflow: hidden; background: #f1f5f9; }
-        .service-img { width: 100%; height: 220px; object-fit: cover; display: block; }
+        .service-img { width: 100%; height: 220px; object-fit: cover; display: block; transition: 0.3s ease; }
         @media (min-width: 769px) { .service-img { height: 300px; } }
+        .service-item:hover .service-img { transform: scale(1.03); }
+        .service-desc { font-size: 12px; color: #475569; margin-bottom: 15px; line-height: 1.5; }
 
-        /* Secure Visiting Card */
         #v-card { width: 100%; max-width: 350px; height: 200px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 15px; position: relative; margin: 0 auto; overflow: hidden; color: white; text-align: left; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); }
-        .card-photo { width: 75px; height: 75px; border-radius: 12px; object-fit: cover; border: 2px solid var(--primary); }
-        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 40px; font-weight: 900; color: rgba(255,255,255,0.03); white-space: nowrap; pointer-events: none; }
+        .card-photo { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; border: 2px solid var(--primary); }
 
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid #eee; padding: 10px 0 25px; z-index: 1000; }
         .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 11px; font-weight: 700; }
         .nav-item.active { color: var(--accent); }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 2px; }
+
+        /* Verified Tick UI */
+        .v-badge { color: var(--accent); margin-left: 5px; font-size: 14px; display: none; }
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -75,89 +77,93 @@
     <section id="view-auth" class="view active">
         <div style="text-align: center; padding-top: 80px;">
             <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" style="width: 110px; height: 110px; border-radius: 50%; margin-bottom: 20px; border: 3px solid var(--primary);">
-            <h2 style="font-weight: 800;">नमस्ते!</h2>
-            <button class="btn" id="login-btn" style="background: white; border: 1.5px solid #eee; width: 85%; margin: 30px auto;">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google लॉगिन
+            <h2 style="font-weight: 800; font-size: 26px;">नमस्ते!</h2>
+            <button class="btn" id="login-btn" style="background: white; color: #000; border: 1.5px solid #eee; width: 85%; margin: 40px auto 0; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google के साथ शुरू करें
             </button>
-        </div>
-    </section>
-
-    <section id="view-verify" class="view">
-        <div class="card">
-            <h3>पार्टनर वेरिफिकेशन</h3>
-            <p style="font-size: 12px; color: gray; margin-bottom: 15px;">KRYA ID डालकर पार्टनर की सत्यता जाँचें।</p>
-            <input type="text" id="verify-input" placeholder="जैसे: KRYA-1234">
-            <button class="btn btn-primary" onclick="verifyMember()"><i class="fas fa-search"></i> अभी जाँचें</button>
-            <div id="verify-result" style="margin-top: 20px; text-align: center; display: none;"></div>
-        </div>
-    </section>
-
-    <section id="view-store" class="view">
-        <h3 id="user-greet" style="font-weight: 800;">नमस्ते!</h3>
-        <div id="store-list" style="margin-top: 20px;"></div>
-    </section>
-
-    <section id="view-orders" class="view">
-        <h3 style="margin-bottom: 20px;">मेरे ऑर्डर्स</h3>
-        <div id="user-orders-display"></div>
-    </section>
-
-    <section id="view-profile" class="view">
-        <div class="card" style="text-align: center;">
-            <img id="u-photo" src="" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 10px;">
-            <h4 id="u-name">Name</h4>
-            
-            <div id="v-card" style="margin: 20px auto;">
-                <div class="watermark">KRYA OFFICIAL</div>
-                <div style="padding: 15px; display: flex; gap: 12px; align-items: center; height: 100%; position: relative; z-index: 2;">
-                    <img id="card-u-photo" src="" class="card-photo">
-                    <div style="flex: 1;">
-                        <h2 id="card-u-name" style="font-size: 15px; margin: 0; font-weight: 800;">NAME</h2>
-                        <p style="font-size: 8px; color: var(--primary); font-weight: 600; margin-bottom: 5px;">OFFICIAL PARTNER</p>
-                        <div style="font-size: 9px; opacity: 0.8;">
-                            ID: <span id="card-u-id" style="font-family: monospace; color: var(--primary);">---</span><br>
-                            Kryalive.com
-                        </div>
-                    </div>
-                    <div id="qrcode" style="background: white; padding: 3px; border-radius: 5px; width: 55px; height: 55px;">
-                        <img id="qr-img" src="" style="width: 100%; height: 100%;">
-                    </div>
-                </div>
-            </div>
-            
-            <button class="btn" onclick="downloadCard()" style="background: #f1f5f9; color: #475569; margin-bottom: 10px; font-size: 12px;">कार्ड सेव करें</button>
-            <button class="btn" style="background: #fee2e2; color: #ef4444;" id="logout-btn">लॉगआउट</button>
         </div>
     </section>
 
     <section id="view-owner" class="view">
         <div class="stat-grid">
-            <div class="stat-card"><h2><i class="fas fa-shopping-cart"></i></h2><h2 id="total-ord">0</h2><p>ऑर्डर्स</p></div>
-            <div class="stat-card"><h2><i class="fas fa-wallet"></i></h2><h2 id="total-rev">₹0</h2><p>राजस्व</p></div>
+            <div class="stat-card"><i class="fas fa-shopping-cart" style="color:var(--accent);"></i><h2 id="total-ord">0</h2><p>ऑर्डर्स</p></div>
+            <div class="stat-card"><i class="fas fa-boxes" style="color:var(--primary);"></i><h2 id="total-services">0</h2><p>कुल सर्विस</p></div>
+            <div class="stat-card" style="grid-column: span 2;"><i class="fas fa-wallet" style="color:var(--gold);"></i><h2 id="total-rev">₹0</h2><p>कुल राजस्व</p></div>
         </div>
         <div class="card">
-            <h3>सर्विस पब्लिश करें</h3>
-            <input type="text" id="s-name" placeholder="नाम">
+            <h3>नया सर्विस पब्लिश करें</h3>
+            <input type="text" id="s-name" placeholder="सर्विस का नाम">
+            <input type="number" id="s-mrp" placeholder="MRP">
             <input type="number" id="s-price" placeholder="कीमत">
             <input type="text" id="s-img" placeholder="फोटो लिंक">
-            <textarea id="s-desc" placeholder="जानकारी..."></textarea>
+            <textarea id="s-desc" placeholder="जानकारी..." rows="3"></textarea>
             <button class="btn btn-primary" id="btn-publish">पब्लिश करें</button>
         </div>
         <div id="admin-product-list"></div>
     </section>
+
+    <section id="view-store" class="view">
+        <h3 id="user-greet" style="font-weight: 800;">नमस्ते!</h3>
+        <p style="font-size: 12px; color: gray; margin-bottom: 20px;">आपकी डिजिटल तरक्की यहाँ से शुरू होती है।</p>
+        <div id="store-list"></div>
+    </section>
+
+    <section id="view-orders" class="view">
+        <h3 style="margin-bottom: 20px; font-weight: 800;">मेरे ऑर्डर्स</h3>
+        <div id="user-orders-display"></div>
+    </section>
+
+    <section id="view-profile" class="view">
+        <div class="card" style="text-align: center; padding: 20px;">
+            <div style="position: relative; width: 80px; margin: 0 auto 10px;">
+                <img id="u-photo" src="" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary);">
+                <div id="u-v-tick" style="display:none; position: absolute; bottom: 0; right: 0; background: var(--accent); color: white; width: 22px; height: 22px; border-radius: 50%; border: 2px solid white; font-size: 12px; align-items: center; justify-content: center;">
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+            <h4 id="u-name">Name <i class="fas fa-check-circle v-badge" id="name-v-badge"></i></h4>
+            <p id="u-email" style="color: gray; font-size: 11px; margin-bottom: 15px;">email</p>
+            
+            <button class="btn btn-primary" style="margin-bottom: 20px;" onclick="shareWebsite()"><i class="fas fa-share-alt"></i> KRYALIVE शेयर करें</button>
+
+            <div id="v-card-section" style="margin-bottom: 20px;">
+                <div id="v-card">
+                    <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: var(--primary); border-radius: 50%; opacity: 0.1;"></div>
+                    <div style="padding: 20px; display: flex; gap: 15px; align-items: center; height: 100%;">
+                        <img id="card-u-photo" src="" class="card-photo">
+                        <div style="flex: 1; z-index: 1;">
+                            <h2 id="card-u-name" style="font-size: 16px; margin: 0; font-weight: 800;">NAME</h2>
+                            <p id="v-status-text" style="font-size: 9px; color: var(--primary); font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">KRYA Partner</p>
+                            <div style="font-size: 10px; opacity: 0.8;">
+                                <i class="fas fa-envelope"></i> <span id="card-u-email">email</span><br>
+                                <i class="fas fa-globe"></i> Kryalive.com
+                            </div>
+                        </div>
+                    </div>
+                    <div style="position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.3); padding: 5px 20px; display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
+                        <span style="font-weight: 800;">KRYA<span style="color:var(--primary)">LIVE</span></span>
+                    </div>
+                </div>
+                <button class="btn" onclick="downloadCard()" style="background: #f1f5f9; color: #475569; margin-top: 10px; font-size: 12px; height: 35px;">
+                    <i class="fas fa-download"></i> कार्ड सेव करें
+                </button>
+            </div>
+
+            <button class="btn" style="background: #fee2e2; color: #ef4444;" id="logout-btn">लॉगआउट</button>
+        </div>
+    </section>
 </main>
 
 <nav class="bottom-nav" id="app-nav">
-    <button class="nav-item active" onclick="openMain()"><i class="fas fa-store"></i><span>Store</span></button>
-    <button class="nav-item" onclick="nav('verify')"><i class="fas fa-shield-alt"></i><span>Verify</span></button>
-    <button class="nav-item" onclick="nav('orders')"><i class="fas fa-box"></i><span>Orders</span></button>
-    <button class="nav-item" onclick="nav('profile')"><i class="fas fa-user-circle"></i><span>Profile</span></button>
+    <button class="nav-item active" id="n-main" onclick="openMain()"><i class="fas fa-store"></i><span id="n-txt">Store</span></button>
+    <button class="nav-item" id="n-orders" onclick="nav('orders')"><i class="fas fa-box"></i><span>Orders</span></button>
+    <button class="nav-item" id="n-profile" onclick="nav('profile')"><i class="fas fa-user-circle"></i><span>Profile</span></button>
 </nav>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, where, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
@@ -175,12 +181,19 @@
 
     const OWNER_EMAIL = "krya.global@gmail.com";
     const WHATSAPP_NUMBER = "916379403821";
+    const DOMAIN_NAME = "Kryalive.com";
 
     let user = null, isOwner = false;
 
+    const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, style: {background: c, borderRadius: "15px"}}).showToast();
+
     window.nav = (id) => {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById('view-' + id).classList.add('active');
+        const navMap = { 'orders': 'n-orders', 'profile': 'n-profile', 'owner': 'n-main', 'store': 'n-main' };
+        document.getElementById(navMap[id]).classList.add('active');
+        if(id === 'orders') loadUserOrders();
     };
 
     window.openMain = () => isOwner ? nav('owner') : nav('store');
@@ -189,92 +202,124 @@
     document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
 
     onAuthStateChanged(auth, async u => {
+        const header = document.getElementById('app-header');
+        const navBar = document.getElementById('app-nav');
         if(u) {
             user = u;
             isOwner = u.email === OWNER_EMAIL;
-            const kryaID = "KRYA-" + u.uid.substring(0, 5).toUpperCase();
-            
-            await setDoc(doc(db, "partners", u.uid), { 
+
+            // --- वेरिफिकेशन सिस्टम लॉजिक ---
+            const userRef = doc(db, "users", u.uid);
+            await setDoc(userRef, { 
                 name: u.displayName, 
                 email: u.email, 
-                kryaID: kryaID, 
-                photo: u.photoURL,
-                joined: serverTimestamp() 
+                photo: u.photoURL, 
+                lastLogin: serverTimestamp() 
             }, { merge: true });
 
-            document.getElementById('u-name').innerText = u.displayName;
-            document.getElementById('u-photo').src = u.photoURL;
-            document.getElementById('card-u-name').innerText = u.displayName;
-            document.getElementById('card-u-photo').src = u.photoURL;
-            document.getElementById('card-u-id').innerText = kryaID;
-            document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${kryaID}`;
+            onSnapshot(userRef, (snap) => {
+                const userData = snap.data();
+                const vTick = document.getElementById('u-v-tick');
+                const nBadge = document.getElementById('name-v-badge');
+                const vStatus = document.getElementById('v-status-text');
+                const cardName = document.getElementById('card-u-name');
+
+                if(userData && userData.isVerified === true) {
+                    vTick.style.display = "flex";
+                    nBadge.style.display = "inline-block";
+                    vStatus.innerText = "Verified Partner";
+                    vStatus.style.color = "var(--accent)";
+                    cardName.innerHTML = `${u.displayName} <i class="fas fa-check-circle" style="color:#2563eb; font-size:12px;"></i>`;
+                } else {
+                    vTick.style.display = "none";
+                    nBadge.style.display = "none";
+                    vStatus.innerText = "KRYA Partner";
+                    cardName.innerText = u.displayName;
+                }
+            });
+
+            header.style.setProperty('display', 'flex', 'important');
+            navBar.style.setProperty('display', 'flex', 'important');
             
-            document.getElementById('app-header').style.display = 'flex';
-            document.getElementById('app-nav').style.display = 'flex';
+            document.getElementById('u-name').firstChild.textContent = u.displayName + " ";
+            document.getElementById('u-email').innerText = u.email;
+            document.getElementById('u-photo').src = u.photoURL;
+            document.getElementById('card-u-email').innerText = u.email;
+            document.getElementById('card-u-photo').src = u.photoURL;
+
+            document.getElementById('role-badge').innerText = isOwner ? "OWNER" : "USER";
+            document.getElementById('role-badge').style.background = isOwner ? "var(--accent)" : "var(--primary)";
+            document.getElementById('user-greet').innerText = "नमस्ते, " + u.displayName.split(' ')[0] + "!";
+            
             openMain();
             loadStore();
+            if(isOwner) loadAdminStats();
         } else {
+            header.style.setProperty('display', 'none', 'important');
+            navBar.style.setProperty('display', 'none', 'important');
             nav('auth');
         }
     });
 
-    window.verifyMember = async () => {
-        const id = document.getElementById('verify-input').value.trim().toUpperCase();
-        const resDiv = document.getElementById('verify-result');
-        resDiv.style.display = 'block';
-        resDiv.innerHTML = "जाँच की जा रही है...";
-
-        const q = query(collection(db, "partners"), where("kryaID", "==", id));
-        onSnapshot(q, snap => {
-            if(snap.empty) {
-                resDiv.innerHTML = `<i class="fas fa-times-circle" style="color:red; font-size:40px;"></i><br><b>नकली आईडी!</b><br>यह पार्टनर हमारे साथ नहीं है।`;
-            } else {
-                const d = snap.docs[0].data();
-                resDiv.innerHTML = `<i class="fas fa-check-circle" style="color:var(--primary); font-size:40px;"></i><br><b>Verified Partner</b><br>${d.name}<br>ईमानदारी की पहचान!`;
-            }
+    window.downloadCard = () => {
+        const card = document.getElementById('v-card');
+        html2canvas(card, { useCORS: true, scale: 2 }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `KRYA-Partner-${user.displayName}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+            showToast("विजिटिंग कार्ड सेव हुआ!");
         });
     };
 
-    window.downloadCard = () => {
-        html2canvas(document.getElementById('v-card'), {useCORS:true}).then(canvas => {
-            const a = document.createElement('a');
-            a.download = 'KRYA-Card.png';
-            a.href = canvas.toDataURL();
-            a.click();
-        });
+    document.getElementById('btn-publish').onclick = async () => {
+        const name = document.getElementById('s-name').value;
+        const mrp = document.getElementById('s-mrp').value;
+        const price = document.getElementById('s-price').value;
+        const img = document.getElementById('s-img').value;
+        const desc = document.getElementById('s-desc').value;
+        if(!name || !price) return showToast("विवरण भरें", "var(--red)");
+        const sCode = "KRYA-S-" + Math.floor(1000 + Math.random() * 9000);
+        await addDoc(collection(db, "services"), { name, mrp, price, img, desc, serviceCode: sCode, createdAt: serverTimestamp() });
+        showToast("सफल!");
+        document.querySelectorAll('input, textarea').forEach(i => i.value="");
     };
 
     function loadStore() {
         onSnapshot(query(collection(db, "services"), orderBy("createdAt", "desc")), snap => {
             const list = document.getElementById('store-list');
-            list.innerHTML = "";
+            const adminList = document.getElementById('admin-product-list');
+            list.innerHTML = ""; if(isOwner) adminList.innerHTML = "";
+            document.getElementById('total-services').innerText = snap.size;
+
             snap.forEach(d => {
                 const s = d.data();
                 list.innerHTML += `
                     <div class="service-item">
-                        <div class="service-image-container"><img src="${s.img}" class="service-img"></div>
-                        <div style="padding:15px;">
-                            <h4>${s.name}</h4>
-                            <p style="color:var(--primary); font-weight:800;">₹${s.price}</p>
-                            <button class="btn btn-primary" onclick="buyNow('${s.name}', '${s.price}')">अभी खरीदें</button>
+                        <div class="service-image-container">
+                            <img src="${s.img || 'https://via.placeholder.com/400x200'}" class="service-img">
+                        </div>
+                        <div style="padding: 15px;">
+                            <h4 style="font-weight: 800; font-size: 16px;">${s.name}</h4>
+                            <div style="margin: 5px 0 12px; display:flex; align-items:baseline; gap:8px;">
+                                <span style="font-size: 20px; font-weight: 800; color: var(--primary);">₹${s.price}</span>
+                                ${s.mrp ? `<span style="text-decoration:line-through; color:gray; font-size:12px;">₹${s.mrp}</span>` : ''}
+                            </div>
+                            <p class="service-desc">${s.desc || ''}</p>
+                            <button class="btn btn-primary" onclick="buyNow('${s.name}', '${s.price}', '${s.serviceCode}')">अभी खरीदें</button>
                         </div>
                     </div>`;
+                if(isOwner) {
+                    adminList.innerHTML += `
+                        <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:10px;">
+                            <div><b>${s.name}</b></div>
+                            <button class="btn" style="background:#fee2e2;color:red;width:auto;padding:5px 10px;" onclick="deleteProduct('${d.id}')">हटाएं</button>
+                        </div>`;
+                }
             });
         });
     }
 
-    window.buyNow = (n, p) => {
-        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=नमस्ते KRYA! मैंने ऑर्डर किया है: ${n}`, '_blank');
-    };
-
-    document.getElementById('btn-publish').onclick = async () => {
-        const name = document.getElementById('s-name').value;
-        const price = document.getElementById('s-price').value;
-        const img = document.getElementById('s-img').value;
-        const desc = document.getElementById('s-desc').value;
-        await addDoc(collection(db, "services"), { name, price, img, desc, createdAt: serverTimestamp() });
-        Toastify({text: "सफल!"}).showToast();
-    };
-</script>
-</body>
-</html>
+    window.buyNow = async (n, p, c) => {
+        const oID = "KRYA-ORD-" + Math.floor(1000 + Math.random() * 9000);
+        await 
