@@ -3,224 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0f172a">
-    <title>KRYALIVE | Masterclass VIP Hub</title>
+    <title>KRYALIVE | Smart Business Hub</title>
     
-    <meta name="description" content="100% सुरक्षित और लीगल डिजिटल बिज़नेस हब।">
-    <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22KRYALIVE%22%2C%22short_name%22%3A%22KRYA%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%2310b981%22%7D">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <meta property="og:title" content="KRYALIVE | Smart Business Hub">
+    <meta property="og:description" content="Kryalive.com: घर बैठे प्रोफेशनल डिजिटल सर्विसेज। ईमानदारी हमारी पहचान।">
+    <meta property="og:image" content="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s600/1000537308.jpg">
+    <meta property="og:image:width" content="600">
+    <meta property="og:image:height" content="600">
+    <meta property="og:url" content="https://kryalive.com">
+    <meta property="og:type" content="website">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    
-    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <style>
-        /* --- MASTERCLASS CSS ARCHITECTURE --- */
-        :root { 
-            --bg-main: #f8fafc; --bg-card: #ffffff; --text-main: #0f172a; --text-muted: #64748b;
-            --primary: #10b981; --primary-hover: #059669; --accent: #3b82f6; --danger: #ef4444; --warning: #f59e0b;
-            --glass-bg: rgba(255, 255, 255, 0.7); --glass-border: rgba(255, 255, 255, 0.2);
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Dark Mode Setup (Can be toggled via JS) */
-        .dark-mode {
-            --bg-main: #0f172a; --bg-card: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8;
-            --glass-bg: rgba(30, 41, 59, 0.7); --glass-border: rgba(255, 255, 255, 0.05);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg-main); color: var(--text-main); overflow: hidden; height: 100vh; transition: background 0.3s ease; }
-
-        /* Loader & Splash */
-        #loader { position: fixed; inset: 0; background: var(--bg-main); z-index: 10000; display: flex; justify-content: center; align-items: center; transition: 0.5s; }
-        .spinner { width: 50px; height: 50px; border: 4px solid var(--primary); border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* Header Glassmorphism */
-        header { 
-            position: sticky; top: 0; z-index: 1000; background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--glass-border); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;
-        }
-        .logo-wrap { display: flex; align-items: center; gap: 12px; }
-        .logo-wrap img { width: 44px; height: 44px; border-radius: 14px; box-shadow: var(--shadow-sm); border: 2px solid var(--primary); }
-        .brand-title { font-size: 24px; font-weight: 800; background: linear-gradient(45deg, var(--text-main), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        /* Main Viewport */
-        main { height: calc(100vh - 77px); overflow-y: auto; padding: 24px; scroll-behavior: smooth; }
-        main::-webkit-scrollbar { width: 6px; }
-        main::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
-
-        /* Views & Routing */
-        .view-container { display: none; animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); padding-bottom: 100px; }
-        .view-container.active { display: block; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(30px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-
-        /* Cards & Forms */
-        .master-card { background: var(--bg-card); border-radius: 24px; padding: 24px; box-shadow: var(--shadow-xl); border: 1px solid var(--glass-border); margin-bottom: 24px; transition: transform 0.3s; }
-        .master-card:hover { transform: translateY(-5px); }
+        :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --light: #f8fafc; --red: #ff4757; --gold: #f59e0b; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--light); color: var(--dark); overflow-x: hidden; height: 100vh; }
         
-        .input-group { position: relative; margin-bottom: 20px; }
-        .input-group i { position: absolute; left: 16px; top: 18px; color: var(--text-muted); }
-        .master-input { width: 100%; padding: 16px 16px 16px 45px; border-radius: 16px; border: 2px solid transparent; background: rgba(0,0,0,0.03); color: var(--text-main); font-size: 15px; transition: 0.3s; outline: none; }
-        .master-input:focus { border-color: var(--primary); background: transparent; }
+        header, .bottom-nav { display: none !important; }
+        .view { display: none !important; }
+        .view.active { display: block !important; animation: slideUp 0.4s ease; }
 
-        /* Buttons with Ripple */
-        .btn-master { 
-            width: 100%; padding: 18px; border-radius: 16px; border: none; font-weight: 800; font-size: 16px; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s; position: relative; overflow: hidden;
-        }
-        .btn-primary { background: var(--primary); color: white; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3); }
-        .btn-primary:active { transform: scale(0.96); box-shadow: none; }
-        .btn-dark { background: var(--text-main); color: var(--bg-main); }
+        header { background: white; padding: 10px 20px; border-bottom: 1px solid #eee; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 70px; }
+        .brand-container { display: flex; align-items: center; gap: 10px; }
+        .logo-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
+        .brand { font-size: 20px; font-weight: 800; }
+        .brand span { color: var(--primary); }
+        
+        main { height: calc(100vh - 140px); overflow-y: auto; padding: 15px; scroll-behavior: smooth; }
+        
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .stat-card { background: white; padding: 15px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .card { background: #fff; border-radius: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); padding: 20px; margin-bottom: 20px; }
+        
+        input, textarea { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; margin-bottom: 10px; background: #f8fafc; outline: none; font-family: inherit; }
+        textarea { resize: vertical; }
 
-        /* Store UI - Premium Grid */
-        .store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
-        .product-card { background: var(--bg-card); border-radius: 28px; overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.05); }
-        .img-wrapper { position: relative; width: 100%; height: 240px; overflow: hidden; }
-        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-        .product-card:hover .img-wrapper img { transform: scale(1.08); }
-        .price-badge { position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.8); color: white; padding: 6px 14px; border-radius: 20px; font-weight: 800; backdrop-filter: blur(5px); }
+        .btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
+        .btn-primary { background: var(--accent); color: white; }
 
-        /* Skeleton Loading */
-        .skeleton { background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 12px; }
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .service-item { border-radius: 24px; overflow: hidden; background: #fff; margin-bottom: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+        .service-img { width: 100%; height: 190px; object-fit: cover; }
+        .service-desc { font-size: 13px; color: #475569; margin-bottom: 15px; line-height: 1.6; }
 
-        /* Admin Chart Container */
-        .chart-container { width: 100%; height: 200px; background: var(--bg-card); border-radius: 20px; padding: 15px; margin-bottom: 24px; box-shadow: var(--shadow-sm); }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid #eee; padding: 10px 0 25px; z-index: 1000; }
+        .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 11px; font-weight: 700; }
+        .nav-item.active { color: var(--accent); }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 2px; }
 
-        /* Bottom Navigation Dock */
-        .nav-dock { 
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px;
-            background: var(--text-main); border-radius: 30px; display: flex; justify-content: space-around; padding: 10px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2); z-index: 1000;
-        }
-        .dock-item { color: var(--text-muted); background: transparent; border: none; padding: 12px 20px; border-radius: 20px; font-size: 20px; cursor: pointer; transition: 0.3s; }
-        .dock-item.active { background: var(--primary); color: white; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(16,185,129,0.4); }
-
-        /* Utility */
-        .badge { background: var(--warning); color: white; padding: 4px 10px; border-radius: 10px; font-size: 11px; font-weight: 800; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div id="loader"><div class="spinner"></div></div>
-
-<header id="main-header" style="display:none;">
-    <div class="logo-wrap">
-        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" alt="KRYA">
-        <div class="brand-title">KRYALIVE</div>
+<header id="app-header">
+    <div class="brand-container">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" class="logo-img">
+        <div class="brand">KRYA<span>LIVE</span></div>
     </div>
-    <div class="badge" id="role-indicator">USER</div>
+    <div id="role-badge" style="font-size: 10px; font-weight: 800; color: white; padding: 5px 12px; border-radius: 20px;">USER</div>
 </header>
 
 <main>
-    <section id="view-auth" class="view-container active">
-        <div style="text-align: center; margin-top: 10vh;">
-            <div style="width: 140px; height: 140px; background: white; border-radius: 40px; margin: 0 auto 30px; display: flex; justify-content: center; align-items: center; box-shadow: var(--shadow-xl); transform: rotate(10deg); border: 4px solid var(--primary);">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" style="width: 100%; height: 100%; border-radius: 36px; object-fit: cover; transform: rotate(-10deg);">
-            </div>
-            <h1 style="font-size: 36px; font-weight: 800; margin-bottom: 10px;">बिज़नेस हब</h1>
-            <p style="color: var(--text-muted); margin-bottom: 40px;">100% सुरक्षित और लीगल नेटवर्क</p>
-            
-            <button class="btn-master btn-dark" id="btn-login" style="width: 90%; margin: 0 auto;">
-                <i class="fab fa-google" style="color: #ea4335;"></i> Google से ऑथेंटिकेट करें
+    <section id="view-auth" class="view active">
+        <div style="text-align: center; padding-top: 80px;">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" style="width: 110px; height: 110px; border-radius: 50%; margin-bottom: 20px; border: 3px solid var(--primary);">
+            <h2 style="font-weight: 800; font-size: 26px;">नमस्ते!</h2>
+            <p style="color: gray; margin-bottom: 40px; padding: 0 20px;">Kryalive.com में प्रवेश के लिए लॉगिन करें।</p>
+            <button class="btn" id="login-btn" style="background: white; color: #000; border: 1.5px solid #eee; width: 85%; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google के साथ शुरू करें
             </button>
-            <p style="font-size: 12px; color: var(--text-muted); margin-top: 20px;"><i class="fas fa-lock"></i> एंड-टू-एंड एन्क्रिप्टेड</p>
         </div>
     </section>
 
-    <section id="view-store" class="view-container">
-        <div class="master-card" style="background: linear-gradient(135deg, var(--text-main), #1e293b); color: white; border: none;">
-            <h2 id="greet-name" style="font-size: 28px; margin-bottom: 5px;">नमस्ते!</h2>
-            <p style="opacity: 0.8; font-size: 14px;">आपके लिए बेहतरीन डिजिटल सेवाएं तैयार हैं।</p>
+    <section id="view-owner" class="view">
+        <div class="stat-grid">
+            <div class="stat-card"><i class="fas fa-shopping-cart" style="color:var(--accent);"></i><h2 id="total-ord">0</h2><p>ऑर्डर्स</p></div>
+            <div class="stat-card"><i class="fas fa-boxes" style="color:var(--primary);"></i><h2 id="total-services">0</h2><p>कुल सर्विस</p></div>
+            <div class="stat-card" style="grid-column: span 2;"><i class="fas fa-wallet" style="color:var(--gold);"></i><h2 id="total-rev">₹0</h2><p>कुल राजस्व</p></div>
         </div>
-        
-        <h3 style="margin: 20px 0 15px; font-weight: 800;">विशेष सेवाएं</h3>
-        <div id="store-grid" class="store-grid">
-            <div class="product-card"><div class="skeleton" style="height: 240px;"></div><div style="padding: 20px;"><div class="skeleton" style="height: 20px; width: 70%; margin-bottom: 10px;"></div><div class="skeleton" style="height: 40px;"></div></div></div>
+        <div class="card">
+            <h3>नया सर्विस पब्लिश करें</h3>
+            <input type="text" id="s-name" placeholder="सर्विस का नाम">
+            <input type="number" id="s-mrp" placeholder="MRP (बाजार भाव)">
+            <input type="number" id="s-price" placeholder="असली कीमत (आपका भाव)">
+            <input type="text" id="s-img" placeholder="फोटो का लिंक">
+            <textarea id="s-desc" placeholder="सर्विस की पूरी जानकारी, नियम और शर्तें लिखें..." rows="5"></textarea>
+            
+            <button class="btn btn-primary" id="btn-publish"><i class="fas fa-plus"></i> पब्लिश करें</button>
         </div>
+        <div id="admin-product-list"></div>
     </section>
 
-    <section id="view-admin" class="view-container">
-        <h2 style="font-weight: 800; margin-bottom: 20px;">कंट्रोल पैनल</h2>
-        
-        <div class="chart-container">
-            <canvas id="revenueChart"></canvas>
-        </div>
-
-        <div class="master-card">
-            <h3 style="margin-bottom: 20px;"><i class="fas fa-cloud-upload-alt text-primary"></i> नई सर्विस डिप्लॉय करें</h3>
-            <div class="input-group">
-                <i class="fas fa-tag"></i>
-                <input type="text" class="master-input" id="adm-name" placeholder="सर्विस का नाम">
-            </div>
-            <div class="input-group">
-                <i class="fas fa-rupee-sign"></i>
-                <input type="number" class="master-input" id="adm-price" placeholder="कीमत दर्ज करें">
-            </div>
-            <div class="input-group">
-                <i class="fas fa-image"></i>
-                <input type="text" class="master-input" id="adm-img" placeholder="इमेज URL">
-            </div>
-            <button class="btn-master btn-primary" id="btn-deploy">डेटाबेस में सेव करें <i class="fas fa-arrow-right"></i></button>
-        </div>
-        
-        <h3 style="font-weight: 800; margin-bottom: 15px;">लाइव डेटा</h3>
-        <div id="admin-list"></div>
+    <section id="view-store" class="view">
+        <h3 id="user-greet" style="font-weight: 800;">नमस्ते!</h3>
+        <p style="font-size: 12px; color: gray; margin-bottom: 20px;">आपकी डिजिटल तरक्की यहाँ से शुरू होती है।</p>
+        <div id="store-list"></div>
     </section>
 
-    <section id="view-orders" class="view-container">
-        <h2 style="font-weight: 800; margin-bottom: 20px;">ऑर्डर ट्रैकिंग</h2>
-        <div id="orders-list"></div>
+    <section id="view-orders" class="view">
+        <h3 style="margin-bottom: 20px; font-weight: 800;">मेरे ऑर्डर्स</h3>
+        <div id="user-orders-display"></div>
     </section>
 
-    <section id="view-profile" class="view-container">
-        <div class="master-card" style="text-align: center;">
-            <div style="position: relative; display: inline-block;">
-                <img id="pro-img" src="" style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--primary); padding: 4px;">
-                <div style="position: absolute; bottom: 5px; right: 5px; background: var(--primary); width: 20px; height: 20px; border-radius: 50%; border: 3px solid white;"></div>
+    <section id="view-profile" class="view">
+        <div class="card" style="text-align: center; padding: 40px 20px;">
+            <img id="u-photo" src="" style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--primary); margin-bottom: 15px;">
+            <h4 id="u-name">Name</h4>
+            <p id="u-email" style="color: gray; font-size: 12px; margin-bottom: 25px;">email</p>
+            <button class="btn btn-primary" style="margin-bottom: 15px;" onclick="shareWebsite()"><i class="fas fa-share-alt"></i> Kryalive.com शेयर करें</button>
+            <div style="font-size: 11px; color: gray; text-align: left; background: #f8fafc; padding: 15px; border-radius: 15px; border: 1px solid #eee;">
+                <b>हमारी नीति:</b> हम ईमानदारी और पारदर्शिता में विश्वास रखते हैं।
             </div>
-            <h2 id="pro-name" style="margin-top: 15px; font-weight: 800;">Name</h2>
-            <p id="pro-email" style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px;">Email</p>
-
-            <div id="vip-card" style="background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'), linear-gradient(135deg, #020617 0%, #0f172a 100%); border-radius: 24px; padding: 30px; text-align: left; color: white; position: relative; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);">
-                <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: var(--primary); filter: blur(40px); opacity: 0.5;"></div>
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px;">
-                    <div>
-                        <h4 style="font-size: 12px; color: var(--primary); font-weight: 800; letter-spacing: 2px;">KRYALIVE</h4>
-                        <p style="font-size: 9px; opacity: 0.7;">AUTHORIZED PARTNER</p>
-                    </div>
-                    <i class="fas fa-qrcode" style="font-size: 24px; opacity: 0.8;"></i>
-                </div>
-                <h3 id="card-name" style="font-size: 22px; font-weight: 800; margin-bottom: 5px;">NAME</h3>
-                <p id="card-email" style="font-size: 11px; opacity: 0.8; margin-bottom: 20px;"><i class="fas fa-envelope"></i> EMAIL</p>
-                <div style="height: 1px; background: rgba(255,255,255,0.1); margin-bottom: 15px;"></div>
-                <p style="font-size: 10px; font-weight: 600;"><i class="fas fa-check-circle" style="color: var(--primary);"></i> 100% SECURE NETWORK</p>
-            </div>
-
-            <button class="btn-master btn-dark" onclick="downloadVIP()" style="margin-top: 20px;"><i class="fas fa-download"></i> VIP कार्ड सेव करें</button>
-            <button class="btn-master" id="btn-logout" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); margin-top: 15px;"><i class="fas fa-sign-out-alt"></i> सिस्टम से बाहर आएं</button>
+            <button class="btn" style="background: #fee2e2; color: #ef4444; margin-top: 20px;" id="logout-btn">लॉगआउट</button>
         </div>
     </section>
 </main>
 
-<nav class="nav-dock" id="main-nav" style="display:none;">
-    <button class="dock-item active" onclick="Router.navigate('store')"><i class="fas fa-home"></i></button>
-    <button class="dock-item" onclick="Router.navigate('orders')"><i class="fas fa-receipt"></i></button>
-    <button class="dock-item" onclick="Router.navigate('profile')"><i class="fas fa-user-astronaut"></i></button>
+<nav class="bottom-nav" id="app-nav">
+    <button class="nav-item active" id="n-main" onclick="openMain()"><i class="fas fa-store"></i><span id="n-txt">Store</span></button>
+    <button class="nav-item" id="n-orders" onclick="nav('orders')"><i class="fas fa-box"></i><span>Orders</span></button>
+    <button class="nav-item" id="n-profile" onclick="nav('profile')"><i class="fas fa-user-circle"></i><span>Profile</span></button>
 </nav>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, doc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // Firebase Architecture Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
         authDomain: "signing-9fc01.firebaseapp.com",
@@ -233,80 +146,45 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    
-    // Core State Management
-    const STATE = {
-        user: null,
-        isOwner: false,
-        ownerEmail: "krya.global@gmail.com",
-        waNumber: "916379403821"
+    const provider = new GoogleAuthProvider();
+
+    const OWNER_EMAIL = "krya.global@gmail.com";
+    const WHATSAPP_NUMBER = "916379403821";
+    const DOMAIN_NAME = "Kryalive.com";
+
+    let user = null, isOwner = false;
+
+    const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, style: {background: c, borderRadius: "15px"}}).showToast();
+
+    window.nav = (id) => {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById('view-' + id).classList.add('active');
+        const navMap = { 'orders': 'n-orders', 'profile': 'n-profile', 'owner': 'n-main', 'store': 'n-main' };
+        document.getElementById(navMap[id]).classList.add('active');
+        if(id === 'orders') loadUserOrders();
     };
 
-    // UI Controller
-    const UI = {
-        showToast: (msg, type = "success") => {
-            const color = type === "success" ? "#10b981" : "#ef4444";
-            Toastify({text: msg, duration: 3000, gravity: "top", position: "center", style: {background: color, borderRadius: "12px", padding: "14px 24px", fontWeight: "600", boxShadow: "0 10px 20px rgba(0,0,0,0.15)"}}).showToast();
-        },
-        toggleLoader: (show) => document.getElementById('loader').style.opacity = show ? '1' : '0',
-        initChart: () => {
-            if(!STATE.isOwner) return;
-            const ctx = document.getElementById('revenueChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Sales Activity', data: [12, 19, 3, 5, 2, 3, 9], borderColor: '#10b981', tension: 0.4 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-            });
-        }
-    };
+    window.openMain = () => isOwner ? nav('owner') : nav('store');
 
-    // Advanced Routing System
-    window.Router = {
-        navigate: (path) => {
-            if(path === 'store' && STATE.isOwner) path = 'admin'; // Redirect owner to admin
-            document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.dock-item').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(`view-${path}`).classList.add('active');
-            
-            // Highlight dock icon
-            const dockMap = {'store': 0, 'admin': 0, 'orders': 1, 'profile': 2};
-            document.querySelectorAll('.dock-item')[dockMap[path]].classList.add('active');
-            
-            if(path === 'orders') DB.fetchOrders();
-        }
-    };
+    document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
+    document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
 
-    // Database Architecture
-    const DB = {
-        publishService: async () => {
-            const data = {
-                name: document.getElementById('adm-name').value,
-                price: document.getElementById('adm-price').value,
-                img: document.getElementById('adm-img').value,
-                createdAt: serverTimestamp()
-            };
-            if(!data.name || !data.price) return UI.showToast("डेटा अधूरा है", "error");
-            await addDoc(collection(db, "services"), data);
-            UI.showToast("सर्विस डिप्लॉय हो गई!");
-            document.querySelectorAll('.master-input').forEach(i => i.value = '');
-        },
-        fetchServices: () => {
-            onSnapshot(query(collection(db, "services"), orderBy("createdAt", "desc")), snap => {
-                const storeGrid = document.getElementById('store-grid');
-                const adminList = document.getElementById('admin-list');
-                storeGrid.innerHTML = ''; if(STATE.isOwner) adminList.innerHTML = '';
-                
-                snap.forEach(doc => {
-                    const s = doc.data();
-                    storeGrid.innerHTML += `
-                        <div class="product-card">
-                            <div class="img-wrapper"><div class="price-badge">₹${s.price}</div><img src="${s.img || 'https://via.placeholder.com/400'}" loading="lazy"></div>
-                            <div style="padding: 24px;">
-                                <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 15px;">${s.name}</h3>
-                                <button class="btn-master btn-primary" onclick="DB.createOrder('${s.name}', '${s.price}')">सुरक्षित ऑर्डर <i class="fas fa-shield-alt"></i></button>
-                            </div>
-                        </div>`;
-                    if(STATE.isOwner) {
-                        adminList.innerHTML += `<div class="master-card" style="display:flex; justify-content:space-between; align-items:center; padding:16px;">
-                  
+    onAuthStateChanged(auth, async u => {
+        const header = document.getElementById('app-header');
+        const navBar = document.getElementById('app-nav');
+
+        if(u) {
+            user = u;
+            isOwner = u.email === OWNER_EMAIL;
+            header.style.setProperty('display', 'flex', 'important');
+            navBar.style.setProperty('display', 'flex', 'important');
+            
+            await setDoc(doc(db, "subscribers", u.uid), { name: u.displayName, email: u.email, lastSeen: serverTimestamp() }, { merge: true });
+
+            document.getElementById('u-name').innerText = u.displayName;
+            document.getElementById('u-email').innerText = u.email;
+            document.getElementById('u-photo').src = u.photoURL;
+            document.getElementById('role-badge').innerText = isOwner ? "OWNER" : "USER";
+            document.getElementById('role-badge').style.background = isOwner ? "var(--accent)" : "var(--primary)";
+            document.getEleme
