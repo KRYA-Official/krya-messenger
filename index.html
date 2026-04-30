@@ -54,27 +54,6 @@
         .nav-item.active { color: var(--accent); }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 2px; }
 
-        /* Floating AI Button Style */
-        .ai-fab {
-            position: fixed;
-            bottom: 90px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            background: var(--accent);
-            color: white;
-            border-radius: 50%;
-            display: none; /* लॉगिन के बाद दिखेगा */
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            cursor: pointer;
-            z-index: 1001;
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .ai-fab:active { transform: scale(0.9); }
-
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -87,10 +66,6 @@
     </div>
     <div id="role-badge" style="font-size: 10px; font-weight: 800; color: white; padding: 5px 12px; border-radius: 20px;">USER</div>
 </header>
-
-<div id="ai-btn" class="ai-fab" onclick="startAICall()">
-    <i class="fas fa-robot"></i>
-</div>
 
 <main>
     <section id="view-auth" class="view active">
@@ -176,18 +151,10 @@
     const OWNER_EMAIL = "krya.global@gmail.com";
     const WHATSAPP_NUMBER = "916379403821";
     const DOMAIN_NAME = "Kryalive.com";
-    const AI_PHONE_NUMBER = "YOUR_TWILIO_NUMBER_HERE"; // यहाँ अपना AI नंबर डालें
 
     let user = null, isOwner = false;
 
     const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, style: {background: c, borderRadius: "15px"}}).showToast();
-
-    // AI Call Function
-    window.startAICall = () => {
-        if(confirm("क्या आप KRYA AI असिस्टेंट को कॉल करना चाहते हैं?")) {
-            window.location.href = "tel:" + AI_PHONE_NUMBER;
-        }
-    };
 
     window.nav = (id) => {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -206,14 +173,12 @@
     onAuthStateChanged(auth, async u => {
         const header = document.getElementById('app-header');
         const navBar = document.getElementById('app-nav');
-        const aiBtn = document.getElementById('ai-btn');
 
         if(u) {
             user = u;
             isOwner = u.email === OWNER_EMAIL;
             header.style.setProperty('display', 'flex', 'important');
             navBar.style.setProperty('display', 'flex', 'important');
-            aiBtn.style.display = "flex"; // लॉगिन के बाद AI बटन दिखाएँ
             
             await setDoc(doc(db, "subscribers", u.uid), { name: u.displayName, email: u.email, lastSeen: serverTimestamp() }, { merge: true });
 
@@ -231,7 +196,6 @@
         } else {
             header.style.setProperty('display', 'none', 'important');
             navBar.style.setProperty('display', 'none', 'important');
-            aiBtn.style.display = "none";
             nav('auth');
         }
     });
@@ -337,5 +301,4 @@
     };
 </script>
 </body>
-        </html>
-    
+</html>
