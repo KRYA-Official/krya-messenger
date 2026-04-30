@@ -92,6 +92,10 @@
             <input type="number" id="s-mrp" placeholder="MRP (बाजार भाव)">
             <input type="number" id="s-price" placeholder="असली कीमत (आपका भाव)">
             <input type="text" id="s-img" placeholder="फोटो का लिंक">
+            
+            <label style="font-size: 12px; color: gray; margin-bottom: 5px; display: block; font-weight: bold;">ऑफर खत्म होने का समय (ऑप्शनल):</label>
+            <input type="datetime-local" id="s-timer">
+            
             <textarea id="s-desc" placeholder="सर्विस की पूरी जानकारी, नियम और शर्तें लिखें..." rows="5"></textarea>
             
             <button class="btn btn-primary" id="btn-publish"><i class="fas fa-plus"></i> पब्लिश करें</button>
@@ -205,12 +209,12 @@
         }
     });
 
-    // ✅ असली पब्लिश बटन फंक्शन (डेटाबेस में सेव करने के लिए)
     document.getElementById('btn-publish').onclick = async () => {
         const name = document.getElementById('s-name').value;
         const mrp = document.getElementById('s-mrp').value;
         const price = document.getElementById('s-price').value;
         const img = document.getElementById('s-img').value;
+        const timer = document.getElementById('s-timer').value; // टाइमर डेटा
         const desc = document.getElementById('s-desc').value;
         
         if(!name || !price) {
@@ -221,23 +225,23 @@
         showToast("सर्विस पब्लिश हो रही है...");
         
         try {
-            // Firebase में डेटा सेव करना
             await addDoc(collection(db, "services"), {
                 name: name,
                 mrp: Number(mrp),
                 price: Number(price),
                 image: img,
+                endTime: timer || null, // टाइमर डेटाबेस में सेव
                 desc: desc,
                 timestamp: serverTimestamp()
             });
 
             showToast("✅ सर्विस सफलतापूर्वक पब्लिश हो गई!");
             
-            // पब्लिश होने के बाद फॉर्म को अपने आप खाली करना
             document.getElementById('s-name').value = '';
             document.getElementById('s-mrp').value = '';
             document.getElementById('s-price').value = '';
             document.getElementById('s-img').value = '';
+            document.getElementById('s-timer').value = '';
             document.getElementById('s-desc').value = '';
             
         } catch (error) {
@@ -246,7 +250,6 @@
         }
     };
 
-    // ✅ डेटाबेस से सभी सर्विस को निकालकर स्टोर में दिखाना
     const loadServices = () => {
         const q = query(collection(db, "services"), orderBy("timestamp", "desc"));
         onSnapshot(q, (snapshot) => {
@@ -256,10 +259,18 @@
             snapshot.forEach((doc) => {
                 totalCount++;
                 const data = doc.data();
+                
+                // टाइमर के लिए लाल बैज का डिज़ाइन
+                let timerBadge = "";
+                if(data.endTime) {
+                    timerBadge = `<div class="offer-timer" data-end="${data.endTime}" style="background: #fee2e2; color: #ef4444; font-size: 11px; padding: 6px 12px; border-radius: 12px; font-weight: 800; margin-bottom: 12px; display: inline-block;">⏳ टाइमर लोड हो रहा है...</div>`;
+                }
+
                 servicesHTML += `
                     <div class="service-item">
                         <img src="${data.image}" class="service-img" alt="${data.name}">
                         <div style="padding: 15px;">
+                            ${timerBadge}
                             <h4 style="margin-bottom: 5px;">${data.name}</h4>
                             <p class="service-desc" style="white-space: pre-wrap;">${data.desc}</p>
                             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -280,8 +291,32 @@
         });
     };
 
-    // सर्विस लोड करने वाले फंक्शन को चालू करना
     loadServices();
+
+    // ✅ लाइव टाइमर की टिक-टिक चलाने वाला जादुई कोड
+    setInterval(() => {
+        document.querySelectorAll('.offer-timer').forEach(el => {
+            const end = new Date(el.getAttribute('data-end')).getTime();
+            const now = new Date().getTime();
+            const distance = end - now;
+
+            if (distance < 0) {
+                el.innerHTML = "⏳ ऑफर समाप्त";
+                el.style.background = "#e2e8f0";
+                el.style.color = "#64748b"; // ग्रे रंग
+            } else {
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                let timeStr = "⏳ ऑफर खत्म होगा: ";
+                if(days > 0) timeStr += days + " दिन ";
+                timeStr += hours + "h " + minutes + "m " + seconds + "s";
+                el.innerHTML = timeStr;
+            }
+        });
+    }, 1000);
 
     window.shareWebsite = () => {
         if (navigator.share) {
@@ -301,4 +336,5 @@
 
 </script>
 </body>
-</html>
+    </html>
+    
