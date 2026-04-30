@@ -3,150 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYALIVE | Professional Business Hub</title>
+    <title>KRYALIVE | VIP Business Hub</title>
     
-    <meta property="og:title" content="KRYALIVE | Smart Business Hub">
-    <meta property="og:description" content="Kryalive.com: घर बैठे प्रोफेशनल डिजिटल सर्विसेज। ईमानदारी हमारी पहचान।">
-    <meta property="og:image" content="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s600/1000537308.jpg">
-
+    <meta property="og:title" content="KRYALIVE | Premium Digital Services">
+    <meta property="og:description" content="Kryalive.com: 100% लीगल, सुरक्षित और प्रोफेशनल डिजिटल सेवाएं।">
+    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
-        :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --light: #f8fafc; --red: #ff4757; --gold: #f59e0b; }
+        :root { 
+            --primary: #10b981; 
+            --primary-dark: #059669;
+            --dark: #0f172a; 
+            --light: #f8fafc; 
+            --gold: #fbbf24;
+            --glass: rgba(255, 255, 255, 0.85);
+        }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--light); color: var(--dark); overflow-x: hidden; height: 100vh; }
-        
-        /* Layout Optimization */
+        body { background: var(--light); color: var(--dark); overflow: hidden; height: 100vh; }
+
+        /* Splash Screen */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: var(--dark); color: white; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .pulse-logo {
+            width: 100px; height: 100px; border-radius: 25px; border: 3px solid var(--primary);
+            animation: pulse 1.5s infinite; margin-bottom: 20px; box-shadow: 0 0 20px rgba(16,185,129,0.5);
+        }
+        @keyframes pulse { 0% { transform: scale(0.95); } 50% { transform: scale(1.05); } 100% { transform: scale(0.95); } }
+
+        /* App Layout */
         header, .bottom-nav { display: none !important; }
-        .view { display: none !important; padding-bottom: 100px; }
-        .view.active { display: block !important; animation: slideUp 0.4s ease; }
+        .view { display: none !important; padding-bottom: 110px; opacity: 0; }
+        .view.active { display: block !important; animation: fadeIn 0.4s forwards; }
+        
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(15px); } }
 
-        header { background: white; padding: 15px 20px; border-bottom: 1px solid #eee; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 75px; }
+        header { 
+            background: var(--glass); backdrop-filter: blur(12px);
+            padding: 15px 20px; border-bottom: 1px solid rgba(0,0,0,0.05); 
+            justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000;
+        }
+        
         .brand-container { display: flex; align-items: center; gap: 12px; }
-        .logo-img { width: 45px; height: 45px; border-radius: 12px; object-fit: cover; border: 2px solid var(--primary); }
-        .brand { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+        .logo-img { width: 42px; height: 42px; border-radius: 12px; object-fit: cover; }
+        .brand { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
         .brand span { color: var(--primary); }
+        .vip-badge { background: linear-gradient(45deg, #fbbf24, #f59e0b); color: #fff; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 20px; box-shadow: 0 4px 10px rgba(245,158,11,0.3); }
+
+        main { height: calc(100vh - 75px); overflow-y: auto; padding: 20px; }
+
+        /* UI Components */
+        .card { background: #fff; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); padding: 25px; margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.02); }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: #fff; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
         
-        main { height: calc(100vh - 145px); overflow-y: auto; padding: 20px; scroll-behavior: smooth; }
+        input, textarea { width: 100%; padding: 15px; border-radius: 14px; border: 1.5px solid #e2e8f0; margin-bottom: 15px; background: #f8fafc; font-size: 14px; transition: 0.3s; }
+        input:focus { border-color: var(--primary); outline: none; background: white; box-shadow: 0 0 0 4px rgba(16,185,129,0.1); }
         
-        /* Stats & Professional Cards */
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
-        .stat-card { background: white; padding: 20px; border-radius: 24px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; }
-        .stat-card h2 { font-size: 24px; font-weight: 800; }
-        .card { background: #fff; border-radius: 28px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 25px; border: 1px solid #f1f5f9; }
-        
-        input, textarea { width: 100%; padding: 14px; border-radius: 16px; border: 1px solid #e2e8f0; margin-bottom: 12px; background: #f8fafc; outline: none; font-size: 14px; transition: 0.3s; }
-        input:focus { border-color: var(--primary); background: #fff; }
-        .btn { width: 100%; padding: 16px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
+        .btn { width: 100%; padding: 16px; border-radius: 16px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; font-size: 15px; }
         .btn-primary { background: var(--dark); color: white; }
-        .btn-whatsapp { background: var(--primary); color: white; margin-top: 10px; }
+        .btn-success { background: var(--primary); color: white; box-shadow: 0 8px 20px rgba(16,185,129,0.25); }
 
-        /* Service List UI */
-        .service-item { border-radius: 28px; overflow: hidden; background: #fff; margin-bottom: 30px; box-shadow: 0 12px 30px rgba(0,0,0,0.06); border: 1px solid #f1f5f9; }
-        .service-img { width: 100%; height: 230px; object-fit: cover; display: block; }
-        .price-badge { font-size: 22px; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+        /* Services Grid */
+        .service-item { background: #fff; border-radius: 24px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.06); }
+        .service-img { width: 100%; height: 220px; object-fit: cover; }
+        .service-content { padding: 20px; }
 
-        /* Visiting Card UI */
-        #v-card { width: 100%; max-width: 350px; height: 200px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 20px; position: relative; margin: 0 auto; overflow: hidden; color: white; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-        .card-photo { width: 75px; height: 75px; border-radius: 15px; object-fit: cover; border: 2px solid var(--primary); }
+        /* VIP V-Card */
+        #v-card { 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border-radius: 20px; padding: 25px; color: white; position: relative; overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
+        }
+        .v-card-bg { position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: var(--primary); border-radius: 50%; opacity: 0.1; }
 
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-top: 1px solid #eee; padding: 12px 0 30px; z-index: 1000; display: flex; justify-content: space-around; border-radius: 25px 25px 0 0; }
-        .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 11px; font-weight: 700; transition: 0.3s; }
-        .nav-item.active { color: var(--accent); }
-        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+        /* Legal Section */
+        .legal-text { font-size: 12px; color: #64748b; line-height: 1.6; padding: 15px; background: #f1f5f9; border-radius: 15px; margin-top: 15px; }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* Floating WhatsApp */
+        .fab-whatsapp { position: fixed; bottom: 90px; right: 20px; width: 55px; height: 55px; background: #25D366; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 28px; box-shadow: 0 10px 25px rgba(37,211,102,0.4); z-index: 999; text-decoration: none; transition: 0.3s; }
+        .fab-whatsapp:active { transform: scale(0.9); }
+
+        /* Bottom Nav Premium */
+        .bottom-nav { 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: var(--glass); backdrop-filter: blur(15px);
+            padding: 15px 10px 25px; z-index: 1000; display: flex; justify-content: space-around;
+            border-radius: 30px 30px 0 0; box-shadow: 0 -10px 30px rgba(0,0,0,0.05); border-top: 1px solid rgba(255,255,255,0.5);
+        }
+        .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 12px; font-weight: 700; }
+        .nav-item.active { color: var(--primary); }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
+<div id="splash-screen">
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" class="pulse-logo">
+    <h1 style="font-weight: 800; letter-spacing: 2px;">KRYA<span style="color:var(--primary);">LIVE</span></h1>
+    <p style="font-size: 12px; color: #94a3b8; margin-top: 10px;">Premium Digital Network</p>
+</div>
+
 <header id="app-header">
     <div class="brand-container">
         <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" class="logo-img">
-        <div class="brand">KRYA<span>LIVE</span></div>
+        <div class="brand">KRYA</div>
     </div>
-    <div id="role-badge" style="font-size: 10px; font-weight: 800; color: white; padding: 6px 14px; border-radius: 20px;">USER</div>
+    <div id="role-badge" class="vip-badge">VERIFIED</div>
 </header>
 
 <main>
     <section id="view-auth" class="view active">
-        <div style="text-align: center; padding-top: 60px;">
-            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" style="width: 100px; height: 100px; border-radius: 30px; margin-bottom: 25px; border: 3px solid var(--primary); box-shadow: 0 10px 20px rgba(16,185,129,0.2);">
-            <h2 style="font-weight: 800; font-size: 28px; letter-spacing: -1px;">स्वागत है!</h2>
-            <p style="color: #64748b; margin-top: 5px;">KRYALIVE प्रोफेशनल हब में लॉगिन करें।</p>
-            <button class="btn" id="login-btn" style="background: white; color: #000; border: 1px solid #e2e8f0; width: 85%; margin: 40px auto 0; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google के साथ जुड़ें
+        <div style="text-align: center; padding-top: 40px;">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" style="width: 120px; height: 120px; border-radius: 35px; border: 4px solid var(--primary); box-shadow: 0 15px 30px rgba(16,185,129,0.2); margin-bottom: 30px;">
+            <h1 style="font-weight: 800; font-size: 32px;">KRYALIVE</h1>
+            <p style="color: #64748b; margin-top: 10px; font-size: 15px;">आपका स्मार्ट और सुरक्षित बिज़नेस हब</p>
+            <button class="btn" id="login-btn" style="background: white; color: black; border: 1px solid #e2e8f0; width: 90%; margin: 50px auto 0; box-shadow: 0 10px 25px rgba(0,0,0,0.05); height: 60px;">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="24"> Google से सुरक्षित लॉगिन
             </button>
+            <p style="font-size: 11px; color: #94a3b8; margin-top: 20px;">लॉगिन करके आप हमारी लीगल शर्तों से सहमत होते हैं।</p>
         </div>
     </section>
 
     <section id="view-owner" class="view">
         <div class="stat-grid">
-            <div class="stat-card"><h2 id="total-ord">0</h2><p style="font-size: 12px; color: gray;">ऑर्डर्स</p></div>
-            <div class="stat-card"><h2 id="total-services">0</h2><p style="font-size: 12px; color: gray;">सर्विसेज</p></div>
+            <div class="stat-card">
+                <i class="fas fa-chart-line" style="font-size:24px; color:var(--primary); margin-bottom:10px;"></i>
+                <h2 id="total-ord">0</h2><p style="font-size:12px; color:gray;">कुल ऑर्डर्स</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-box" style="font-size:24px; color:var(--gold); margin-bottom:10px;"></i>
+                <h2 id="total-services">0</h2><p style="font-size:12px; color:gray;">लाइव सर्विस</p>
+            </div>
         </div>
         <div class="card">
-            <h3 style="margin-bottom: 15px;">नया सर्विस पब्लिश करें</h3>
-            <input type="text" id="s-name" placeholder="सर्विस का नाम">
-            <input type="number" id="s-price" placeholder="कीमत (₹)">
-            <input type="text" id="s-img" placeholder="फोटो लिंक (URL)">
-            <textarea id="s-desc" placeholder="सर्विस की जानकारी लिखें..." rows="3"></textarea>
-            <button class="btn btn-primary" id="btn-publish"><i class="fas fa-plus-circle"></i> लाइव पब्लिश करें</button>
+            <h3 style="margin-bottom: 20px; font-weight: 800;"><i class="fas fa-plus-circle text-primary"></i> नई सर्विस जोड़ें</h3>
+            <input type="text" id="s-name" placeholder="सर्विस का नाम (उदा. वेबसाइट डिजाइन)">
+            <input type="number" id="s-price" placeholder="प्राइस (₹)">
+            <input type="text" id="s-img" placeholder="इमेज का लिंक (URL)">
+            <textarea id="s-desc" placeholder="सर्विस की पूरी जानकारी..." rows="3"></textarea>
+            <button class="btn btn-success" id="btn-publish">पब्लिश करें</button>
         </div>
         <div id="admin-product-list"></div>
     </section>
 
     <section id="view-store" class="view">
-        <h3 id="user-greet" style="font-weight: 800; font-size: 22px;">नमस्ते!</h3>
-        <p style="font-size: 13px; color: #64748b; margin-bottom: 25px;">KRYALIVE की प्रीमियम डिजिटल सर्विसेज यहाँ हैं।</p>
+        <h2 id="user-greet" style="font-weight: 800; font-size: 26px;">नमस्कार!</h2>
+        <p style="font-size: 14px; color: #64748b; margin-bottom: 25px;">KRYALIVE की प्रीमियम सेवाओं में आपका स्वागत है।</p>
         <div id="store-list"></div>
     </section>
 
     <section id="view-orders" class="view">
-        <h3 style="margin-bottom: 20px; font-weight: 800;">मेरे ऑर्डर्स</h3>
+        <h2 style="margin-bottom: 25px; font-weight: 800;">मेरे ऑर्डर्स</h2>
         <div id="user-orders-display"></div>
     </section>
 
     <section id="view-profile" class="view">
         <div class="card" style="text-align: center;">
-            <img id="u-photo" src="" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 12px;">
-            <h4 id="u-name" style="font-weight: 800;">Name</h4>
-            <p id="u-email" style="color: gray; font-size: 12px; margin-bottom: 20px;">email</p>
+            <img id="u-photo" src="" style="width: 90px; height: 90px; border-radius: 50%; border: 4px solid var(--primary); margin-bottom: 15px; box-shadow: 0 10px 20px rgba(16,185,129,0.2);">
+            <h3 id="u-name" style="font-weight: 800; font-size: 22px;">Name</h3>
+            <p id="u-email" style="color: gray; font-size: 13px; margin-bottom: 25px;">email</p>
             
-            <button class="btn btn-primary" style="margin-bottom: 25px;" onclick="shareWebsite()"><i class="fas fa-share-alt"></i> वेबसाइट शेयर करें</button>
+            <button class="btn btn-primary" style="margin-bottom: 25px;" onclick="shareWebsite()"><i class="fas fa-share-alt"></i> नेटवर्क में शेयर करें</button>
 
-            <div id="v-card-section">
+            <div id="v-card-section" style="margin-bottom: 30px;">
                 <div id="v-card">
-                    <div style="padding: 25px; display: flex; gap: 18px; align-items: center; height: 100%;">
-                        <img id="card-u-photo" src="" class="card-photo">
-                        <div style="text-align: left; z-index: 1;">
+                    <div class="v-card-bg"></div>
+                    <div style="display: flex; gap: 20px; align-items: center; height: 100%; position: relative; z-index: 2;">
+                        <img id="card-u-photo" src="" style="width: 70px; height: 70px; border-radius: 16px; border: 2px solid rgba(255,255,255,0.5);">
+                        <div style="text-align: left;">
                             <h2 id="card-u-name" style="font-size: 18px; margin: 0; font-weight: 800;">NAME</h2>
-                            <p style="font-size: 10px; color: var(--primary); font-weight: 700; text-transform: uppercase; margin-bottom: 8px;">Verified Partner</p>
-                            <div style="font-size: 11px; opacity: 0.8; line-height: 1.5;">
+                            <p style="font-size: 10px; color: var(--primary); font-weight: 800; letter-spacing: 1px; margin-bottom: 10px;">VIP PARTNER</p>
+                            <div style="font-size: 11px; opacity: 0.9; line-height: 1.6;">
                                 <i class="fas fa-envelope"></i> <span id="card-u-email">email</span><br>
-                                <i class="fas fa-globe"></i> Kryalive.com
+                                <i class="fas fa-shield-alt"></i> 100% Verified By KRYA
                             </div>
                         </div>
                     </div>
                 </div>
-                <button class="btn" onclick="downloadCard()" style="background: #f1f5f9; color: #475569; margin-top: 15px; font-size: 13px; height: 45px; border-radius: 12px;">
-                    <i class="fas fa-download"></i> कार्ड डाउनलोड करें
+                <button class="btn" onclick="downloadCard()" style="background: #f1f5f9; color: var(--dark); margin-top: 15px;">
+                    <i class="fas fa-download"></i> कार्ड सेव करें
                 </button>
             </div>
-            <button class="btn" style="background: #fee2e2; color: #ef4444; margin-top: 20px;" id="logout-btn">लॉगआउट</button>
+
+            <div style="text-align: left; border-top: 1px solid #eee; padding-top: 20px;">
+                <h4 style="font-weight: 800;"><i class="fas fa-gavel"></i> कानूनी व सुरक्षा नीतियां</h4>
+                <div class="legal-text">
+                    <b>ईमानदारी हमारी पहचान है।</b><br>
+                    1. आपके द्वारा दी गई सभी जानकारी KRYALIVE के पास सुरक्षित है।<br>
+                    2. हम किसी भी गैर-कानूनी गतिविधि का समर्थन नहीं करते।<br>
+                    3. पेमेंट और सेवाओं की डिलीवरी पूर्णतः पारदर्शी रखी जाएगी।
+                </div>
+            </div>
+
+            <button class="btn" style="background: #fee2e2; color: #ef4444; margin-top: 25px;" id="logout-btn"><i class="fas fa-sign-out-alt"></i> सुरक्षित लॉगआउट</button>
         </div>
     </section>
 </main>
 
+<a href="https://wa.me/916379403821?text=नमस्ते KRYALIVE सपोर्ट, मुझे मदद चाहिए।" target="_blank" class="fab-whatsapp" id="fab-help" style="display:none;">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
 <nav class="bottom-nav" id="app-nav">
-    <button class="nav-item active" id="n-main" onclick="openMain()"><i class="fas fa-th-large"></i><span>स्टोर</span></button>
-    <button class="nav-item" id="n-orders" onclick="nav('orders')"><i class="fas fa-shopping-bag"></i><span>ऑर्डर्स</span></button>
-    <button class="nav-item" id="n-profile" onclick="nav('profile')"><i class="fas fa-user-circle"></i><span>प्रोफाइल</span></button>
+    <button class="nav-item active" id="n-main" onclick="openMain()"><i class="fas fa-compass"></i>स्टोर</button>
+    <button class="nav-item" id="n-orders" onclick="nav('orders')"><i class="fas fa-receipt"></i>ऑर्डर्स</button>
+    <button class="nav-item" id="n-profile" onclick="nav('profile')"><i class="fas fa-user-shield"></i>प्रोफाइल</button>
 </nav>
 
 <script type="module">
@@ -173,7 +245,14 @@
 
     let user = null, isOwner = false;
 
-    const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, gravity: "top", position: "center", style: {background: c, borderRadius: "15px"}}).showToast();
+    // Toast configuration for VIP look
+    const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, gravity: "top", position: "center", style: {background: c, borderRadius: "12px", fontWeight: "600", padding: "12px 20px", boxShadow: "0 10px 20px rgba(0,0,0,0.1)"}}).showToast();
+
+    // Splash Screen Logic
+    setTimeout(() => {
+        document.getElementById('splash-screen').style.opacity = '0';
+        setTimeout(() => document.getElementById('splash-screen').style.visibility = 'hidden', 500);
+    }, 2000);
 
     window.nav = (id) => {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -192,11 +271,14 @@
     onAuthStateChanged(auth, async u => {
         const header = document.getElementById('app-header');
         const navBar = document.getElementById('app-nav');
+        const fab = document.getElementById('fab-help');
+        
         if(u) {
             user = u;
             isOwner = u.email === OWNER_EMAIL;
             header.style.setProperty('display', 'flex', 'important');
             navBar.style.setProperty('display', 'flex', 'important');
+            fab.style.display = 'flex';
             
             document.getElementById('u-name').innerText = u.displayName;
             document.getElementById('u-email').innerText = u.email;
@@ -205,9 +287,9 @@
             document.getElementById('card-u-email').innerText = u.email;
             document.getElementById('card-u-photo').src = u.photoURL;
 
-            document.getElementById('role-badge').innerText = isOwner ? "OWNER" : "VERIFIED";
-            document.getElementById('role-badge').style.background = isOwner ? "var(--accent)" : "var(--primary)";
-            document.getElementById('user-greet').innerText = "नमस्ते, " + u.displayName.split(' ')[0] + "!";
+            document.getElementById('role-badge').innerText = isOwner ? "ADMIN" : "VIP PARTNER";
+            document.getElementById('role-badge').style.background = isOwner ? "var(--dark)" : "linear-gradient(45deg, #fbbf24, #f59e0b)";
+            document.getElementById('user-greet').innerText = "नमस्कार, " + u.displayName.split(' ')[0] + "!";
             
             openMain();
             loadStore();
@@ -215,6 +297,7 @@
         } else {
             header.style.setProperty('display', 'none', 'important');
             navBar.style.setProperty('display', 'none', 'important');
+            fab.style.display = 'none';
             nav('auth');
         }
     });
@@ -224,9 +307,9 @@
         const price = document.getElementById('s-price').value;
         const img = document.getElementById('s-img').value;
         const desc = document.getElementById('s-desc').value;
-        if(!name || !price) return showToast("विवरण भरें", "var(--red)");
+        if(!name || !price) return showToast("कृपया सभी विवरण भरें", "var(--dark)");
         await addDoc(collection(db, "services"), { name, price, img, desc, createdAt: serverTimestamp() });
-        showToast("सर्विस पब्लिश हुई!");
+        showToast("सर्विस सफलतापूर्वक पब्लिश हुई!");
         document.querySelectorAll('input, textarea').forEach(i => i.value="");
     };
 
@@ -242,79 +325,8 @@
                 list.innerHTML += `
                     <div class="service-item">
                         <img src="${s.img || 'https://via.placeholder.com/400x200'}" class="service-img">
-                        <div style="padding: 20px;">
-                            <h4 style="font-weight: 800; font-size: 18px; margin-bottom: 8px;">${s.name}</h4>
-                            <div class="price-badge">₹${s.price}</div>
-                            <p style="font-size: 13px; color: #64748b; margin: 12px 0 20px; line-height: 1.5;">${s.desc || ''}</p>
-                            <button class="btn btn-whatsapp" onclick="buyNow('${s.name}', '${s.price}')">
-                                <i class="fab fa-whatsapp"></i> अभी ऑर्डर करें
-                            </button>
-                        </div>
-                    </div>`;
-                if(isOwner) {
-                    adminList.innerHTML += `
-                        <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px;">
-                            <div><b>${s.name}</b><br><small>₹${s.price}</small></div>
-                            <button class="btn" style="background:#fee2e2;color:red;width:auto;padding:8px 15px;" onclick="deleteProduct('${d.id}')">हटाएं</button>
-                        </div>`;
-                }
-            });
-        });
-    }
-
-    window.buyNow = async (n, p) => {
-        if(!user) return;
-        const oID = "KRYA-ORD-" + Math.floor(1000 + Math.random() * 9000);
-        await addDoc(collection(db, "orders"), {
-            orderID: oID, userName: user.displayName, userEmail: user.email,
-            serviceName: n, amount: p, status: "Pending", createdAt: serverTimestamp()
-        });
-        const msg = `नमस्ते KRYALIVE, मैंने '${n}' सर्विस के लिए ऑर्डर किया है। कृपया आगे की प्रक्रिया बताएं।`;
-        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
-        showToast("ऑर्डर दर्ज हुआ!");
-    };
-
-    function loadUserOrders() {
-        const q = query(collection(db, "orders"), where("userEmail", "==", user.email), orderBy("createdAt", "desc"));
-        onSnapshot(q, snap => {
-            const container = document.getElementById('user-orders-display');
-            container.innerHTML = snap.empty ? "<p style='text-align:center; padding:20px; color:gray;'>कोई ऑर्डर नहीं मिला।</p>" : "";
-            snap.forEach(doc => {
-                const o = doc.data();
-                container.innerHTML += `<div class="card" style="padding:20px; border-left:5px solid var(--primary);">
-                    <div style="display:flex; justify-content:space-between;">
-                        <b>${o.serviceName}</b>
-                        <span style="font-size:12px; font-weight:800; color:var(--primary);">${o.status}</span>
-                    </div>
-                    <div style="font-size:12px; color:gray; margin-top:5px;">ID: ${o.orderID} | ₹${o.amount}</div>
-                </div>`;
-            });
-        });
-    }
-
-    function loadAdminStats() {
-        onSnapshot(collection(db, "orders"), snap => {
-            document.getElementById('total-ord').innerText = snap.size;
-        });
-    }
-
-    window.downloadCard = () => {
-        const card = document.getElementById('v-card');
-        html2canvas(card, { useCORS: true, scale: 3 }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = `KRYA-Partner-${user.displayName}.png`;
-            link.href = canvas.toDataURL();
-            link.click();
-            showToast("विजिटिंग कार्ड गैलरी में सेव हुआ!");
-        });
-    };
-
-    window.shareWebsite = () => {
-        if (navigator.share) navigator.share({ title: "KRYALIVE", url: 'https://kryalive.com' });
-    };
-
-    window.deleteProduct = async (id) => { if(confirm("डिलीट करें?")) await deleteDoc(doc(db, "services", id)); };
-</script>
-</body>
-    </html>
-    
+                        <div class="service-content">
+                            <h4 style="font-weight: 800; font-size: 18px; margin-bottom: 5px;">${s.name}</h4>
+                            <div style="font-size: 24px; font-weight: 800; color: var(--primary);">₹${s.price}</div>
+                            <p style="font-size: 13px; color: #64748b; margin: 12px 0 20px; line-height: 1.6;">${s.desc || ''}</p>
+                            <b
