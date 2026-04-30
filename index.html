@@ -3,222 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KRYALIVE | VIP Business Hub</title>
+    <meta name="theme-color" content="#0f172a">
+    <title>KRYALIVE | Masterclass VIP Hub</title>
     
-    <meta property="og:title" content="KRYALIVE | Premium Digital Services">
-    <meta property="og:description" content="Kryalive.com: 100% लीगल, सुरक्षित और प्रोफेशनल डिजिटल सेवाएं।">
+    <meta name="description" content="100% सुरक्षित और लीगल डिजिटल बिज़नेस हब।">
+    <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22KRYALIVE%22%2C%22short_name%22%3A%22KRYA%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%2310b981%22%7D">
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
+        /* --- MASTERCLASS CSS ARCHITECTURE --- */
         :root { 
-            --primary: #10b981; 
-            --primary-dark: #059669;
-            --dark: #0f172a; 
-            --light: #f8fafc; 
-            --gold: #fbbf24;
-            --glass: rgba(255, 255, 255, 0.85);
+            --bg-main: #f8fafc; --bg-card: #ffffff; --text-main: #0f172a; --text-muted: #64748b;
+            --primary: #10b981; --primary-hover: #059669; --accent: #3b82f6; --danger: #ef4444; --warning: #f59e0b;
+            --glass-bg: rgba(255, 255, 255, 0.7); --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--light); color: var(--dark); overflow: hidden; height: 100vh; }
 
-        /* Splash Screen */
-        #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: var(--dark); color: white; z-index: 9999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+        /* Dark Mode Setup (Can be toggled via JS) */
+        .dark-mode {
+            --bg-main: #0f172a; --bg-card: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8;
+            --glass-bg: rgba(30, 41, 59, 0.7); --glass-border: rgba(255, 255, 255, 0.05);
         }
-        .pulse-logo {
-            width: 100px; height: 100px; border-radius: 25px; border: 3px solid var(--primary);
-            animation: pulse 1.5s infinite; margin-bottom: 20px; box-shadow: 0 0 20px rgba(16,185,129,0.5);
-        }
-        @keyframes pulse { 0% { transform: scale(0.95); } 50% { transform: scale(1.05); } 100% { transform: scale(0.95); } }
 
-        /* App Layout */
-        header, .bottom-nav { display: none !important; }
-        .view { display: none !important; padding-bottom: 110px; opacity: 0; }
-        .view.active { display: block !important; animation: fadeIn 0.4s forwards; }
-        
-        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(15px); } }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg-main); color: var(--text-main); overflow: hidden; height: 100vh; transition: background 0.3s ease; }
 
+        /* Loader & Splash */
+        #loader { position: fixed; inset: 0; background: var(--bg-main); z-index: 10000; display: flex; justify-content: center; align-items: center; transition: 0.5s; }
+        .spinner { width: 50px; height: 50px; border: 4px solid var(--primary); border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Header Glassmorphism */
         header { 
-            background: var(--glass); backdrop-filter: blur(12px);
-            padding: 15px 20px; border-bottom: 1px solid rgba(0,0,0,0.05); 
-            justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000;
+            position: sticky; top: 0; z-index: 1000; background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;
         }
+        .logo-wrap { display: flex; align-items: center; gap: 12px; }
+        .logo-wrap img { width: 44px; height: 44px; border-radius: 14px; box-shadow: var(--shadow-sm); border: 2px solid var(--primary); }
+        .brand-title { font-size: 24px; font-weight: 800; background: linear-gradient(45deg, var(--text-main), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* Main Viewport */
+        main { height: calc(100vh - 77px); overflow-y: auto; padding: 24px; scroll-behavior: smooth; }
+        main::-webkit-scrollbar { width: 6px; }
+        main::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
+
+        /* Views & Routing */
+        .view-container { display: none; animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); padding-bottom: 100px; }
+        .view-container.active { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+        /* Cards & Forms */
+        .master-card { background: var(--bg-card); border-radius: 24px; padding: 24px; box-shadow: var(--shadow-xl); border: 1px solid var(--glass-border); margin-bottom: 24px; transition: transform 0.3s; }
+        .master-card:hover { transform: translateY(-5px); }
         
-        .brand-container { display: flex; align-items: center; gap: 12px; }
-        .logo-img { width: 42px; height: 42px; border-radius: 12px; object-fit: cover; }
-        .brand { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
-        .brand span { color: var(--primary); }
-        .vip-badge { background: linear-gradient(45deg, #fbbf24, #f59e0b); color: #fff; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 20px; box-shadow: 0 4px 10px rgba(245,158,11,0.3); }
+        .input-group { position: relative; margin-bottom: 20px; }
+        .input-group i { position: absolute; left: 16px; top: 18px; color: var(--text-muted); }
+        .master-input { width: 100%; padding: 16px 16px 16px 45px; border-radius: 16px; border: 2px solid transparent; background: rgba(0,0,0,0.03); color: var(--text-main); font-size: 15px; transition: 0.3s; outline: none; }
+        .master-input:focus { border-color: var(--primary); background: transparent; }
 
-        main { height: calc(100vh - 75px); overflow-y: auto; padding: 20px; }
-
-        /* UI Components */
-        .card { background: #fff; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); padding: 25px; margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.02); }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: #fff; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
-        
-        input, textarea { width: 100%; padding: 15px; border-radius: 14px; border: 1.5px solid #e2e8f0; margin-bottom: 15px; background: #f8fafc; font-size: 14px; transition: 0.3s; }
-        input:focus { border-color: var(--primary); outline: none; background: white; box-shadow: 0 0 0 4px rgba(16,185,129,0.1); }
-        
-        .btn { width: 100%; padding: 16px; border-radius: 16px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; font-size: 15px; }
-        .btn-primary { background: var(--dark); color: white; }
-        .btn-success { background: var(--primary); color: white; box-shadow: 0 8px 20px rgba(16,185,129,0.25); }
-
-        /* Services Grid */
-        .service-item { background: #fff; border-radius: 24px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.06); }
-        .service-img { width: 100%; height: 220px; object-fit: cover; }
-        .service-content { padding: 20px; }
-
-        /* VIP V-Card */
-        #v-card { 
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            border-radius: 20px; padding: 25px; color: white; position: relative; overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
+        /* Buttons with Ripple */
+        .btn-master { 
+            width: 100%; padding: 18px; border-radius: 16px; border: none; font-weight: 800; font-size: 16px; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s; position: relative; overflow: hidden;
         }
-        .v-card-bg { position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: var(--primary); border-radius: 50%; opacity: 0.1; }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3); }
+        .btn-primary:active { transform: scale(0.96); box-shadow: none; }
+        .btn-dark { background: var(--text-main); color: var(--bg-main); }
 
-        /* Legal Section */
-        .legal-text { font-size: 12px; color: #64748b; line-height: 1.6; padding: 15px; background: #f1f5f9; border-radius: 15px; margin-top: 15px; }
+        /* Store UI - Premium Grid */
+        .store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+        .product-card { background: var(--bg-card); border-radius: 28px; overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.05); }
+        .img-wrapper { position: relative; width: 100%; height: 240px; overflow: hidden; }
+        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .product-card:hover .img-wrapper img { transform: scale(1.08); }
+        .price-badge { position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.8); color: white; padding: 6px 14px; border-radius: 20px; font-weight: 800; backdrop-filter: blur(5px); }
 
-        /* Floating WhatsApp */
-        .fab-whatsapp { position: fixed; bottom: 90px; right: 20px; width: 55px; height: 55px; background: #25D366; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 28px; box-shadow: 0 10px 25px rgba(37,211,102,0.4); z-index: 999; text-decoration: none; transition: 0.3s; }
-        .fab-whatsapp:active { transform: scale(0.9); }
+        /* Skeleton Loading */
+        .skeleton { background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 12px; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-        /* Bottom Nav Premium */
-        .bottom-nav { 
-            position: fixed; bottom: 0; left: 0; width: 100%; 
-            background: var(--glass); backdrop-filter: blur(15px);
-            padding: 15px 10px 25px; z-index: 1000; display: flex; justify-content: space-around;
-            border-radius: 30px 30px 0 0; box-shadow: 0 -10px 30px rgba(0,0,0,0.05); border-top: 1px solid rgba(255,255,255,0.5);
+        /* Admin Chart Container */
+        .chart-container { width: 100%; height: 200px; background: var(--bg-card); border-radius: 20px; padding: 15px; margin-bottom: 24px; box-shadow: var(--shadow-sm); }
+
+        /* Bottom Navigation Dock */
+        .nav-dock { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px;
+            background: var(--text-main); border-radius: 30px; display: flex; justify-content: space-around; padding: 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); z-index: 1000;
         }
-        .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 12px; font-weight: 700; }
-        .nav-item.active { color: var(--primary); }
-        .nav-item i { font-size: 22px; display: block; margin-bottom: 5px; }
+        .dock-item { color: var(--text-muted); background: transparent; border: none; padding: 12px 20px; border-radius: 20px; font-size: 20px; cursor: pointer; transition: 0.3s; }
+        .dock-item.active { background: var(--primary); color: white; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(16,185,129,0.4); }
+
+        /* Utility */
+        .badge { background: var(--warning); color: white; padding: 4px 10px; border-radius: 10px; font-size: 11px; font-weight: 800; }
     </style>
 </head>
 <body>
 
-<div id="splash-screen">
-    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" class="pulse-logo">
-    <h1 style="font-weight: 800; letter-spacing: 2px;">KRYA<span style="color:var(--primary);">LIVE</span></h1>
-    <p style="font-size: 12px; color: #94a3b8; margin-top: 10px;">Premium Digital Network</p>
-</div>
+<div id="loader"><div class="spinner"></div></div>
 
-<header id="app-header">
-    <div class="brand-container">
-        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" class="logo-img">
-        <div class="brand">KRYA</div>
+<header id="main-header" style="display:none;">
+    <div class="logo-wrap">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" alt="KRYA">
+        <div class="brand-title">KRYALIVE</div>
     </div>
-    <div id="role-badge" class="vip-badge">VERIFIED</div>
+    <div class="badge" id="role-indicator">USER</div>
 </header>
 
 <main>
-    <section id="view-auth" class="view active">
-        <div style="text-align: center; padding-top: 40px;">
-            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" style="width: 120px; height: 120px; border-radius: 35px; border: 4px solid var(--primary); box-shadow: 0 15px 30px rgba(16,185,129,0.2); margin-bottom: 30px;">
-            <h1 style="font-weight: 800; font-size: 32px;">KRYALIVE</h1>
-            <p style="color: #64748b; margin-top: 10px; font-size: 15px;">आपका स्मार्ट और सुरक्षित बिज़नेस हब</p>
-            <button class="btn" id="login-btn" style="background: white; color: black; border: 1px solid #e2e8f0; width: 90%; margin: 50px auto 0; box-shadow: 0 10px 25px rgba(0,0,0,0.05); height: 60px;">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="24"> Google से सुरक्षित लॉगिन
-            </button>
-            <p style="font-size: 11px; color: #94a3b8; margin-top: 20px;">लॉगिन करके आप हमारी लीगल शर्तों से सहमत होते हैं।</p>
-        </div>
-    </section>
-
-    <section id="view-owner" class="view">
-        <div class="stat-grid">
-            <div class="stat-card">
-                <i class="fas fa-chart-line" style="font-size:24px; color:var(--primary); margin-bottom:10px;"></i>
-                <h2 id="total-ord">0</h2><p style="font-size:12px; color:gray;">कुल ऑर्डर्स</p>
+    <section id="view-auth" class="view-container active">
+        <div style="text-align: center; margin-top: 10vh;">
+            <div style="width: 140px; height: 140px; background: white; border-radius: 40px; margin: 0 auto 30px; display: flex; justify-content: center; align-items: center; box-shadow: var(--shadow-xl); transform: rotate(10deg); border: 4px solid var(--primary);">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" style="width: 100%; height: 100%; border-radius: 36px; object-fit: cover; transform: rotate(-10deg);">
             </div>
-            <div class="stat-card">
-                <i class="fas fa-box" style="font-size:24px; color:var(--gold); margin-bottom:10px;"></i>
-                <h2 id="total-services">0</h2><p style="font-size:12px; color:gray;">लाइव सर्विस</p>
-            </div>
-        </div>
-        <div class="card">
-            <h3 style="margin-bottom: 20px; font-weight: 800;"><i class="fas fa-plus-circle text-primary"></i> नई सर्विस जोड़ें</h3>
-            <input type="text" id="s-name" placeholder="सर्विस का नाम (उदा. वेबसाइट डिजाइन)">
-            <input type="number" id="s-price" placeholder="प्राइस (₹)">
-            <input type="text" id="s-img" placeholder="इमेज का लिंक (URL)">
-            <textarea id="s-desc" placeholder="सर्विस की पूरी जानकारी..." rows="3"></textarea>
-            <button class="btn btn-success" id="btn-publish">पब्लिश करें</button>
-        </div>
-        <div id="admin-product-list"></div>
-    </section>
-
-    <section id="view-store" class="view">
-        <h2 id="user-greet" style="font-weight: 800; font-size: 26px;">नमस्कार!</h2>
-        <p style="font-size: 14px; color: #64748b; margin-bottom: 25px;">KRYALIVE की प्रीमियम सेवाओं में आपका स्वागत है।</p>
-        <div id="store-list"></div>
-    </section>
-
-    <section id="view-orders" class="view">
-        <h2 style="margin-bottom: 25px; font-weight: 800;">मेरे ऑर्डर्स</h2>
-        <div id="user-orders-display"></div>
-    </section>
-
-    <section id="view-profile" class="view">
-        <div class="card" style="text-align: center;">
-            <img id="u-photo" src="" style="width: 90px; height: 90px; border-radius: 50%; border: 4px solid var(--primary); margin-bottom: 15px; box-shadow: 0 10px 20px rgba(16,185,129,0.2);">
-            <h3 id="u-name" style="font-weight: 800; font-size: 22px;">Name</h3>
-            <p id="u-email" style="color: gray; font-size: 13px; margin-bottom: 25px;">email</p>
+            <h1 style="font-size: 36px; font-weight: 800; margin-bottom: 10px;">बिज़नेस हब</h1>
+            <p style="color: var(--text-muted); margin-bottom: 40px;">100% सुरक्षित और लीगल नेटवर्क</p>
             
-            <button class="btn btn-primary" style="margin-bottom: 25px;" onclick="shareWebsite()"><i class="fas fa-share-alt"></i> नेटवर्क में शेयर करें</button>
+            <button class="btn-master btn-dark" id="btn-login" style="width: 90%; margin: 0 auto;">
+                <i class="fab fa-google" style="color: #ea4335;"></i> Google से ऑथेंटिकेट करें
+            </button>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 20px;"><i class="fas fa-lock"></i> एंड-टू-एंड एन्क्रिप्टेड</p>
+        </div>
+    </section>
 
-            <div id="v-card-section" style="margin-bottom: 30px;">
-                <div id="v-card">
-                    <div class="v-card-bg"></div>
-                    <div style="display: flex; gap: 20px; align-items: center; height: 100%; position: relative; z-index: 2;">
-                        <img id="card-u-photo" src="" style="width: 70px; height: 70px; border-radius: 16px; border: 2px solid rgba(255,255,255,0.5);">
-                        <div style="text-align: left;">
-                            <h2 id="card-u-name" style="font-size: 18px; margin: 0; font-weight: 800;">NAME</h2>
-                            <p style="font-size: 10px; color: var(--primary); font-weight: 800; letter-spacing: 1px; margin-bottom: 10px;">VIP PARTNER</p>
-                            <div style="font-size: 11px; opacity: 0.9; line-height: 1.6;">
-                                <i class="fas fa-envelope"></i> <span id="card-u-email">email</span><br>
-                                <i class="fas fa-shield-alt"></i> 100% Verified By KRYA
-                            </div>
-                        </div>
+    <section id="view-store" class="view-container">
+        <div class="master-card" style="background: linear-gradient(135deg, var(--text-main), #1e293b); color: white; border: none;">
+            <h2 id="greet-name" style="font-size: 28px; margin-bottom: 5px;">नमस्ते!</h2>
+            <p style="opacity: 0.8; font-size: 14px;">आपके लिए बेहतरीन डिजिटल सेवाएं तैयार हैं।</p>
+        </div>
+        
+        <h3 style="margin: 20px 0 15px; font-weight: 800;">विशेष सेवाएं</h3>
+        <div id="store-grid" class="store-grid">
+            <div class="product-card"><div class="skeleton" style="height: 240px;"></div><div style="padding: 20px;"><div class="skeleton" style="height: 20px; width: 70%; margin-bottom: 10px;"></div><div class="skeleton" style="height: 40px;"></div></div></div>
+        </div>
+    </section>
+
+    <section id="view-admin" class="view-container">
+        <h2 style="font-weight: 800; margin-bottom: 20px;">कंट्रोल पैनल</h2>
+        
+        <div class="chart-container">
+            <canvas id="revenueChart"></canvas>
+        </div>
+
+        <div class="master-card">
+            <h3 style="margin-bottom: 20px;"><i class="fas fa-cloud-upload-alt text-primary"></i> नई सर्विस डिप्लॉय करें</h3>
+            <div class="input-group">
+                <i class="fas fa-tag"></i>
+                <input type="text" class="master-input" id="adm-name" placeholder="सर्विस का नाम">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-rupee-sign"></i>
+                <input type="number" class="master-input" id="adm-price" placeholder="कीमत दर्ज करें">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-image"></i>
+                <input type="text" class="master-input" id="adm-img" placeholder="इमेज URL">
+            </div>
+            <button class="btn-master btn-primary" id="btn-deploy">डेटाबेस में सेव करें <i class="fas fa-arrow-right"></i></button>
+        </div>
+        
+        <h3 style="font-weight: 800; margin-bottom: 15px;">लाइव डेटा</h3>
+        <div id="admin-list"></div>
+    </section>
+
+    <section id="view-orders" class="view-container">
+        <h2 style="font-weight: 800; margin-bottom: 20px;">ऑर्डर ट्रैकिंग</h2>
+        <div id="orders-list"></div>
+    </section>
+
+    <section id="view-profile" class="view-container">
+        <div class="master-card" style="text-align: center;">
+            <div style="position: relative; display: inline-block;">
+                <img id="pro-img" src="" style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--primary); padding: 4px;">
+                <div style="position: absolute; bottom: 5px; right: 5px; background: var(--primary); width: 20px; height: 20px; border-radius: 50%; border: 3px solid white;"></div>
+            </div>
+            <h2 id="pro-name" style="margin-top: 15px; font-weight: 800;">Name</h2>
+            <p id="pro-email" style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px;">Email</p>
+
+            <div id="vip-card" style="background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'), linear-gradient(135deg, #020617 0%, #0f172a 100%); border-radius: 24px; padding: 30px; text-align: left; color: white; position: relative; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);">
+                <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: var(--primary); filter: blur(40px); opacity: 0.5;"></div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px;">
+                    <div>
+                        <h4 style="font-size: 12px; color: var(--primary); font-weight: 800; letter-spacing: 2px;">KRYALIVE</h4>
+                        <p style="font-size: 9px; opacity: 0.7;">AUTHORIZED PARTNER</p>
                     </div>
+                    <i class="fas fa-qrcode" style="font-size: 24px; opacity: 0.8;"></i>
                 </div>
-                <button class="btn" onclick="downloadCard()" style="background: #f1f5f9; color: var(--dark); margin-top: 15px;">
-                    <i class="fas fa-download"></i> कार्ड सेव करें
-                </button>
+                <h3 id="card-name" style="font-size: 22px; font-weight: 800; margin-bottom: 5px;">NAME</h3>
+                <p id="card-email" style="font-size: 11px; opacity: 0.8; margin-bottom: 20px;"><i class="fas fa-envelope"></i> EMAIL</p>
+                <div style="height: 1px; background: rgba(255,255,255,0.1); margin-bottom: 15px;"></div>
+                <p style="font-size: 10px; font-weight: 600;"><i class="fas fa-check-circle" style="color: var(--primary);"></i> 100% SECURE NETWORK</p>
             </div>
 
-            <div style="text-align: left; border-top: 1px solid #eee; padding-top: 20px;">
-                <h4 style="font-weight: 800;"><i class="fas fa-gavel"></i> कानूनी व सुरक्षा नीतियां</h4>
-                <div class="legal-text">
-                    <b>ईमानदारी हमारी पहचान है।</b><br>
-                    1. आपके द्वारा दी गई सभी जानकारी KRYALIVE के पास सुरक्षित है।<br>
-                    2. हम किसी भी गैर-कानूनी गतिविधि का समर्थन नहीं करते।<br>
-                    3. पेमेंट और सेवाओं की डिलीवरी पूर्णतः पारदर्शी रखी जाएगी।
-                </div>
-            </div>
-
-            <button class="btn" style="background: #fee2e2; color: #ef4444; margin-top: 25px;" id="logout-btn"><i class="fas fa-sign-out-alt"></i> सुरक्षित लॉगआउट</button>
+            <button class="btn-master btn-dark" onclick="downloadVIP()" style="margin-top: 20px;"><i class="fas fa-download"></i> VIP कार्ड सेव करें</button>
+            <button class="btn-master" id="btn-logout" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); margin-top: 15px;"><i class="fas fa-sign-out-alt"></i> सिस्टम से बाहर आएं</button>
         </div>
     </section>
 </main>
 
-<a href="https://wa.me/916379403821?text=नमस्ते KRYALIVE सपोर्ट, मुझे मदद चाहिए।" target="_blank" class="fab-whatsapp" id="fab-help" style="display:none;">
-    <i class="fab fa-whatsapp"></i>
-</a>
-
-<nav class="bottom-nav" id="app-nav">
-    <button class="nav-item active" id="n-main" onclick="openMain()"><i class="fas fa-compass"></i>स्टोर</button>
-    <button class="nav-item" id="n-orders" onclick="nav('orders')"><i class="fas fa-receipt"></i>ऑर्डर्स</button>
-    <button class="nav-item" id="n-profile" onclick="nav('profile')"><i class="fas fa-user-shield"></i>प्रोफाइल</button>
+<nav class="nav-dock" id="main-nav" style="display:none;">
+    <button class="dock-item active" onclick="Router.navigate('store')"><i class="fas fa-home"></i></button>
+    <button class="dock-item" onclick="Router.navigate('orders')"><i class="fas fa-receipt"></i></button>
+    <button class="dock-item" onclick="Router.navigate('profile')"><i class="fas fa-user-astronaut"></i></button>
 </nav>
 
 <script type="module">
@@ -226,6 +220,7 @@
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, doc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+    // Firebase Architecture Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
         authDomain: "signing-9fc01.firebaseapp.com",
@@ -238,95 +233,80 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
-
-    const OWNER_EMAIL = "krya.global@gmail.com";
-    const WHATSAPP_NUMBER = "916379403821";
-
-    let user = null, isOwner = false;
-
-    // Toast configuration for VIP look
-    const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, gravity: "top", position: "center", style: {background: c, borderRadius: "12px", fontWeight: "600", padding: "12px 20px", boxShadow: "0 10px 20px rgba(0,0,0,0.1)"}}).showToast();
-
-    // Splash Screen Logic
-    setTimeout(() => {
-        document.getElementById('splash-screen').style.opacity = '0';
-        setTimeout(() => document.getElementById('splash-screen').style.visibility = 'hidden', 500);
-    }, 2000);
-
-    window.nav = (id) => {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById('view-' + id).classList.add('active');
-        const navMap = { 'orders': 'n-orders', 'profile': 'n-profile', 'owner': 'n-main', 'store': 'n-main' };
-        document.getElementById(navMap[id]).classList.add('active');
-        if(id === 'orders') loadUserOrders();
+    
+    // Core State Management
+    const STATE = {
+        user: null,
+        isOwner: false,
+        ownerEmail: "krya.global@gmail.com",
+        waNumber: "916379403821"
     };
 
-    window.openMain = () => isOwner ? nav('owner') : nav('store');
-
-    document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
-    document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
-
-    onAuthStateChanged(auth, async u => {
-        const header = document.getElementById('app-header');
-        const navBar = document.getElementById('app-nav');
-        const fab = document.getElementById('fab-help');
-        
-        if(u) {
-            user = u;
-            isOwner = u.email === OWNER_EMAIL;
-            header.style.setProperty('display', 'flex', 'important');
-            navBar.style.setProperty('display', 'flex', 'important');
-            fab.style.display = 'flex';
-            
-            document.getElementById('u-name').innerText = u.displayName;
-            document.getElementById('u-email').innerText = u.email;
-            document.getElementById('u-photo').src = u.photoURL;
-            document.getElementById('card-u-name').innerText = u.displayName;
-            document.getElementById('card-u-email').innerText = u.email;
-            document.getElementById('card-u-photo').src = u.photoURL;
-
-            document.getElementById('role-badge').innerText = isOwner ? "ADMIN" : "VIP PARTNER";
-            document.getElementById('role-badge').style.background = isOwner ? "var(--dark)" : "linear-gradient(45deg, #fbbf24, #f59e0b)";
-            document.getElementById('user-greet').innerText = "नमस्कार, " + u.displayName.split(' ')[0] + "!";
-            
-            openMain();
-            loadStore();
-            if(isOwner) loadAdminStats();
-        } else {
-            header.style.setProperty('display', 'none', 'important');
-            navBar.style.setProperty('display', 'none', 'important');
-            fab.style.display = 'none';
-            nav('auth');
+    // UI Controller
+    const UI = {
+        showToast: (msg, type = "success") => {
+            const color = type === "success" ? "#10b981" : "#ef4444";
+            Toastify({text: msg, duration: 3000, gravity: "top", position: "center", style: {background: color, borderRadius: "12px", padding: "14px 24px", fontWeight: "600", boxShadow: "0 10px 20px rgba(0,0,0,0.15)"}}).showToast();
+        },
+        toggleLoader: (show) => document.getElementById('loader').style.opacity = show ? '1' : '0',
+        initChart: () => {
+            if(!STATE.isOwner) return;
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Sales Activity', data: [12, 19, 3, 5, 2, 3, 9], borderColor: '#10b981', tension: 0.4 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
         }
-    });
-
-    document.getElementById('btn-publish').onclick = async () => {
-        const name = document.getElementById('s-name').value;
-        const price = document.getElementById('s-price').value;
-        const img = document.getElementById('s-img').value;
-        const desc = document.getElementById('s-desc').value;
-        if(!name || !price) return showToast("कृपया सभी विवरण भरें", "var(--dark)");
-        await addDoc(collection(db, "services"), { name, price, img, desc, createdAt: serverTimestamp() });
-        showToast("सर्विस सफलतापूर्वक पब्लिश हुई!");
-        document.querySelectorAll('input, textarea').forEach(i => i.value="");
     };
 
-    function loadStore() {
-        onSnapshot(query(collection(db, "services"), orderBy("createdAt", "desc")), snap => {
-            const list = document.getElementById('store-list');
-            const adminList = document.getElementById('admin-product-list');
-            list.innerHTML = ""; if(isOwner) adminList.innerHTML = "";
-            document.getElementById('total-services').innerText = snap.size;
+    // Advanced Routing System
+    window.Router = {
+        navigate: (path) => {
+            if(path === 'store' && STATE.isOwner) path = 'admin'; // Redirect owner to admin
+            document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.dock-item').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(`view-${path}`).classList.add('active');
+            
+            // Highlight dock icon
+            const dockMap = {'store': 0, 'admin': 0, 'orders': 1, 'profile': 2};
+            document.querySelectorAll('.dock-item')[dockMap[path]].classList.add('active');
+            
+            if(path === 'orders') DB.fetchOrders();
+        }
+    };
 
-            snap.forEach(d => {
-                const s = d.data();
-                list.innerHTML += `
-                    <div class="service-item">
-                        <img src="${s.img || 'https://via.placeholder.com/400x200'}" class="service-img">
-                        <div class="service-content">
-                            <h4 style="font-weight: 800; font-size: 18px; margin-bottom: 5px;">${s.name}</h4>
-                            <div style="font-size: 24px; font-weight: 800; color: var(--primary);">₹${s.price}</div>
-                            <p style="font-size: 13px; color: #64748b; margin: 12px 0 20px; line-height: 1.6;">${s.desc || ''}</p>
-                            <b
+    // Database Architecture
+    const DB = {
+        publishService: async () => {
+            const data = {
+                name: document.getElementById('adm-name').value,
+                price: document.getElementById('adm-price').value,
+                img: document.getElementById('adm-img').value,
+                createdAt: serverTimestamp()
+            };
+            if(!data.name || !data.price) return UI.showToast("डेटा अधूरा है", "error");
+            await addDoc(collection(db, "services"), data);
+            UI.showToast("सर्विस डिप्लॉय हो गई!");
+            document.querySelectorAll('.master-input').forEach(i => i.value = '');
+        },
+        fetchServices: () => {
+            onSnapshot(query(collection(db, "services"), orderBy("createdAt", "desc")), snap => {
+                const storeGrid = document.getElementById('store-grid');
+                const adminList = document.getElementById('admin-list');
+                storeGrid.innerHTML = ''; if(STATE.isOwner) adminList.innerHTML = '';
+                
+                snap.forEach(doc => {
+                    const s = doc.data();
+                    storeGrid.innerHTML += `
+                        <div class="product-card">
+                            <div class="img-wrapper"><div class="price-badge">₹${s.price}</div><img src="${s.img || 'https://via.placeholder.com/400'}" loading="lazy"></div>
+                            <div style="padding: 24px;">
+                                <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 15px;">${s.name}</h3>
+                                <button class="btn-master btn-primary" onclick="DB.createOrder('${s.name}', '${s.price}')">सुरक्षित ऑर्डर <i class="fas fa-shield-alt"></i></button>
+                            </div>
+                        </div>`;
+                    if(STATE.isOwner) {
+                        adminList.innerHTML += `<div class="master-card" style="display:flex; justify-content:space-between; align-items:center; padding:16px;">
+                  
