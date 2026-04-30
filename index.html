@@ -8,8 +8,6 @@
     <meta property="og:title" content="KRYALIVE | Smart Business Hub">
     <meta property="og:description" content="Kryalive.com: घर बैठे प्रोफेशनल डिजिटल सर्विसेज। ईमानदारी हमारी पहचान।">
     <meta property="og:image" content="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s600/1000537308.jpg">
-    <meta property="og:image:width" content="600">
-    <meta property="og:image:height" content="600">
     <meta property="og:url" content="https://kryalive.com">
     <meta property="og:type" content="website">
 
@@ -17,6 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
         :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --light: #f8fafc; --red: #ff4757; --gold: #f59e0b; }
@@ -40,14 +39,12 @@
         .card { background: #fff; border-radius: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); padding: 20px; margin-bottom: 20px; }
         
         input, textarea { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; margin-bottom: 10px; background: #f8fafc; outline: none; font-family: inherit; }
-        textarea { resize: vertical; }
-
         .btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
         .btn-primary { background: var(--accent); color: white; }
 
-        .service-item { border-radius: 24px; overflow: hidden; background: #fff; margin-bottom: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
-        .service-img { width: 100%; height: 190px; object-fit: cover; }
-        .service-desc { font-size: 13px; color: #475569; margin-bottom: 15px; line-height: 1.6; }
+        /* Visiting Card Styling */
+        #v-card { width: 100%; max-width: 350px; height: 200px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 15px; position: relative; margin: 0 auto; overflow: hidden; color: white; text-align: left; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); }
+        .card-photo { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; border: 2px solid var(--primary); }
 
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid #eee; padding: 10px 0 25px; z-index: 1000; }
         .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 11px; font-weight: 700; }
@@ -72,8 +69,7 @@
         <div style="text-align: center; padding-top: 80px;">
             <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" style="width: 110px; height: 110px; border-radius: 50%; margin-bottom: 20px; border: 3px solid var(--primary);">
             <h2 style="font-weight: 800; font-size: 26px;">नमस्ते!</h2>
-            <p style="color: gray; margin-bottom: 40px; padding: 0 20px;">Kryalive.com में प्रवेश के लिए लॉगिन करें।</p>
-            <button class="btn" id="login-btn" style="background: white; color: #000; border: 1.5px solid #eee; width: 85%; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+            <button class="btn" id="login-btn" style="background: white; color: #000; border: 1.5px solid #eee; width: 85%; margin: 40px auto 0; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google के साथ शुरू करें
             </button>
         </div>
@@ -88,12 +84,11 @@
         <div class="card">
             <h3>नया सर्विस पब्लिश करें</h3>
             <input type="text" id="s-name" placeholder="सर्विस का नाम">
-            <input type="number" id="s-mrp" placeholder="MRP (बाजार भाव)">
-            <input type="number" id="s-price" placeholder="असली कीमत (आपका भाव)">
-            <input type="text" id="s-img" placeholder="फोटो का लिंक">
-            <textarea id="s-desc" placeholder="सर्विस की पूरी जानकारी, नियम और शर्तें लिखें..." rows="5"></textarea>
-            
-            <button class="btn btn-primary" id="btn-publish"><i class="fas fa-plus"></i> पब्लिश करें</button>
+            <input type="number" id="s-mrp" placeholder="MRP">
+            <input type="number" id="s-price" placeholder="असली कीमत">
+            <input type="text" id="s-img" placeholder="फोटो लिंक">
+            <textarea id="s-desc" placeholder="जानकारी..." rows="3"></textarea>
+            <button class="btn btn-primary" id="btn-publish">पब्लिश करें</button>
         </div>
         <div id="admin-product-list"></div>
     </section>
@@ -110,15 +105,37 @@
     </section>
 
     <section id="view-profile" class="view">
-        <div class="card" style="text-align: center; padding: 40px 20px;">
-            <img id="u-photo" src="" style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--primary); margin-bottom: 15px;">
+        <div class="card" style="text-align: center; padding: 20px;">
+            <img id="u-photo" src="" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 10px;">
             <h4 id="u-name">Name</h4>
-            <p id="u-email" style="color: gray; font-size: 12px; margin-bottom: 25px;">email</p>
-            <button class="btn btn-primary" style="margin-bottom: 15px;" onclick="shareWebsite()"><i class="fas fa-share-alt"></i> Kryalive.com शेयर करें</button>
-            <div style="font-size: 11px; color: gray; text-align: left; background: #f8fafc; padding: 15px; border-radius: 15px; border: 1px solid #eee;">
-                <b>हमारी नीति:</b> हम ईमानदारी और पारदर्शिता में विश्वास रखते हैं।
+            <p id="u-email" style="color: gray; font-size: 11px; margin-bottom: 15px;">email</p>
+            
+            <button class="btn btn-primary" style="margin-bottom: 20px;" onclick="shareWebsite()"><i class="fas fa-share-alt"></i> KRYALIVE शेयर करें</button>
+
+            <div id="id-card-area" style="margin-bottom: 20px;">
+                <div id="v-card">
+                    <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: var(--primary); border-radius: 50%; opacity: 0.1;"></div>
+                    <div style="padding: 20px; display: flex; gap: 15px; align-items: center; height: 100%;">
+                        <img id="card-u-photo" src="" class="card-photo">
+                        <div style="flex: 1; z-index: 1;">
+                            <h2 id="card-u-name" style="font-size: 16px; margin: 0; font-weight: 800;">NAME</h2>
+                            <p style="font-size: 9px; color: var(--primary); font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Verified Partner</p>
+                            <div style="font-size: 10px; opacity: 0.8;">
+                                <i class="fas fa-envelope"></i> <span id="card-u-email">email</span><br>
+                                <i class="fas fa-globe"></i> Kryalive.com
+                            </div>
+                        </div>
+                    </div>
+                    <div style="position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.3); padding: 5px 20px; display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
+                        <span style="font-weight: 800;">KRYA<span style="color:var(--primary)">LIVE</span></span>
+                    </div>
+                </div>
+                <button class="btn" onclick="downloadCard()" style="background: #f1f5f9; color: #475569; margin-top: 10px; font-size: 12px; height: 35px;">
+                    <i class="fas fa-download"></i> कार्ड सेव करें
+                </button>
             </div>
-            <button class="btn" style="background: #fee2e2; color: #ef4444; margin-top: 20px;" id="logout-btn">लॉगआउट</button>
+
+            <button class="btn" style="background: #fee2e2; color: #ef4444;" id="logout-btn">लॉगआउट</button>
         </div>
     </section>
 </main>
@@ -156,6 +173,7 @@
 
     const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, style: {background: c, borderRadius: "15px"}}).showToast();
 
+    // Nav Logic
     window.nav = (id) => {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -173,21 +191,22 @@
     onAuthStateChanged(auth, async u => {
         const header = document.getElementById('app-header');
         const navBar = document.getElementById('app-nav');
-
         if(u) {
             user = u;
             isOwner = u.email === OWNER_EMAIL;
             header.style.setProperty('display', 'flex', 'important');
             navBar.style.setProperty('display', 'flex', 'important');
             
-            await setDoc(doc(db, "subscribers", u.uid), { name: u.displayName, email: u.email, lastSeen: serverTimestamp() }, { merge: true });
-
+            // Profile & Card Data Update
             document.getElementById('u-name').innerText = u.displayName;
             document.getElementById('u-email').innerText = u.email;
             document.getElementById('u-photo').src = u.photoURL;
+            document.getElementById('card-u-name').innerText = u.displayName;
+            document.getElementById('card-u-email').innerText = u.email;
+            document.getElementById('card-u-photo').src = u.photoURL;
+
             document.getElementById('role-badge').innerText = isOwner ? "OWNER" : "USER";
             document.getElementById('role-badge').style.background = isOwner ? "var(--accent)" : "var(--primary)";
-            document.getElementById('n-txt').innerText = isOwner ? "Admin" : "Store";
             document.getElementById('user-greet').innerText = "नमस्ते, " + u.displayName.split(' ')[0] + "!";
             
             openMain();
@@ -200,74 +219,57 @@
         }
     });
 
-    window.deleteProduct = async (id) => {
-        if(confirm("डिलीट करें?")) {
-            await deleteDoc(doc(db, "services", id));
-            showToast("हटा दिया गया", "var(--red)");
-        }
+    window.downloadCard = () => {
+        const card = document.getElementById('v-card');
+        html2canvas(card, { useCORS: true, scale: 2 }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `KRYA-Partner-${user.displayName}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+            showToast("विजिटिंग कार्ड गैलरी में सेव हुआ!");
+        });
     };
 
+    // Services Logic
     document.getElementById('btn-publish').onclick = async () => {
         const name = document.getElementById('s-name').value;
         const mrp = document.getElementById('s-mrp').value;
         const price = document.getElementById('s-price').value;
         const img = document.getElementById('s-img').value;
         const desc = document.getElementById('s-desc').value;
-
         if(!name || !price) return showToast("विवरण भरें", "var(--red)");
-
-        try {
-            const sCode = "KRYA-S-" + Math.floor(1000 + Math.random() * 9000);
-            await addDoc(collection(db, "services"), { name, mrp, price, img, desc, serviceCode: sCode, createdAt: serverTimestamp() });
-            showToast("सफल! कोड: " + sCode);
-            document.querySelectorAll('input, textarea').forEach(i => i.value="");
-        } catch (e) { showToast("Error: " + e.message, "var(--red)"); }
+        const sCode = "KRYA-S-" + Math.floor(1000 + Math.random() * 9000);
+        await addDoc(collection(db, "services"), { name, mrp, price, img, desc, serviceCode: sCode, createdAt: serverTimestamp() });
+        showToast("सफल!");
+        document.querySelectorAll('input, textarea').forEach(i => i.value="");
     };
 
     function loadStore() {
         onSnapshot(query(collection(db, "services"), orderBy("createdAt", "desc")), snap => {
             const list = document.getElementById('store-list');
-            const adminList = document.getElementById('admin-product-list');
-            document.getElementById('total-services').innerText = snap.size;
-            list.innerHTML = ""; if(isOwner) adminList.innerHTML = "";
-
+            list.innerHTML = "";
             snap.forEach(d => {
                 const s = d.data();
-                const descHtml = s.desc ? `<p class="service-desc">${s.desc.replace(/\n/g, '<br>')}</p>` : '';
-                
                 list.innerHTML += `
                     <div class="service-item">
                         <img src="${s.img || 'https://via.placeholder.com/400x200'}" class="service-img">
-                        <div style="padding: 18px;">
+                        <div style="padding: 15px;">
                             <h4 style="font-weight: 800;">${s.name}</h4>
-                            <div style="margin: 8px 0; display:flex; align-items:baseline; gap:8px;">
-                                <span style="font-size: 22px; font-weight: 800; color: var(--primary);">₹${s.price}</span>
-                                ${s.mrp ? `<span style="text-decoration:line-through; color:gray; font-size:13px;">₹${s.mrp}</span>` : ''}
-                            </div>
-                            ${descHtml}
-                            <button class="btn btn-primary" onclick="buyNow('${s.name}', '${s.price}', '${s.serviceCode}')">अभी खरीदें</button>
+                            <span style="font-size: 20px; font-weight: 800; color: var(--primary);">₹${s.price}</span>
+                            <button class="btn btn-primary" style="margin-top:10px;" onclick="buyNow('${s.name}', '${s.price}', '${s.serviceCode}')">अभी खरीदें</button>
                         </div>
                     </div>`;
-                if(isOwner) {
-                    adminList.innerHTML += `
-                        <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:12px;">
-                            <div><small style="color:gray;">${s.serviceCode}</small><br><b>${s.name}</b></div>
-                            <button class="btn" style="background:#fee2e2;color:red;width:auto;padding:5px 12px;font-size:12px;" onclick="deleteProduct('${d.id}')">हटाएं</button>
-                        </div>`;
-                }
             });
         });
     }
 
     window.buyNow = async (n, p, c) => {
-        if(!user) return showToast("लॉगिन करें", "var(--red)");
         const oID = "KRYA-ORD-" + Math.floor(1000 + Math.random() * 9000);
         await addDoc(collection(db, "orders"), {
             orderID: oID, serviceCode: c, userName: user.displayName, userEmail: user.email,
-            serviceName: n, amount: p, status: "Waiting for Payment", createdAt: serverTimestamp()
+            serviceName: n, amount: p, status: "Waiting", createdAt: serverTimestamp()
         });
-        const msg = `नमस्ते ${DOMAIN_NAME}!\nऑर्डर: ${n}\nकीमत: ₹${p}\nकोड: ${c}\n\nपेमेंट कर दी है। UTR: ________`;
-        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=Order:${n}%0APrice:₹${p}`, '_blank');
         showToast("ऑर्डर दर्ज!");
     };
 
@@ -275,13 +277,10 @@
         const q = query(collection(db, "orders"), where("userEmail", "==", user.email), orderBy("createdAt", "desc"));
         onSnapshot(q, snap => {
             const container = document.getElementById('user-orders-display');
-            container.innerHTML = snap.empty ? "<p style='text-align:center;color:gray;margin-top:40px;'>कोई ऑर्डर नहीं।</p>" : "";
+            container.innerHTML = snap.empty ? "<p>कोई ऑर्डर नहीं।</p>" : "";
             snap.forEach(doc => {
                 const o = doc.data();
-                container.innerHTML += `
-                    <div class="card" style="padding:15px; border-left: 5px solid ${o.status === 'Approved' ? 'var(--primary)' : 'var(--gold)'};">
-                        <b>${o.serviceName}</b><br><small>Status: ${o.status}</small><br><small>ID: ${o.orderID}</small>
-                    </div>`;
+                container.innerHTML += `<div class="card" style="padding:10px; border-left:4px solid var(--primary);"><b>${o.serviceName}</b><br><small>${o.status}</small></div>`;
             });
         });
     }
@@ -289,16 +288,13 @@
     function loadAdminStats() {
         onSnapshot(collection(db, "orders"), snap => {
             document.getElementById('total-ord').innerText = snap.size;
-            let rev = 0; snap.forEach(d => { if(d.data().status === 'Approved') rev += Number(d.data().amount); });
-            document.getElementById('total-rev').innerText = "₹" + rev;
         });
     }
 
     window.shareWebsite = () => {
-        const shareData = { title: DOMAIN_NAME, text: 'KRYALIVE डिजिटल Hub से जुड़ें।', url: 'https://' + DOMAIN_NAME };
-        if (navigator.share) navigator.share(shareData);
-        else window.open(`https://wa.me/?text=जुड़ें ${DOMAIN_NAME}: https://${DOMAIN_NAME}`, '_blank');
+        if (navigator.share) navigator.share({ title: DOMAIN_NAME, url: 'https://kryalive.com' });
     };
 </script>
 </body>
-</html>
+    </html>
+    
