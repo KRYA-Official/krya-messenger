@@ -23,7 +23,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--light); color: var(--dark); overflow-x: hidden; height: 100vh; }
         
-        /* गेटकीपर सुरक्षा */
         header, .bottom-nav { display: none !important; }
         .view { display: none !important; }
         .view.active { display: block !important; animation: slideUp 0.4s ease; }
@@ -92,10 +91,8 @@
             <input type="number" id="s-mrp" placeholder="MRP (बाजार भाव)">
             <input type="number" id="s-price" placeholder="असली कीमत (आपका भाव)">
             <input type="text" id="s-img" placeholder="फोटो का लिंक">
-            
             <label style="font-size: 12px; color: gray; margin-bottom: 5px; display: block; font-weight: bold;">ऑफर खत्म होने का समय (ऑप्शनल):</label>
             <input type="datetime-local" id="s-timer">
-            
             <textarea id="s-desc" placeholder="सर्विस की पूरी जानकारी, नियम और शर्तें लिखें..." rows="5"></textarea>
             
             <button class="btn btn-primary" id="btn-publish"><i class="fas fa-plus"></i> पब्लिश करें</button>
@@ -195,6 +192,7 @@
             if(isOwner) {
                 document.getElementById('n-txt').innerText = "Dashboard";
                 openMain(); 
+                loadUserOrders(); // Admin के लिए डैशबोर्ड के नंबर लोड करना
             } else {
                 document.getElementById('n-txt').innerText = "Store";
                 document.getElementById('user-greet').innerText = "नमस्ते, " + u.displayName.split(" ")[0] + "!";
@@ -209,12 +207,89 @@
         }
     });
 
+    // 🛒 ऑर्डर सेव करने का नया फंक्शन
+    window.placeOrder = async (serviceName, price) => {
+        if(!user) {
+            showToast("कृपया पहले लॉगिन करें!", "#ff4757");
+            return;
+        }
+        showToast("ऑर्डर प्रोसेस हो रहा है...");
+        try {
+            await addDoc(collection(db, "orders"), {
+                userId: user.uid,
+                customerName: user.displayName,
+                customerEmail: user.email,
+                serviceName: serviceName,
+                price: price,
+                status: "Pending", // शुरुआत में ऑर्डर Pending रहेगा
+                timestamp: serverTimestamp()
+            });
+            showToast("✅ आपका ऑर्डर सफलतापूर्वक बुक हो गया!");
+            nav('orders'); // ऑर्डर बुक होते ही ग्राहक को Orders पेज पर भेज देगा
+        } catch (error) {
+            console.error(error);
+            showToast("❌ ऑर्डर फेल हो गया।", "#ff4757");
+        }
+    };
+
+    // 📦 ऑर्डर्स लोड करने का फंक्शन (ग्राहक और एडमिन दोनों के लिए)
+    window.loadUserOrders = () => {
+        if(!user) return;
+        
+        let q;
+        if(isOwner) {
+            // एडमिन (मालिक) को सभी ग्राहकों के ऑर्डर्स दिखेंगे
+            q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
+        } else {
+            // ग्राहक को सिर्फ अपने ऑर्डर्स दिखेंगे
+            q = query(collection(db, "orders"), where("userId", "==", user.uid), orderBy("timestamp", "desc"));
+        }
+
+        onSnapshot(q, (snapshot) => {
+            let ordersHTML = "";
+            let orderCount = 0;
+            let totalRevenue = 0;
+
+            snapshot.forEach((doc) => {
+                orderCount++;
+                const data = doc.data();
+                
+                // अगर ऑर्डर 'Completed' है, तभी कुल राजस्व (Revenue) में पैसा जुड़ेगा
+                if(data.status === "Completed") {
+                    totalRevenue += data.price;
+                }
+
+                // स्टेटस के हिसाब से रंग (Pending = पीला, Completed = हरा)
+                let statusColor = data.status === "Pending" ? "var(--gold)" : (data.status === "Completed" ? "var(--primary)" : "var(--red)");
+                
+                ordersHTML += `
+                    <div class="card" style="margin-bottom: 15px; padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <b style="font-size: 14px;">${data.serviceName}</b>
+                            <span style="background: #f8fafc; padding: 4px 10px; border-radius: 10px; color: ${statusColor}; font-weight: 800; font-size: 11px;">${data.status}</span>
+                        </div>
+                        <p style="font-size: 11px; color: gray;">ग्राहक: ${data.customerName}</p>
+                        <p style="font-size: 16px; font-weight: 800; margin-top: 5px; color: var(--dark);">₹${data.price}</p>
+                    </div>
+                `;
+            });
+
+            document.getElementById('user-orders-display').innerHTML = ordersHTML || "<div style='text-align:center; padding:40px 20px;'><i class='fas fa-box-open' style='font-size: 40px; color: #ddd; margin-bottom: 15px;'></i><p style='color:gray; font-size: 14px;'>अभी तक कोई ऑर्डर नहीं है।</p></div>";
+            
+            // अगर एडमिन लॉगिन है, तो ऊपर डैशबोर्ड के नंबर अपडेट करना
+            if(isOwner) {
+                document.getElementById('total-ord').innerText = orderCount;
+                document.getElementById('total-rev').innerText = "₹" + totalRevenue;
+            }
+        });
+    };
+
     document.getElementById('btn-publish').onclick = async () => {
         const name = document.getElementById('s-name').value;
         const mrp = document.getElementById('s-mrp').value;
         const price = document.getElementById('s-price').value;
         const img = document.getElementById('s-img').value;
-        const timer = document.getElementById('s-timer').value; // टाइमर डेटा
+        const timer = document.getElementById('s-timer').value;
         const desc = document.getElementById('s-desc').value;
         
         if(!name || !price) {
@@ -230,7 +305,7 @@
                 mrp: Number(mrp),
                 price: Number(price),
                 image: img,
-                endTime: timer || null, // टाइमर डेटाबेस में सेव
+                endTime: timer || null,
                 desc: desc,
                 timestamp: serverTimestamp()
             });
@@ -260,12 +335,12 @@
                 totalCount++;
                 const data = doc.data();
                 
-                // टाइमर के लिए लाल बैज का डिज़ाइन
                 let timerBadge = "";
                 if(data.endTime) {
                     timerBadge = `<div class="offer-timer" data-end="${data.endTime}" style="background: #fee2e2; color: #ef4444; font-size: 11px; padding: 6px 12px; border-radius: 12px; font-weight: 800; margin-bottom: 12px; display: inline-block;">⏳ टाइमर लोड हो रहा है...</div>`;
                 }
 
+                // 🛒 यहाँ बटन में जादुई 'placeOrder' फंक्शन जोड़ दिया गया है
                 servicesHTML += `
                     <div class="service-item">
                         <img src="${data.image}" class="service-img" alt="${data.name}">
@@ -278,63 +353,4 @@
                                     <span style="text-decoration: line-through; color: gray; font-size: 12px;">₹${data.mrp}</span>
                                     <span style="color: var(--primary); font-weight: 800; font-size: 18px;"> ₹${data.price}</span>
                                 </div>
-                                <button class="btn btn-primary" style="width: auto; padding: 8px 20px; font-size: 14px;" onclick="showToast('ऑर्डर सिस्टम जल्द आ रहा है!')">ऑर्डर करें</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            document.getElementById('admin-product-list').innerHTML = servicesHTML || "<p style='text-align:center; color:gray;'>अभी कोई सर्विस पब्लिश नहीं हुई है।</p>";
-            document.getElementById('store-list').innerHTML = servicesHTML || "<p style='text-align:center; color:gray;'>अभी कोई सर्विस उपलब्ध नहीं है।</p>";
-            document.getElementById('total-services').innerText = totalCount;
-        });
-    };
-
-    loadServices();
-
-    // ✅ लाइव टाइमर की टिक-टिक चलाने वाला जादुई कोड
-    setInterval(() => {
-        document.querySelectorAll('.offer-timer').forEach(el => {
-            const end = new Date(el.getAttribute('data-end')).getTime();
-            const now = new Date().getTime();
-            const distance = end - now;
-
-            if (distance < 0) {
-                el.innerHTML = "⏳ ऑफर समाप्त";
-                el.style.background = "#e2e8f0";
-                el.style.color = "#64748b"; // ग्रे रंग
-            } else {
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                
-                let timeStr = "⏳ ऑफर खत्म होगा: ";
-                if(days > 0) timeStr += days + " दिन ";
-                timeStr += hours + "h " + minutes + "m " + seconds + "s";
-                el.innerHTML = timeStr;
-            }
-        });
-    }, 1000);
-
-    window.shareWebsite = () => {
-        if (navigator.share) {
-            navigator.share({
-                title: 'KRYALIVE',
-                text: 'Kryalive.com: घर बैठे प्रोफेशनल डिजिटल सर्विसेज।',
-                url: 'https://kryalive.com',
-            });
-        } else {
-            showToast("शेयर लिंक कॉपी किया गया!");
-        }
-    };
-    
-    window.loadUserOrders = () => {
-        document.getElementById('user-orders-display').innerHTML = "<p style='text-align:center; color:gray; padding:20px;'>अभी तक कोई ऑर्डर नहीं है।</p>";
-    };
-
-</script>
-</body>
-    </html>
-    
+                                <button class="btn btn-primary" style="width: auto; padding: 8px 20px; font-size: 14px;" onclick="placeOrder('${data.name}', ${data.price})">ऑर्डर करें</b    
