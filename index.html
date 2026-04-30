@@ -23,7 +23,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--light); color: var(--dark); overflow-x: hidden; height: 100vh; }
         
-        /* गेटकीपर सुरक्षा */
         header, .bottom-nav { display: none !important; }
         .view { display: none !important; }
         .view.active { display: block !important; animation: slideUp 0.4s ease; }
@@ -92,10 +91,8 @@
             <input type="number" id="s-mrp" placeholder="MRP (बाजार भाव)">
             <input type="number" id="s-price" placeholder="असली कीमत (आपका भाव)">
             <input type="text" id="s-img" placeholder="फोटो का लिंक">
-            
             <label style="font-size: 12px; color: gray; margin-bottom: 5px; display: block; font-weight: bold;">ऑफर खत्म होने का समय (ऑप्शनल):</label>
             <input type="datetime-local" id="s-timer">
-            
             <textarea id="s-desc" placeholder="सर्विस की पूरी जानकारी, नियम और शर्तें लिखें..." rows="5"></textarea>
             
             <button class="btn btn-primary" id="btn-publish"><i class="fas fa-plus"></i> पब्लिश करें</button>
@@ -137,7 +134,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, setDoc, doc, updateDoc, onSnapshotMetadata, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
@@ -235,19 +232,6 @@
         }
     };
 
-    // 📦 ऑर्डर्स को अपडेट करने का फंक्शन (मालिक के लिए)
-    window.updateOrderStatus = async (orderId, newStatus) => {
-        try {
-            const orderRef = doc(db, "orders", orderId);
-            await updateDoc(orderRef, { status: newStatus });
-            showToast("स्टेटस अपडेट हो गया!");
-            loadUserOrders();
-        } catch (e) {
-            console.error(e);
-            showToast("समस्या आ रही है!", "#ff4757");
-        }
-    };
-
     // 📦 ऑर्डर्स लोड और डैशबोर्ड अपडेट फंक्शन
     window.loadUserOrders = () => {
         if(!user) return;
@@ -258,23 +242,11 @@
             let orderCount = 0;
             let totalRevenue = 0;
 
-            snapshot.forEach((docItem) => {
+            snapshot.forEach((doc) => {
                 orderCount++;
-                const data = docItem.data();
-                const docId = docItem.id;
-                
+                const data = doc.data();
                 if(data.status === "Completed") totalRevenue += data.price;
                 let statusColor = data.status === "Pending" ? "var(--gold)" : (data.status === "Completed" ? "var(--primary)" : "var(--red)");
-                
-                let adminAction = "";
-                if(isOwner) {
-                    adminAction = `
-                        <div style="margin-top:10px; display:flex; gap:5px;">
-                            <button onclick="updateOrderStatus('${docId}', 'Completed')" class="btn" style="background:var(--primary); padding:6px; font-size:11px; width:50%; color:white;">Complete</button>
-                            <button onclick="updateOrderStatus('${docId}', 'Cancelled')" class="btn" style="background:var(--red); padding:6px; font-size:11px; width:50%; color:white;">Cancel</button>
-                        </div>
-                    `;
-                }
                 
                 ordersHTML += `
                     <div class="card" style="margin-bottom: 15px; padding: 15px;">
@@ -284,7 +256,6 @@
                         </div>
                         <p style="font-size: 11px; color: gray;">ग्राहक: ${data.customerName}</p>
                         <p style="font-size: 16px; font-weight: 800; margin-top: 5px; color: var(--dark);">₹${data.price}</p>
-                        ${adminAction}
                     </div>
                 `;
             });
@@ -303,7 +274,7 @@
         const mrp = document.getElementById('s-mrp').value;
         const price = document.getElementById('s-price').value;
         const img = document.getElementById('s-img').value;
-        const timer = document.getElementById('s-timer').value; // टाइमर डेटा
+        const timer = document.getElementById('s-timer').value;
         const desc = document.getElementById('s-desc').value;
         
         if(!name || !price) {
@@ -317,12 +288,7 @@
                 name: name, mrp: Number(mrp), price: Number(price), image: img, endTime: timer || null, desc: desc, timestamp: serverTimestamp()
             });
             showToast("✅ सर्विस पब्लिश हो गई!");
-            document.getElementById('s-name').value = '';
-            document.getElementById('s-mrp').value = '';
-            document.getElementById('s-price').value = '';
-            document.getElementById('s-img').value = '';
-            document.getElementById('s-timer').value = '';
-            document.getElementById('s-desc').value = '';
+            document.querySelectorAll('input, textarea').forEach(el => el.id.startsWith('s-') ? el.value = '' : null);
         } catch (e) { showToast("Error!", "#ff4757"); }
     };
 
@@ -337,11 +303,40 @@
                 let timerBadge = data.endTime ? `<div class="offer-timer" data-end="${data.endTime}" style="background: #fee2e2; color: #ef4444; font-size: 11px; padding: 6px 12px; border-radius: 12px; font-weight: 800; margin-bottom: 12px; display: inline-block;">⏳ लोड हो रहा है...</div>` : "";
                 servicesHTML += `
                     <div class="service-item">
-                        <img src="${data.image}" class="service-img" style="width: 100%; height: 190px; object-fit: cover;">
+                        <img src="${data.image}" class="service-img">
                         <div style="padding: 15px;">
                             ${timerBadge}
                             <h4 style="margin-bottom: 5px;">${data.name}</h4>
                             <p class="service-desc" style="white-space: pre-wrap;">${data.desc}</p>
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div><span style="text-decoration: line-through; color: gray; font-size: 12px;">₹${data.mrp}</span><span style="color: var(--primary); font-weight: 800; font-size: 18px;"> ₹${data.price}</span></div>
-                                <button class="btn btn-primary" style="width: auto; 
+                                <button class="btn btn-primary" style="width: auto; padding: 8px 20px; font-size: 14px;" onclick="placeOrder('${data.name}', ${data.price})">ऑर्डर करें</button>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+            document.getElementById('admin-product-list').innerHTML = servicesHTML;
+            document.getElementById('store-list').innerHTML = servicesHTML;
+            if(isOwner) document.getElementById('total-services').innerText = totalCount;
+        });
+    };
+
+    loadServices();
+
+    setInterval(() => {
+        document.querySelectorAll('.offer-timer').forEach(el => {
+            const dist = new Date(el.getAttribute('data-end')).getTime() - new Date().getTime();
+            if (dist < 0) { el.innerHTML = "⏳ ऑफर समाप्त"; el.style.background = "#e2e8f0"; el.style.color = "#64748b"; }
+            else {
+                const h = Math.floor((dist % (86400000)) / 3600000);
+                const m = Math.floor((dist % 3600000) / 60000);
+                const s = Math.floor((dist % 60000) / 1000);
+                el.innerHTML = `⏳ खत्म होगा: ${h}h ${m}m ${s}s`;
+            }
+        });
+    }, 1000);
+
+    window.shareWebsite = () => navigator.share ? navigator.share({title: 'KRYALIVE', url: 'https://kryalive.com'}) : showToast("Link Copied!");
+</script>
+</body>
+    </html>
