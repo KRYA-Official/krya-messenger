@@ -185,7 +185,6 @@
             document.getElementById('u-email').innerText = u.email;
             document.getElementById('u-photo').src = u.photoURL;
             
-            // यहाँ से वह कोड ठीक किया गया है जो कट गया था
             document.getElementById('role-badge').innerText = isOwner ? "OWNER" : "USER";
             document.getElementById('role-badge').style.background = isOwner ? "#ff4757" : "var(--primary)";
             
@@ -206,10 +205,13 @@
         }
     });
 
-    // पब्लिश बटन फंक्शन (Admin के लिए)
+    // ✅ असली पब्लिश बटन फंक्शन (डेटाबेस में सेव करने के लिए)
     document.getElementById('btn-publish').onclick = async () => {
         const name = document.getElementById('s-name').value;
+        const mrp = document.getElementById('s-mrp').value;
         const price = document.getElementById('s-price').value;
+        const img = document.getElementById('s-img').value;
+        const desc = document.getElementById('s-desc').value;
         
         if(!name || !price) {
             showToast("कृपया सर्विस का नाम और कीमत दर्ज करें!", "#ff4757");
@@ -217,8 +219,69 @@
         }
         
         showToast("सर्विस पब्लिश हो रही है...");
-        // यहाँ आप Firestore में डेटा सेव करने का आगे का कोड लिख सकते हैं
+        
+        try {
+            // Firebase में डेटा सेव करना
+            await addDoc(collection(db, "services"), {
+                name: name,
+                mrp: Number(mrp),
+                price: Number(price),
+                image: img,
+                desc: desc,
+                timestamp: serverTimestamp()
+            });
+
+            showToast("✅ सर्विस सफलतापूर्वक पब्लिश हो गई!");
+            
+            // पब्लिश होने के बाद फॉर्म को अपने आप खाली करना
+            document.getElementById('s-name').value = '';
+            document.getElementById('s-mrp').value = '';
+            document.getElementById('s-price').value = '';
+            document.getElementById('s-img').value = '';
+            document.getElementById('s-desc').value = '';
+            
+        } catch (error) {
+            console.error("Error: ", error);
+            showToast("❌ तकनीकी समस्या! कृपया इंटरनेट चेक करें।", "#ff4757");
+        }
     };
+
+    // ✅ डेटाबेस से सभी सर्विस को निकालकर स्टोर में दिखाना
+    const loadServices = () => {
+        const q = query(collection(db, "services"), orderBy("timestamp", "desc"));
+        onSnapshot(q, (snapshot) => {
+            let servicesHTML = "";
+            let totalCount = 0;
+
+            snapshot.forEach((doc) => {
+                totalCount++;
+                const data = doc.data();
+                servicesHTML += `
+                    <div class="service-item">
+                        <img src="${data.image}" class="service-img" alt="${data.name}">
+                        <div style="padding: 15px;">
+                            <h4 style="margin-bottom: 5px;">${data.name}</h4>
+                            <p class="service-desc" style="white-space: pre-wrap;">${data.desc}</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <span style="text-decoration: line-through; color: gray; font-size: 12px;">₹${data.mrp}</span>
+                                    <span style="color: var(--primary); font-weight: 800; font-size: 18px;"> ₹${data.price}</span>
+                                </div>
+                                <button class="btn btn-primary" style="width: auto; padding: 8px 20px; font-size: 14px;" onclick="showToast('ऑर्डर सिस्टम जल्द आ रहा है!')">ऑर्डर करें</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('admin-product-list').innerHTML = servicesHTML || "<p style='text-align:center; color:gray;'>अभी कोई सर्विस पब्लिश नहीं हुई है।</p>";
+            document.getElementById('store-list').innerHTML = servicesHTML || "<p style='text-align:center; color:gray;'>अभी कोई सर्विस उपलब्ध नहीं है।</p>";
+            document.getElementById('total-services').innerText = totalCount;
+        });
+    };
+
+    // सर्विस लोड करने वाले फंक्शन को चालू करना
+    loadServices();
 
     window.shareWebsite = () => {
         if (navigator.share) {
