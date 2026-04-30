@@ -192,7 +192,7 @@
             if(isOwner) {
                 document.getElementById('n-txt').innerText = "Dashboard";
                 openMain(); 
-                loadUserOrders(); // Admin के लिए डैशबोर्ड के नंबर लोड करना
+                loadUserOrders(); 
             } else {
                 document.getElementById('n-txt').innerText = "Store";
                 document.getElementById('user-greet').innerText = "नमस्ते, " + u.displayName.split(" ")[0] + "!";
@@ -207,7 +207,7 @@
         }
     });
 
-    // 🛒 ऑर्डर सेव करने का नया फंक्शन
+    // 🛒 असली ऑर्डर बुक करने का फंक्शन
     window.placeOrder = async (serviceName, price) => {
         if(!user) {
             showToast("कृपया पहले लॉगिन करें!", "#ff4757");
@@ -220,30 +220,22 @@
                 customerName: user.displayName,
                 customerEmail: user.email,
                 serviceName: serviceName,
-                price: price,
-                status: "Pending", // शुरुआत में ऑर्डर Pending रहेगा
+                price: Number(price),
+                status: "Pending",
                 timestamp: serverTimestamp()
             });
-            showToast("✅ आपका ऑर्डर सफलतापूर्वक बुक हो गया!");
-            nav('orders'); // ऑर्डर बुक होते ही ग्राहक को Orders पेज पर भेज देगा
+            showToast("✅ ऑर्डर सफलतापूर्वक बुक हो गया!");
+            nav('orders');
         } catch (error) {
             console.error(error);
             showToast("❌ ऑर्डर फेल हो गया।", "#ff4757");
         }
     };
 
-    // 📦 ऑर्डर्स लोड करने का फंक्शन (ग्राहक और एडमिन दोनों के लिए)
+    // 📦 ऑर्डर्स लोड और डैशबोर्ड अपडेट फंक्शन
     window.loadUserOrders = () => {
         if(!user) return;
-        
-        let q;
-        if(isOwner) {
-            // एडमिन (मालिक) को सभी ग्राहकों के ऑर्डर्स दिखेंगे
-            q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
-        } else {
-            // ग्राहक को सिर्फ अपने ऑर्डर्स दिखेंगे
-            q = query(collection(db, "orders"), where("userId", "==", user.uid), orderBy("timestamp", "desc"));
-        }
+        let q = isOwner ? query(collection(db, "orders"), orderBy("timestamp", "desc")) : query(collection(db, "orders"), where("userId", "==", user.uid), orderBy("timestamp", "desc"));
 
         onSnapshot(q, (snapshot) => {
             let ordersHTML = "";
@@ -253,13 +245,7 @@
             snapshot.forEach((doc) => {
                 orderCount++;
                 const data = doc.data();
-                
-                // अगर ऑर्डर 'Completed' है, तभी कुल राजस्व (Revenue) में पैसा जुड़ेगा
-                if(data.status === "Completed") {
-                    totalRevenue += data.price;
-                }
-
-                // स्टेटस के हिसाब से रंग (Pending = पीला, Completed = हरा)
+                if(data.status === "Completed") totalRevenue += data.price;
                 let statusColor = data.status === "Pending" ? "var(--gold)" : (data.status === "Completed" ? "var(--primary)" : "var(--red)");
                 
                 ordersHTML += `
@@ -274,9 +260,7 @@
                 `;
             });
 
-            document.getElementById('user-orders-display').innerHTML = ordersHTML || "<div style='text-align:center; padding:40px 20px;'><i class='fas fa-box-open' style='font-size: 40px; color: #ddd; margin-bottom: 15px;'></i><p style='color:gray; font-size: 14px;'>अभी तक कोई ऑर्डर नहीं है।</p></div>";
-            
-            // अगर एडमिन लॉगिन है, तो ऊपर डैशबोर्ड के नंबर अपडेट करना
+            document.getElementById('user-orders-display').innerHTML = ordersHTML || "<div style='text-align:center; padding:40px 20px;'><p style='color:gray;'>कोई ऑर्डर नहीं है।</p></div>";
             if(isOwner) {
                 document.getElementById('total-ord').innerText = orderCount;
                 document.getElementById('total-rev').innerText = "₹" + totalRevenue;
@@ -284,6 +268,7 @@
         });
     };
 
+    // पब्लिश सर्विस फंक्शन
     document.getElementById('btn-publish').onclick = async () => {
         const name = document.getElementById('s-name').value;
         const mrp = document.getElementById('s-mrp').value;
@@ -293,36 +278,18 @@
         const desc = document.getElementById('s-desc').value;
         
         if(!name || !price) {
-            showToast("कृपया सर्विस का नाम और कीमत दर्ज करें!", "#ff4757");
+            showToast("कृपया नाम और कीमत दर्ज करें!", "#ff4757");
             return;
         }
         
-        showToast("सर्विस पब्लिश हो रही है...");
-        
+        showToast("पब्लिश हो रही है...");
         try {
             await addDoc(collection(db, "services"), {
-                name: name,
-                mrp: Number(mrp),
-                price: Number(price),
-                image: img,
-                endTime: timer || null,
-                desc: desc,
-                timestamp: serverTimestamp()
+                name: name, mrp: Number(mrp), price: Number(price), image: img, endTime: timer || null, desc: desc, timestamp: serverTimestamp()
             });
-
-            showToast("✅ सर्विस सफलतापूर्वक पब्लिश हो गई!");
-            
-            document.getElementById('s-name').value = '';
-            document.getElementById('s-mrp').value = '';
-            document.getElementById('s-price').value = '';
-            document.getElementById('s-img').value = '';
-            document.getElementById('s-timer').value = '';
-            document.getElementById('s-desc').value = '';
-            
-        } catch (error) {
-            console.error("Error: ", error);
-            showToast("❌ तकनीकी समस्या! कृपया इंटरनेट चेक करें।", "#ff4757");
-        }
+            showToast("✅ सर्विस पब्लिश हो गई!");
+            document.querySelectorAll('input, textarea').forEach(el => el.id.startsWith('s-') ? el.value = '' : null);
+        } catch (e) { showToast("Error!", "#ff4757"); }
     };
 
     const loadServices = () => {
@@ -330,27 +297,46 @@
         onSnapshot(q, (snapshot) => {
             let servicesHTML = "";
             let totalCount = 0;
-
             snapshot.forEach((doc) => {
                 totalCount++;
                 const data = doc.data();
-                
-                let timerBadge = "";
-                if(data.endTime) {
-                    timerBadge = `<div class="offer-timer" data-end="${data.endTime}" style="background: #fee2e2; color: #ef4444; font-size: 11px; padding: 6px 12px; border-radius: 12px; font-weight: 800; margin-bottom: 12px; display: inline-block;">⏳ टाइमर लोड हो रहा है...</div>`;
-                }
-
-                // 🛒 यहाँ बटन में जादुई 'placeOrder' फंक्शन जोड़ दिया गया है
+                let timerBadge = data.endTime ? `<div class="offer-timer" data-end="${data.endTime}" style="background: #fee2e2; color: #ef4444; font-size: 11px; padding: 6px 12px; border-radius: 12px; font-weight: 800; margin-bottom: 12px; display: inline-block;">⏳ लोड हो रहा है...</div>` : "";
                 servicesHTML += `
                     <div class="service-item">
-                        <img src="${data.image}" class="service-img" alt="${data.name}">
+                        <img src="${data.image}" class="service-img">
                         <div style="padding: 15px;">
                             ${timerBadge}
                             <h4 style="margin-bottom: 5px;">${data.name}</h4>
                             <p class="service-desc" style="white-space: pre-wrap;">${data.desc}</p>
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <span style="text-decoration: line-through; color: gray; font-size: 12px;">₹${data.mrp}</span>
-                                    <span style="color: var(--primary); font-weight: 800; font-size: 18px;"> ₹${data.price}</span>
-                                </div>
-                                <button class="btn btn-primary" style="width: auto; padding: 8px 20px; font-size: 14px;" onclick="placeOrder('${data.name}', ${data.price})">ऑर्डर करें</b    
+                                <div><span style="text-decoration: line-through; color: gray; font-size: 12px;">₹${data.mrp}</span><span style="color: var(--primary); font-weight: 800; font-size: 18px;"> ₹${data.price}</span></div>
+                                <button class="btn btn-primary" style="width: auto; padding: 8px 20px; font-size: 14px;" onclick="placeOrder('${data.name}', ${data.price})">ऑर्डर करें</button>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+            document.getElementById('admin-product-list').innerHTML = servicesHTML;
+            document.getElementById('store-list').innerHTML = servicesHTML;
+            if(isOwner) document.getElementById('total-services').innerText = totalCount;
+        });
+    };
+
+    loadServices();
+
+    setInterval(() => {
+        document.querySelectorAll('.offer-timer').forEach(el => {
+            const dist = new Date(el.getAttribute('data-end')).getTime() - new Date().getTime();
+            if (dist < 0) { el.innerHTML = "⏳ ऑफर समाप्त"; el.style.background = "#e2e8f0"; el.style.color = "#64748b"; }
+            else {
+                const h = Math.floor((dist % (86400000)) / 3600000);
+                const m = Math.floor((dist % 3600000) / 60000);
+                const s = Math.floor((dist % 60000) / 1000);
+                el.innerHTML = `⏳ खत्म होगा: ${h}h ${m}m ${s}s`;
+            }
+        });
+    }, 1000);
+
+    window.shareWebsite = () => navigator.share ? navigator.share({title: 'KRYALIVE', url: 'https://kryalive.com'}) : showToast("Link Copied!");
+</script>
+</body>
+</html>
