@@ -207,7 +207,6 @@
         }
     });
 
-    // 🛒 असली ऑर्डर बुक करने का फंक्शन
     window.placeOrder = async (serviceName, price) => {
         if(!user) {
             showToast("कृपया पहले लॉगिन करें!", "#ff4757");
@@ -232,7 +231,6 @@
         }
     };
 
-    // 📦 ऑर्डर्स लोड और डैशबोर्ड अपडेट फंक्शन
     window.loadUserOrders = () => {
         if(!user) return;
         let q = isOwner ? query(collection(db, "orders"), orderBy("timestamp", "desc")) : query(collection(db, "orders"), where("userId", "==", user.uid), orderBy("timestamp", "desc"));
@@ -268,7 +266,6 @@
         });
     };
 
-    // पब्लिश सर्विस फंक्शन
     document.getElementById('btn-publish').onclick = async () => {
         const name = document.getElementById('s-name').value;
         const mrp = document.getElementById('s-mrp').value;
@@ -339,4 +336,5 @@
     window.shareWebsite = () => navigator.share ? navigator.share({title: 'KRYALIVE', url: 'https://kryalive.com'}) : showToast("Link Copied!");
 </script>
 </body>
-    </html>
+                                                                                                 </html>
+    
