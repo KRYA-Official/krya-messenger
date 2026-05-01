@@ -64,7 +64,7 @@
         <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" class="logo-img">
         <div class="brand">KRYA<span>LIVE</span></div>
     </div>
-    <div id="role-badge" style="font-size: 10px; font-weight: 800; color: white; padding: 5px 12px; border-radius: 20px;">USER</div>
+    <div id="role-badge" style="font-size: 10px; font-weight: 800; color: white; padding: 5px 12px; border-radius: 20px; background: var(--accent);">USER</div>
 </header>
 
 <main>
@@ -134,7 +134,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
@@ -162,7 +162,6 @@
         document.getElementById('view-' + id).classList.add('active');
         const navMap = { 'orders': 'n-orders', 'profile': 'n-profile', 'owner': 'n-main', 'store': 'n-main' };
         document.getElementById(navMap[id]).classList.add('active');
-        if(id === 'orders') loadUserOrders();
     };
 
     window.openMain = () => isOwner ? nav('owner') : nav('store');
@@ -170,20 +169,55 @@
     document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
     document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
 
+    window.shareWebsite = () => {
+        if (navigator.share) {
+            navigator.share({
+                title: 'KRYALIVE | Smart Business Hub',
+                text: 'Kryalive.com: घर बैठे प्रोफेशनल डिजिटल सर्विसेज। ईमानदारी हमारी पहचान।',
+                url: 'https://kryalive.com/'
+            }).catch(console.error);
+        } else {
+            navigator.clipboard.writeText('https://kryalive.com/').then(() => {
+                showToast("लिंक कॉपी हो गया!");
+            });
+        }
+    };
+
     onAuthStateChanged(auth, async u => {
         const header = document.getElementById('app-header');
         const navBar = document.getElementById('app-nav');
+        const roleBadge = document.getElementById('role-badge');
 
-        if(u) {
+        if (u) {
             user = u;
             isOwner = u.email === OWNER_EMAIL;
             header.style.setProperty('display', 'flex', 'important');
             navBar.style.setProperty('display', 'flex', 'important');
             
-            await setDoc(doc(db, "subscribers", u.uid), { name: u.displayName, email: u.email, lastSeen: serverTimestamp() }, { merge: true });
+            await setDoc(doc(db, "subscribers", u.uid), { 
+                name: u.displayName, 
+                email: u.email 
+            }, { merge: true });
 
             document.getElementById('u-name').innerText = u.displayName;
             document.getElementById('u-email').innerText = u.email;
             document.getElementById('u-photo').src = u.photoURL;
-            
-            document.getElementById('role-badge').inner
+
+            if (isOwner) {
+                roleBadge.innerText = "ADMIN";
+                roleBadge.style.backgroundColor = "var(--primary)";
+                nav('owner');
+            } else {
+                roleBadge.innerText = "USER";
+                roleBadge.style.backgroundColor = "var(--accent)";
+                nav('store');
+            }
+        } else {
+            header.style.setProperty('display', 'none', 'important');
+            navBar.style.setProperty('display', 'none', 'important');
+            nav('auth');
+        }
+    });
+</script>
+</body>
+</html>
