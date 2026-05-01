@@ -5,22 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KRYALIVE | Smart Business Hub</title>
     
-    <meta property="og:title" content="KRYALIVE | Smart Business Hub">
-    <meta property="og:description" content="Kryalive.com: घर बैठे प्रोफेशनल डिजिटल सर्विसेज। ईमानदारी हमारी पहचान।">
-    <meta property="og:image" content="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s600/1000537308.jpg">
-    <meta property="og:image:width" content="600">
-    <meta property="og:image:height" content="600">
-    <meta property="og:url" content="https://kryalive.com">
-    <meta property="og:type" content="website">
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <style>
         :root { --primary: #10b981; --accent: #2563eb; --dark: #0f172a; --light: #f8fafc; --red: #ff4757; --gold: #f59e0b; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--light); color: var(--dark); overflow-x: hidden; height: 100vh; }
         
         header, .bottom-nav { display: none !important; }
@@ -35,37 +27,58 @@
         
         main { height: calc(100vh - 140px); overflow-y: auto; padding: 15px; scroll-behavior: smooth; }
         
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .stat-card { background: white; padding: 15px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .card { background: #fff; border-radius: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); padding: 20px; margin-bottom: 20px; }
-        
-        input, textarea { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; margin-bottom: 10px; background: #f8fafc; outline: none; font-family: inherit; }
-        textarea { resize: vertical; }
+        /* Personalized Slider Styling */
+        .slider-container {
+            width: 100%;
+            height: 380px;
+            background: white;
+            border-radius: 24px;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
 
+        .slide {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            background: white;
+        }
+
+        .slide.active { opacity: 1; z-index: 10; }
+
+        .slide-user-img { width: 85px; height: 85px; border-radius: 50%; border: 4px solid var(--primary); margin-bottom: 12px; object-fit: cover; }
+        .slide h2 { font-size: 22px; font-weight: 800; color: var(--dark); margin-bottom: 8px; }
+        .slide p { font-size: 13px; color: #475569; line-height: 1.5; max-width: 90%; }
+
+        /* Dynamic Background Blobs for Slider */
+        .slider-container::before {
+            content: '';
+            position: absolute;
+            top: -50px; right: -50px;
+            width: 150px; height: 150px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .card { background: #fff; border-radius: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); padding: 20px; margin-bottom: 20px; }
         .btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
         .btn-primary { background: var(--accent); color: white; }
 
-        .service-item { border-radius: 24px; overflow: hidden; background: #fff; margin-bottom: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
-        .service-img { width: 100%; height: 190px; object-fit: cover; }
-        .service-desc { font-size: 13px; color: #475569; margin-bottom: 15px; line-height: 1.6; }
-
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid #eee; padding: 10px 0 25px; z-index: 1000; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid #eee; padding: 10px 0 25px; z-index: 1000; display: none; }
         .nav-item { flex: 1; text-align: center; border: none; background: none; color: #94a3b8; font-size: 11px; font-weight: 700; }
         .nav-item.active { color: var(--accent); }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 2px; }
-
-        /* KRYA Welcome Banner */
-        .welcome-banner {
-            background-color: #fdfdfd; 
-            border: 1px solid #e0e0e0; 
-            padding: 25px 20px; 
-            text-align: center; 
-            border-radius: 12px; 
-            margin: 15px auto; 
-            max-width: 650px; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.03); 
-            font-family: inherit;
-        }
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -81,20 +94,31 @@
 </header>
 
 <main>
-    <div class="welcome-banner">
-        <h2 style="color: #28a745; margin-bottom: 12px; font-size: 24px;">
-            ✨ KRYALIVE पर आपका स्वागत है!
-        </h2>
-        <p style="font-size: 15px; color: #444; line-height: 1.6; margin-bottom: 20px;">
-            हमारी यह नई वेबसाइट अभी निर्माण के चरण (Under Construction) में है। हम आपके लिए 100% सुरक्षित और कानूनी (Legal) उत्पाद तैयार करने में जुटे हुए हैं। आपके धैर्य और विश्वास के लिए धन्यवाद। जल्द ही नई सेवाएँ आपके सामने होंगी!
-        </p>
-        <div style="display: inline-block; padding: 8px 16px; background-color: #e8f5e9; color: #2e7d32; border-radius: 20px; font-weight: 500; font-size: 13px;">
-            <span>🚀 KRYA - KRYALIVE.COM</span>
+    <div class="slider-container" id="main-slider" style="display: none;">
+        <div class="slide active">
+            <img src="" class="slide-user-img dynamic-photo">
+            <h2>KRYA परिवार में स्वागत है <span class="dynamic-name">यूज़र</span>!</h2>
+            <p>हमारी पहचान ईमानदारी, पारदर्शिता और आपके विश्वास से है। यह सिर्फ एक वेबसाइट नहीं, बल्कि आपका अपना डिजिटल हब है। आइए, मिलकर एक नई और सफल शुरुआत करें।</p>
+        </div>
+        <div class="slide">
+            <img src="" class="slide-user-img dynamic-photo">
+            <h2>KRYA - आपकी डिजिटल तरक्की का सच्चा साथी</h2>
+            <p><span class="dynamic-name">यूज़र</span>, जीवन में कोई भी लक्ष्य बड़ा नहीं होता। जब हम ईमानदारी के रास्ते पर चलते हैं तो सफलता ज़रूर मिलती है। अपने सपनों को उड़ान दें, हम आपके साथ हैं।</p>
+        </div>
+        <div class="slide">
+            <div style="font-size: 45px; color: var(--primary); margin-bottom: 10px;"><i class="fa-solid fa-heart"></i></div>
+            <h2>आपके विचार, हमारी प्रेरणा!</h2>
+            <p>KRYALIVE का हर एक यूज़र हमारे परिवार का हिस्सा है। हम चाहते हैं कि आप अपने लक्ष्य हमें बताएं ताकि हम आपके अनुसार बेहतरीन और सुरक्षित सेवाएँ तैयार कर सकें।</p>
+        </div>
+        <div class="slide">
+            <div style="font-size: 45px; color: var(--gold); margin-bottom: 10px;"><i class="fa-solid fa-handshake-angle"></i></div>
+            <h2>हमेशा आपके साथ KRYA</h2>
+            <p>हम आपसे वैसे ही जुड़े हैं जैसे सामने बैठकर बात कर रहे हों। आपकी ईमेल <span class="dynamic-email"></span> पर हमारी नज़र है, और हम आपके हर कदम पर आपके साथ हैं।</p>
         </div>
     </div>
 
     <section id="view-auth" class="view active">
-        <div style="text-align: center; padding-top: 20px;">
+        <div style="text-align: center; padding-top: 40px;">
             <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s3264/1000537308.jpg" style="width: 110px; height: 110px; border-radius: 50%; margin-bottom: 20px; border: 3px solid var(--primary);">
             <h2 style="font-weight: 800; font-size: 26px;">नमस्ते!</h2>
             <p style="color: gray; margin-bottom: 40px; padding: 0 20px;">Kryalive.com में प्रवेश के लिए लॉगिन करें।</p>
@@ -104,36 +128,12 @@
         </div>
     </section>
 
-    <section id="view-owner" class="view">
-        <div class="stat-grid">
-            <div class="stat-card"><i class="fas fa-shopping-cart" style="color:var(--accent);"></i><h2 id="total-ord">0</h2><p>ऑर्डर्स</p></div>
-            <div class="stat-card"><i class="fas fa-boxes" style="color:var(--primary);"></i><h2 id="total-services">0</h2><p>कुल सर्विस</p></div>
-            <div class="stat-card" style="grid-column: span 2;"><i class="fas fa-wallet" style="color:var(--gold);"></i><h2 id="total-rev">₹0</h2><p>कुल राजस्व</p></div>
-        </div>
-        <div class="card">
-            <h3>नया सर्विस पब्लिश करें</h3>
-            <input type="text" id="s-name" placeholder="सर्विस का नाम">
-            <input type="number" id="s-mrp" placeholder="MRP (बाजार भाव)">
-            <input type="number" id="s-price" placeholder="असली कीमत (आपका भाव)">
-            <input type="text" id="s-img" placeholder="फोटो का लिंक">
-            <label style="font-size: 12px; color: gray; margin-bottom: 5px; display: block; font-weight: bold;">ऑफर खत्म होने का समय (ऑप्शनल):</label>
-            <input type="datetime-local" id="s-timer">
-            <textarea id="s-desc" placeholder="सर्विस की पूरी जानकारी, नियम और शर्तें लिखें..." rows="5"></textarea>
-            
-            <button class="btn btn-primary" id="btn-publish"><i class="fas fa-plus"></i> पब्लिश करें</button>
-        </div>
-        <div id="admin-product-list"></div>
-    </section>
-
     <section id="view-store" class="view">
-        <h3 id="user-greet" style="font-weight: 800;">नमस्ते!</h3>
+        <h3 style="font-weight: 800;">नमस्ते <span class="dynamic-name">यूज़र</span>!</h3>
         <p style="font-size: 12px; color: gray; margin-bottom: 20px;">आपकी डिजिटल तरक्की यहाँ से शुरू होती है।</p>
-        <div id="store-list"></div>
-    </section>
-
-    <section id="view-orders" class="view">
-        <h3 style="margin-bottom: 20px; font-weight: 800;">मेरे ऑर्डर्स</h3>
-        <div id="user-orders-display"></div>
+        <div class="card" style="background: #f0fdf4; border: 1px solid #10b981;">
+            <p style="font-size: 14px; color: #065f46; font-weight: 600;">⚠️ वेबसाइट पर काम चल रहा है। हम जल्द ही आपके लिए बेहतरीन उत्पाद लेकर आएंगे।</p>
+        </div>
     </section>
 
     <section id="view-profile" class="view">
@@ -141,25 +141,27 @@
             <img id="u-photo" src="" style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--primary); margin-bottom: 15px;">
             <h4 id="u-name">Name</h4>
             <p id="u-email" style="color: gray; font-size: 12px; margin-bottom: 25px;">email</p>
-            <button class="btn btn-primary" style="margin-bottom: 15px;" onclick="shareWebsite()"><i class="fas fa-share-alt"></i> Kryalive.com शेयर करें</button>
-            <div style="font-size: 11px; color: gray; text-align: left; background: #f8fafc; padding: 15px; border-radius: 15px; border: 1px solid #eee;">
-                <b>हमारी नीति:</b> हम ईमानदारी और पारदर्शिता में विश्वास रखते हैं।
+            
+            <div style="background-color: #f8fafc; border: 1.5px solid #e2e8f0; padding: 20px; text-align: left; border-radius: 18px; margin-bottom: 20px;">
+                <h4 style="color: var(--primary); margin-bottom: 10px; font-weight: 800; font-size: 14px;">💬 आप अपनी लाइफ में क्या करना चाहते हैं?</h4>
+                <textarea id="user-goals" placeholder="अपने सपने और विचार यहाँ लिखें..." rows="4" style="width:100%; border:none; background:transparent; font-size:13px; outline:none;"></textarea>
+                <button class="btn btn-primary" onclick="submitFeedback()" style="height:40px; font-size:12px; margin-top:10px;"><i class="fas fa-paper-plane"></i> विचार भेजें</button>
             </div>
+
+            <button class="btn btn-primary" style="margin-bottom: 15px;" onclick="shareWebsite()"><i class="fas fa-share-alt"></i> Kryalive.com शेयर करें</button>
             <button class="btn" style="background: #fee2e2; color: #ef4444; margin-top: 20px;" id="logout-btn">लॉगआउट</button>
         </div>
     </section>
 </main>
 
 <nav class="bottom-nav" id="app-nav">
-    <button class="nav-item active" id="n-main" onclick="openMain()"><i class="fas fa-store"></i><span id="n-txt">Store</span></button>
-    <button class="nav-item" id="n-orders" onclick="nav('orders')"><i class="fas fa-box"></i><span>Orders</span></button>
+    <button class="nav-item active" id="n-store" onclick="nav('store')"><i class="fas fa-store"></i><span>Store</span></button>
     <button class="nav-item" id="n-profile" onclick="nav('profile')"><i class="fas fa-user-circle"></i><span>Profile</span></button>
 </nav>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
@@ -172,78 +174,67 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
-    const OWNER_EMAIL = "krya.global@gmail.com";
-    
-    let user = null, isOwner = false;
-
     const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, style: {background: c, borderRadius: "15px"}}).showToast();
+
+    // Slider Logic
+    let currentSlide = 0;
+    function startSlider() {
+        const slides = document.querySelectorAll('.slide');
+        setInterval(() => {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }, 6000); // 6 Seconds rotation
+    }
 
     window.nav = (id) => {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById('view-' + id).classList.add('active');
-        const navMap = { 'orders': 'n-orders', 'profile': 'n-profile', 'owner': 'n-main', 'store': 'n-main' };
-        document.getElementById(navMap[id]).classList.add('active');
+        document.getElementById('n-' + id).classList.add('active');
     };
 
-    window.openMain = () => isOwner ? nav('owner') : nav('store');
+    window.submitFeedback = () => {
+        const goals = document.getElementById('user-goals').value;
+        if(goals.trim() === "") return showToast("कृपया कुछ लिखें!", "var(--red)");
+        showToast("आपके विचार KRYA टीम तक पहुँच गए हैं। धन्यवाद!");
+        document.getElementById('user-goals').value = "";
+    };
 
     document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
     document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
 
-    window.shareWebsite = () => {
-        if (navigator.share) {
-            navigator.share({
-                title: 'KRYALIVE | Smart Business Hub',
-                text: 'Kryalive.com: घर बैठे प्रोफेशनल डिजिटल सर्विसेज। ईमानदारी हमारी पहचान।',
-                url: 'https://kryalive.com/'
-            }).catch(console.error);
-        } else {
-            navigator.clipboard.writeText('https://kryalive.com/').then(() => {
-                showToast("लिंक कॉपी हो गया!");
-            });
-        }
-    };
-
-    onAuthStateChanged(auth, async u => {
+    onAuthStateChanged(auth, u => {
         const header = document.getElementById('app-header');
         const navBar = document.getElementById('app-nav');
-        const roleBadge = document.getElementById('role-badge');
+        const slider = document.getElementById('main-slider');
 
         if (u) {
-            user = u;
-            isOwner = u.email === OWNER_EMAIL;
             header.style.setProperty('display', 'flex', 'important');
             navBar.style.setProperty('display', 'flex', 'important');
-            
-            await setDoc(doc(db, "subscribers", u.uid), { 
-                name: u.displayName, 
-                email: u.email 
-            }, { merge: true });
+            slider.style.display = 'block';
+
+            // Dynamic Personalization
+            document.querySelectorAll('.dynamic-name').forEach(el => el.innerText = u.displayName.split(' ')[0]);
+            document.querySelectorAll('.dynamic-email').forEach(el => el.innerText = u.email);
+            document.querySelectorAll('.dynamic-photo').forEach(el => el.src = u.photoURL);
 
             document.getElementById('u-name').innerText = u.displayName;
             document.getElementById('u-email').innerText = u.email;
             document.getElementById('u-photo').src = u.photoURL;
 
-            if (isOwner) {
-                roleBadge.innerText = "ADMIN";
-                roleBadge.style.backgroundColor = "var(--primary)";
-                nav('owner');
-            } else {
-                roleBadge.innerText = "USER";
-                roleBadge.style.backgroundColor = "var(--accent)";
-                nav('store');
-            }
+            nav('store');
+            startSlider();
         } else {
             header.style.setProperty('display', 'none', 'important');
             navBar.style.setProperty('display', 'none', 'important');
+            slider.style.display = 'none';
             nav('auth');
         }
     });
 </script>
 </body>
-                                                                                                     </html>
-        
+            </html>
+            
