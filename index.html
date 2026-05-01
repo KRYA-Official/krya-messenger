@@ -97,28 +97,13 @@
             
             <button class="btn btn-primary" id="btn-publish"><i class="fas fa-plus"></i> पब्लिश करें</button>
         </div>
-        
-        <h3>आए हुए ऑर्डर्स (Admin Control)</h3>
-        <div id="admin-orders-display" style="margin-top: 15px;"></div>
-        
-        <div id="admin-product-list" style="margin-top: 20px;"></div>
+        <div id="admin-product-list"></div>
     </section>
 
     <section id="view-store" class="view">
         <h3 id="user-greet" style="font-weight: 800;">नमस्ते!</h3>
         <p style="font-size: 12px; color: gray; margin-bottom: 20px;">आपकी डिजिटल तरक्की यहाँ से शुरू होती है।</p>
         <div id="store-list"></div>
-        
-        <div id="booking-modal" class="card" style="display:none; margin-top: 20px; border: 2px solid var(--accent);">
-            <h3>सर्विस बुकिंग फॉर्म</h3>
-            <p id="booking-service-name" style="font-weight: 600; color: var(--accent); margin-bottom: 10px;"></p>
-            <input type="text" id="b-name" placeholder="आपका नाम">
-            <input type="email" id="b-email" placeholder="आपका ईमेल">
-            <input type="tel" id="b-phone" placeholder="मोबाइल नंबर">
-            <textarea id="b-address" placeholder="अपना पता (Address) लिखें" rows="3"></textarea>
-            <button class="btn btn-primary" id="submit-booking-btn">सबमिट करें</button>
-            <button class="btn" style="background:#94a3b8; color:white; margin-top:10px;" onclick="cancelBooking()">कैंसल करें</button>
-        </div>
     </section>
 
     <section id="view-orders" class="view">
@@ -149,7 +134,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCJ_hoMrqu0ENYS12hecTy9VD1DKQIaKFs",
@@ -166,8 +151,8 @@
     const provider = new GoogleAuthProvider();
 
     const OWNER_EMAIL = "krya.global@gmail.com";
+    
     let user = null, isOwner = false;
-    let selectedServiceToBook = "";
 
     const showToast = (m, c="var(--primary)") => Toastify({text: m, duration: 3000, style: {background: c, borderRadius: "15px"}}).showToast();
 
@@ -177,9 +162,6 @@
         document.getElementById('view-' + id).classList.add('active');
         const navMap = { 'orders': 'n-orders', 'profile': 'n-profile', 'owner': 'n-main', 'store': 'n-main' };
         document.getElementById(navMap[id]).classList.add('active');
-        
-        if(id === 'orders') loadUserOrders();
-        if(id === 'owner') loadAdminOrders();
     };
 
     window.openMain = () => isOwner ? nav('owner') : nav('store');
@@ -224,15 +206,11 @@
             if (isOwner) {
                 roleBadge.innerText = "ADMIN";
                 roleBadge.style.backgroundColor = "var(--primary)";
-                document.getElementById('n-txt').innerText = 'Admin';
                 nav('owner');
-                loadAdminOrders();
             } else {
                 roleBadge.innerText = "USER";
                 roleBadge.style.backgroundColor = "var(--accent)";
-                document.getElementById('n-txt').innerText = 'Store';
                 nav('store');
-                loadStoreServices();
             }
         } else {
             header.style.setProperty('display', 'none', 'important');
@@ -240,122 +218,6 @@
             nav('auth');
         }
     });
-
-    // सेवाएं लोड करें (Store)
-    function loadStoreServices() {
-        const list = document.getElementById('store-list');
-        list.innerHTML = `
-            <div class="service-item">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s600/1000537308.jpg" class="service-img" />
-                <div style="padding: 15px;">
-                    <h4>प्रोफेशनल वेबसाइट डिज़ाइन</h4>
-                    <p style="color: gray; font-size: 12px; margin: 5px 0 10px;">MRP: <del>₹14,999</del> | हमारी कीमत: <b>₹4,999</b></p>
-                    <p class="service-desc">KRYALIVE द्वारा आपकी पसंद के अनुसार प्रोफेशनल वेबसाइट डिज़ाइन और डिजिटल मार्केटिंग।</p>
-                    <button class="btn btn-primary" onclick="openBookingForm('प्रोफेशनल वेबसाइट डिज़ाइन')">अभी बुक करें</button>
-                </div>
-            </div>
-        `;
-    }
-    window.openBookingForm = (serviceName) => {
-        selectedServiceToBook = serviceName;
-        document.getElementById('booking-service-name').innerText = serviceName;
-        document.getElementById('booking-modal').style.display = 'block';
-        window.location.hash = '#booking-modal';
-    };
-    window.cancelBooking = () => {
-        document.getElementById('booking-modal').style.display = 'none';
-        selectedServiceToBook = "";
-    };
-
-    // बुकिंग सबमिट करने के लिए
-    document.getElementById('submit-booking-btn').onclick = async () => {
-        const name = document.getElementById('b-name').value;
-        const email = document.getElementById('b-email').value;
-        const phone = document.getElementById('b-phone').value;
-        const address = document.getElementById('b-address').value;
-
-        if (!name || !email || !phone || !address) {
-            showToast("कृपया सभी फ़ील्ड भरें!", "var(--red)");
-            return;
-        }
-
-        try {
-            await addDoc(collection(db, "orders"), {
-                serviceName: selectedServiceToBook,
-                customerName: name,
-                customerEmail: email,
-                customerPhone: phone,
-                customerAddress: address,
-                userId: user.uid,
-                status: "Pending",
-                createdAt: serverTimestamp()
-            });
-            showToast("बुकिंग सफलतापूर्वक हो गई है!", "var(--primary)");
-            document.getElementById('booking-modal').style.display = 'none';
-            // फ़ील्ड खाली करें
-            document.getElementById('b-name').value = '';
-            document.getElementById('b-email').value = '';
-            document.getElementById('b-phone').value = '';
-            document.getElementById('b-address').value = '';
-            nav('orders');
-        } catch (e) {
-            showToast("समस्या आ रही है: " + e.message, "var(--red)");
-        }
-    };
-
-    // यूजर ऑर्डर्स
-    window.loadUserOrders = () => {
-        const display = document.getElementById('user-orders-display');
-        display.innerHTML = '<p>ऑर्डर्स लोड हो रहे हैं...</p>';
-        
-        const q = query(collection(db, "orders"));
-        onSnapshot(q, (snapshot) => {
-            display.innerHTML = '';
-            let userHasOrders = false;
-
-            snapshot.forEach((doc) => {
-                const data = doc.data();
-                if (data.userId === user.uid) {
-                    userHasOrders = true;
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <h4>सर्विस: ${data.serviceName}</h4>
-                        <p style="font-size:12px; color:gray;">बुकिंग का नाम: ${data.customerName}</p>
-                        <p style="font-size:12px; color:gray;">पता: ${data.customerAddress}</p>
-                        <p style="margin-top: 10px; font-weight: bold; color: ${data.status === 'Confirmed' ? 'var(--primary)' : data.status === 'Completed' ? 'var(--accent)' : 'var(--gold)'};">
-                            स्टेटस: ${data.status}
-                        </p>
-                    `;
-                    display.appendChild(card);
-                }
-            });
-
-            if (!userHasOrders) {
-                display.innerHTML = '<p style="color: gray;">आपने अभी तक कोई सर्विस बुक नहीं की है।</p>';
-            }
-        });
-    };
-
-    // एडमिन ऑर्डर्स
-    window.loadAdminOrders = () => {
-        const display = document.getElementById('admin-orders-display');
-        display.innerHTML = '<p>ऑर्डर्स लोड हो रहे हैं...</p>';
-
-        const q = query(collection(db, "orders"));
-        onSnapshot(q, (snapshot) => {
-            display.innerHTML = '';
-            let totalOrdersCount = 0;
-            
-            snapshot.forEach((docSnap) => {
-                const data = docSnap.data();
-                totalOrdersCount++;
-                const card = document.createElement('div');
-                card.className = 'card';
-                
-                card.innerHTML = `
-                    <h4>सर्विस: ${data.serviceName}</h4>
-                    <p style="font-size:12px;"><b>ग्राहक का नाम:</b> ${data.customerName}</p>
-                    <p style="font-size:12px;"><b>ईमेल:</b> ${data.customerEmail}</p>
-                    <p style="font-size:12px;"><b>मोबाइल नंबर:</b> ${data.customerPhone}</p>
-                    <
+</script>
+</body>
+</html>
