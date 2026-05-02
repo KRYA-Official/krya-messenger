@@ -99,6 +99,16 @@
         }
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* लेबर चौक सेक्शन */
+        .labor-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
     </style>
 </head>
 <body>
@@ -170,10 +180,22 @@
     <section id="view-store" class="view">
         <h3 id="user-greet" style="font-weight: 800;">नमस्ते <span class="dynamic-name">यूज़र</span>!</h3>
         <p style="font-size: 12px; color: gray; margin-bottom: 20px;">आपकी डिजिटल तरक्की यहाँ से शुरू होती है।</p>
-        <div class="card" style="background: #f0fdf4; border: 1px solid #10b981;">
-            <p style="font-size: 14px; color: #065f46; font-weight: 600;">⚠️ वेबसाइट पर काम चल रहा है। हम जल्द ही आपके लिए बेहतरीन उत्पाद लेकर आएंगे।</p>
+        
+        <div class="card" style="border: 1.5px solid var(--primary); background: #f0fdf4;">
+            <h3 style="color: var(--primary); margin-bottom: 15px;"><i class="fas fa-hard-hat"></i> KRYA डिजिटल लेबर चौक</h3>
+            <form id="laborForm">
+                <input type="text" id="worker-name" placeholder="पूरा नाम" required>
+                <input type="text" id="worker-work" placeholder="कार्य का प्रकार (जैसे: राजमिस्त्री, पेंटर)" required>
+                <input type="text" id="worker-location" placeholder="स्थान (जैसे: सोनीपत, बिहार)" required>
+                <input type="tel" id="worker-phone" placeholder="मोबाइल नंबर" required>
+                <button type="submit" class="btn btn-primary" style="background: var(--primary); margin-top: 5px;"><i class="fas fa-user-plus"></i> रजिस्टर करें</button>
+            </form>
         </div>
-        <div id="store-list"></div>
+
+        <div class="card" style="margin-top: 20px;">
+            <h3><i class="fas fa-users"></i> पंजीकृत कामगार (Available Workers)</h3>
+            <div id="laborList" style="margin-top: 15px;"></div>
+        </div>
     </section>
 
     <section id="view-orders" class="view">
@@ -240,7 +262,7 @@
             slides[currentSlide].classList.remove('active');
             currentSlide = (currentSlide + 1) % slides.length;
             slides[currentSlide].classList.add('active');
-        }, 6000); // 6 Seconds rotation
+        }, 6000);
     }
 
     window.nav = (id) => {
@@ -259,6 +281,30 @@
         showToast("आपके विचार KRYA टीम तक पहुँच गए हैं। धन्यवाद!");
         document.getElementById('user-goals').value = "";
     };
+
+    // लेबर चौक फंक्शन
+    document.getElementById('laborForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('worker-name').value;
+        const work = document.getElementById('worker-work').value;
+        const location = document.getElementById('worker-location').value;
+        const phone = document.getElementById('worker-phone').value;
+        
+        const list = document.getElementById('laborList');
+        const card = document.createElement('div');
+        card.className = 'labor-card';
+        card.innerHTML = `
+            <h4><i class="fas fa-user"></i> <b>${name}</b></h4>
+            <p><i class="fas fa-tools"></i> <b>काम:</b> ${work}</p>
+            <p><i class="fas fa-map-marker-alt"></i> <b>स्थान:</b> ${location}</p>
+            <p><i class="fas fa-phone-alt"></i> <b>मोबाइल:</b> ${phone}</p>
+        `;
+        
+        list.prepend(card);
+        showToast("कामगार का विवरण सफलता से जुड़ गया!");
+        document.getElementById('laborForm').reset();
+    });
 
     document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
     document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
@@ -295,7 +341,6 @@
                 email: u.email 
             }, { merge: true });
 
-            // Dynamic Personalization
             document.querySelectorAll('.dynamic-name').forEach(el => el.innerText = u.displayName.split(' ')[0]);
             document.querySelectorAll('.dynamic-email').forEach(el => el.innerText = u.email);
             document.querySelectorAll('.dynamic-photo').forEach(el => el.src = u.photoURL);
@@ -305,22 +350,4 @@
             document.getElementById('u-photo').src = u.photoURL;
 
             if (isOwner) {
-                roleBadge.innerText = "ADMIN";
-                roleBadge.style.backgroundColor = "var(--primary)";
-                nav('owner');
-            } else {
-                roleBadge.innerText = "USER";
-                roleBadge.style.backgroundColor = "var(--accent)";
-                nav('store');
-            }
-            startSlider();
-        } else {
-            header.style.setProperty('display', 'none', 'important');
-            navBar.style.setProperty('display', 'none', 'important');
-            slider.style.display = 'none';
-            nav('auth');
-        }
-    });
-</script>
-</body>
-        </html>
+                roleBadg
