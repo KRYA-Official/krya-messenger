@@ -3,138 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYA Digital - Premium Services</title>
+    <title>KRYA Digital - Premium Digital Agency</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-color: #002D04; /* Monaco Green */
-            color: #D4AF37; /* Gold */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
+        :root {
+            --primary-bg: #002D04; /* Monaco Green */
+            --gold: #D4AF37; /* Gold */
+            --gold-hover: #F6E27A;
+            --text-light: #F4F4F4;
+            --card-bg: rgba(255, 255, 255, 0.05);
+        }
+
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Navbar / Header */
+        header {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            min-height: 100vh;
+            padding: 15px 5%;
+            background: rgba(0, 45, 4, 0.95);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
         }
-        .container {
-            max-width: 600px;
-            width: 90%;
-            background: rgba(0, 45, 4, 0.9);
-            border: 2px solid #D4AF37;
-            padding: 40px 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(212, 175, 55, 0.2);
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
         }
-        .logo-container {
-            margin-bottom: 25px;
-            position: relative;
-            display: inline-block;
-        }
-        .logo-img {
-            width: 120px;
-            height: 120px;
+
+        .header-logo {
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            border: 3px solid #D4AF37;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            border: 2px solid var(--gold);
             object-fit: cover;
-            transition: transform 0.3s ease;
         }
-        .logo-img:hover {
-            transform: scale(1.05);
+
+        .brand-name {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--text-light);
+            letter-spacing: 1px;
         }
-        h1 {
-            font-size: 2.8em;
-            margin: 10px 0;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+
+        .brand-name span {
+            color: var(--gold);
         }
-        .tagline {
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(180deg, rgba(0,45,4,1) 0%, rgba(0,20,2,1) 100%);
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+            color: #ccc;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--primary-bg);
+            padding: 12px 30px;
             font-size: 1.1em;
-            font-style: italic;
-            opacity: 0.9;
-            margin-bottom: 30px;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-header {
+            padding: 8px 20px;
+            font-size: 0.9em;
+        }
+
+        /* Services Section */
+        .services-section {
+            padding: 60px 5%;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 2.2em;
+            color: var(--gold);
+            margin-bottom: 40px;
+            display: inline-block;
+            border-bottom: 2px solid var(--gold);
             padding-bottom: 10px;
         }
-        .services-box {
-            text-align: left;
-            background: rgba(212, 175, 55, 0.05);
-            padding: 20px;
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            padding: 30px 20px;
             border-radius: 10px;
-            margin-bottom: 30px;
+            border-top: 4px solid var(--gold);
+            text-align: left;
+            transition: transform 0.3s ease, background 0.3s ease;
+            cursor: default;
         }
-        .services-box h3 {
-            margin-top: 0;
-            color: #D4AF37;
-            border-left: 4px solid #D4AF37;
-            padding-left: 10px;
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
         }
-        ul {
-            list-style: none;
-            padding: 0;
+
+        .service-icon {
+            font-size: 2em;
+            margin-bottom: 15px;
         }
-        li {
-            padding: 8px 0;
-            font-size: 1.1em;
+
+        .service-card h3 {
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-size: 1.3em;
         }
-        li::before {
-            content: "✦ ";
-            color: #D4AF37;
+
+        .service-card p {
+            font-size: 0.95em;
+            color: #ddd;
         }
-        .btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
-            color: #002D04;
-            padding: 16px 40px;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 50px;
-            font-size: 1.2em;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            text-transform: uppercase;
-        }
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
-            background: linear-gradient(135deg, #F6E27A 0%, #D4AF37 100%);
-        }
+
+        /* Footer */
         footer {
-            margin-top: 30px;
-            font-size: 0.8em;
-            opacity: 0.6;
+            text-align: center;
+            padding: 30px 20px;
+            background: #001a02;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2.2em; }
+            .brand-name { font-size: 1.2em; }
+            header { padding: 10px 5%; }
+            .btn-header { display: none; } /* Hide header button on very small screens */
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo-container">
-            <a href="https://kryalive.com">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s600/1000537308.jpg" 
-                     alt="KRYA Digital Logo" class="logo-img">
-            </a>
+
+    <header>
+        <a href="https://kryalive.com" class="brand-container">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1bixMJd4JUYrenIP1acbcd46lNVBY5rfCPPcjUCJjuZErSbl-Wee_0EW1obL3da5L23jC1XZlamC2kazOPj9YyRWd_sY5zebrtxVk53gb048BI1jiuHnc5ZRLKwMvBtAkcmbJHrKcr5OPeKyVcjTtAz8rUk89R7Vkt603kbahMh58ikA9S-bJDdiVdJ4/s600/1000537308.jpg" alt="KRYA Digital Logo" class="header-logo">
+            <div class="brand-name">KRYA <span>Digital</span></div>
+        </a>
+        <a href="mailto:krya.global@gmail.com" class="btn-primary btn-header">संपर्क करें</a>
+    </header>
+
+    <section class="hero">
+        <h1>डिजिटल दुनिया में आपका भरोसेमंद पार्टनर</h1>
+        <p>हम आपके बिज़नेस को ऑनलाइन नई ऊंचाइयों पर ले जाने के लिए 100% सुरक्षित, प्रोफेशनल और बेहतरीन वेब सॉल्यूशंस प्रदान करते हैं।</p>
+        <br>
+        <a href="mailto:krya.global@gmail.com" class="btn-primary">अभी ईमेल करें</a>
+    </section>
+
+    <section class="services-section">
+        <h2 class="section-title">हमारी प्रीमियम सेवाएँ</h2>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">💻</div>
+                <h3>कस्टम वेबसाइट डेवलपमेंट</h3>
+                <p>आपके ब्रांड के लिए तेज़, सुरक्षित और कस्टम-डिज़ाइन की गई वेबसाइट्स जो आपके बिज़नेस को आगे बढ़ाएं।</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">🚀</div>
+                <h3>SEO और मार्केटिंग</h3>
+                <p>आपकी वेबसाइट को गूगल के पहले पेज पर लाएं और अपनी सही ऑडियंस तक पहुंचें।</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">📝</div>
+                <h3>ब्लॉग सेटअप</h3>
+                <p>प्रोफेशनल और फास्ट-लोडिंग ब्लॉग बनवाएं जो कमाई (Monetization) के लिए पूरी तरह तैयार हों।</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">✨</div>
+                <h3>UI/UX डिज़ाइन</h3>
+                <p>ग्राहकों के लिए एक सुंदर, आसान और बेहतरीन यूज़र इंटरफेस (Design) तैयार करवाएं।</p>
+            </div>
         </div>
+    </section>
 
-        <h1>KRYA Digital</h1>
-        <p class="tagline">प्रोफेशनल डिजिटल सर्विसेज और वेब डेवलपमेंट सॉल्यूशंस</p>
+    <footer>
+        <p>&copy; 2026 KRYA. सर्वाधिकार सुरक्षित। 100% Legal & Trusted Solutions.</p>
+    </footer>
 
-        <div class="services-box">
-            <h3>हमारी प्रीमियम सेवाएँ:</h3>
-            <ul>
-                <li>कस्टम वेबसाइट डेवलपमेंट</li>
-                <li>SEO और डिजिटल मार्केटिंग</li>
-                <li>ब्लॉग सेटअप और कस्टमाइजेशन</li>
-                <li>UI/UX डिज़ाइन</li>
-            </ul>
-        </div>
-
-        <a href="mailto:krya.global@gmail.com" class="btn">हमसे संपर्क करें</a>
-
-        <footer>
-            &copy; 2026 KRYA. सर्वाधिकार सुरक्षित।
-        </footer>
-    </div>
 </body>
 </html>
