@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <title>KRYA Live Chat</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; }
+        #chatBox { height: 400px; border: 1px solid #333; overflow-y: scroll; padding: 10px; background: #1e1e1e; margin-bottom: 10px; border-radius: 8px; }
+        input { padding: 10px; width: 70%; border-radius: 5px; border: none; }
+        button { padding: 10px 20px; background: #ffc107; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>KRYA लाइव चैट</h2>
+    <input type="text" id="userName" placeholder="अपना नाम लिखें...">
+    <div id="chatBox"></div>
+    <input type="text" id="msgInput" placeholder="संदेश लिखें...">
+    <button onclick="sendMessage()">भेजें</button>
+
+    <script>
+        // यहाँ अपना Firebase कॉन्फ़िगरेशन डालें
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        function sendMessage() {
+            const name = document.getElementById('userName').value || "अज्ञात";
+            const msg = document.getElementById('msgInput').value;
+            db.ref('messages/').push({ name: name, text: msg });
+            document.getElementById('msgInput').value = '';
+        }
+
+        db.ref('messages/').on('child_added', (data) => {
+            const m = data.val();
+            document.getElementById('chatBox').innerHTML += `<p><b>${m.name}:</b> ${m.text}</p>`;
+        });
+    </script>
+</body>
+</html>
+
